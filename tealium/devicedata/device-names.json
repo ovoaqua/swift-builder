@@ -103,6 +103,18 @@
 			"model_name": "iPhone XR",
 			"model_variant": ""
 		},
+        "iPhone12,1": {
+            "model_name": "iPhone 11",
+            "model_variant": ""
+        },
+        "iPhone12,3": {
+            "model_name": "iPhone 11 Pro",
+            "model_variant": ""
+        },
+        "iPhone12,5": {
+            "model_name": "iPhone 11 Pro Max",
+            "model_variant": ""
+        },
 		"iPod5,1": {
 			"model_name": "iPod Touch 5th Generation",
 			"model_variant": ""
@@ -111,6 +123,10 @@
 			"model_name": "iPod Touch 6th Generation",
 			"model_variant": ""
 		},
+        "iPod9,1": {
+            "model_name": "iPod Touch 7th Generation",
+            "model_variant": ""
+        },
 		"iPad2,1": {
 			"model_name": "iPad 2",
 			"model_variant": "Wifi (model A1432)"
@@ -263,6 +279,54 @@
 			"model_name": "iPad 6th Gen",
 			"model_variant": "WiFi + Cellular (model A1954)"
 		},
+        "iPad8,1": {
+            "model_name": "iPad Pro 3rd Gen 11\"",
+            "model_variant": "WiFi"
+        },
+        "iPad8,2": {
+            "model_name": "iPad Pro 3rd Gen 11\"",
+            "model_variant": "WiFi 1TB"
+        },
+        "iPad8,3": {
+            "model_name": "iPad Pro 3rd Gen 11\"",
+            "model_variant": "WiFi + Cellular"
+        },
+        "iPad8,4": {
+            "model_name": "iPad Pro 3rd Gen 11\"",
+            "model_variant": "WiFi + Cellular 1TB"
+        },
+        "iPad8,5": {
+            "model_name": "iPad Pro 3rd Gen 12.9\"",
+            "model_variant": "WiFi"
+        },
+        "iPad8,6": {
+            "model_name": "iPad Pro 3rd Gen 12.9\"",
+            "model_variant": "WiFi 1TB"
+        },
+        "iPad8,7": {
+            "model_name": "iPad Pro 3rd Gen 12.9\"",
+            "model_variant": "WiFi + Cellular"
+        },
+        "iPad8,8": {
+            "model_name": "iPad Pro 3rd Gen 12.9\"",
+            "model_variant": "WiFi + Cellular 1TB"
+        },
+        "iPad11,1": {
+            "model_name": "iPad Mini 5th Gen",
+            "model_variant": "WiFi"
+        },
+        "iPad11,2": {
+            "model_name": "iPad Mini 5th Gen",
+            "model_variant": "WiFi + Cellular"
+        },
+        "iPad11,3": {
+            "model_name": "iPad Air 3rd Gen",
+            "model_variant": "WiFi"
+        },
+        "iPad11,4": {
+            "model_name": "iPad Air 3rd Gen",
+            "model_variant": "WiFi + Cellular"
+        },
 		"AppleTV2,1": {
 			"model_name": "Apple TV 2nd Generation",
 			"model_variant": ""
@@ -323,6 +387,38 @@
 			"model_name": "Apple Watch Series 3",
 			"model_variant": "42mm"
 		},
+        "Watch4,1": {
+            "model_name": "Apple Watch Series 4",
+            "model_variant": "40mm"
+        },
+        "Watch4,2": {
+            "model_name": "Apple Watch Series 4",
+            "model_variant": "44mm"
+        },
+        "Watch4,3": {
+            "model_name": "Apple Watch Series 4",
+            "model_variant": "40mm Cellular"
+        },
+        "Watch4,4": {
+            "model_name": "Apple Watch Series 4",
+            "model_variant": "44mm Cellular"
+        },
+        "Watch5,1": {
+            "model_name": "Apple Watch Series 5",
+            "model_variant": "40mm"
+        },
+        "Watch5,2": {
+            "model_name": "Apple Watch Series 5",
+            "model_variant": "44mm"
+        },
+        "Watch5,3": {
+            "model_name": "Apple Watch Series 5",
+            "model_variant": "40mm Cellular"
+        },
+        "Watch5,4": {
+            "model_name": "Apple Watch Series 5",
+            "model_variant": "44mm Cellular"
+        },
         "i386": {
             "model_name": "Simulator",
             "model_variant": "32-bit"

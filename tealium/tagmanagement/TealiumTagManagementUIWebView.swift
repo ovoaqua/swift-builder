@@ -18,6 +18,9 @@ import UIKit
 
 /// TIQ Supported dispatch service Module. Utilizes older but simpler UIWebView vs. newer WKWebView.
 public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtocol {
+    public func trackMultiple(_ data: [[String: Any]], completion: ((Bool, [String: Any], Error?) -> Void)?) {
+        print("Not implemented")
+    }
 
     var delegates = TealiumMulticastDelegate<UIWebViewDelegate>()
     var webviewDidFinishLoading = false
@@ -31,9 +34,11 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
     /// Enables the webview. Called by the webview module at init time.
     ///
     /// - Parameters:
-    /// - webviewURL: The URL (typically for "mobile.html") to be loaded by the webview
-    /// - shouldMigrateCookies: Indicates whether cookies should be migrated from HTTPCookieStore (UIWebView).
-    /// - completion: completion block to be called when the webview has finished loading
+    ///     - webviewURL: `URL?` (typically for "mobile.html") to be loaded by the webview
+    ///     - shouldMigrateCookies: `Bool` indicating whether cookies should be migrated from `HTTPCookieStore` (`UIWebView`).
+    ///     - delegates: `[AnyObject]?` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
+    ///     - view: `UIView? ` - not required by `UIWebView`
+    ///     - completion: completion block to be called when the webview has finished loading
     public func enable(webviewURL: URL?,
                        shouldMigrateCookies: Bool,
                        delegates: [AnyObject]?,
@@ -50,15 +55,20 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
         self.setupWebview(forURL: webviewURL)
     }
 
-    /// Not required for UIWebView
+    /// Not required for UIWebView.
     public func setRootView(_ view: UIView,
                             completion: ((Bool) -> Void)?) {
 
     }
 
-    /// Adds optional delegates to the WebView instance
-    ///
-    /// - Parameter delegates: Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
+    /// Not required for UIWebView
+    public func reload(_ completion: (Bool, [String: Any]?, Error?) -> Void) {
+
+    }
+
+    /// Adds optional delegates to the WebView instance.
+    ///￼
+    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
     public func setWebViewDelegates(_ delegates: [AnyObject]) {
         delegates.forEach { delegate in
             if let delegate = delegate as? UIWebViewDelegate {
@@ -67,9 +77,9 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
         }
     }
 
-    /// Removes optional delegates for the WebView instance
-    ///
-    /// - Parameter delegates: Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
+    /// Removes optional delegates for the WebView instance.
+    ///￼
+    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
     public func removeWebViewDelegates(_ delegates: [AnyObject]) {
         delegates.forEach { delegate in
             if let delegate = delegate as? UIWebViewDelegate {
@@ -79,12 +89,13 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
     }
 
     /// Configures an instance of UIWebView for later use.
-    ///
-    /// - Parameter forURL: The URL (typically for mobile.html) to load in the webview
+    ///￼
+    /// - Parameter url: `URL?` (typically for mobile.html) to load in the webview
     func setupWebview(forURL url: URL?) {
+        TealiumQueues.mainQueue.async {
         self.webview = UIWebView()
         self.webview?.delegate = self
-        guard let webview = webview else {
+        guard let webview = self.webview else {
             self.enableCompletion?(false, TealiumWebviewError.webviewNotInitialized)
             return
         }
@@ -93,14 +104,13 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
             return
         }
         let request = URLRequest(url: url)
-        DispatchQueue.main.async {
             webview.loadRequest(request)
         }
     }
 
     /// Internal webview status check.
     ///
-    /// - Returns: Bool indicating whether or not the internal webview is ready for dispatching.
+    /// - Returns: `Bool` indicating whether or not the internal webview is ready for dispatching.
     public func isWebViewReady() -> Bool {
         guard nil != webview else {
             return false
@@ -115,8 +125,8 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
     /// Process event data for UTAG delivery.
     ///
     /// - Parameters:
-    /// - data: [String:Any] Dictionary of preferably String or [String] values.
-    /// - completion: Optional completion handler to call when call completes.
+    ///     - data: `[String:Any]` Dictionary of preferably String or [String] values.
+    ///     - completion: Optional completion handler to call when call completes.
     public func track(_ data: [String: Any], completion: ((Bool, [String: Any], Error?) -> Void)?) {
         guard let javascriptString = data.tealiumJavaScriptTrackCall else {
             completion?(false,
@@ -134,14 +144,15 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
         }
     }
 
-    /// Handles JavaScript evaluation on the WKWebView instance
+    /// Handles JavaScript evaluation on the WKWebView instance.
     ///
     /// - Parameters:
-    /// - jsString: The JavaScript call to be executed in the webview
-    /// - completion: Optional completion block to be called after the JavaScript call completes
-    public func evaluateJavascript(_ jsString: String, _ completion: (([String: Any]) -> Void)?) {
+    ///     - jsString: `String` containing the JavaScript call to be executed in the webview
+    ///     - completion: Optional completion block to be called after the JavaScript call completes
+    public func evaluateJavascript(_ jsString: String,
+                                   _ completion: (([String: Any]) -> Void)?) {
         var info = [String: Any]()
-        DispatchQueue.main.async {
+        TealiumQueues.mainQueue.async {
             if let result = self.webview?.stringByEvaluatingJavaScript(from: jsString) {
                 info += [TealiumTagManagementKey.jsResult: result]
                 completion?(info)
@@ -149,7 +160,7 @@ public class TealiumTagManagementUIWebView: NSObject, TealiumTagManagementProtoc
         }
     }
 
-    /// Called when the module needs to disable the webview
+    /// Called when the module needs to disable the webview.
     public func disable() {
         self.webview?.stopLoading()
         self.webview = nil

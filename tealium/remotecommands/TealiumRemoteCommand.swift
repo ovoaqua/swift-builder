@@ -24,10 +24,9 @@ open class TealiumRemoteCommand {
     /// Constructor for a Tealium Remote Command.
     ///
     /// - Parameters:
-    /// - commandId: String identifier for command block.
-    /// - description: Optional string description of command.
-    /// - queue: Optional target queue to run command block on. Nil to specify running on the existing thread.
-    /// - completion: The completion block to run when this remote command is triggered.
+    ///     - commandId: `String` identifier for command block.
+    ///     - description: `String?` description of command.
+    ///     - completion: The completion block to run when this remote command is triggered.
     public init(commandId: String,
                 description: String?,
                 completion : @escaping ((_ response: TealiumRemoteCommandResponse) -> Void)) {
@@ -37,9 +36,9 @@ open class TealiumRemoteCommand {
         self.remoteCommandCompletion = completion
     }
 
-    /// Called when a Remote Command is ready for execution
-    ///
-    /// - Parameter response: TealiumRemoteCommandResponse object containing information from the TiQ webview
+    /// Called when a Remote Command is ready for execution.
+    ///￼
+    /// - Parameter response: `TealiumRemoteCommandResponse` object containing information from the TiQ webview
     func completeWith(response: TealiumRemoteCommandResponse) {
 
         delegate?.tealiumRemoteCommandRequestsExecution(self,
@@ -47,12 +46,13 @@ open class TealiumRemoteCommand {
 
     }
 
-    /// Sends a notification to the TiQ webview when the remote command has finished executing
+    /// Sends a notification to the TiQ webview when the remote command has finished executing.
     ///
     /// - Parameters:
-    /// - commandId: String identifier for the Remote Command
-    /// - response: The response from the remote command to be passed back to the TiQ webview
-    public class func sendCompletionNotification(for commandId: String, response: TealiumRemoteCommandResponse) {
+    ///     - commandId: `String` identifier for the Remote Command
+    ///     - response: `TealiumRemoteCommandResponse` from the remote command to be passed back to the TiQ webview
+    public class func sendCompletionNotification(for commandId: String,
+                                                 response: TealiumRemoteCommandResponse) {
         guard let responseId = response.responseId() else {
             return
         }
@@ -67,12 +67,12 @@ open class TealiumRemoteCommand {
         NotificationCenter.default.post(notification)
     }
 
-    /// Generates a completion notification for a specific Remote Command response
+    /// Generates a completion notification for a specific Remote Command response.
     ///
     /// - Parameters:
-    /// - commandId: String identifier for the Remote Command
-    /// - response: The response from the remote command to be passed back to the TiQ webview
-    /// - Returns: A Notification object containing the encoded JavaScript string for the TiQ webview.
+    ///     - commandId: `String` identifier for the Remote Command
+    ///     - response: `TealiumRemoteCommandResponse` from the remote command to be passed back to the TiQ webview
+    ///     - Returns: `Notification?`  containing the encoded JavaScript string for the TiQ webview.
     class func completionNotification(for commandId: String,
                                       response: TealiumRemoteCommandResponse) -> Notification? {
         guard let responseId = response.responseId() else {

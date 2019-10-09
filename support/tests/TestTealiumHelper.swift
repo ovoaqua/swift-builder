@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@testable import Tealium
+@testable import TealiumCore
 
 enum TealiumTestKey {
     static let stringKey = "keyString"
@@ -44,7 +44,7 @@ let testTealiumConfig = TealiumConfig(account: TealiumTestValue.account,
 let testDeleteRequest = TealiumDeleteRequest(name: "testDelete")
 let testDisableRequest = TealiumDisableRequest()
 let testEnableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
-let testLoadRequest = TealiumLoadRequest(name: "test") { (_, _, _) in
+let testLoadRequest = TealiumLoadRequest(name: "test") { _, _, _ in
     // Future processing... maybe
 }
 let testReportNotificationRequest = TealiumReportNotificationsRequest()
@@ -60,10 +60,23 @@ let testDataDictionary: [String: Any]  =
         TealiumKey.event: TealiumTestValue.title,
         TealiumKey.libraryName: TealiumValue.libraryName,
         TealiumKey.libraryVersion: TealiumValue.libraryVersion,
-        TealiumVolatileDataKey.sessionId: TealiumTestValue.sessionId,
-        TealiumAppDataKey.visitorId: TealiumTestValue.visitorID,
-        TealiumVolatileDataKey.random: TealiumTestValue.random
+        TealiumKey.sessionId: TealiumTestValue.sessionId,
+        TealiumKey.visitorId: TealiumTestValue.visitorID,
+        TealiumKey.random: TealiumTestValue.random
     ]
+
+class TimeTraveler {
+
+    private var date = Date()
+
+    func travel(by timeInterval: TimeInterval) -> Date {
+        return date.addingTimeInterval(timeInterval)
+    }
+
+    func generateDate() -> Date {
+        return date
+    }
+}
 
 class TestTealiumHelper {
 
@@ -127,6 +140,7 @@ class TestTealiumHelper {
             //            "crash", // crash is excluded; separate tests exist for crash
             "consentmanager",
             "dispatchqueue",
+            "visitorprofile",
         ]
         #elseif os(tvOS)
         return [
@@ -145,6 +159,7 @@ class TestTealiumHelper {
             "collect",
             "consentmanager",
             "dispatchqueue",
+            "visitorprofile",
         ]
         #else
             return [
@@ -165,6 +180,7 @@ class TestTealiumHelper {
                 // "tagmanagement",
                 "consentmanager",
                 "dispatchqueue",
+                "visitorprofile",
             ]
         #endif
     }

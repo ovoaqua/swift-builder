@@ -23,9 +23,9 @@ public class TealiumConnectivity {
     var currentConnectivityType = ""
     static var currentConnectionStatus: Bool?
 
-    /// Retrieves the current connection type used by the device
-    ///
-    /// - Returns: String containing the current connection type
+    /// Retrieves the current connection type used by the device.
+    /// 
+    /// - Returns: `String` containing the current connection type
     public class func currentConnectionType() -> String {
         let isConnected = TealiumConnectivity.isConnectedToNetwork()
         if isConnected == true {
@@ -35,9 +35,9 @@ public class TealiumConnectivity {
     }
 
     // Credit: RAJAMOHAN-S: https://stackoverflow.com/questions/30743408/check-for-internet-connection-with-swift/39782859#39782859
-    /// Determines if the device has network connectivity
+    /// Determines if the device has network connectivity.
     ///
-    /// - Returns: Bool (true if device has connectivity)
+    /// - Returns: `Bool` (true if device has connectivity)
     class func isConnectedToNetwork() -> Bool {
         // used only for unit testing
         if forceConnectionOverride == true {

@@ -20,7 +20,7 @@ public typealias WebViewNavigationTypeAlias = UIWebViewNavigationType
 
 extension TealiumTagManagementUIWebView: UIWebViewDelegate {
 
-    /// Used to determine if a Remote Command should be triggered from a URLRequest
+    /// Used to determine if a Remote Command should be triggered from a `URLRequest`.
     public func webView(_ webView: UIWebView,
                         shouldStartLoadWith request: URLRequest,
                         navigationType: WebViewNavigationTypeAlias) -> Bool {
@@ -50,7 +50,7 @@ extension TealiumTagManagementUIWebView: UIWebViewDelegate {
         return shouldStart
     }
 
-    /// Not used by Tealium. Forward to any listening delegates
+    /// Not used by Tealium. Forward to any listening delegates.
     public func webViewDidStartLoad(_ webView: UIWebView) {
         delegates.invoke {
             $0.webViewDidStartLoad?(webView)
@@ -69,7 +69,7 @@ extension TealiumTagManagementUIWebView: UIWebViewDelegate {
         self.enableCompletion?(false, error)
     }
 
-    /// Called when the WebView has finished loading a resource (DOM Complete)
+    /// Called when the WebView has finished loading a resource (DOM Complete).
     public func webViewDidFinishLoad(_ webView: UIWebView) {
         webviewDidFinishLoading = true
         delegates.invoke {
