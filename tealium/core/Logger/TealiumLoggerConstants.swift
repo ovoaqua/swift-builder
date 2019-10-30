@@ -15,13 +15,6 @@ public enum TealiumLogLevelValue {
     static let warnings = "warnings"
 }
 
-public enum TealiumLoggerModuleError: Error {
-    case moduleDisabled
-    case noAccount
-    case noProfile
-    case noEnvironment
-}
-
 let defaultTealiumLogLevel: TealiumLogLevel = .errors
 
 public enum TealiumLogLevel: Int, Comparable {

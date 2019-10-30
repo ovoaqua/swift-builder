@@ -89,8 +89,8 @@ extension Date {
         return String(describing: time)
     }
 
-    public func millisecondsFrom(earlierDate: Date) -> Int {
-        return Int(self.timeIntervalSince(earlierDate) * 1000)
+    public func millisecondsFrom(earlierDate: Date) -> Int64 {
+        return Int64(self.timeIntervalSince(earlierDate) * 1000)
     }
 }
 

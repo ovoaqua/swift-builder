@@ -37,14 +37,18 @@ open class TealiumLifecyclePersistentData {
         }
 
         do {
+            // CocoaPods & Carthage use different module names, so legacy storage requires different namespaces
             #if COCOAPODS
-            NSKeyedUnarchiver.setClass(TealiumLifecycleLegacy.self, forClassName: "Tealium.TealiumLifecycle")
-            NSKeyedUnarchiver.setClass(TealiumLifecycleLegacySession.self, forClassName: "Tealium.TealiumLifecycleSession")
+            NSKeyedUnarchiver.setClass(TealiumLifecycleLegacy.self, forClassName: "TealiumSwift.TealiumLifecycle")
+            NSKeyedUnarchiver.setClass(TealiumLifecycleLegacySession.self, forClassName: "TealiumSwift.TealiumLifecycleSession")
             #elseif lifecycle
+            // carthage - individual schemes
             NSKeyedUnarchiver.setClass(TealiumLifecycleLegacy.self, forClassName: "TealiumLifecycle.TealiumLifecycle")
             NSKeyedUnarchiver.setClass(TealiumLifecycleLegacySession.self, forClassName: "TealiumLifecycle.TealiumLifecycleSession")
-            NSKeyedUnarchiver.setClass(TealiumLifecycleLegacy.self, forClassName: "Tealium.TealiumLifecycle")
-            NSKeyedUnarchiver.setClass(TealiumLifecycleLegacySession.self, forClassName: "Tealium.TealiumLifecycleSession")
+            // For the "SwiftTestBed" app in 1.7.1 and below, the module namespace was "Tealium", but this shouldn't be the case in production apps.
+            // If testing migration from 1.7.1 in the builder project, you will need to uncomment the following 2 lines
+            // NSKeyedUnarchiver.setClass(TealiumLifecycleLegacy.self, forClassName: "Tealium.TealiumLifecycle")
+            // NSKeyedUnarchiver.setClass(TealiumLifecycleLegacySession.self, forClassName: "Tealium.TealiumLifecycleSession")
             #endif
             guard let lifecycle = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? TealiumLifecycleLegacy else {
                 return nil

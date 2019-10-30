@@ -14,7 +14,7 @@ import TealiumCore
 /// Manages instances of TealiumRemoteCommand
 public class TealiumRemoteCommands: NSObject {
 
-    weak var queue: DispatchQueue?
+    weak var queue = TealiumQueues.backgroundSerialQueue
     var commands = [TealiumRemoteCommand]()
     var isEnabled = false
     static var pendingResponses = [String: Bool]()
@@ -79,6 +79,13 @@ public class TealiumRemoteCommands: NSObject {
         let request = URLRequest(url: url)
 
         return triggerCommandFrom(request: request)
+    }
+
+    public func triggerCommandFrom(notification: Notification) {
+        guard let request = notification.userInfo?[TealiumKey.tagmanagementNotification] as? URLRequest else {
+            return
+        }
+        triggerCommandFrom(request: request)
     }
 
     /// Trigger an associated remote command from a url request.

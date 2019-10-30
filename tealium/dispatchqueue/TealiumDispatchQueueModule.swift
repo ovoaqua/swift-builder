@@ -10,6 +10,10 @@ import Foundation
 #if dispatchqueue
 import TealiumCore
 #endif
+#if os(iOS)
+import UIKit
+#else
+#endif
 
 class TealiumDispatchQueueModule: TealiumModule {
 
@@ -23,6 +27,13 @@ class TealiumDispatchQueueModule: TealiumModule {
     var isBatchingEnabled = true
     var batchingBypassKeys: [String]?
     var batchExpirationDays: Int = TealiumDispatchQueueConstants.defaultBatchExpirationDays
+
+    #if os(iOS)
+    class var sharedApplication: UIApplication? {
+        let selector = NSSelectorFromString("sharedApplication")
+        return UIApplication.perform(selector)?.takeUnretainedValue() as? UIApplication
+    }
+    #endif
 
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumDispatchQueueConstants.moduleName,
@@ -145,14 +156,16 @@ class TealiumDispatchQueueModule: TealiumModule {
         persistentQueue.clearQueue()
     }
 
+    // swiftlint:disable function_body_length
     override func track(_ request: TealiumTrackRequest) {
+        defer {
+            if persistentQueue.currentEvents >= self.eventsBeforeAutoDispatch {
+                releaseQueue()
+            }
+        }
         guard isEnabled else {
             didFinishWithNoResponse(request)
             return
-        }
-
-        if persistentQueue.currentEvents >= self.eventsBeforeAutoDispatch {
-            releaseQueue()
         }
 
         let canWrite = diskStorage.canWrite()
@@ -190,6 +203,7 @@ class TealiumDispatchQueueModule: TealiumModule {
         }
 
         guard canQueueRequest(newTrack) else {
+            releaseQueue()
             didFinishWithNoResponse(newTrack)
             return
         }
@@ -207,6 +221,7 @@ class TealiumDispatchQueueModule: TealiumModule {
 
         logQueue(request: newRequest)
     }
+    // swiftlint:enable function_body_length
 
     func logQueue(request: TealiumTrackRequest) {
         let message = """

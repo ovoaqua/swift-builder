@@ -44,10 +44,17 @@ public extension Disk {
     }
 
     /// Volume's available capacity in bytes.
-    static var availableCapacity: Int? {
+    static var availableCapacity: Int64? {
         get {
-            let resourceValues = getVolumeResourceValues(for: .volumeAvailableCapacityKey)
-            return resourceValues?.volumeAvailableCapacity
+            guard let resourceValues = getVolumeResourceValues(for: .volumeAvailableCapacityKey) else {
+                return 0
+            }
+            
+            guard let available = resourceValues.volumeAvailableCapacity, available >= 0 else {
+                return resourceValues.allValues[URLResourceKey.volumeAvailableCapacityKey] as? Int64 ?? 0
+            }
+            
+            return Int64(available)
         }
     }
 

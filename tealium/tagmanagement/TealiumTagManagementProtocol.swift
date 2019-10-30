@@ -19,8 +19,8 @@ public protocol TealiumTagManagementProtocol {
     /// - Parameters:
     ///     - webviewURL: `URL?` (typically for "mobile.html") to be loaded by the webview
     ///     - shouldMigrateCookies: `Bool` indicating whether cookies should be migrated from `HTTPCookieStore` (`UIWebView`).
-    ///     - delegates: `[AnyObject]?` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
-    ///     - view: `UIView? ` - not required by `UIWebView`
+    ///     - delegates: `[AnyObject]?` Array of delegates, downcast from AnyObject to account for any future potential changes in WebView APIs
+    ///     - view: `UIView? `- required `WKWebView`, if one is not provided we attach to the window object
     ///     - completion: completion block to be called when the webview has finished loading
     func enable (webviewURL: URL?,
                  shouldMigrateCookies: Bool,
@@ -66,12 +66,12 @@ public protocol TealiumTagManagementProtocol {
 
     /// Adds optional delegates to the WebView instance.
     ///￼
-    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
+    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AAnyObject to account for any future potential changes in WebView APIs
     func setWebViewDelegates(_ delegates: [AnyObject])
 
     /// Removes optional delegates for the WebView instance.
     ///￼
-    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
+    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject to account for any future potential changes in WebView APIs
     func removeWebViewDelegates(_ delegates: [AnyObject])
 
     /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.

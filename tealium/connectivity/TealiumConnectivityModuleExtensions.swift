@@ -24,6 +24,7 @@ extension TealiumConnectivityModule: TealiumConnectivityDelegate {
 
     /// Called when network connectivity is lost.
     func connectionLost() {
+        TealiumConnectivity.isConnected.value = false
         let report = TealiumReportRequest(message: "Connectivity: Connection lost; queueing dispatches")
         self.delegate?.tealiumModuleRequests(module: self,
                                              process: report)
@@ -31,6 +32,7 @@ extension TealiumConnectivityModule: TealiumConnectivityDelegate {
 
     /// Called when network connectivity is restored.
     func connectionRestored() {
+        TealiumConnectivity.isConnected.value = true
         let report = TealiumReportRequest(message: "Connectivity: Connection restored; releasing queue")
         self.delegate?.tealiumModuleRequests(module: self,
                                              process: report)

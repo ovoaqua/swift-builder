@@ -47,14 +47,7 @@ public class TealiumTagManagementModule: TealiumModule {
     ///￼
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
     override public func enable(_ request: TealiumEnableRequest) {
-
-        if request.config.getShouldUseLegacyWebview() == true {
-            self.tagManagement = TealiumTagManagementUIWebView()
-        } else if #available(iOS 11.0, *) {
-            self.tagManagement = TealiumTagManagementWKWebView()
-        } else {
-            self.tagManagement = TealiumTagManagementUIWebView()
-        }
+        self.tagManagement = TealiumTagManagementWKWebView()
 
         let config = request.config
         enableNotifications()

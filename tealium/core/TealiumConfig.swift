@@ -136,3 +136,15 @@ public extension TealiumConfig {
         self.optionalData[TealiumKey.logLevelConfig] = logLevel
     }
 }
+
+public extension TealiumConfig {
+    /// Sets a known visitor ID. Must be unique (i.e. UUID).
+    /// Should only be used in cases where the user has an existing visitor ID
+    func setExistingVisitorId(_ visitorId: String) {
+        self.optionalData[TealiumKey.visitorId] = visitorId
+    }
+
+    func getExistingVisitorId() -> String? {
+        return self.optionalData[TealiumKey.visitorId] as? String
+    }
+}

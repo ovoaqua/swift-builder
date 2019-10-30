@@ -12,7 +12,7 @@ import XCTest
 
 class TealiumLifecycleTests: XCTestCase {
 
-    var lifecycle: Tealiumlifecycle!
+    var lifecycle: TealiumLifecycle!
 
     override func setUp() {
         super.setUp()
@@ -31,11 +31,8 @@ class TealiumLifecycleTests: XCTestCase {
     func testAllExpectedRegularKeys() {
         _ = lifecycle!.newLaunch(at: Date(),
                                  overrideSession: nil)
-        guard let data = lifecycle!.asDictionary(type: "launch",
-                                                 for: Date()) else {
-            XCTFail("Lifecycle object missing")
-            return
-        }
+        let data = lifecycle.asDictionary(type: "launch",
+                                                 for: Date())
 
         let expectedKeys = ["lifecycle_dayofweek_local",
                             "lifecycle_dayssincelaunch",
@@ -64,11 +61,7 @@ class TealiumLifecycleTests: XCTestCase {
     func testAllExpectedRegularTrackRequestKeys() {
         _ = lifecycle!.newLaunch(at: Date(),
                                  overrideSession: nil)
-        guard let data = lifecycle!.asDictionary(type: "launch",
-                                                 for: Date()) else {
-            XCTFail("Lifecycle object missing")
-            return
-        }
+        let data = lifecycle.asDictionary(type: "launch", for: Date())
 
         let expectedKeys = ["lifecycle_dayofweek_local",
                             "lifecycle_dayssincelaunch",
@@ -157,7 +150,7 @@ class TealiumLifecycleTests: XCTestCase {
         }
         let date = Date(timeIntervalSince1970: 1)
         // get local time from lifecycle module
-        let hour = lifecycle!.hourofdaylocal(for: date)
+        let hour = lifecycle.hourOfDayLocal(for: date)
 
         XCTAssertTrue(hour == expectedHour, "Mismatch in hourOfDayLocal, returned:\(String(describing: hour)), expected:\(expectedHour)")
     }
@@ -182,8 +175,8 @@ class TealiumLifecycleTests: XCTestCase {
 
     func testIsFirstWakeToday3Wakes() {
         let date1 = Date(timeIntervalSince1970: 0)
-        let date2 = Date(timeIntervalSince1970: 86400)
-        let date3 = Date(timeIntervalSince1970: 172800)
+        let date2 = Date(timeIntervalSince1970: 86_400)
+        let date3 = Date(timeIntervalSince1970: 172_800)
         _ = lifecycle!.newWake(at: date1, overrideSession: nil)
         _ = lifecycle!.newWake(at: date2, overrideSession: nil)
         _ = lifecycle!.newWake(at: date3, overrideSession: nil)
@@ -206,7 +199,7 @@ class TealiumLifecycleTests: XCTestCase {
 
     func testIsFirstWakeThisMonthTrue() {
         let date1 = Date(timeIntervalSince1970: 0)
-        let date2 = Date(timeIntervalSince1970: 2678401)
+        let date2 = Date(timeIntervalSince1970: 2_678_401)
         _ = lifecycle!.newWake(at: date1, overrideSession: nil)
         _ = lifecycle!.newWake(at: date2, overrideSession: nil)
 

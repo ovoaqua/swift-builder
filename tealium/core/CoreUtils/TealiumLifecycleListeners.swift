@@ -39,26 +39,26 @@ public class TealiumLifecycleListeners {
     }
 
     /// Notifies listeners of a launch event.
-    func launch() {
+    public func launch() {
         hasLaunched = true
         launchDate = Date()
         guard let launchDate = launchDate else {
             return
         }
-        listeningDelegates?.invoke {
+        listeningDelegates.invoke {
             $0.launch(at: launchDate)
         }
     }
 
     /// Notifies listeners of a sleep event.
-    func sleep() {
+    public func sleep() {
         listeningDelegates.invoke {
             $0.sleep()
         }
     }
 
     /// Notifies listeners of a wake event.
-    func wake() {
+    public func wake() {
         listeningDelegates.invoke {
             $0.wake()
         }

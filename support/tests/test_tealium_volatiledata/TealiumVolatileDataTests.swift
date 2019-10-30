@@ -86,7 +86,7 @@ class TealiumVolatileDataTests: XCTestCase {
                 let matches = regex.numberOfMatches(in: random, options: [], range: NSRange(location: 0, length: random.count))
                 print("matches here is : \(matches)")
                 if matches != 1 {
-                    print ("random number is :::: \(random)")
+                    print("random number is :::: \(random)")
                     XCTFail("Random number is not a 16 digits long")
                 }
                 randomNumbers.append(random)

@@ -124,11 +124,8 @@ class TestTealiumHelper {
             "logger",
             "lifecycle",
             "autotracking",
-            "filestorage",
-            "defaultsstorage",
             "attribution",
             "appdata",
-            "datasource",
             "devicedata",
             "persistentdata",
             "volatiledata",
@@ -140,17 +137,14 @@ class TestTealiumHelper {
             //            "crash", // crash is excluded; separate tests exist for crash
             "consentmanager",
             "dispatchqueue",
-            "visitorprofile",
+            "visitorservice",
         ]
         #elseif os(tvOS)
         return [
             "logger",
             "lifecycle",
             "autotracking",
-            "filestorage",
-            "defaultsstorage",
             "appdata",
-            "datasource",
             "devicedata",
             "persistentdata",
             "volatiledata",
@@ -159,16 +153,12 @@ class TestTealiumHelper {
             "collect",
             "consentmanager",
             "dispatchqueue",
-            "visitorprofile",
+            "visitorservice",
         ]
         #else
             return [
                 "logger",
                 "lifecycle",
-                // "autotracking",
-                "filestorage",
-                "defaultsstorage",
-                // "attribution",
                 "appdata",
                 "datasource",
                 "devicedata",
@@ -177,10 +167,9 @@ class TestTealiumHelper {
                 "delegate",
                 "connectivity",
                 "collect",
-                // "tagmanagement",
                 "consentmanager",
                 "dispatchqueue",
-                "visitorprofile",
+                "visitorservice"
             ]
         #endif
     }

@@ -32,7 +32,7 @@ public extension TealiumConfig {
 
     /// Gets array of optional webview delegates from the `TealiumConfig` instance.
     ///
-    /// - Returns: `[AnyObject]` representing either a `UIWebViewDelegate` or `WKNavigationDelegate`
+    /// - Returns: `[AnyObject]` representing `WKNavigationDelegate` or any future updated WebView delegate
     func getWebViewDelegates() -> [AnyObject]? {
         return optionalData[TealiumTagManagementConfigKey.delegate] as? [AnyObject]
     }
@@ -42,20 +42,6 @@ public extension TealiumConfig {
     /// - Parameter string: `String` representing the URL to be loaded by the webview. Must be a valid URL
     func setTagManagementOverrideURL(string: String) {
         optionalData[TealiumTagManagementConfigKey.overrideURL] = string
-    }
-
-    /// Optional override to force the legacy `UIWebView` to be used instead of `WKWebView`.
-    ///￼
-    /// - Parameter useLegacyWebview: `Bool` (`true` if legacy webview should be used)
-    func setShouldUseLegacyWebview(_ shouldUse: Bool) {
-        optionalData[TealiumTagManagementConfigKey.shouldUseLegacyWebview] = shouldUse
-    }
-
-    /// Checks for config override for legacy `UIWebView`.
-    ///
-    /// - Returns: `Bool` (`true` if legacy webview should be used)
-    func getShouldUseLegacyWebview() -> Bool {
-        return optionalData[TealiumTagManagementConfigKey.shouldUseLegacyWebview] as? Bool ?? false
     }
 
     /// Gets the URL to be loaded by the webview (mobile.html).
@@ -88,7 +74,7 @@ public extension TealiumConfig {
 #else
 public extension Tealium {
 
-    /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+, `UIWebView` for iOS <11)
+    /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
     func tagManagement() -> TealiumTagManagementProtocol? {
         guard let module = modulesManager.getModule(forName: TealiumTagManagementKey.moduleName) as? TealiumTagManagementModule else {
             return nil

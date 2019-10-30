@@ -14,6 +14,7 @@
 @testable import TealiumDeviceData
 @testable import TealiumLogger
 @testable import TealiumPersistentData
+@testable import TealiumVisitorService
 import XCTest
 
 class TealiumModulesTest: XCTestCase {

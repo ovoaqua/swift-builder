@@ -14,7 +14,6 @@ import TealiumCore
 public class TealiumVisitorServiceModule: TealiumModule {
 
     var visitorProfileManager: TealiumVisitorProfileManagerProtocol?
-    var ready = false
     var diskStorage: TealiumDiskStorageProtocol!
     var visitorId: String?
     var firstEventSent = false
@@ -58,7 +57,7 @@ public class TealiumVisitorServiceModule: TealiumModule {
         isEnabled = true
         guard visitor != nil else {
             visitorProfileManager = TealiumVisitorProfileManager(config: request.config,
-                                                                 delegates: request.config.getVisitorProfileDelegates(),
+                                                                 delegates: request.config.getVisitorServiceDelegates(),
                                                                  diskStorage: self.diskStorage)
 
             self.didFinish(request)

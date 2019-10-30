@@ -18,13 +18,16 @@ public class TealiumAppData: TealiumAppDataProtocol, TealiumAppDataCollection {
     private var bundle: Bundle
     var appData = VolatileAppData()
     var migrator: TealiumLegacyMigratorProtocol.Type
+    var existingVisitorId: String?
 
     init(diskStorage: TealiumDiskStorageProtocol,
          bundle: Bundle = Bundle.main,
-         legacyMigrator: TealiumLegacyMigratorProtocol.Type = TealiumLegacyMigrator.self) {
+         legacyMigrator: TealiumLegacyMigratorProtocol.Type = TealiumLegacyMigrator.self,
+         existingVisitorId: String? = nil) {
         self.migrator = legacyMigrator
         self.bundle = bundle
         self.diskStorage = diskStorage
+        self.existingVisitorId = existingVisitorId
         setExistingAppData()
     }
 
@@ -88,9 +91,9 @@ public class TealiumAppData: TealiumAppDataProtocol, TealiumAppDataCollection {
     /// - Parameter uuid: The uuid string to use for new persistent data.
     /// - Returns: `[String:Any]`
     func newPersistentData(for uuid: String) -> PersistentAppData {
-        let vid = visitorId(from: uuid)
-        let persistentData = PersistentAppData(visitorId: vid, uuid: uuid)
-        diskStorage.saveToDefaults(key: TealiumKey.visitorId, value: vid)
+        let visitorId = existingVisitorId ?? self.visitorId(from: uuid)
+        let persistentData = PersistentAppData(visitorId: visitorId, uuid: uuid)
+        diskStorage.saveToDefaults(key: TealiumKey.visitorId, value: visitorId)
         diskStorage?.save(persistentData, completion: nil)
         return persistentData
     }
@@ -132,6 +135,13 @@ public class TealiumAppData: TealiumAppDataProtocol, TealiumAppDataCollection {
         }
 
         appData.persistentData = data
+        if let existingVisitorId = self.existingVisitorId,
+            let persistentData = appData.persistentData {
+            let newPersistentData = PersistentAppData(visitorId: existingVisitorId, uuid: persistentData.uuid)
+            diskStorage.saveToDefaults(key: TealiumKey.visitorId, value: existingVisitorId)
+            diskStorage.save(newPersistentData, completion: nil)
+            self.appData.persistentData = newPersistentData
+        }
         newVolatileData()
     }
 }

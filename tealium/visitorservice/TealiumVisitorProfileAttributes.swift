@@ -61,11 +61,11 @@ public extension Badges {
 public typealias Dates = [DateTime]
 public struct DateTime: Codable {
     public let id: String
-    public let value: Int
+    public let value: Int64
 }
 
 public extension Dates {
-    init(from dictionary: [String: Int]) {
+    init(from dictionary: [String: Int64]) {
         var dates = [DateTime]()
         dictionary.forEach {
             dates.append(DateTime(id: $0.key, value: $0.value))
@@ -73,8 +73,8 @@ public extension Dates {
         self = dates
     }
 
-    subscript(id: String) -> Int? {
-        var value: Int?
+    subscript(id: String) -> Int64? {
+        var value: Int64?
         self.forEach { date in
             if date.id == id {
                 value = date.value
@@ -110,19 +110,19 @@ public extension Booleans {
     }
 }
 
-public typealias ArrayOfBooleans = [BooleanArray]
-public struct BooleanArray: Codable {
+public typealias ArraysOfBooleans = [ArrayOfBooleans]
+public struct ArrayOfBooleans: Codable {
     public let id: String
     public let value: [Bool]
 }
 
-public extension ArrayOfBooleans {
+public extension ArraysOfBooleans {
     init(from dictionary: [String: [Bool]]) {
-        var arrayOfBools = [BooleanArray]()
+        var arraysOfBools = [ArrayOfBooleans]()
         dictionary.forEach {
-            arrayOfBools.append(BooleanArray(id: $0.key, value: $0.value))
+            arraysOfBools.append(ArrayOfBooleans(id: $0.key, value: $0.value))
         }
-        self = arrayOfBools
+        self = arraysOfBools
     }
 
     subscript(id: String) -> [Bool]? {
@@ -162,19 +162,19 @@ public extension Numbers {
     }
 }
 
-public typealias ArrayOfNumbers = [NumberArray]
-public struct NumberArray: Codable {
+public typealias ArraysOfNumbers = [ArrayOfNumbers]
+public struct ArrayOfNumbers: Codable {
     public let id: String
     public let value: [Double]
 }
 
-public extension ArrayOfNumbers {
+public extension ArraysOfNumbers {
     init(from dictionary: [String: [Double]]) {
-        var arrayOfNumbers = [NumberArray]()
+        var arraysOfNumbers = [ArrayOfNumbers]()
         dictionary.forEach {
-            arrayOfNumbers.append(NumberArray(id: $0.key, value: $0.value))
+            arraysOfNumbers.append(ArrayOfNumbers(id: $0.key, value: $0.value))
         }
-        self = arrayOfNumbers
+        self = arraysOfNumbers
     }
 
     subscript(id: String) -> [Double]? {
@@ -304,19 +304,19 @@ public extension SetsOfStrings {
     }
 }
 
-public typealias ArrayOfStrings = [StringArray]
-public struct StringArray: Codable {
+public typealias ArraysOfStrings = [ArrayOfStrings]
+public struct ArrayOfStrings: Codable {
     public let id: String
     public let value: [String]
 }
 
-public extension ArrayOfStrings {
+public extension ArraysOfStrings {
     init(from dictionary: [String: [String]]) {
-        var arrayOfStrings = [StringArray]()
+        var arraysOfStrings = [ArrayOfStrings]()
         dictionary.forEach {
-            arrayOfStrings.append(StringArray(id: $0.key, value: $0.value))
+            arraysOfStrings.append(ArrayOfStrings(id: $0.key, value: $0.value))
         }
-        self = arrayOfStrings
+        self = arraysOfStrings
     }
 
     subscript(id: String) -> [String]? {

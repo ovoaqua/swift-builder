@@ -22,7 +22,10 @@ extension TealiumDeviceData {
         }
         var sysinfo = utsname()
         uname(&sysinfo) // ignore return value
-        return String(bytes: Data(bytes: &sysinfo.machine, count: Int(_SYS_NAMELEN)), encoding: .ascii)!.trimmingCharacters(in: .controlCharacters)
+        guard let model = String(bytes: Data(bytes: &sysinfo.machine, count: Int(_SYS_NAMELEN)), encoding: .ascii) else {
+            return ""
+        }
+        return model.trimmingCharacters(in: .controlCharacters)
     }
 
     /// Retrieves device name mapping from JSON file in app bundle.

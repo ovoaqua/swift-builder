@@ -13,7 +13,6 @@ import TealiumCore
 #endif
 
 // MARK: Cookie migration from HTTPCookieStore/UIWebView
-@available(iOS 11.0, *)
 extension TealiumTagManagementWKWebView {
 
     /// Migrates cookies from HTTPCookieStore to a specified WKWebView instance
@@ -38,9 +37,11 @@ extension TealiumTagManagementWKWebView {
         }
 
         allCookies.forEach { cookie in
-            dispatchGroup.enter()
-            webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie) {
-                dispatchGroup.leave()
+            if #available(iOS 11.0, *) {
+                dispatchGroup.enter()
+                webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie) {
+                    dispatchGroup.leave()
+                }
             }
         }
 

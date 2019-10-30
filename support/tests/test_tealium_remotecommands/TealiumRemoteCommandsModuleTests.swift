@@ -84,7 +84,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
         let notification = Notification(name: Notification.Name(TealiumKey.tagmanagementNotification),
                                         object: nil,
                                         userInfo: [TealiumKey.tagmanagementNotification: urlRequest])
-        module.trigger(sender: notification)
+        module.remoteCommands!.triggerCommandFrom(notification: notification)
 
         waitForExpectations(timeout: 5.0, handler: nil)
 

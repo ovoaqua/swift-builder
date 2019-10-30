@@ -20,7 +20,6 @@ public enum WebViewState: Int {
     case notYetLoaded = 3
 }
 
-@available(iOS 11.0, *)
 public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
 
     var webview: WKWebView?
@@ -40,8 +39,8 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
     /// - Parameters:
     ///     - webviewURL: `URL?` (typically for "mobile.html") to be loaded by the webview
     ///     - shouldMigrateCookies: `Bool` indicating whether cookies should be migrated from `HTTPCookieStore` (`UIWebView`).
-    ///     - delegates: `[AnyObject]?` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
-    ///     - view: `UIView? ` - not required by `UIWebView`
+    ///     - delegates: `[AnyObject]?` Array of delegates, downcast fromAnyObject to account for any future potential changes in WebView APIs
+    ///     - view: `UIView? ` - required `WKWebView`, if one is not provided we attach to the window object
     ///     - completion: completion block to be called when the webview has finished loading
     public func enable(webviewURL: URL?,
                        shouldMigrateCookies: Bool,
@@ -76,7 +75,7 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
 
     /// Adds optional delegates to the WebView instance.
     ///￼
-    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
+    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject to account for any future potential changes in WebView APIs
     public func setWebViewDelegates(_ delegates: [AnyObject]) {
         delegates.forEach { delegate in
             if let delegate = delegate as? WKNavigationDelegate {
@@ -87,7 +86,7 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
 
     /// Removes optional delegates for the WebView instance.
     ///￼
-    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject due to different delegate APIs for UIWebView and WKWebView
+    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject to account for any future potential changes in WebView APIs
     public func removeWebViewDelegates(_ delegates: [AnyObject]) {
         delegates.forEach { delegate in
             if let delegate = delegate as? WKNavigationDelegate {
@@ -105,7 +104,9 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
                       withSpecificView specificView: UIView?) {
         TealiumQueues.mainQueue.async {
             // required to force cookies to sync
-            WKWebsiteDataStore.default().httpCookieStore.add(self)
+            if #available(iOS 11, *) {
+                WKWebsiteDataStore.default().httpCookieStore.add(self)
+            }
             let config = WKWebViewConfiguration()
             self.webview = WKWebView(frame: .zero, configuration: config)
             self.webview?.navigationDelegate = self
@@ -275,13 +276,17 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
 
     /// Called when the module needs to disable the webview.
     public func disable() {
-        webview?.stopLoading()
-        webview = nil
+        TealiumQueues.mainQueue.async {
+            self.webview?.stopLoading()
+            self.webview = nil
+        }
     }
 
     deinit {
-        webview?.stopLoading()
-        webview?.navigationDelegate = nil
-        webview = nil
+        TealiumQueues.mainQueue.async {
+            self.webview?.stopLoading()
+            self.webview?.navigationDelegate = nil
+            self.webview = nil
+        }
     }
 }

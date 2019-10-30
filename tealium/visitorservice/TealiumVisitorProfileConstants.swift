@@ -14,7 +14,7 @@ enum TealiumVisitorProfileConstants {
     static let enableVisitorProfile = "enable_visitor_profile"
     static let pollingInterval = 5.0
     static let eventCountMetric = "22"
-    static let defaultRefreshInterval = 5
+    static let defaultRefreshInterval: Int64 = 5
     static let visitorProfileDelegate = "visitor_profile_delegate"
 }
 
@@ -26,6 +26,7 @@ public enum AttributeScope {
 public enum NetworkError: Error {
     case couldNotCreateSession
     case unknownResponseType
+    case noInternet
     case xErrorDetected
     case non200Response
     case noDataToTrack

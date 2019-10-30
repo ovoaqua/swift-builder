@@ -13,6 +13,7 @@
 @testable import TealiumDelegate
 @testable import TealiumDeviceData
 @testable import TealiumLogger
+@testable import TealiumVisitorService
 import XCTest
 #if os(iOS)
 @testable import TealiumCrashReporteriOS

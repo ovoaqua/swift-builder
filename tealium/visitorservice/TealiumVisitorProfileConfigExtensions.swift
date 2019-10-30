@@ -13,17 +13,17 @@ import TealiumCore
 
 public extension TealiumConfig {
 
-    func setVisitorProfileRefresh(interval: Int) {
+    func setVisitorServiceRefresh(interval: Int64) {
         optionalData[TealiumVisitorProfileConstants.refreshInterval] = interval
     }
 
-    func addVisitorProfileDelegate(_ delegate: TealiumVisitorProfileDelegate) {
-        var delegates = getVisitorProfileDelegates() ?? [TealiumVisitorProfileDelegate]()
+    func addVisitorServiceDelegate(_ delegate: TealiumVisitorServiceDelegate) {
+        var delegates = getVisitorServiceDelegates() ?? [TealiumVisitorServiceDelegate]()
         delegates.append(delegate)
         optionalData[TealiumVisitorProfileConstants.visitorProfileDelegate] = delegates
     }
 
-    func getVisitorProfileDelegates() -> [TealiumVisitorProfileDelegate]? {
-        return optionalData[TealiumVisitorProfileConstants.visitorProfileDelegate] as? [TealiumVisitorProfileDelegate]
+    func getVisitorServiceDelegates() -> [TealiumVisitorServiceDelegate]? {
+        return optionalData[TealiumVisitorProfileConstants.visitorProfileDelegate] as? [TealiumVisitorServiceDelegate]
     }
 }

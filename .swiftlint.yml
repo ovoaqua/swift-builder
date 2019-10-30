@@ -8,8 +8,8 @@ excluded:
 disabled_rules:
   - trailing_comma
   - unused_optional_binding
-opt_in_rules:
   - file_header
+opt_in_rules:
   - explicit_init
   - closure_spacing
   - overridden_super_call

@@ -56,7 +56,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         // wake event should not be queued
         let wakeRequest = TealiumTrackRequest(data: ["tealium_event": "wake"], completion: nil)
         module.track(wakeRequest)
-        XCTAssertEqual(module.persistentQueue.currentEvents, 2)
+        XCTAssertEqual(module.persistentQueue.currentEvents, 3)
     }
 
     func testQueue() {
@@ -102,7 +102,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     func testCanQueueRequest() {
         let module = TealiumDispatchQueueModule(delegate: nil)
         module.diskStorage = diskStorage
-        XCTAssertFalse(module.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "wake"], completion: nil)))
+        XCTAssertFalse(module.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "grant_full_consent"], completion: nil)))
         XCTAssertTrue(module.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "view"], completion: nil)))
         module.batchingBypassKeys = ["view"]
         XCTAssertFalse(module.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "view"], completion: nil)))

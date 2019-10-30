@@ -102,8 +102,6 @@ class TealiumModules {
             "TealiumDeviceData.TealiumDeviceDataModule",
             "TealiumLifecycleModule",
             "TealiumLifecycle.TealiumLifecycleModule",
-            "TealiumLocationModule",
-            "TealiumLocation.TealiumLocationModule",
             "TealiumLoggerModule",
             "TealiumLogger.TealiumLoggerModule",
             "TealiumPersistentData.TealiumPersistentDataModule",

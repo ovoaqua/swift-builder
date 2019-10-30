@@ -18,7 +18,7 @@ open class TealiumRemoteCommand {
     let commandId: String
     weak var delegate: TealiumRemoteCommandDelegate?
     var description: String?
-
+    static var urlSession: URLSessionProtocol = URLSession.shared
     let remoteCommandCompletion: ((_ response: TealiumRemoteCommandResponse) -> Void)
 
     /// Constructor for a Tealium Remote Command.
@@ -26,6 +26,7 @@ open class TealiumRemoteCommand {
     /// - Parameters:
     ///     - commandId: `String` identifier for command block.
     ///     - description: `String?` description of command.
+    ///     - urlSession: `URLSessionProtocol`
     ///     - completion: The completion block to run when this remote command is triggered.
     public init(commandId: String,
                 description: String?,

@@ -50,7 +50,7 @@ class TealiumAppDataModule: TealiumModule {
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumAppDataKey.moduleName, isCritical: true)
         }
-        self.appData = self.appData ?? TealiumAppData(diskStorage: self.diskStorage)
+        self.appData = self.appData ?? TealiumAppData(diskStorage: self.diskStorage, existingVisitorId: request.config.getExistingVisitorId())
         isEnabled = true
 
         didFinish(request)

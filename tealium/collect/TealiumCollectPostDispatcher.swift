@@ -30,7 +30,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     ///     - urlSession: `URLSession` to use for the dispatch (overridable for unit tests)￼
     ///     - completion: Completion handler to run when the dispatcher has finished initializing
     init(dispatchURL: String,
-         urlSession: URLSessionProtocol = URLSession.shared,
+         urlSession: URLSessionProtocol = TealiumCollectPostDispatcher.getURLSession(),
          completion: ((_ success: Bool, _ error: TealiumCollectError) -> Void)? = nil) {
         if TealiumCollectPostDispatcher.isValidUrl(url: dispatchURL) {
             // if using a custom endpoint, we recommend disabling batching, otherwise custom endpoint must handle batched events using Tealium's proprietary format
@@ -46,6 +46,11 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
             completion?(false, .invalidDispatchURL)
         }
         self.urlSession = urlSession
+    }
+
+    class func getURLSession() -> URLSession {
+        let config = URLSessionConfiguration.ephemeral
+        return URLSession(configuration: config)
     }
 
     /// Gets the hostname from a url￼.
@@ -114,7 +119,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
                         _ completion: TealiumCompletion?) {
         if let urlSession = self.urlSession {
             let task = urlSession.dataTask(with: request) { _, response, error in
-                if let error = error {
+                if let error = error as? URLError {
                     completion?(false, nil, error)
                 } else if let status = response as? HTTPURLResponse {
                     // error only indicates "no response from server. 400 responses are considered successful

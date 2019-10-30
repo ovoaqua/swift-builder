@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import TealiumCore
 
 enum TealiumDispatchQueueConstants {
     static let defaultMaxQueueSize = 40
@@ -26,10 +27,9 @@ enum TealiumDispatchQueueConstants {
 // These events will not be subject to batching
 enum BypassDispatchQueueKeys: String, CaseIterable {
     case lifecycleLaunch = "launch"
-    case lifecycleWake = "wake"
-    case lifecycleSleep = "sleep"
     case fullConsentGranted = "grant_full_consent"
     case partialConsentGranted = "grant_partial_consent"
     case consentDenied = "decline_consent"
     case updateConsentCookie = "update_consent_cookie"
+    case killVisitorSession = "kill_visitor_session"
 }

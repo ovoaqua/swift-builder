@@ -11,10 +11,10 @@ import Foundation
 import TealiumCore
 #endif
 
-extension Int {
+extension Int64 {
 
     /// Converts minutes to milliseconds
-    var milliseconds: Int {
+    var milliseconds: Int64 {
         return self * 60 * 1000
     }
 }

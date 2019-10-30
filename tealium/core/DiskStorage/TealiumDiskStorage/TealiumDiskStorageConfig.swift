@@ -13,13 +13,13 @@ public extension TealiumConfig {
     /// Sets the minimum free disk space on the device for Disk Storage to be enabled
     ///
     /// - Parameter spaceInMB: `Int` containing the minimum amount for free space in Megabytes (default 20MB)
-    func setMinimumFreeDiskSpace(spaceInMB: Int) {
+    func setMinimumFreeDiskSpace(spaceInMB: Int32) {
         optionalData[TealiumKey.minimumFreeDiskSpace] = spaceInMB * 1_000_000
     }
 
     /// - Returns: `Int` containing the minimum free space in Megabytes allowed for Disk Storage to be enabled
-    func getMinimumFreeDiskSpace() -> Int {
-        return optionalData[TealiumKey.minimumFreeDiskSpace] as? Int ?? TealiumValue.defaultMinimumDiskSpace
+    func getMinimumFreeDiskSpace() -> Int32 {
+        return optionalData[TealiumKey.minimumFreeDiskSpace] as? Int32 ?? TealiumValue.defaultMinimumDiskSpace
     }
 
     /// Enables (default) or disables disk storage.
@@ -35,6 +35,14 @@ public extension TealiumConfig {
     /// - Returns:`Bool` indicating if disk storage is enabled (default) or disabled
     func isDiskStorageEnabled() -> Bool {
         return self.optionalData[TealiumKey.diskStorageEnabled] as? Bool ?? true
+    }
+    
+    func setOverrideDiskStorageDirectory(_ directory: Disk.Directory) {
+        self.optionalData[TealiumKey.diskStorageDirectory] = directory
+    }
+    
+    func getOverrideDiskStorageDirectory() -> Disk.Directory? {
+        return self.optionalData[TealiumKey.diskStorageDirectory] as? Disk.Directory ?? nil
     }
 
 }

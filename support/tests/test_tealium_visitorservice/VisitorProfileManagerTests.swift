@@ -44,8 +44,8 @@ class TealiumVisitorProfileManagerTests: XCTestCase {
 
     func testInitialVisitorProfileSettingsFromConfig() {
             let config = tealHelper.getConfig()
-            config.setVisitorProfileRefresh(interval: 10)
-                let interval = config.optionalData[TealiumVisitorProfileConstants.refreshInterval] as! Int
+            config.setVisitorServiceRefresh(interval: 10)
+                let interval = config.optionalData[TealiumVisitorProfileConstants.refreshInterval] as! Int64
                 XCTAssertEqual(interval, 10)
 
     }
@@ -54,7 +54,7 @@ class TealiumVisitorProfileManagerTests: XCTestCase {
         let expectation = self.expectation(description: "testDelegateDidUpdateViaRequestVisitorProfile")
         currentTest = "testDelegateDidUpdateViaRequestVisitorProfile"
         expectations.append(expectation)
-        visitorProfileManager?.addVisitorProfileDelegate(self)
+        visitorProfileManager?.addVisitorServiceDelegate(self)
         visitorProfileManager?.visitorId = "test"
         visitorProfileManager?.requestVisitorProfile()
         waiter.wait(for: expectations, timeout: 5.0)
@@ -103,7 +103,7 @@ class TealiumVisitorProfileManagerTests: XCTestCase {
 
 }
 
-extension TealiumVisitorProfileManagerTests: TealiumVisitorProfileDelegate {
+extension TealiumVisitorProfileManagerTests: TealiumVisitorServiceDelegate {
 
     func profileDidUpdate(profile: TealiumVisitorProfile?) {
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {

@@ -164,6 +164,10 @@ class TealiumCollectModule: TealiumModule {
         collect.dispatchBulk(data: compressed) { success, info, error in
 
             guard success else {
+                let localError = error ?? TealiumCollectError.unknownIssueWithSend
+                self.didFailToFinish(request,
+                                     info: info,
+                                     error: localError)
                 let logRequest = TealiumReportRequest(message: "Batch track request failed. Error: \(error?.localizedDescription ?? "unknown")")
                 self.delegate?.tealiumModuleRequests(module: self, process: logRequest)
                 return
@@ -204,10 +208,28 @@ class TealiumCollectModule: TealiumModule {
         var response = TealiumModuleResponse(moduleName: type(of: self).moduleConfig().name,
                                              success: false,
                                              error: error)
-        response.info = info
-        newRequest.moduleResponses.append(response)
-        delegate?.tealiumModuleFinished(module: self,
-                                        process: newRequest)
+        if let error = error as? URLError,
+        error.code == URLError.notConnectedToInternet || error.code == URLError.networkConnectionLost || error.code == URLError.timedOut {
+
+            switch request {
+            case let request as TealiumTrackRequest:
+                let enqueueRequest = TealiumEnqueueRequest(data: request, queueReason: "connectivity", completion: nil)
+                delegate?.tealiumModuleRequests(module: self, process: enqueueRequest)
+            case let request as TealiumBatchTrackRequest:
+                let enqueueRequest = TealiumEnqueueRequest(data: request, queueReason: "connectivity", completion: nil)
+                delegate?.tealiumModuleRequests(module: self, process: enqueueRequest)
+            default:
+                return
+            }
+
+            let connectivityRequest = TealiumConnectivityRequest(status: .notReachable)
+            delegate?.tealiumModuleRequests(module: self, process: connectivityRequest)
+        } else {
+            response.info = info
+            newRequest.moduleResponses.append(response)
+            delegate?.tealiumModuleFinished(module: self,
+                                            process: newRequest)
+        }
     }
 
     /// Disables the module￼.

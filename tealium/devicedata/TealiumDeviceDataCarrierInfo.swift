@@ -17,7 +17,9 @@ extension TealiumDeviceData {
     /// - Returns: `[String: String]` containing current network carrier info
     class func carrierInfo() -> [String: String] {
         // only available on iOS
-        var carrierInfo = [String: String]()
+        var carrierInfo: [String: String]
+        // avoiding direct assignment to suppress spurious compiler warning (never mutated)
+        carrierInfo = [String: String]()
         #if os(iOS)
         // beginning in iOS 12, Xcode generates lots of errors
         // when calling CTTelephonyNetworkInfo from the simulator

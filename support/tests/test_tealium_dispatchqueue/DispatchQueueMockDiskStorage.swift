@@ -11,14 +11,13 @@ import Foundation
 @testable import TealiumDispatchQueue
 
 class DispatchQueueMockDiskStorage: TealiumDiskStorageProtocol {
-    func append(_ data: [String : Any], fileName: String, completion: TealiumCompletion?) {
-        
+    func append(_ data: [String: Any], fileName: String, completion: TealiumCompletion?) {
+
     }
-    
-    func update<T>(value: Any, for key: String, as type: T.Type, completion: TealiumCompletion?) where T : Decodable, T : Encodable {
-        
+
+    func update<T>(value: Any, for key: String, as type: T.Type, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
+
     }
-    
 
     var dispatchQueueData: [TealiumTrackRequest]! = [TealiumTrackRequest]()
 

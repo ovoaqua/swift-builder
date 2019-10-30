@@ -46,7 +46,8 @@ public class TealiumVisitorProfileRetriever {
     /// - Returns: `URLSession` - `ephemeral` session to avoid sending cookies to UDH.
     /// If default session were used, previously-set TAPID cookies may be transmitted, which would override the default visitor ID
     class func getURLSession() -> URLSession {
-        return URLSession(configuration: .ephemeral)
+        let config = URLSessionConfiguration.ephemeral
+        return URLSession(configuration: config)
     }
 
     /// Sends a URLRequest, then calls the completion handler, passing success/failures back to the completion handler
@@ -60,9 +61,16 @@ public class TealiumVisitorProfileRetriever {
             completion(.failure(.couldNotCreateSession))
             return
         }
+        var request = request
+        request.addValue("com.tealium.myapp", forHTTPHeaderField: "referer")
         urlSession.dataTask(with: request) { data, response, error in
-            if let _ = error {
-                completion(.failure(.unknownIssueWithSend))
+            guard error == nil else {
+                if let error = error as? URLError, error.code == URLError.notConnectedToInternet || error.code == URLError.networkConnectionLost || error.code == URLError.timedOut {
+                    completion(.failure(.noInternet))
+                } else {
+                    completion(.failure(.unknownIssueWithSend))
+                }
+                return
             }
             if let status = response as? HTTPURLResponse {
                  if let _ = status.allHeaderFields[TealiumKey.errorHeaderKey] as? String {
@@ -83,7 +91,7 @@ public class TealiumVisitorProfileRetriever {
 
     /// Should fetch visitor profile based on interval set in the config or defaults to every 5 minutes
     var shouldFetchVisitorProfile: Bool {
-        guard let refresh = tealiumConfig.optionalData[TealiumVisitorProfileConstants.refreshInterval] as? Int else {
+        guard let refresh = tealiumConfig.optionalData[TealiumVisitorProfileConstants.refreshInterval] as? Int64 else {
             return shouldFetch(basedOn: lastFetch, interval: TealiumVisitorProfileConstants.defaultRefreshInterval.milliseconds, environment: tealiumConfig.environment)
         }
         return shouldFetch(basedOn: lastFetch, interval: refresh.milliseconds, environment: tealiumConfig.environment)
@@ -94,8 +102,8 @@ public class TealiumVisitorProfileRetriever {
     /// - Parameters:
     ///   - lastFetch: The date the visitor profile was last retrieved
     ///   - currentDate: The current date/timestamp in milliseconds
-    /// - Returns: Int - milliseconds since last fetch
-    func intervalSince(lastFetch: Date, _ currentDate: Date = Date()) -> Int {
+    /// - Returns: `Int64` - milliseconds since last fetch
+    func intervalSince(lastFetch: Date, _ currentDate: Date = Date()) -> Int64 {
         return currentDate.millisecondsFrom(earlierDate: lastFetch)
     }
 
@@ -109,7 +117,7 @@ public class TealiumVisitorProfileRetriever {
     ///   - environment: The environment set in TealiumConfig
     /// - Returns: `Bool` - whether or not the profile should be fetched
     func shouldFetch(basedOn lastFetch: Date?,
-                     interval: Int?,
+                     interval: Int64?,
                      environment: String) -> Bool {
         guard let lastFetch = lastFetch else {
             return true

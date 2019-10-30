@@ -123,7 +123,7 @@ class TealiumConnectivityModuleTests: XCTestCase {
         let module = TealiumConnectivityModule(delegate: nil)
         let config = TestTealiumHelper().getConfig()
         let testInterval = 5
-        config.setConnectivityRefreshInterval(interval: testInterval)
+        config.setConnectivityRefreshInterval(testInterval)
         let request = TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil)
         module.enable(request)
         module.isEnabled = true

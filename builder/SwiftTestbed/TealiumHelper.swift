@@ -53,7 +53,6 @@ class TealiumHelper: NSObject {
         config.setConsentLoggingEnabled(true)
         config.setSearchAdsEnabled(true)
         config.setInitialUserConsentStatus(.consented)
-        config.setShouldUseLegacyWebview(true)
         config.setBatchSize(5)
         config.setDispatchAfter(numberOfEvents: 5)
         config.setMaxQueueSize(200)
@@ -69,10 +68,10 @@ class TealiumHelper: NSObject {
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: ["autotracking", "tagmanagement"])
+                                      moduleNames: ["autotracking",])
         config.setModulesList(list)
         config.setDiskStorageEnabled(isEnabled: true)
-        config.addVisitorProfileDelegate(self)
+        config.addVisitorServiceDelegate(self)
         #endif
         #if os(iOS)
         
@@ -93,8 +92,6 @@ class TealiumHelper: NSObject {
         tealium = Tealium(config: config) { response in
         // Optional processing post init.
         // Optionally, join a trace. Trace ID must be generated server-side in UDH.
-//            self.tealium?.joinTrace(traceId: "01234")
-//            self.tealium?.leaveTrace()
 //        self.tealium?.leaveTrace(killVisitorSession: true)
         self.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
             
@@ -102,7 +99,7 @@ class TealiumHelper: NSObject {
             
                             self.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
                             self.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
-//                            self.tealium?.consentManager()?.setUserConsentStatus( .consented)
+
         }
     }
 
@@ -128,7 +125,15 @@ class TealiumHelper: NSObject {
         })
 
     }
+    
+    func joinTrace(_ traceID: String) {
+        self.tealium?.joinTrace(traceId: traceID)
+    }
 
+    func leaveTrace() {
+        self.tealium?.leaveTrace()
+    }
+    
     func crash() {
         NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
     }
@@ -148,7 +153,7 @@ extension TealiumHelper: TealiumDelegate {
     }
 }
 
-extension TealiumHelper: TealiumVisitorProfileDelegate {
+extension TealiumHelper: TealiumVisitorServiceDelegate {
     func profileDidUpdate(profile: TealiumVisitorProfile?) {
         guard let profile = profile else {
             return

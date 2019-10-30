@@ -65,6 +65,10 @@ public extension TealiumConnectivity {
         }
         timer = TealiumRepeatingTimer(timeInterval: timeInterval, dispatchQueue: queue)
         timer?.eventHandler = {
+            #if os(watchOS)
+            TealiumConnectivity.isConnected = Atomic(value: true)
+            self.connectionRestored()
+            #else
             let connected = TealiumConnectivity.isConnectedToNetwork()
             if let connectionType = TealiumConnectivity.connectionType {
                 if connectionType != self.currentConnectivityType {
@@ -81,6 +85,7 @@ public extension TealiumConnectivity {
                     self.connectionLost()
                 }
             }
+            #endif
             TealiumConnectivity.currentConnectionStatus = TealiumConnectivity.isConnectedToNetwork()
         }
         timer?.resume()

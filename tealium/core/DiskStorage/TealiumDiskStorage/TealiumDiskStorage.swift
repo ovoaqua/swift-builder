@@ -10,9 +10,10 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
 
     static let readWriteQueue = ReadWrite("TealiumDiskStorage.label")
     let defaultDirectory = Disk.Directory.caches
+    var currentDirectory: Disk.Directory
     let filePrefix: String
     let module: String
-    let minimumDiskSpace: Int
+    let minimumDiskSpace: Int32
     var defaultsStorage: UserDefaults?
     let isCritical: Bool
     let isDiskStorageEnabled: Bool
@@ -42,6 +43,8 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
         self.module = module
         self.isCritical = isCritical
         self.isDiskStorageEnabled = config.isDiskStorageEnabled()
+        let defaultDirectory = self.defaultDirectory
+        currentDirectory = config.getOverrideDiskStorageDirectory() ?? defaultDirectory
         // Provides userdefaults backing for critical data (e.g. appdata, consentmanager)
         if isCritical {
             self.defaultsStorage = UserDefaults(suiteName: filePath)
@@ -91,7 +94,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     ///
     /// - Returns: `String` containing the total size in bytes of data saved by this module
     public func totalSizeSavedData() -> String? {
-        if let fileUrl = try? Disk.url(for: filePrefix, in: defaultDirectory),
+        if let fileUrl = try? Disk.url(for: filePrefix, in: currentDirectory),
             let contents = try? FileManager.default.contentsOfDirectory(at: fileUrl, includingPropertiesForKeys: nil, options: []) {
 
             var folderSize: Int64 = 0
@@ -143,7 +146,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                 return
             }
             do {
-                try Disk.save(data, to: self.defaultDirectory, as: self.filePath(fileName))
+                try Disk.save(data, to: self.currentDirectory, as: self.filePath(fileName))
             } catch let error {
                 completion?(false, nil, error)
             }
@@ -193,7 +196,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                         completion?(false, nil, nil)
                         return
                 }
-	                try Disk.save(data, to: self.defaultDirectory, as: self.filePath(fileName))
+	                try Disk.save(data, to: self.currentDirectory, as: self.filePath(fileName))
             } catch let error {
                 completion?(false, nil, error)
             }
@@ -235,7 +238,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                     completion?(false, nil, nil)
                     return
                 }
-                try Disk.append(data, to: self.filePath(fileName), in: self.defaultDirectory)
+                try Disk.append(data, to: self.filePath(fileName), in: self.currentDirectory)
             } catch let error {
                 completion?(false, nil, error)
             }
@@ -257,7 +260,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
             }
             do {
                 let data = AnyCodable(data)
-                try Disk.append(data, to: self.filePath(fileName), in: self.defaultDirectory)
+                try Disk.append(data, to: self.filePath(fileName), in: self.currentDirectory)
             } catch let error {
                 completion?(false, nil, error)
             }
@@ -300,7 +303,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                 return
             }
             do {
-                let data = try Disk.retrieve(self.filePath(fileName), from: self.defaultDirectory, as: type)
+                let data = try Disk.retrieve(self.filePath(fileName), from: self.currentDirectory, as: type)
                 completion(true, data, nil)
             } catch let error {
                 completion(false, nil, error)
@@ -331,7 +334,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                 return
             }
             do {
-                guard let data = try Disk.retrieve(self.filePath(fileName), from: self.defaultDirectory, as: AnyCodable.self).value as? [String: Any] else {
+                guard let data = try Disk.retrieve(self.filePath(fileName), from: self.currentDirectory, as: AnyCodable.self).value as? [String: Any] else {
                     log(error: DiskStorageErrors.couldNotDecode.rawValue)
                     completion(false, nil, nil)
                     return
@@ -356,7 +359,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                 return
             }
             do {
-                try Disk.remove(self.filePath(self.module), from: self.defaultDirectory)
+                try Disk.remove(self.filePath(self.module), from: self.currentDirectory)
                 completion?(true, nil, nil)
             } catch let error {
                 completion?(false, nil, error)

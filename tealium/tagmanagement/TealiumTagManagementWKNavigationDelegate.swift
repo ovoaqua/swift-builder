@@ -12,7 +12,6 @@ import WebKit
 import TealiumCore
 #endif
 
-@available(iOS 11.0, *)
 extension TealiumTagManagementWKWebView: WKNavigationDelegate {
 
     /// Called when the WebView has finished loading a resource (DOM Complete)
@@ -54,7 +53,9 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
         if let headerFields = response.allHeaderFields as? [String: String] {
             let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
             cookies.forEach { cookie in
-                webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                if #available(iOS 11, *) {
+                    webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+                }
             }
         }
 

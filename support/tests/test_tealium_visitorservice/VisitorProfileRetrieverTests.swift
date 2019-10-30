@@ -32,7 +32,7 @@ class TealiumVisitorProfileRetrieverTests: XCTestCase {
         let timeTraveler = TimeTraveler()
 
         var mockedLastFetch = timeTraveler.travel(by: (60 * 5 + 1) * -1)
-        var expectedResult = 301_000
+        var expectedResult: Int64 = 301_000
 
         var actualResult = visitorProfileRetriever.intervalSince(lastFetch: mockedLastFetch)
 
@@ -73,7 +73,7 @@ class TealiumVisitorProfileRetrieverTests: XCTestCase {
         XCTAssertEqual(true, visitorProfileRetriever.shouldFetchVisitorProfile)
 
         tealConfig = TealiumConfig(account: "test", profile: "test", environment: "prod")
-        tealConfig.setVisitorProfileRefresh(interval: 0)
+        tealConfig.setVisitorServiceRefresh(interval: 0)
         visitorProfileRetriever = TealiumVisitorProfileRetriever(config: tealConfig, visitorId: "test")
         visitorProfileRetriever.lastFetch = timeTraveler.travel(by: (60 * 2 + 1) * -1)
         XCTAssertEqual(true, visitorProfileRetriever.shouldFetchVisitorProfile)
@@ -85,7 +85,7 @@ class TealiumVisitorProfileRetrieverTests: XCTestCase {
 
         tealConfig = TealiumConfig(account: "test", profile: "test", environment: "prod")
         // resetting back to default
-        tealConfig.setVisitorProfileRefresh(interval: 300)
+        tealConfig.setVisitorServiceRefresh(interval: 300)
         visitorProfileRetriever = TealiumVisitorProfileRetriever(config: tealConfig, visitorId: "test")
         visitorProfileRetriever.lastFetch = timeTraveler.travel(by: (60 * 2 + 1) * -1)
         XCTAssertEqual(false, visitorProfileRetriever.shouldFetchVisitorProfile)

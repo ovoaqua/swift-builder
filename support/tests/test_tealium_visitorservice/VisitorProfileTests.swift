@@ -55,7 +55,7 @@ class VisitorProfileTests: XCTestCase {
         XCTAssertNil(visitor.tallies)
         XCTAssertNil(visitor.strings)
         XCTAssertNotNil(visitor.dates)
-        XCTAssertNotNil(visitor.arrayOfStrings)
+        XCTAssertNotNil(visitor.arraysOfStrings)
         XCTAssertNil(visitor.currentVisit)
     }
 
@@ -70,7 +70,7 @@ class VisitorProfileTests: XCTestCase {
         XCTAssertNotNil(visitor.dates)
         XCTAssertNotNil(visitor.tallies)
         XCTAssertNil(currentVisit.setsOfStrings)
-        XCTAssertNotNil(currentVisit.arrayOfBooleans)
+        XCTAssertNotNil(currentVisit.arraysOfBooleans)
     }
 
     func testAudienceSubscriptByName() {
@@ -111,13 +111,13 @@ class VisitorProfileTests: XCTestCase {
         if let boolean = visitor.booleans?["27"] {
             XCTAssertTrue(boolean)
         }
-        if let arrayOfBools = currentVisit.arrayOfBooleans?["8479"] {
+        if let arrayOfBools = currentVisit.arraysOfBooleans?["8479"] {
             XCTAssertEqual([true, false, true, false, true, false, true, false], arrayOfBools)
         }
         if let number = visitor.numbers?["25"] {
             XCTAssertEqual(27.983_333_333_333_334, number)
         }
-        if let arrayOfNumbers = visitor.arrayOfNumbers?["8487"] {
+        if let arrayOfNumbers = visitor.arraysOfNumbers?["8487"] {
             XCTAssertEqual([3.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], arrayOfNumbers)
         }
         if let tally = visitor.tallies?[tally: "8481"] {
@@ -131,7 +131,7 @@ class VisitorProfileTests: XCTestCase {
         if let string = visitor.strings?["8480"] {
             XCTAssertEqual("category 5", string)
         }
-        if let stringArray = visitor.arrayOfStrings?["8483"] {
+        if let stringArray = visitor.arraysOfStrings?["8483"] {
             XCTAssertEqual(["category 4", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5"], stringArray)
         }
         if let stringSet = currentVisit.setsOfStrings?["50"] {
@@ -219,21 +219,21 @@ class VisitorProfileTests: XCTestCase {
 
     func testArrayOfBooleansSubscriptNoResult() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
-        if let currentVisit = visitor.currentVisit, let shouldNotExistInProfile = currentVisit.arrayOfBooleans?["9999"] {
+        if let currentVisit = visitor.currentVisit, let shouldNotExistInProfile = currentVisit.arraysOfBooleans?["9999"] {
             XCTAssertNil(shouldNotExistInProfile)
         }
     }
 
     func testArrayOfBooleansSubscriptSuccess() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
-        if let currentVisit = visitor.currentVisit, let shouldExistInProfile = currentVisit.arrayOfBooleans?["27"] {
+        if let currentVisit = visitor.currentVisit, let shouldExistInProfile = currentVisit.arraysOfBooleans?["27"] {
             XCTAssertEqual([true, false, true, false, true, false, true, false], shouldExistInProfile)
         }
     }
 
     func testArrayOfBooleansSubscriptNil() {
            visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorAllNil)
-        if let currentVisit = visitor.currentVisit, let _ = currentVisit.arrayOfBooleans?["9999"] {
+        if let currentVisit = visitor.currentVisit, let _ = currentVisit.arraysOfBooleans?["9999"] {
                 XCTFail("Should not get here - nil")
            }
            XCTAssertTrue(true)
@@ -285,21 +285,21 @@ class VisitorProfileTests: XCTestCase {
 
     func testArrayOfNumbersSubscriptNoResult() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
-        if let shouldNotExistInProfile = visitor.arrayOfNumbers?["9999"] {
+        if let shouldNotExistInProfile = visitor.arraysOfNumbers?["9999"] {
             XCTAssertNil(shouldNotExistInProfile)
         }
     }
 
     func testArrayOfNumbersSubscriptSuccess() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
-        if let shouldExistInProfile = visitor.arrayOfNumbers?["8487"] {
+        if let shouldExistInProfile = visitor.arraysOfNumbers?["8487"] {
             XCTAssertEqual([3.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], shouldExistInProfile)
         }
     }
 
     func testArrayOfNumbersSubscriptNil() {
            visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorAllNil)
-           if let _ = visitor.arrayOfNumbers?["9999"] {
+           if let _ = visitor.arraysOfNumbers?["9999"] {
                 XCTFail("Should not get here - nil")
            }
            XCTAssertTrue(true)
@@ -382,21 +382,21 @@ class VisitorProfileTests: XCTestCase {
 
     func testArrayOfStringsSubscriptNoResult() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
-        if let shouldNotExistInProfile = visitor.arrayOfStrings?["9999"] {
+        if let shouldNotExistInProfile = visitor.arraysOfStrings?["9999"] {
             XCTAssertNil(shouldNotExistInProfile)
         }
     }
 
     func testArrayOfStringsSubscriptSuccess() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
-        if let shouldExistInProfile = visitor.arrayOfStrings?["8483"] {
+        if let shouldExistInProfile = visitor.arraysOfStrings?["8483"] {
             XCTAssertEqual(["category 4", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5", "category 5"], shouldExistInProfile)
         }
     }
 
     func testArrayOfStringsSubscriptNil() {
            visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorAllNil)
-           if let _ = visitor.arrayOfStrings?["9999"] {
+           if let _ = visitor.arraysOfStrings?["9999"] {
                 XCTFail("Should not get here - nil")
            }
            XCTAssertTrue(true)

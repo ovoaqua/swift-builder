@@ -14,8 +14,8 @@ disabled_rules:
   - vertical_parameter_alignment_on_call
   - cyclomatic_complexity
   - type_body_length
-opt_in_rules:
   - file_header
+opt_in_rules:
   - explicit_init
   - closure_spacing
   - redundant_nil_coalescing

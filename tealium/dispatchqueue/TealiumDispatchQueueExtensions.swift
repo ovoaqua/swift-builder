@@ -10,6 +10,12 @@ import Foundation
 #if dispatchqueue
 import TealiumCore
 #endif
+
+#if os(iOS)
+import UIKit
+#else
+#endif
+
 public extension TealiumConfig {
     func setBatchSize(_ size: Int) {
         let size = size > TealiumValue.maxEventBatchSize ? TealiumValue.maxEventBatchSize: size
@@ -73,15 +79,48 @@ public extension TealiumConfig {
 
 extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
     func sleep() {
-        releaseQueue()
+        #if os(iOS)
+        var backgroundTaskId: UIBackgroundTaskIdentifier?
+            backgroundTaskId = TealiumDispatchQueueModule.sharedApplication?.beginBackgroundTask {
+                if let taskId = backgroundTaskId {
+                    TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
+                    backgroundTaskId = UIBackgroundTaskInvalid
+                }
+            }
+
+        TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+            self.releaseQueue()
+        }
+        if let taskId = backgroundTaskId {
+            TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+                TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
+                backgroundTaskId = UIBackgroundTaskInvalid
+            }
+        }
+        #elseif os(watchOS)
+        let pInfo = ProcessInfo()
+        pInfo.performExpiringActivity(withReason: "Tealium Swift: Dispatch Queued Events") { willBeSuspended in
+            if !willBeSuspended {
+                TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                    self.releaseQueue()
+                }
+            }
+        }
+        #else
+        self.releaseQueue()
+        #endif
     }
 
     func wake() {
-        releaseQueue()
+        TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+            self.releaseQueue()
+        }
     }
 
     func launch(at date: Date) {
-        releaseQueue()
+        TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+            self.releaseQueue()
+        }
     }
 
 }

@@ -13,7 +13,7 @@ public enum TealiumValue {
     public static let libraryVersion = "1.8.0"
     // This is the current limit for performance reasons. May be increased in future
     public static let maxEventBatchSize = 10
-    public static let defaultMinimumDiskSpace = 20_000_000
+    public static let defaultMinimumDiskSpace: Int32 = 20_000_000
 }
 
 // MARK: ENUMS
@@ -66,6 +66,7 @@ public enum TealiumKey {
     public static let qa = "qa"
     // swiftlint:enable identifier_name
     public static let errorHeaderKey = "X-Error"
+    public static let diskStorageDirectory = "disk_storage_directory"
 }
 
 public enum TealiumModulesManagerError: Error {

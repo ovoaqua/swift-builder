@@ -144,22 +144,63 @@ public struct TealiumEnqueueRequest: TealiumRequest {
     public var typeId = TealiumEnqueueRequest.instanceTypeId()
     public var moduleResponses = [TealiumModuleResponse]()
     public var completion: TealiumCompletion?
-    public let data: [TealiumTrackRequest]
+    public var data: [TealiumTrackRequest]
+    var queueReason: String?
 
     public init(data: TealiumTrackRequest,
+                queueReason: String? = nil,
                 completion: TealiumCompletion?) {
         self.data = [data]
+        self.queueReason = queueReason
+        setQueueReason()
         self.completion = completion
     }
 
     public init(data: TealiumBatchTrackRequest,
+                queueReason: String? = nil,
                 completion: TealiumCompletion?) {
         self.data = data.trackRequests
+        self.queueReason = queueReason
+        setQueueReason()
         self.completion = completion
     }
 
+    mutating func setQueueReason() {
+        guard let queueReason = queueReason else {
+            return
+        }
+        self.data = data.map {
+            var data = $0.trackDictionary
+            data[TealiumKey.queueReason] = queueReason
+            return TealiumTrackRequest(data: data, completion: $0.completion)
+        }
+    }
+    
     public static func instanceTypeId() -> String {
         return "enqueue"
+    }
+}
+
+public struct TealiumConnectivityRequest: TealiumRequest {
+    public var completion: TealiumCompletion?
+    
+    
+    public enum TealiumConnectivityStatus {
+        case reachable
+        case notReachable
+    }
+    
+    public init(status: TealiumConnectivityStatus) {
+        self.connectivityStatus = status
+    }
+    
+    public var typeId = TealiumConnectivityRequest.instanceTypeId()
+    public var moduleResponses = [TealiumModuleResponse]()
+//    public var completion: TealiumCompletion?
+    public var connectivityStatus: TealiumConnectivityStatus
+    
+    public static func instanceTypeId() -> String {
+        return "connectivity"
     }
 }
 

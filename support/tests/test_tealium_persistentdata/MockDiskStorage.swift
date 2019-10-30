@@ -11,14 +11,13 @@ import Foundation
 @testable import TealiumPersistentData
 
 class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
-    func append(_ data: [String : Any], fileName: String, completion: TealiumCompletion?) {
-        
+    func append(_ data: [String: Any], fileName: String, completion: TealiumCompletion?) {
+
     }
-    
-    func update<T>(value: Any, for key: String, as type: T.Type, completion: TealiumCompletion?) where T : Decodable, T : Encodable {
-        
+
+    func update<T>(value: Any, for key: String, as type: T.Type, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
+
     }
-    
 
     var persistentData: TealiumPersistentDataStorage! = TealiumPersistentDataStorage()
 
@@ -73,7 +72,7 @@ class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
 
     func delete(completion: TealiumCompletion?) {
         persistentData = nil
-        completion?(true,nil,nil)
+        completion?(true, nil, nil)
     }
 
     func totalSizeSavedData() -> String? {

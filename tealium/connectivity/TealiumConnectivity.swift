@@ -7,7 +7,10 @@
 //
 
 import Foundation
+#if os(watchOS)
+#else
 import SystemConfiguration
+#endif
 #if connectivity
 import TealiumCore
 #endif
@@ -15,13 +18,14 @@ import TealiumCore
 public class TealiumConnectivity {
 
     static var connectionType: String?
-    static var isConnected: Bool?
+    static var isConnected: Atomic<Bool> = Atomic(value: true)
     // used to simulate connection status for unit tests
     static var forceConnectionOverride: Bool?
     var timer: TealiumRepeatingTimer?
     var connectivityDelegates = TealiumMulticastDelegate<TealiumConnectivityDelegate>()
     var currentConnectivityType = ""
     static var currentConnectionStatus: Bool?
+    static var inBlackoutPeriod = false
 
     /// Retrieves the current connection type used by the device.
     /// 
@@ -34,6 +38,11 @@ public class TealiumConnectivity {
         return TealiumConnectivityKey.connectionTypeNone
     }
 
+    #if os(watchOS)
+    class func isConnectedToNetwork() -> Bool {
+        return isConnected.value
+    }
+    #else
     // Credit: RAJAMOHAN-S: https://stackoverflow.com/questions/30743408/check-for-internet-connection-with-swift/39782859#39782859
     /// Determines if the device has network connectivity.
     ///
@@ -73,14 +82,14 @@ public class TealiumConnectivity {
         // Working for Cellular and WIFI
         let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
         let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
-        isConnected = (isReachable && !needsConnection)
-        if !isConnected! {
+        isConnected.value = (isReachable && !needsConnection)
+        if !isConnected.value {
             connectionType = TealiumConnectivityKey.connectionTypeNone
         }
 
-        return isConnected!
+        return isConnected.value
     }
-
+    #endif
     deinit {
         timer = nil
     }

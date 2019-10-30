@@ -8,10 +8,6 @@
 
 import Foundation
 
-#if os(watchOS)
-#else
-import SystemConfiguration
-#endif
 #if connectivity
 import TealiumCore
 #endif
@@ -36,7 +32,7 @@ class TealiumConnectivityModule: TealiumModule {
                                    enabled: true)
     }
 
-    /// Custom handler for incoming module requests￼.
+    /// Custom handler for incoming module requests.
     ///
     /// - Parameter request: TealiumRequest to be handled by the module
     override func handle(_ request: TealiumRequest) {
@@ -49,12 +45,14 @@ class TealiumConnectivityModule: TealiumModule {
             dynamicDispatch(request)
         case let request as TealiumBatchTrackRequest:
             dynamicDispatch(request)
+        case let request as TealiumConnectivityRequest:
+            handleConnectivityReport(request: request)
         default:
             didFinishWithNoResponse(request)
         }
     }
 
-    /// Detects track type and dispatches appropriately, adding mandatory data (account and profile) to the track if missing.￼
+    /// Detects track type and dispatches appropriately, adding mandatory data (account and profile) to the track if missing.
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
     func dynamicDispatch(_ track: TealiumRequest) {
@@ -80,7 +78,7 @@ class TealiumConnectivityModule: TealiumModule {
         }
     }
 
-    /// Adds connectivity information to the dispatch￼.
+    /// Adds connectivity information to the dispatch.
     ///
     /// - Parameter request: `TealiumTrackRequest` to be insepcted/modified
     /// - Returns: `TealiumTrackRequest`
@@ -88,26 +86,29 @@ class TealiumConnectivityModule: TealiumModule {
         var newData = request.trackDictionary
         // do not add data to queued hits
         if newData[TealiumKey.wasQueued] as? String == nil {
-            newData += [TealiumConnectivityKey.connectionType: TealiumConnectivity.currentConnectionType(),
-                        TealiumConnectivityKey.connectionTypeLegacy: TealiumConnectivity.currentConnectionType(),
-            ]
+            if let connectionType = TealiumConnectivity.connectionType {
+                newData += [TealiumConnectivityKey.connectionType: connectionType,
+                            TealiumConnectivityKey.connectionTypeLegacy: connectionType,
+                ]
+            }
         }
         var newRequest = TealiumTrackRequest(data: newData, completion: request.completion)
         newRequest.moduleResponses = request.moduleResponses
         return newRequest
     }
 
-    /// Enables the module and starts connectivity monitoring￼.
+    /// Enables the module and starts connectivity monitoring.
     ///
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
     override func enable(_ request: TealiumEnableRequest) {
-        super.enable(request)
+        isEnabled = true
         connectivity.addConnectivityDelegate(delegate: self)
         self.config = request.config
         self.refreshConnectivityStatus()
+        didFinishWithNoResponse(request)
     }
 
-    /// Handles the track request and queues if no connection available (requires DispatchQueue module)￼.
+    /// Handles the track request and queues if no connection available (requires DispatchQueue module).
     ///
     /// - Parameter track: `TealiumTrackRequest` to be processed
     func trackWithConnectivityCheck(_ request: TealiumRequest) {
@@ -138,7 +139,7 @@ class TealiumConnectivityModule: TealiumModule {
         didFinishWithNoResponse(request)
     }
 
-    /// Enqueues the track request for later transmission￼.
+    /// Enqueues the track request for later transmission.
     ///
     /// - Parameter track: `TealiumTrackRequest` to be queued
     func enqueue(_ track: TealiumRequest) {
@@ -162,6 +163,14 @@ class TealiumConnectivityModule: TealiumModule {
         }
 
         delegate?.tealiumModuleRequests(module: self, process: enqueueRequest)
+    }
+
+    func handleConnectivityReport(request: TealiumConnectivityRequest) {
+        if request.connectivityStatus == .notReachable {
+            TealiumConnectivity.isConnected = Atomic(value: false)
+            TealiumConnectivity.currentConnectionStatus = false
+            connectivity.connectionLost()
+        }
     }
 
     /// Adds queue reason to track request.
