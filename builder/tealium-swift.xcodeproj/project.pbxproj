@@ -2503,7 +2503,7 @@
 		D7805821233A5A2D00DAD90E /* TealiumVolatileDataExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumVolatileDataExtensions.swift; sourceTree = "<group>"; };
 		D7805823233A5C8200DAD90E /* TealiumVolatileDataConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumVolatileDataConstants.swift; sourceTree = "<group>"; };
 		D7805836233A65FB00DAD90E /* TealiumVisitorService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumVisitorService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D7805837233A65FE00DAD90E /* TealiumVisitorService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumVisitorService-Info.plist"; path = "/Users/craigrouse/mobiledev/swift-fixes/tealium-swift/builder/TealiumVisitorService-Info.plist"; sourceTree = "<absolute>"; };
+		D7805837233A65FE00DAD90E /* TealiumVisitorService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumVisitorService-Info.plist"; path = "TealiumVisitorService-Info.plist"; sourceTree = "<group>"; };
 		D7805849233A672800DAD90E /* TealiumVisitorServiceTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumVisitorServiceTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7805850233A68DC00DAD90E /* VisitorProfileManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorProfileManagerTests.swift; sourceTree = "<group>"; };
 		D7805852233A68DC00DAD90E /* TealiumVisitorProfileModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumVisitorProfileModuleTests.swift; sourceTree = "<group>"; };
@@ -2575,7 +2575,7 @@
 		D798C43E2342411B00EE665E /* TealiumVolatileDataTests-tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumVolatileDataTests-tvOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D798C4572342411E00EE665E /* TealiumVisitorServiceTests-tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumVisitorServiceTests-tvOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D798C4682342416600EE665E /* TealiumVolatileDataTests-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumVolatileDataTests-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D798C4692342416600EE665E /* TealiumTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumTests-Info.plist"; path = "/Users/craigrouse/mobiledev/swift-fixes/tealium-swift/builder/TealiumTests-Info.plist"; sourceTree = "<absolute>"; };
+		D798C4692342416600EE665E /* TealiumTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumTests-Info.plist"; path = "TealiumTests-Info.plist"; sourceTree = "<group>"; };
 		D798C4812342416900EE665E /* TealiumVisitorServiceTests-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumVisitorServiceTests-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D79A2D812087FB17001C1F80 /* SwiftTestbed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftTestbed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D79A2D832087FB17001C1F80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -10354,7 +10354,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -10441,7 +10440,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -10528,7 +10526,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -10615,7 +10612,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -10702,7 +10698,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -10789,7 +10784,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -11096,7 +11090,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -11383,7 +11376,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -11470,7 +11462,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -11557,7 +11548,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -14195,7 +14185,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -14362,7 +14351,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -14529,7 +14517,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
-					"/Users/craigrouse/Library/Developer/Xcode/DerivedData/tealium-swift-dtkvrlsrkgsfhqgbkbnhsmqdufcf/Build/Products/Debug-iphonesimulator/**",
 				);
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
