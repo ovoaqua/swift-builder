@@ -14,6 +14,7 @@ import XCTest
 class TealiumDispatchQueueModuleTests: XCTestCase {
 
     static var releaseExpectation: XCTestExpectation?
+    static var remoteAPIExpectation: XCTestExpectation?
     static var expiredDispatches: XCTestExpectation?
     var diskStorage = DispatchQueueMockDiskStorage()
     var persistentQueue: PersistentQueue!
@@ -46,7 +47,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
 
     func testTrack() {
         let module = TealiumDispatchQueueModule(delegate: nil)
-        module.enable(TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil), diskStorage: diskStorage)
+        let config = TestTealiumHelper().getConfig()
+        config.setIsEventBatchingEnabled(true)
+        module.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: diskStorage)
         module.clearQueue()
         let trackRequest = TealiumTrackRequest(data: ["tealium_event": "hello"], completion: nil)
         module.track(trackRequest)
@@ -90,6 +93,20 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         wait(for: [TealiumDispatchQueueModuleTests.releaseExpectation!], timeout: 5.0)
     }
 
+    #if os(iOS)
+    func testRemoteAPIEnabled() {
+        TealiumDispatchQueueModuleTests.remoteAPIExpectation = self.expectation(description: "remote api")
+        delegate = RemoteAPIDelegate()
+        let module = TealiumDispatchQueueModule(delegate: delegate!)
+        let config = TestTealiumHelper().getConfig()
+        config.setIsRemoteAPIEnbled(true)
+        module.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: diskStorage)
+        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "myevent"], completion: nil)
+        module.track(trackRequest)
+        wait(for: [TealiumDispatchQueueModuleTests.remoteAPIExpectation!], timeout: 5.0)
+    }
+    #endif
+
     func testClearQueue() {
         let module = TealiumDispatchQueueModule(delegate: nil)
         module.enable(TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil), diskStorage: diskStorage)
@@ -124,6 +141,21 @@ class ReleaseQueueDelegate: TealiumModuleDelegate {
         TealiumDispatchQueueModuleTests.releaseExpectation?.fulfill()
     }
 
+}
+
+class RemoteAPIDelegate: TealiumModuleDelegate {
+    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
+
+    }
+
+    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
+        guard let request = process as? TealiumRemoteAPIRequest else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(request.trackRequest.trackDictionary["tealium_event"] as! String, "myevent")
+        TealiumDispatchQueueModuleTests.remoteAPIExpectation?.fulfill()
+    }
 }
 
 class PersistentQueue: TealiumPersistentDispatchQueue {

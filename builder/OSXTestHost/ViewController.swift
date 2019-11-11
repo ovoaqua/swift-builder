@@ -12,14 +12,17 @@ class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
         }
     }
-
+    @IBAction func trackViewPressed(_ sender: Any) {
+        OSXTealiumHelper.shared.trackView(title: "osx_view", data: ["testKey": "testVal"])
+    }
+    
+    @IBAction func trackEventPressed(_ sender: Any) {
+        OSXTealiumHelper.shared.track(title: "osx_event", data: ["testKey": "testVal"])
+    }
 }

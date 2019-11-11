@@ -38,6 +38,8 @@ public class TealiumTagManagementModule: TealiumModule {
             dynamicTrack(request)
         case let request as TealiumBatchTrackRequest:
             dynamicTrack(request)
+        case let request as TealiumRemoteAPIRequest:
+            dynamicTrack(request)
         default:
             didFinish(request)
         }
@@ -125,6 +127,11 @@ public class TealiumTagManagementModule: TealiumModule {
                                                       completion: track.completion)
             newRequest.moduleResponses = track.moduleResponses
             self.dispatchTrack(newRequest)
+        case let track as TealiumRemoteAPIRequest:
+            self.dispatchTrack(prepareForDispatch(track.trackRequest))
+            let reportRequest = TealiumReportRequest(message: "Processing remote_api request.")
+            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
+            return
         default:
             self.didFinishWithNoResponse(track)
             return
@@ -225,6 +232,10 @@ public class TealiumTagManagementModule: TealiumModule {
     ///     - info: `[String: Any]?`  containing additional information from the module about how it handled the request
     func didFinish(_ request: TealiumRequest,
                    info: [String: Any]?) {
+        // No didFinish call for remote api requests
+        guard request as? TealiumRemoteAPIRequest == nil else {
+            return
+        }
         var newRequest = request
         var response = TealiumModuleResponse(moduleName: type(of: self).moduleConfig().name,
                                              success: true,
@@ -245,6 +256,10 @@ public class TealiumTagManagementModule: TealiumModule {
     func didFailToFinish(_ request: TealiumRequest,
                          info: [String: Any]?,
                          error: Error) {
+        // No didFinish call for remote api requests
+        guard request as? TealiumRemoteAPIRequest == nil else {
+            return
+        }
         var newRequest = request
         var response = TealiumModuleResponse(moduleName: type(of: self).moduleConfig().name,
                                              success: false,

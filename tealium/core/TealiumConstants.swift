@@ -46,6 +46,7 @@ public enum TealiumKey {
     public static let uuid = "app_uuid"
     public static let simpleModel = "model_name" // e.g. iPhone 5s // OLD: device
     public static let device = "device" // == model_name
+    public static let deviceType = "device_type"
     public static let fullModel = "model_variant" // e.g. CDMA, GSM
     public static let architectureLegacy = "cpu_architecture"
     public static let architecture = "device_architecture"
@@ -67,6 +68,7 @@ public enum TealiumKey {
     // swiftlint:enable identifier_name
     public static let errorHeaderKey = "X-Error"
     public static let diskStorageDirectory = "disk_storage_directory"
+    public static let remoteAPICallType = "remote_api"
 }
 
 public enum TealiumModulesManagerError: Error {

@@ -1,5 +1,5 @@
 //
-//  TealiumHelper.swift
+//  OSXTealiumHelper.swift
 //  SwiftTestbed
 //
 //  Created by Jason Koo on 11/22/16.
@@ -10,13 +10,10 @@ import Foundation
 import TealiumCore
 import TealiumCollect
 import TealiumConnectivity
-import TealiumAttribution
 import TealiumConsentManager
 import TealiumDispatchQueue
 import TealiumDelegate
 import TealiumDeviceData
-import TealiumRemoteCommands
-import TealiumTagManagement
 import TealiumPersistentData
 import TealiumVolatileData
 import TealiumVisitorService
@@ -26,11 +23,11 @@ extension String: Error {}
 /// Example of a shared helper to handle all 3rd party tracking services. This
 /// paradigm is recommended to reduce burden of future code updates for external services
 /// in general.
-/// Note: TealiumHelper class inherits from NSObject to allow @objc annotations and Objective-C interop.
+/// Note: OSXTealiumHelper class inherits from NSObject to allow @objc annotations and Objective-C interop.
 /// If you don't need this, you may omit @objc annotations and NSObject inheritance.
-class TealiumHelper: NSObject {
+class OSXTealiumHelper: NSObject {
 
-    static let shared = TealiumHelper()
+    static let shared = OSXTealiumHelper()
     var tealium: Tealium?
     var enableHelperLogs = false
     var traceId = "04136"
@@ -51,12 +48,11 @@ class TealiumHelper: NSObject {
         config.setConnectivityRefreshInterval(5)
         config.setLogLevel(.verbose)
         config.setConsentLoggingEnabled(true)
-        config.setSearchAdsEnabled(true)
         config.setInitialUserConsentStatus(.consented)
-        config.setBatchSize(5)
-        config.setDispatchAfter(numberOfEvents: 5)
+        //config.setBatchSize(5)
+        //config.setDispatchAfter(numberOfEvents: 5)
         config.setMaxQueueSize(200)
-        config.setIsEventBatchingEnabled(true)
+        config.setIsEventBatchingEnabled(false)
 //        config.setVisitorServiceRefresh(interval: 0)
 //        config.setVisitorServiceOverrideProfile("main")
         // OPTIONALLY add an external delegate
@@ -64,31 +60,17 @@ class TealiumHelper: NSObject {
         config.setMemoryReportingEnabled(true)
 
         #if AUTOTRACKING
-//        print("*** TealiumHelper: Autotracking enabled.")
+//        print("*** OSXTealiumHelper: Autotracking enabled.")
         #else
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: ["autotracking",])
+                                      moduleNames: ["autotracking"])
         config.setModulesList(list)
         config.setDiskStorageEnabled(isEnabled: true)
         config.addVisitorServiceDelegate(self)
-        config.setIsRemoteAPIEnbled(true)
         #endif
-        #if os(iOS)
-        
-        let remoteCommand = TealiumRemoteCommand(commandId: "hello",
-                                                 description: "test") { response in
-                                                    if TealiumHelper.shared.enableHelperLogs {
-//                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
-                                                    }
-                                                    let dict = ["hello":"from helper"]
-                                                    // set some JSON response data to be passed back to the webview
-                                                    let myJson = try? JSONSerialization.data(withJSONObject: dict, options: [])
-                                                    response.data = myJson
-        }
-        config.addRemoteCommand(remoteCommand)
-        #endif
+
 
         // REQUIRED Initialization
         tealium = Tealium(config: config) { response in
@@ -141,7 +123,7 @@ class TealiumHelper: NSObject {
     }
 }
 
-extension TealiumHelper: TealiumDelegate {
+extension OSXTealiumHelper: TealiumDelegate {
 
     func tealiumShouldTrack(data: [String: Any]) -> Bool {
         return true
@@ -155,7 +137,7 @@ extension TealiumHelper: TealiumDelegate {
     }
 }
 
-extension TealiumHelper: TealiumVisitorServiceDelegate {
+extension OSXTealiumHelper: TealiumVisitorServiceDelegate {
     func profileDidUpdate(profile: TealiumVisitorProfile?) {
         guard let profile = profile else {
             return

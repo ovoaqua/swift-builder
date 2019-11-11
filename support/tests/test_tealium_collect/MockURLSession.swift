@@ -11,18 +11,18 @@ import Foundation
 @testable import TealiumCore
 
 class MockURLSession: URLSessionProtocol {
-    func dataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return DataTask(completionHandler: completionHandler, url: url)
     }
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
-    func dataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
 //        let completion = DataTaskCompletion(nil, nil, nil)
         return DataTask(completionHandler: completionHandler, url: with.url!)
     }
 
     func finishTasksAndInvalidate() {
-
+        finishTasksAndInvalidate()
     }
 
 }
@@ -43,18 +43,18 @@ class DataTask: URLSessionDataTaskProtocol {
 }
 
 class MockURLSessionError: URLSessionProtocol {
-    func dataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return DataTaskError(completionHandler: completionHandler, url: url)
     }
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
-    func dataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
         return DataTaskError(completionHandler: completionHandler, url: with.url!)
     }
 
-    func finishTasksAndInvalidate() {
-
+    func finishTealiumTasksAndInvalidate() {
+        finishTasksAndInvalidate()
     }
 
 }
