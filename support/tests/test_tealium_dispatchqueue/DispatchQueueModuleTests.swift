@@ -99,7 +99,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         delegate = RemoteAPIDelegate()
         let module = TealiumDispatchQueueModule(delegate: delegate!)
         let config = TestTealiumHelper().getConfig()
-        config.setIsRemoteAPIEnbled(true)
+        config.setIsRemoteAPIEnabled(true)
         module.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: diskStorage)
         let trackRequest = TealiumTrackRequest(data: ["tealium_event": "myevent"], completion: nil)
         module.track(trackRequest)

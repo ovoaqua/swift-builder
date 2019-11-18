@@ -179,6 +179,12 @@ Pod::Spec.new do |s|
     tagmanagement.dependency "tealium-swift/Core"
   end
 
+  s.subspec "TealiumPersistentData" do |persistentdata|
+    persistentdata.source_files = "tealium/persistentdata/*"
+    persistentdata.dependency "tealium-swift/Core"
+  end
+
+
   s.subspec "TealiumVolatileData" do |volatiledata|
     volatiledata.source_files = "tealium/volatiledata/*"
     volatiledata.dependency "tealium-swift/Core"
