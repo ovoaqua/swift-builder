@@ -73,7 +73,7 @@ class TealiumHelper: NSObject {
         config.setModulesList(list)
         config.setDiskStorageEnabled(isEnabled: true)
         config.addVisitorServiceDelegate(self)
-        config.setIsRemoteAPIEnbled(true)
+        config.setIsRemoteAPIEnabled(true)
         #endif
         #if os(iOS)
         
