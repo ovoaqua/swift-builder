@@ -49,14 +49,14 @@ class TealiumHelper: NSObject {
 
         // OPTIONALLY set log level
         config.setConnectivityRefreshInterval(5)
-        config.setLogLevel(.verbose)
+//        config.setLogLevel(.verbose)
         config.setConsentLoggingEnabled(true)
         config.setSearchAdsEnabled(true)
         config.setInitialUserConsentStatus(.consented)
-        config.setBatchSize(5)
-        config.setDispatchAfter(numberOfEvents: 5)
-        config.setMaxQueueSize(200)
-        config.setIsEventBatchingEnabled(true)
+//        config.setBatchSize(5)
+//        config.setDispatchAfter(numberOfEvents: 5)
+//        config.setMaxQueueSize(200)
+//        config.setIsEventBatchingEnabled(true)
 //        config.setVisitorServiceRefresh(interval: 0)
 //        config.setVisitorServiceOverrideProfile("main")
         // OPTIONALLY add an external delegate

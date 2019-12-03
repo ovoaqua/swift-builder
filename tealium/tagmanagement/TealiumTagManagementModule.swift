@@ -57,7 +57,7 @@ public class TealiumTagManagementModule: TealiumModule {
         self.tagManagement?.enable(webviewURL: config.webviewURL(), shouldMigrateCookies: true, delegates: config.getWebViewDelegates(), view: config.getRootView()) { _, error in
             TealiumQueues.backgroundConcurrentQueue.write {
                 if let error = error {
-                    let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel())
+                    let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel() ?? defaultTealiumLogLevel)
                     logger.log(message: (error.localizedDescription), logLevel: .warnings)
                     self.errorState.incrementAndGet()
                 }

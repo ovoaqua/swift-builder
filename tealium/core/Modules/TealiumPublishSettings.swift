@@ -50,31 +50,47 @@ struct RemotePublishSettings: Codable {
     
     
     public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        let v5 = try values.nestedContainer(keyedBy: CodingKeys.self, forKey: .v5)
-        self.batterySaver = try v5.decode(String.self, forKey: .battery_saver) == "true" ? true : false
-        self.dispatchExpiration = Int(try v5.decode(String.self, forKey: .dispatch_expiration), radix: 10) ?? -1
-        self.collectEnabled = try v5.decode(String.self, forKey: .enable_collect) == "true" ? true : false
-        self.tagManagementEnabled = try v5.decode(String.self, forKey: .enable_tag_management) == "true" ? true : false
-        self.batchSize = Int(try v5.decode(String.self, forKey: .event_batch_size), radix: 10) ?? 1
-        self.minutesBetweenRefresh = Double(try v5.decode(String.self, forKey: .minutes_between_refresh)) ?? 15.0
-        self.dispatchQueueLimit = Int(try v5.decode(String.self, forKey: .offline_dispatch_limit), radix: 10) ?? 100
-        let logLevel = try v5.decode(String.self, forKey: .offline_dispatch_limit)
-        
-        switch logLevel {
-        case "dev":
-            self.overrideLog = .verbose
-        case "qa":
-            self.overrideLog = .warnings
-        case "prod":
-            self.overrideLog = .errors
-        default:
-            self.overrideLog = .none
+        do {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            let v5 = try values.nestedContainer(keyedBy: CodingKeys.self, forKey: .v5)
+            self.batterySaver = try v5.decode(String.self, forKey: .battery_saver) == "true" ? true : false
+            self.dispatchExpiration = Int(try v5.decode(String.self, forKey: .dispatch_expiration), radix: 10) ?? -1
+            self.collectEnabled = try v5.decode(String.self, forKey: .enable_collect) == "true" ? true : false
+            self.tagManagementEnabled = try v5.decode(String.self, forKey: .enable_tag_management) == "true" ? true : false
+            self.batchSize = Int(try v5.decode(String.self, forKey: .event_batch_size), radix: 10) ?? 1
+            self.minutesBetweenRefresh = Double(try v5.decode(String.self, forKey: .minutes_between_refresh)) ?? 15.0
+            self.dispatchQueueLimit = Int(try v5.decode(String.self, forKey: .offline_dispatch_limit), radix: 10) ?? 100
+            let logLevel = try v5.decode(String.self, forKey: .override_log)
+            
+            switch logLevel {
+            case "dev":
+                self.overrideLog = .verbose
+            case "qa":
+                self.overrideLog = .warnings
+            case "prod":
+                self.overrideLog = .errors
+            default:
+                self.overrideLog = .none
+            }
+            
+            self.wifiOnlySending = try v5.decode(String.self, forKey: .wifi_only_sending) == "true" ? true : false
+            self.isEnabled = try v5.decode(String.self, forKey: ._is_enabled) == "true" ? true : false
+        } catch {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            self.batterySaver = try values.decode(Bool.self, forKey: .battery_saver)
+            self.dispatchExpiration = try values.decode(Int.self, forKey: .dispatch_expiration)
+            self.collectEnabled = try values.decode(Bool.self, forKey: .enable_collect)
+            self.tagManagementEnabled = try values.decode(Bool.self, forKey: .enable_tag_management)
+            self.batchSize = try values.decode(Int.self, forKey: .event_batch_size)
+            self.minutesBetweenRefresh = try values.decode(Double.self, forKey: .minutes_between_refresh)
+            self.dispatchQueueLimit = try values.decode(Int.self, forKey: .offline_dispatch_limit)
+            let logLevel = try values.decode(String.self, forKey: .override_log)
+            
+            self.overrideLog = TealiumLogLevel.fromString(logLevel)
+            
+            self.wifiOnlySending = try values.decode(Bool.self, forKey: .wifi_only_sending)
+            self.isEnabled = try values.decode(Bool.self, forKey: ._is_enabled)
         }
-        
-        self.wifiOnlySending = try v5.decode(String.self, forKey: .wifi_only_sending) == "true" ? true : false
-        self.isEnabled = try v5.decode(String.self, forKey: ._is_enabled) == "true" ? true : false
-        
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -92,4 +108,92 @@ struct RemotePublishSettings: Codable {
         try container.encode(isEnabled, forKey: ._is_enabled)
     }
     
+    public func newConfig(with config: TealiumConfig) -> TealiumConfig {
+        let config = config
+        var optionalData = config.optionalData
+        //    case battery_saver
+        optionalData["battery_saver_enabled"] = batterySaver
+        //    case dispatch_expiration
+        let dispatchExpiration = optionalData["batch_expiration_days"] as? Int
+        optionalData["batch_expiration_days"] = dispatchExpiration ?? self.dispatchExpiration
+        
+        
+        let batchingEnabled = optionalData["batching_enabled"] as? Bool
+        optionalData["batching_enabled"] = batchingEnabled ?? (self.batchSize > 1)
+        
+        //    case event_batch_size
+        let batchSize = optionalData["batch_size"] as? Int
+        optionalData["batch_size"] = batchSize ?? self.batchSize
+        
+        //    case offline_dispatch_limit
+        let eventLimit = optionalData["event_limit"] as? Int
+        optionalData["event_limit"] = eventLimit ?? self.dispatchQueueLimit
+        
+//        var newModulesList: TealiumModulesList
+        
+        
+        // START TM/collect
+        if let existingModulesList = config.getModulesList() {
+         
+            let isWhiteList = existingModulesList.isWhitelist,
+            moduleNames = existingModulesList.moduleNames
+            
+            
+            var newModuleNames = moduleNames
+            if isWhiteList {
+                if moduleNames.contains("tagmanagement"), !self.tagManagementEnabled {
+                    newModuleNames.remove("tagmanagement")
+                } else if !moduleNames.contains("tagmanagement"), self.tagManagementEnabled {
+                    newModuleNames.insert("tagmanagement")
+                }
+                if moduleNames.contains("collect"), !self.collectEnabled {
+                    newModuleNames.remove("collect")
+                } else if !moduleNames.contains("collect"), self.collectEnabled {
+                    newModuleNames.insert("collect")
+                }
+            } else {
+                if moduleNames.contains("tagmanagement"), self.tagManagementEnabled {
+                    newModuleNames.remove("tagmanagement")
+                } else if !moduleNames.contains("tagmanagement"), !self.tagManagementEnabled {
+                    newModuleNames.insert("tagmanagement")
+                }
+                if moduleNames.contains("collect"), self.collectEnabled {
+                    newModuleNames.remove("collect")
+                } else if !moduleNames.contains("collect"), !self.collectEnabled {
+                    newModuleNames.insert("collect")
+                }
+            }
+
+            config.setModulesList(TealiumModulesList(isWhitelist: isWhiteList, moduleNames: newModuleNames))
+//            var newModulesList = TealiumModulesList(isWhitelist: isWhiteList, moduleNames: <#T##Set<String>#>)
+            
+        } else {
+            var newModuleNames = Set<String>()
+            
+            if !self.tagManagementEnabled {
+               newModuleNames.insert("tagmanagement")
+            }
+           
+            if !self.collectEnabled {
+               newModuleNames.insert("collect")
+            }
+            
+            config.setModulesList(TealiumModulesList(isWhitelist: false, moduleNames: newModuleNames))
+        }
+        
+        // end TM/Collect
+        
+        //    case override_log
+        let overrideLog = config.getLogLevel()
+        config.setLogLevel(overrideLog ?? self.overrideLog)
+        
+        //    case wifi_only_sending
+        optionalData["wifi_only_sending"] = self.wifiOnlySending
+        //    case minutes_between_refresh
+        optionalData["minutes_between_refresh"] = self.minutesBetweenRefresh
+        //    case _is_enabled
+        optionalData["library_is_enabled"] = self.isEnabled
+        return config
+    }
+
 }

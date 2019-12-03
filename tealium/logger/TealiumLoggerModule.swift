@@ -29,7 +29,7 @@ class TealiumLoggerModule: TealiumModule {
 
         if logger == nil {
             let config = request.config
-            let logLevel = config.getLogLevel()
+            let logLevel = config.getLogLevel() ?? defaultTealiumLogLevel
             let id = "\(config.account):\(config.profile):\(config.environment)"
             logger = TealiumLogger(loggerId: id, logLevel: logLevel)
         }

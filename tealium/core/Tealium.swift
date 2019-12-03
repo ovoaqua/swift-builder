@@ -30,12 +30,15 @@ public class Tealium {
     public init(config: TealiumConfig,
                 enableCompletion: TealiumEnableCompletion?) {
         self.config = config
+        self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config)
+        if let remoteConfig = self.remotePublishSettingsRetriever?.getCachedSettings()?.newConfig(with: config) {
+            self.config = remoteConfig
+        }
         self.enableCompletion = enableCompletion
         modulesManager = TealiumModulesManager()
         TealiumQueues.backgroundConcurrentQueue.write {
             self.enable(tealiumInstance: self)
             TealiumInstanceManager.shared.addInstance(self, config: config)
-            self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config)
         }
     }
 

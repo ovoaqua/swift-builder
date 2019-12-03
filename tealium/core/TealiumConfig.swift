@@ -120,13 +120,8 @@ public extension TealiumConfig {
 public extension TealiumConfig {
 
     /// - Returns: `TealiumLogLevel` (default is `.errors`)
-    func getLogLevel() -> TealiumLogLevel {
-        if let level = self.optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel {
-            return level
-        }
-
-        // Default
-        return defaultTealiumLogLevel
+    func getLogLevel() -> TealiumLogLevel? {
+       return self.optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
     }
 
     /// Sets the log level to be used by the library
