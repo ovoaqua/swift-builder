@@ -20,6 +20,7 @@ struct RemotePublishSettings: Codable {
     override_log,
     wifi_only_sending: false
     _is_enabled: true
+     // TODO: Last updated
     **/
 
     var batterySaver: Bool
@@ -34,6 +35,7 @@ struct RemotePublishSettings: Codable {
     var isEnabled: Bool
     
     enum CodingKeys: String, CodingKey {
+        case v5 = "5"
         case battery_saver
         case dispatch_expiration
         case enable_collect
@@ -49,14 +51,15 @@ struct RemotePublishSettings: Codable {
     
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.batterySaver = try values.decode(String.self, forKey: .battery_saver) == "true" ? true : false
-        self.dispatchExpiration = Int(try values.decode(String.self, forKey: .dispatch_expiration), radix: 10) ?? -1
-        self.collectEnabled = try values.decode(String.self, forKey: .enable_collect) == "true" ? true : false
-        self.tagManagementEnabled = try values.decode(String.self, forKey: .enable_tag_management) == "true" ? true : false
-        self.batchSize = Int(try values.decode(String.self, forKey: .event_batch_size), radix: 10) ?? 1
-        self.minutesBetweenRefresh = Double(try values.decode(String.self, forKey: .minutes_between_refresh)) ?? 15.0
-        self.dispatchQueueLimit = Int(try values.decode(String.self, forKey: .offline_dispatch_limit), radix: 10) ?? 100
-        let logLevel = try values.decode(String.self, forKey: .offline_dispatch_limit)
+        let v5 = try values.nestedContainer(keyedBy: CodingKeys.self, forKey: .v5)
+        self.batterySaver = try v5.decode(String.self, forKey: .battery_saver) == "true" ? true : false
+        self.dispatchExpiration = Int(try v5.decode(String.self, forKey: .dispatch_expiration), radix: 10) ?? -1
+        self.collectEnabled = try v5.decode(String.self, forKey: .enable_collect) == "true" ? true : false
+        self.tagManagementEnabled = try v5.decode(String.self, forKey: .enable_tag_management) == "true" ? true : false
+        self.batchSize = Int(try v5.decode(String.self, forKey: .event_batch_size), radix: 10) ?? 1
+        self.minutesBetweenRefresh = Double(try v5.decode(String.self, forKey: .minutes_between_refresh)) ?? 15.0
+        self.dispatchQueueLimit = Int(try v5.decode(String.self, forKey: .offline_dispatch_limit), radix: 10) ?? 100
+        let logLevel = try v5.decode(String.self, forKey: .offline_dispatch_limit)
         
         switch logLevel {
         case "dev":
@@ -69,8 +72,8 @@ struct RemotePublishSettings: Codable {
             self.overrideLog = .none
         }
         
-        self.wifiOnlySending = try values.decode(String.self, forKey: .wifi_only_sending) == "true" ? true : false
-        self.isEnabled = try values.decode(String.self, forKey: ._is_enabled) == "true" ? true : false
+        self.wifiOnlySending = try v5.decode(String.self, forKey: .wifi_only_sending) == "true" ? true : false
+        self.isEnabled = try v5.decode(String.self, forKey: ._is_enabled) == "true" ? true : false
         
     }
     

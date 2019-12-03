@@ -20,7 +20,7 @@ public class Tealium {
     public var enableCompletion: TealiumEnableCompletion?
     public static var numberOfTrackRequests = AtomicInteger()
     public static var lifecycleListeners = TealiumLifecycleListeners()
-
+    var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     // MARK: PUBLIC
 
     /// Initializer.
@@ -35,6 +35,7 @@ public class Tealium {
         TealiumQueues.backgroundConcurrentQueue.write {
             self.enable(tealiumInstance: self)
             TealiumInstanceManager.shared.addInstance(self, config: config)
+            self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config)
         }
     }
 

@@ -10,8 +10,10 @@ import Foundation
 
 class TealiumPublishSettingsRetriever {
     
-    init() {
-        self.getUtagFile(baseUrl: "https://tags.tiqcdn.com", account: "tealiummobile", profile: "demo", env: "dev")
+    // todo: head request
+    
+    init(config: TealiumConfig) {
+        self.getUtagFile(baseUrl: "https://tags.tiqcdn.com", account: config.account, profile: config.profile, env: config.environment)
     }
     
     func getUtagFile(baseUrl: String,
@@ -27,25 +29,25 @@ class TealiumPublishSettingsRetriever {
         guard let mobileHTML = url?.appendingPathComponent("mobile.html") else {
             return
         }
-//         data, urlresponse, error in...
-        URLSession.shared.dataTask(with: utagURL) { abc, def, ghi in
-            print("hello")
-            try? Disk.save(abc!, to: .caches, as: "tealiummobile.demo/tagmanagement/utag.js")
-            print("\(abc)\(def)\(ghi)")
-        }.resume()
+////         data, urlresponse, error in...
+//        URLSession.shared.dataTask(with: utagURL) { abc, def, ghi in
+////            print("hello")
+////            try? Disk.save(abc!, to: .caches, as: "tealiummobile.demo/tagmanagement/utag.js")
+////            print("\(abc)\(def)\(ghi)")
+//        }.resume()
 
-        URLSession.shared.dataTask(with: mobileHTML) { abc, def, ghi in
-            print("hello")
-            try? Disk.save(abc!, to: .caches, as: "tealiummobile.demo/tagmanagement/mobile.html")
-            if let publishSettings = self.getPublishSettings(from: abc!) {
-                try? Disk.save(publishSettings.encodable, to: .caches, as: "tealiummobile.demo/core/publishsetttings")
+        URLSession.shared.dataTask(with: mobileHTML) { data, def, ghi in
+//            print("hello")
+            try? Disk.save(data!, to: .caches, as: "tealiummobile.demo/tagmanagement/mobile.html")
+            if let publishSettings = self.getPublishSettings(from: data!) {
+                try? Disk.save(publishSettings, to: .caches, as: "tealiummobile.demo/core/publishsetttings")
             }
-            print("\(abc)\(def)\(ghi)")
+//            print("\(abc)\(def)\(ghi)")
         }.resume()
 
     }
     
-    func getPublishSettings(from data: Data) -> [String: Any]? {
+    func getPublishSettings(from data: Data) -> RemotePublishSettings? {
         guard let dataString = String(data: data, encoding: .utf8) else {
             return nil
         }
@@ -59,8 +61,12 @@ class TealiumPublishSettingsRetriever {
         guard let data = newSubString.data(using: .utf8) else {
             return nil
         }
+        
+        
+        
+        return try? JSONDecoder().decode(RemotePublishSettings.self, from: data)
 
-        return try! JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+//        return try! JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
 
     }
 }
