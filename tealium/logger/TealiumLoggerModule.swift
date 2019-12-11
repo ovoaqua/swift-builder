@@ -36,7 +36,9 @@ class TealiumLoggerModule: TealiumModule {
 
         delegate?.tealiumModuleRequests(module: self,
                                         process: TealiumReportNotificationsRequest())
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     override func disable(_ request: TealiumDisableRequest) {

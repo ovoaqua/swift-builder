@@ -46,7 +46,9 @@ class TealiumConsentManagerModule: TealiumModule {
         // start consent manager with completion block
         consentManager.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {
             self.ready = true
-            self.didFinish(request)
+            if !request.bypassDidFinish {
+                self.didFinish(request)
+            }
         }
         consentManager.addConsentDelegate(self)
     }

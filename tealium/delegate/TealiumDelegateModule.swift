@@ -31,8 +31,9 @@ class TealiumDelegateModule: TealiumModule {
         delegates = request.config.delegates()
         delegate?.tealiumModuleRequests(module: self,
                                         process: TealiumReportNotificationsRequest())
-
-        didFinishWithNoResponse(request)
+        if !request.bypassDidFinish {
+            didFinishWithNoResponse(request)
+        }
     }
 
     /// Notifies listening delegates of a completed track request.

@@ -60,7 +60,9 @@ public class TealiumLifecycleModule: TealiumModule {
         save()
         isEnabled = true
         Tealium.lifecycleListeners.addDelegate(delegate: self)
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     /// Disables the module and deletes all associated data￼￼.

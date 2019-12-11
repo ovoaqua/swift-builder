@@ -15,6 +15,7 @@ public typealias TealiumEnableCompletion = ((_ responses: [TealiumModuleResponse
 public class Tealium {
 
     public var config: TealiumConfig
+    var originalConfig: TealiumConfig
     /// Mediator for all Tealium modules.
     public let modulesManager: TealiumModulesManager
     public var enableCompletion: TealiumEnableCompletion?
@@ -30,15 +31,19 @@ public class Tealium {
     public init(config: TealiumConfig,
                 enableCompletion: TealiumEnableCompletion?) {
         self.config = config
-        self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config)
-        if let remoteConfig = self.remotePublishSettingsRetriever?.getCachedSettings()?.newConfig(with: config) {
-            self.config = remoteConfig
-        }
+        self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
         modulesManager = TealiumModulesManager()
-        TealiumQueues.backgroundConcurrentQueue.write {
+        self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
+        if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
+            self.config = remoteConfig
+        }
+        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.enable(tealiumInstance: self)
-            TealiumInstanceManager.shared.addInstance(self, config: config)
+//            TealiumInstanceManager.shared.addInstance(self, config: config)
         }
     }
 
@@ -62,8 +67,8 @@ public class Tealium {
     /// - Parameter config: TealiumConfiguration to update library with.
     public func update(config: TealiumConfig) {
         TealiumQueues.backgroundConcurrentQueue.write {
+            self.modulesManager.update(config: config.copy, oldConfig: self.config.copy)
             self.config = config
-            self.modulesManager.update(config: self.config)
         }
     }
 
@@ -98,6 +103,7 @@ public class Tealium {
                       data: [String: Any]?,
                       completion: ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)?) {
         TealiumQueues.backgroundConcurrentQueue.write {
+            self.remotePublishSettingsRetriever?.refresh()
             let trackData = Tealium.trackDataFor(title: title,
                                                  optionalData: data)
             let track = TealiumTrackRequest(data: trackData,
@@ -157,4 +163,17 @@ public class Tealium {
         return trackData
     }
 
+    deinit {
+        TealiumInstanceManager.shared.removeInstance(config: config)
+    }
+
+}
+
+extension Tealium: TealiumPublishSettingsDelegate {
+    func didUpdate(_ publishSettings: RemotePublishSettings) {
+        let newConfig = publishSettings.newConfig(with: self.originalConfig)
+        if newConfig != self.config {
+            self.update(config: newConfig)
+        }
+    }
 }

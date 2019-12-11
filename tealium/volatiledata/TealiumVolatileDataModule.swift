@@ -60,7 +60,9 @@ class TealiumVolatileDataModule: TealiumModule {
 
         volatileData.add(data: currentStaticData)
 
-        didFinishWithNoResponse(request)
+        if !request.bypassDidFinish {
+            didFinishWithNoResponse(request)
+        }
     }
 
     /// Disables the module and deletes all volatile data.

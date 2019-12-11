@@ -34,7 +34,9 @@ public class TealiumRemoteCommandsModule: TealiumModule {
         remoteCommands?.enable()
         updateReservedCommands(config: config)
         self.addCommandsFromConfig(config)
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     /// Allows Remote Commands to be added from the TealiumConfig object.

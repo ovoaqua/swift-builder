@@ -33,6 +33,7 @@ struct RemotePublishSettings: Codable {
     var overrideLog: TealiumLogLevel
     var wifiOnlySending: Bool
     var isEnabled: Bool
+    var lastFetch: Date
     
     enum CodingKeys: String, CodingKey {
         case v5 = "5"
@@ -46,6 +47,7 @@ struct RemotePublishSettings: Codable {
         case override_log
         case wifi_only_sending
         case _is_enabled
+        case lastFetch
     }
     
     
@@ -75,6 +77,7 @@ struct RemotePublishSettings: Codable {
             
             self.wifiOnlySending = try v5.decode(String.self, forKey: .wifi_only_sending) == "true" ? true : false
             self.isEnabled = try v5.decode(String.self, forKey: ._is_enabled) == "true" ? true : false
+            self.lastFetch = Date()
         } catch {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             self.batterySaver = try values.decode(Bool.self, forKey: .battery_saver)
@@ -90,6 +93,7 @@ struct RemotePublishSettings: Codable {
             
             self.wifiOnlySending = try values.decode(Bool.self, forKey: .wifi_only_sending)
             self.isEnabled = try values.decode(Bool.self, forKey: ._is_enabled)
+            self.lastFetch = (try? values.decode(Date.self, forKey: .lastFetch)) ?? Date()
         }
     }
     
@@ -106,10 +110,11 @@ struct RemotePublishSettings: Codable {
         try container.encode(overrideLog.description, forKey: .override_log)
         try container.encode(wifiOnlySending, forKey: .wifi_only_sending)
         try container.encode(isEnabled, forKey: ._is_enabled)
+        try container.encode(lastFetch, forKey: .lastFetch)
     }
     
     public func newConfig(with config: TealiumConfig) -> TealiumConfig {
-        let config = config
+        let config = config.copy
         var optionalData = config.optionalData
         //    case battery_saver
         optionalData["battery_saver_enabled"] = batterySaver
@@ -125,12 +130,23 @@ struct RemotePublishSettings: Codable {
         let batchSize = optionalData["batch_size"] as? Int
         optionalData["batch_size"] = batchSize ?? self.batchSize
         
+//        //    case event_batch_size
+//        let dispatchAfter = optionalData["event_limit"] as? Int
+//        optionalData["event_limit"] = dispatchAfter ?? self.batchSize
+        
         //    case offline_dispatch_limit
-        let eventLimit = optionalData["event_limit"] as? Int
-        optionalData["event_limit"] = eventLimit ?? self.dispatchQueueLimit
+        let eventLimit = optionalData["queue_size"] as? Int
+        optionalData["queue_size"] = eventLimit ?? self.dispatchQueueLimit
+        
+        //    case wifi_only_sending
+        optionalData["wifi_only_sending"] = self.wifiOnlySending
+        //    case minutes_between_refresh
+        optionalData["minutes_between_refresh"] = self.minutesBetweenRefresh
+        //    case _is_enabled
+        optionalData["library_is_enabled"] = self.isEnabled
         
 //        var newModulesList: TealiumModulesList
-        
+        config.optionalData = optionalData
         
         // START TM/collect
         if let existingModulesList = config.getModulesList() {
@@ -186,14 +202,8 @@ struct RemotePublishSettings: Codable {
         //    case override_log
         let overrideLog = config.getLogLevel()
         config.setLogLevel(overrideLog ?? self.overrideLog)
-        
-        //    case wifi_only_sending
-        optionalData["wifi_only_sending"] = self.wifiOnlySending
-        //    case minutes_between_refresh
-        optionalData["minutes_between_refresh"] = self.minutesBetweenRefresh
-        //    case _is_enabled
-        optionalData["library_is_enabled"] = self.isEnabled
+
         return config
     }
-
 }
+

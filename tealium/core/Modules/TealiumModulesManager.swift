@@ -12,7 +12,7 @@ import Foundation
 open class TealiumModulesManager: NSObject {
 
     weak var queue: ReadWrite?
-    public var modules = [TealiumModule]()
+    public var modules: [TealiumModule]? = [TealiumModule]()
     public var isEnabled = true
     public var modulesRequestingReport = [Weak<TealiumModule>]()
     public let timeoutMillisecondIncrement = 500
@@ -32,8 +32,9 @@ open class TealiumModulesManager: NSObject {
     /// Updates the currently active modules from config￼.
     ///
     /// - Parameter config: `TealiumConfig` instance
-    public func update(config: TealiumConfig) {
-        update(config: config, enableCompletion: nil)
+    public func update(config: TealiumConfig,
+                       oldConfig: TealiumConfig?) {
+        update(config: config, oldConfig: oldConfig, enableCompletion: nil)
     }
 
     /// Updates the currently active modules from config￼.
@@ -41,10 +42,50 @@ open class TealiumModulesManager: NSObject {
     /// - Parameter config: `TealiumConfig` instance￼
     /// - Parameter completion: `TealiumEnableCompletion?` to be called when modules have been initialized
     public func update(config: TealiumConfig,
+                       oldConfig: TealiumConfig?,
                        enableCompletion: TealiumEnableCompletion?) {
-        self.modules.removeAll()
-        enable(config: config,
-               enableCompletion: enableCompletion)
+//        self.modules?.removeAll()
+        
+        // TODO: Enable/disable select modules as required
+        
+        let currentModulesList: [String]? = modules?.map {
+            return $0.description.replacingOccurrences(of: ".module", with: "")
+        }
+        
+        var modulesToInit = [String]()
+        
+        // 1. go through new modules list (which includes modules all modules, not just delta). Init any not found in current modules, but in new list, deinit any not in new list but already initialized
+        // 2. go through new modules and init any that aren't in the current list
+         // if list was originally a whitelist, we don't want to add all other modules in
+        
+        if let newModulesList = config.getModulesList()?.filtered {
+            newModulesList.forEach { module in
+                if currentModulesList?.contains(module.description) == false {
+                    modulesToInit.append(module)
+                }
+            }
+            
+            
+            self.modules = self.modules?.filter {
+                newModulesList.contains($0.description.replacingOccurrences(of: ".module", with: "")) == true
+            }
+        }
+
+        let newModules = TealiumModules.initializeModules(modulesList: TealiumModulesList(isWhitelist: true, moduleNames: Set(modulesToInit)), delegate: self)
+        
+        newModules.forEach {
+            self.modules?.append($0)
+            self.modules = self.modules?.prioritized()
+            var enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
+            enableRequest.bypassDidFinish = true
+            $0.enable(enableRequest)
+        }
+        
+        // TODO: Broadcast updated config to each module as required, rather than re-enabling
+        
+        
+//        enable(config: config,
+//               enableCompletion: enableCompletion)
     }
 
     /// Enables modules￼.
@@ -61,14 +102,14 @@ open class TealiumModulesManager: NSObject {
         self.queue = TealiumQueues.backgroundConcurrentQueue
         let request = TealiumEnableRequest(config: config,
                                            enableCompletion: enableCompletion)
-        self.modules.first?.handle(request)
+        self.modules?.first?.handle(request)
     }
 
     /// Tear down all modules
     public func disable() {
         isEnabled = false
         let request = TealiumDisableRequest()
-        self.modules.first?.handle(request)
+        self.modules?.first?.handle(request)
     }
 
     /// Retrieves a currently-active module￼.
@@ -76,13 +117,18 @@ open class TealiumModulesManager: NSObject {
     /// - Parameter name: `String`
     /// - Returns: `TealiumModule?`
     public func getModule(forName name: String) -> TealiumModule? {
-        return modules.first(where: { type(of: $0).moduleConfig().name == name })
+        return modules?.first(where: {
+            type(of: $0).moduleConfig().name == name
+        })
     }
 
     /// Checks if all modules ready.
     ///
     /// - Returns: `Bool` `true` if all modules ready
     public func allModulesReady() -> Bool {
+        guard let modules = self.modules else {
+            return false
+        }
         for module in modules where module.isEnabled == false {
             return false
         }
@@ -105,7 +151,7 @@ open class TealiumModulesManager: NSObject {
     ///
     /// - Parameter track: `TealiumRequest`
     public func track(_ track: TealiumRequest) {
-        guard let firstModule = modules.first else {
+        guard let firstModule = modules?.first else {
             track.completion?(false, nil, TealiumModulesManagerError.noModules)
             return
         }
@@ -114,7 +160,9 @@ open class TealiumModulesManager: NSObject {
             track.completion?(false, nil, TealiumModulesManagerError.isDisabled)
             return
         }
-
+        guard let modules = self.modules else {
+            return
+        }
         let notReady = modulesNotReady(modules)
 
         if notReady.isEmpty == false {
@@ -161,6 +209,12 @@ open class TealiumModulesManager: NSObject {
             module.handleReport(request)
         }
     }
+    
+    
+    deinit {
+        self.modules = nil
+        self.isEnabled = false   
+    }
 }
 
 // MARK: TEALIUM MODULE DELEGATE
@@ -174,7 +228,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
     public func tealiumModuleFinished(module: TealiumModule,
                                       process: TealiumRequest) {
         TealiumQueues.backgroundConcurrentQueue.write {
-            guard let nextModule = self.modules.next(after: module) else {
+            guard let nextModule = self.modules?.next(after: module) else {
 
                 // If enable call set isEnable
                 if let process = process as? TealiumEnableRequest {
@@ -248,8 +302,9 @@ extension TealiumModulesManager: TealiumModuleDelegate {
         }
 
         // Pass request to other modules - Regular behavior
-        modules.first?.handle(process)
+        modules?.first?.handle(process)
     }
+    
 }
 
 // MARK: MODULEMANAGER EXTENSIONS

@@ -65,7 +65,9 @@ class TealiumDeviceDataModule: TealiumModule {
         data = enableTimeData()
         let config = request.config
         isMemoryEnabled = config.isMemoryReportingEnabled()
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     override func track(_ request: TealiumTrackRequest) {

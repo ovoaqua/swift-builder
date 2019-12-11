@@ -52,8 +52,9 @@ class TealiumAppDataModule: TealiumModule {
         }
         self.appData = self.appData ?? TealiumAppData(diskStorage: self.diskStorage, existingVisitorId: request.config.getExistingVisitorId())
         isEnabled = true
-
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     /// Adds current AppData to the track request￼￼.

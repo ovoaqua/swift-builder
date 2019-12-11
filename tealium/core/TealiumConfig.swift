@@ -17,6 +17,10 @@ open class TealiumConfig {
     public let datasource: String?
     public lazy var optionalData = [String: Any]()
 
+    var copy: TealiumConfig {
+            return TealiumConfig(account: self.account, profile: self.profile, environment: self.environment, datasource: self.datasource, optionalData: self.optionalData)
+    }
+
     /// Convenience constructor.
     ///
     /// - Parameters:
@@ -82,6 +86,7 @@ extension TealiumConfig: Equatable {
         if lhs.environment != rhs.environment { return false }
         let lhsKeys = lhs.optionalData.keys.sorted()
         let rhsKeys = rhs.optionalData.keys.sorted()
+        if lhs.getModulesList() != rhs.getModulesList() { return false }
         if lhsKeys.count != rhsKeys.count { return false }
         for (index, key) in lhsKeys.enumerated() {
             if key != rhsKeys[index] { return false }

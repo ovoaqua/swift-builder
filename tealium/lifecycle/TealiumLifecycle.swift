@@ -28,7 +28,7 @@ public struct TealiumLifecycle: Codable {
     var sessions = [TealiumLifecycleSession]() {
         didSet {
             // Limit size of sessions records
-            if sessions.count > sessionsSize &&
+            while sessions.count > sessionsSize &&
                 sessionsSize > 1 {
                 sessions.remove(at: 1)
             }

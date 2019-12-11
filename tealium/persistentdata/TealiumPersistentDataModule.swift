@@ -48,7 +48,9 @@ class TealiumPersistentDataModule: TealiumModule {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumPersistentKey.moduleName, isCritical: true)
         }
         self.persistentData = TealiumPersistentData(diskStorage: self.diskStorage)
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     /// Disables the module and deletes all associated data￼￼.

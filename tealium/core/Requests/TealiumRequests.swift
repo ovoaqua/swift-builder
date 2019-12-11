@@ -61,6 +61,7 @@ public struct TealiumEnableRequest: TealiumRequest {
     public var completion: TealiumCompletion?
     public var enableCompletion: TealiumEnableCompletion?
     public let config: TealiumConfig
+    public var bypassDidFinish = false
 
     public init(config: TealiumConfig, enableCompletion: TealiumEnableCompletion?) {
         self.config = config

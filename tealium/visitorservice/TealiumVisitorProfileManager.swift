@@ -94,7 +94,10 @@ public class TealiumVisitorProfileManager: TealiumVisitorProfileManagerProtocol 
     func blockState() {
         currentState.value = VisitorProfileStatus.blocked.rawValue
         stateTimer = TealiumRepeatingTimer(timeInterval: 10.0)
-        stateTimer?.eventHandler = {
+        stateTimer?.eventHandler = { [weak self] in
+               guard let self = self else {
+                   return
+               }
             self.releaseState()
             self.stateTimer?.suspend()
         }
@@ -115,7 +118,10 @@ public class TealiumVisitorProfileManager: TealiumVisitorProfileManagerProtocol 
         }
         pollingAttempts.value = 0
         self.timer = TealiumRepeatingTimer(timeInterval: TealiumVisitorProfileConstants.pollingInterval)
-        self.timer?.eventHandler = {
+        self.timer?.eventHandler = { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.fetchProfile { profile, error in
                 guard error == nil else {
                     self.releaseState()

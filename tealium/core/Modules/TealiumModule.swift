@@ -94,7 +94,9 @@ open class TealiumModule: TealiumModuleProtocol {
     /// - Parameter request: `TealiumEnableRequest`.
     open func enable(_ request: TealiumEnableRequest) {
         isEnabled = true
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     /// Most modules will want to be able to be disabled.￼

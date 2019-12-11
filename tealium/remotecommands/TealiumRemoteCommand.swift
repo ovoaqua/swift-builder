@@ -57,10 +57,10 @@ open class TealiumRemoteCommand {
         guard let responseId = response.responseId() else {
             return
         }
-        guard TealiumRemoteCommands.pendingResponses[responseId] == true else {
+        guard TealiumRemoteCommands.pendingResponses.value[responseId] == true else {
             return
         }
-        TealiumRemoteCommands.pendingResponses[responseId] = nil
+        TealiumRemoteCommands.pendingResponses.value[responseId] = nil
         guard let notification = TealiumRemoteCommand.completionNotification(for: commandId,
                                                                              response: response) else {
                                                                                         return

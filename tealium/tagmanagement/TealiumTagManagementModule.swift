@@ -54,7 +54,10 @@ public class TealiumTagManagementModule: TealiumModule {
         let config = request.config
         enableNotifications()
 
-        self.tagManagement?.enable(webviewURL: config.webviewURL(), shouldMigrateCookies: true, delegates: config.getWebViewDelegates(), view: config.getRootView()) { _, error in
+        self.tagManagement?.enable(webviewURL: config.webviewURL(), shouldMigrateCookies: true, delegates: config.getWebViewDelegates(), view: config.getRootView()) { [weak self] _, error in
+            guard let self = self else {
+                return
+            }
             TealiumQueues.backgroundConcurrentQueue.write {
                 if let error = error {
                     let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel() ?? defaultTealiumLogLevel)
@@ -62,14 +65,19 @@ public class TealiumTagManagementModule: TealiumModule {
                     self.errorState.incrementAndGet()
                 }
                 self.isEnabled = true
-                self.didFinish(request)
+                if !request.bypassDidFinish {
+                    self.didFinish(request)
+                }
             }
         }
     }
 
     /// Listens for notifications from the Remote Commands module. Typically these will be responses from a Remote Command that has finished executing.
     func enableNotifications() {
-        remoteCommandResponseObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name(TealiumKey.jsNotificationName), object: nil, queue: OperationQueue.main) { notification in
+        remoteCommandResponseObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name(TealiumKey.jsNotificationName), object: nil, queue: OperationQueue.main) { [weak self] notification in
+            guard let self = self else {
+                return
+            }
             if let userInfo = notification.userInfo, let jsCommand = userInfo[TealiumKey.jsCommand] as? String {
                 // Webview instance will ensure this is processed on the main thread
                 self.tagManagement?.evaluateJavascript(jsCommand, nil)
@@ -175,7 +183,10 @@ public class TealiumTagManagementModule: TealiumModule {
     func dispatchTrack(_ request: TealiumRequest) {
         // Webview has failed for some reason
         if tagManagement?.isWebViewReady() == false {
-            TealiumQueues.backgroundConcurrentQueue.write {
+            TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                guard let self = self else {
+                    return
+                }
                 self.didFailToFinish(request,
                                      info: nil,
                                      error: TealiumTagManagementError.webViewNotYetReady)
@@ -191,7 +202,10 @@ public class TealiumTagManagementModule: TealiumModule {
                 #if TEST
                 #else
                 self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write {
+                    TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                       guard let self = self else {
+                           return
+                       }
                         track.completion?(success, info, error)
                         guard error == nil else {
                             self.didFailToFinish(track, info: info, error: error!)
@@ -206,7 +220,10 @@ public class TealiumTagManagementModule: TealiumModule {
                 #if TEST
                 #else
                 self.tagManagement?.track(track.trackDictionary) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write {
+                    TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                       guard let self = self else {
+                           return
+                       }
                         track.completion?(success, info, error)
                         guard error == nil else {
                             self.didFailToFinish(track, info: info, error: error!)
@@ -277,10 +294,19 @@ public class TealiumTagManagementModule: TealiumModule {
     override public func disable(_ request: TealiumDisableRequest) {
         isEnabled = false
         self.pendingTrackRequests = [TealiumRequest]()
-        DispatchQueue.main.async {
-            self.tagManagement?.disable()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.tagManagement = nil
+            self.didFinish(request,
+                           info: nil)
         }
-        didFinish(request,
-                  info: nil)
     }
+
+    deinit {
+        self.remoteCommandResponseObserver = nil
+        self.disable(TealiumDisableRequest())
+    }
+
 }

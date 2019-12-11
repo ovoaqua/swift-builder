@@ -105,7 +105,9 @@ class TealiumConnectivityModule: TealiumModule {
         connectivity.addConnectivityDelegate(delegate: self)
         self.config = request.config
         self.refreshConnectivityStatus()
-        didFinishWithNoResponse(request)
+        if !request.bypassDidFinish {
+            didFinishWithNoResponse(request)
+        }
     }
 
     /// Handles the track request and queues if no connection available (requires DispatchQueue module).
@@ -117,7 +119,8 @@ class TealiumConnectivityModule: TealiumModule {
             return
         }
 
-        if TealiumConnectivity.isConnectedToNetwork() == false {
+        if TealiumConnectivity.isConnectedToNetwork() == false || (config?.wifiOnlySending == true &&
+        TealiumConnectivity.currentConnectionType() != TealiumConnectivityKey.connectionTypeWifi) {
             self.refreshConnectivityStatus()
             // Save in cache
             enqueue(request)

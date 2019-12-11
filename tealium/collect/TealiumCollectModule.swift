@@ -46,7 +46,9 @@ class TealiumCollectModule: TealiumModule {
             // Collect dispatch service
             let urlString = config?.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL
             self.collect = TealiumCollectPostDispatcher(dispatchURL: urlString) { _, _ in
-                self.didFinish(request)
+                if !request.bypassDidFinish {
+                    self.didFinish(request)
+                }
                 return
             }
         }

@@ -57,7 +57,9 @@ class TealiumAttributionModule: TealiumModule {
         self.attributionData = TealiumAttributionData(diskStorage: self.diskStorage,
                                                       isSearchAdsEnabled: request.config.isSearchAdsEnabled())
         isEnabled = true
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     /// Adds current AttributionData to the track request￼.

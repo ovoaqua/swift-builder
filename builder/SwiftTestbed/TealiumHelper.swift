@@ -69,11 +69,14 @@ class TealiumHelper: NSObject {
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: ["autotracking",])
+                                      moduleNames: ["autotracking"])
+//              let list = TealiumModulesList(isWhitelist: true,
+//                                              moduleNames: ["tagmanagement", "logger"])
         config.setModulesList(list)
         config.setDiskStorageEnabled(isEnabled: true)
         config.addVisitorServiceDelegate(self)
         config.setIsRemoteAPIEnabled(true)
+        config.setLogLevel(.verbose)
         #endif
         #if os(iOS)
         
@@ -91,18 +94,28 @@ class TealiumHelper: NSObject {
         #endif
 
         // REQUIRED Initialization
-        tealium = Tealium(config: config) { response in
+        tealium = Tealium(config: config) { [weak self] response in
         // Optional processing post init.
         // Optionally, join a trace. Trace ID must be generated server-side in UDH.
 //        self.tealium?.leaveTrace(killVisitorSession: true)
-        self.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
+        self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
             
-        self.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
+        self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
             
-                            self.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
-                            self.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
+                            self?.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
+                            self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
 
         }
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute:
+//            { [weak self] in
+//                guard let self = self else {
+//                    return
+//                }
+//                TealiumQueues.backgroundConcurrentQueue.write {
+//                    self.tealium = nil
+//                }
+//        })
     }
 
     func track(title: String, data: [String: Any]?) {

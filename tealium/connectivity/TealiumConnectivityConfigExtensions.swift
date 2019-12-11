@@ -27,4 +27,14 @@ public extension TealiumConfig {
     func setConnectivityRefreshEnabled(_ enabled: Bool) {
         optionalData[TealiumConnectivityKey.refreshEnabledKey] = enabled
     }
+
+    var wifiOnlySending: Bool {
+        get {
+            return self.optionalData["wifi_only_sending"] as? Bool ?? false
+        }
+
+        set {
+            self.optionalData["wifi_only_sending"] = newValue
+        }
+    }
 }

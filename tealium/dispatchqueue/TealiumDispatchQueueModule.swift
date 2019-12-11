@@ -69,7 +69,9 @@ class TealiumDispatchQueueModule: TealiumModule {
         #endif
         isEnabled = true
         Tealium.lifecycleListeners.addDelegate(delegate: self)
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     override func handle(_ request: TealiumRequest) {

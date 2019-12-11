@@ -60,7 +60,9 @@ public class TealiumVisitorServiceModule: TealiumModule {
                                                                  delegates: request.config.getVisitorServiceDelegates(),
                                                                  diskStorage: self.diskStorage)
 
-            self.didFinish(request)
+            if !request.bypassDidFinish {
+                didFinish(request)
+            }
             return
         }
         visitorProfileManager = visitor

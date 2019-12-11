@@ -93,7 +93,9 @@ class TealiumCrashModule: TealiumModule {
     override func enable(_ request: TealiumEnableRequest) {
         isEnabled = true
         _ = crashReporter?.enable()
-        didFinish(request)
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     override func disable(_ request: TealiumDisableRequest) {
