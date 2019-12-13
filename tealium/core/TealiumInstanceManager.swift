@@ -25,8 +25,16 @@ public class TealiumInstanceManager {
         tealiumInstances[instanceKey] = instance
     }
 
-    func removeInstance(config: TealiumConfig) {
+    /// Disables the specified instance. If there are no other references elsewhere in the app, the instances will be destroyed.
+    /// - Parameter config: `TealiumConfig` for the instance
+    public func removeInstance(config: TealiumConfig) {
         let instanceKey = generateInstanceKey(for: config)
+        tealiumInstances[instanceKey] = nil
+    }
+
+    /// Disables the specified instance. If there are no other references elsewhere in the app, the instances will be destroyed.
+    /// - Parameter instanceKey: `String` containing the instance name. Default `account.profile.environment`.
+    public func removeInstanceForKey(_ instanceKey: String) {
         tealiumInstances[instanceKey] = nil
     }
 
@@ -37,6 +45,11 @@ public class TealiumInstanceManager {
             return instance
         }
         return nil
+    }
+
+    /// Disables all instances. If there are no other references elsewhere in the app, the instances will be destroyed.
+    public func disable() {
+        self.tealiumInstances = [String: Tealium]()
     }
 
     func generateInstanceKey(for config: TealiumConfig) -> String {

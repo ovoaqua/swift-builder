@@ -227,7 +227,10 @@ extension TealiumModulesManager: TealiumModuleDelegate {
     ///     - process: `TealiumRequest` that has been processed
     public func tealiumModuleFinished(module: TealiumModule,
                                       process: TealiumRequest) {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+            guard let self = self else {
+                return
+            }
             guard let nextModule = self.modules?.next(after: module) else {
 
                 // If enable call set isEnable
@@ -235,7 +238,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
                     self.isEnabled = true
                     // Should never be nil at this point, but we are running on a background thread, so there's a very slim chance. This may happen in unit tests
                     if self.tealiumInstance != nil {
-                     process.enableCompletion?(process.moduleResponses)
+                        process.enableCompletion?(process.moduleResponses)
                     }
                 }
                 // Last module has finished processing

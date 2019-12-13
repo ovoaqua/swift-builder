@@ -53,6 +53,7 @@ class TealiumHelper: NSObject {
         config.setConsentLoggingEnabled(true)
         config.setSearchAdsEnabled(true)
         config.setInitialUserConsentStatus(.consented)
+        config.shouldAddCookieObserver = false
 //        config.setBatchSize(5)
 //        config.setDispatchAfter(numberOfEvents: 5)
 //        config.setMaxQueueSize(200)
@@ -106,16 +107,6 @@ class TealiumHelper: NSObject {
                             self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
 
         }
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute:
-//            { [weak self] in
-//                guard let self = self else {
-//                    return
-//                }
-//                TealiumQueues.backgroundConcurrentQueue.write {
-//                    self.tealium = nil
-//                }
-//        })
     }
 
     func track(title: String, data: [String: Any]?) {

@@ -40,11 +40,13 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
     ///     - webviewURL: `URL?` (typically for "mobile.html") to be loaded by the webview
     ///     - shouldMigrateCookies: `Bool` indicating whether cookies should be migrated from `HTTPCookieStore` (`UIWebView`).
     ///     - delegates: `[AnyObject]?` Array of delegates, downcast fromAnyObject to account for any future potential changes in WebView APIs
+    ///     - shouldAddCookieObserver: `Bool` indicating whether the cookie observer should be added. Default `true`.
     ///     - view: `UIView? ` - required `WKWebView`, if one is not provided we attach to the window object
     ///     - completion: completion block to be called when the webview has finished loading
     public func enable(webviewURL: URL?,
                        shouldMigrateCookies: Bool,
                        delegates: [AnyObject]?,
+                       shouldAddCookieObserver: Bool,
                        view: UIView?,
                        completion: ((_ success: Bool, _ error: Error?) -> Void)?) {
         guard webview == nil else {
@@ -56,7 +58,7 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
         }
         enableCompletion = completion
         self.url = webviewURL
-        setupWebview(forURL: webviewURL, withSpecificView: view)
+        setupWebview(forURL: webviewURL, shouldAddCookieObserver: shouldAddCookieObserver, withSpecificView: view)
     }
 
     /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
@@ -101,13 +103,14 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
     ///    - url: `URL` (typically for mobile.html) to load in the webview
     ///    - specificView: `UIView?` to attach to
     func setupWebview(forURL url: URL?,
+                      shouldAddCookieObserver: Bool,
                       withSpecificView specificView: UIView?) {
-        DispatchQueue.main.async { [weak self] in
+        TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
-                return
+               return
             }
             // required to force cookies to sync
-            if #available(iOS 11, *) {
+            if #available(iOS 11, *), shouldAddCookieObserver {
                 WKWebsiteDataStore.default().httpCookieStore.add(self)
             }
             let config = WKWebViewConfiguration()
@@ -126,7 +129,7 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
                         return
                     }
                     let request = URLRequest(url: url)
-                    DispatchQueue.main.async {
+                    TealiumQueues.mainQueue.async {
                         webview.load(request)
                     }
                 }
@@ -143,9 +146,9 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
         }
         reloadHandler = completion
         let request = URLRequest(url: url)
-        DispatchQueue.main.async { [weak self] in
+        TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
-                return
+               return
             }
             self.currentState = AtomicInteger(value: WebViewState.isLoading.rawValue)
             self.webview?.load(request)
@@ -175,10 +178,10 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
                         TealiumTagManagementError.couldNotJSONEncodeData)
             return
         }
-        DispatchQueue.main.async { [weak self] in
-                   guard let self = self else {
-                       return
-                   }
+        TealiumQueues.mainQueue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
             // always re-attach to UIView. If specific view has been previously passed in, this will be used.
             // nil is passed to force attachToUIView to auto-detect and check for a valid view, since this track call could be happening after the view was dismissed
             self.attachToUIView(specificView: nil) { _ in }
@@ -227,24 +230,26 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
     ///     - completion: Optional completion block to be called after the JavaScript call completes
     public func evaluateJavascript (_ jsString: String, _ completion: (([String: Any]) -> Void)?) {
         // webview js evaluation must be on main thread
-        var info = [String: Any]()
-        DispatchQueue.main.async {  [weak self] in
-                   guard let self = self else {
-                       return
-                   }
+        TealiumQueues.mainQueue.async { [weak self] in
+            guard let self = self else {
+               return
+            }
             if self.webview?.superview == nil {
                 self.attachToUIView(specificView: nil) { _ in }
             }
             self.webview?.evaluateJavaScript(jsString) { result, error in
+                let info = Atomic(value: [String: Any]())
                 if let result = result {
-                    info += [TealiumTagManagementKey.jsResult: result]
+                    info.value += [TealiumTagManagementKey.jsResult: result]
                 }
 
                 if let error = error {
-                    info += [TealiumTagManagementKey.jsError: error]
+                    info.value += [TealiumTagManagementKey.jsError: error]
+                }
+                TealiumQueues.backgroundConcurrentQueue.write {
+                    completion?(info.value)
                 }
             }
-            completion?(info)
         }
     }
 
@@ -287,26 +292,26 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
     }
 
     /// Called when the module needs to disable the webview.
-    public func disable() {
-        self.delegates = nil
-        // these methods MUST be called on the main thread. Cannot be async, or self will be deallocated before these run
-        if !Thread.isMainThread {
-            TealiumQueues.mainQueue.sync {
+      public func disable() {
+          self.delegates = nil
+          // these methods MUST be called on the main thread. Cannot be async, or self will be deallocated before these run
+          if !Thread.isMainThread {
+              TealiumQueues.mainQueue.sync {
                 self.webview?.navigationDelegate = nil
                 // if this isn't run, the webview will remain attached in a kind of zombie state
                 self.webview?.removeFromSuperview()
                 self.webview?.stopLoading()
-            }
-        } else {
-            self.webview?.navigationDelegate = nil
-            // if this isn't run, the webview will remain attached in a kind of zombie state
-            self.webview?.removeFromSuperview()
-            self.webview?.stopLoading()
-        }
-        self.webview = nil
-    }
+              }
+          } else {
+              self.webview?.navigationDelegate = nil
+              // if this isn't run, the webview will remain attached in a kind of zombie state
+              self.webview?.removeFromSuperview()
+              self.webview?.stopLoading()
+          }
+          self.webview = nil
+      }
 
-    deinit {
-        self.disable()
-    }
+      deinit {
+          self.disable()
+      }
 }

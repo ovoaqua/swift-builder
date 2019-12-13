@@ -54,21 +54,27 @@ public class TealiumTagManagementModule: TealiumModule {
         let config = request.config
         enableNotifications()
 
-        self.tagManagement?.enable(webviewURL: config.webviewURL(), shouldMigrateCookies: true, delegates: config.getWebViewDelegates(), view: config.getRootView()) { [weak self] _, error in
+        self.tagManagement?.enable(webviewURL: config.webviewURL(), shouldMigrateCookies: true, delegates: config.getWebViewDelegates(), shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.getRootView()) { [weak self] _, error in
             guard let self = self else {
                 return
             }
-            TealiumQueues.backgroundConcurrentQueue.write {
+            TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                guard let self = self else {
+                    return
+                }
                 if let error = error {
-                    let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel() ?? defaultTealiumLogLevel)
+                    let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel() ?? TealiumLogLevel.errors)
                     logger.log(message: (error.localizedDescription), logLevel: .warnings)
                     self.errorState.incrementAndGet()
                 }
-                self.isEnabled = true
-                if !request.bypassDidFinish {
-                    self.didFinish(request)
-                }
             }
+        }
+        self.isEnabled = true
+        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.didFinish(request)
         }
     }
 
@@ -203,9 +209,9 @@ public class TealiumTagManagementModule: TealiumModule {
                 #else
                 self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
                     TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                       guard let self = self else {
-                           return
-                       }
+                        guard let self = self else {
+                            return
+                        }
                         track.completion?(success, info, error)
                         guard error == nil else {
                             self.didFailToFinish(track, info: info, error: error!)
@@ -221,9 +227,9 @@ public class TealiumTagManagementModule: TealiumModule {
                 #else
                 self.tagManagement?.track(track.trackDictionary) { success, info, error in
                     TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                       guard let self = self else {
-                           return
-                       }
+                        guard let self = self else {
+                            return
+                        }
                         track.completion?(success, info, error)
                         guard error == nil else {
                             self.didFailToFinish(track, info: info, error: error!)
@@ -293,19 +299,18 @@ public class TealiumTagManagementModule: TealiumModule {
     /// - Parameter request: `TealiumDisableRequest` indicating that the module should be disabled
     override public func disable(_ request: TealiumDisableRequest) {
         isEnabled = false
+        self.remoteCommandResponseObserver = nil
         self.pendingTrackRequests = [TealiumRequest]()
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
+        if !Thread.isMainThread {
+            TealiumQueues.mainQueue.sync {
+                self.tagManagement = nil
             }
+        } else {
             self.tagManagement = nil
-            self.didFinish(request,
-                           info: nil)
         }
     }
 
     deinit {
-        self.remoteCommandResponseObserver = nil
         self.disable(TealiumDisableRequest())
     }
 

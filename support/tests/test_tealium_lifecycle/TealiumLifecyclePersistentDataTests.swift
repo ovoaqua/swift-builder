@@ -48,10 +48,9 @@ class TealiumLifecyclePersistentDataTests: XCTestCase {
         TealiumLifecycleSession(withLaunchDate: date)
         ]
         persistentData.save(lifecycle)
-        mockStorage.retrieve(as: TealiumLifecycle.self) { _, data, _ in
-            XCTAssertEqual(data?.countCrashTotal, 5)
-            XCTAssertEqual(data?.sessions, lifecycle.sessions)
-        }
+        let data = mockStorage.retrieve(as: TealiumLifecycle.self)
+        XCTAssertEqual(data!.countCrashTotal, 5)
+        XCTAssertEqual(data!.sessions, lifecycle.sessions)
     }
 
 }

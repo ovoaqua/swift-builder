@@ -35,15 +35,15 @@ public class Tealium {
         self.enableCompletion = enableCompletion
         modulesManager = TealiumModulesManager()
         self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
-        if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
-            self.config = remoteConfig
-        }
+//        if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
+//            self.config = remoteConfig
+//        }
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
                 return
             }
             self.enable(tealiumInstance: self)
-//            TealiumInstanceManager.shared.addInstance(self, config: config)
+            TealiumInstanceManager.shared.addInstance(self, config: config)
         }
     }
 
@@ -55,7 +55,10 @@ public class Tealium {
     /// Enable call used after disable() to re-enable library activites. Unnecessary to call after
     /// initial init. Does NOT override individual module enabled flags.
     public func enable(tealiumInstance: Tealium? = nil) {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.modulesManager.enable(config: self.config,
                                        enableCompletion: self.enableCompletion,
                                        tealiumInstance: tealiumInstance)
@@ -162,11 +165,6 @@ public class Tealium {
 
         return trackData
     }
-
-    deinit {
-        TealiumInstanceManager.shared.removeInstance(config: config)
-    }
-
 }
 
 extension Tealium: TealiumPublishSettingsDelegate {
