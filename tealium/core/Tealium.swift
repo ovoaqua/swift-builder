@@ -35,9 +35,9 @@ public class Tealium {
         self.enableCompletion = enableCompletion
         modulesManager = TealiumModulesManager()
         self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
-//        if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
-//            self.config = remoteConfig
-//        }
+        if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
+            self.config = remoteConfig
+        }
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
                 return
