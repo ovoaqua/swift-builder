@@ -65,6 +65,19 @@ public class TealiumLifecycleModule: TealiumModule {
         }
     }
 
+    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config,
+            newConfig.account != config?.account, newConfig.profile != config?.profile, newConfig.environment != config?.environment {
+            self.config = newConfig
+            self.diskStorage = TealiumDiskStorage(config: newConfig, forModule: TealiumLifecycleModuleKey.moduleName)
+            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
+            enableRequest.bypassDidFinish = true
+            enable(enableRequest)
+        }
+        didFinish(request)
+    }
+
     /// Disables the module and deletes all associated data￼￼.
     ///
     /// - Parameter request: `TealiumDisableRequest`

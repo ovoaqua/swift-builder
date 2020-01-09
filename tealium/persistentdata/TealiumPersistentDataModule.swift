@@ -53,6 +53,18 @@ class TealiumPersistentDataModule: TealiumModule {
         }
     }
 
+    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            self.config = newConfig
+            self.diskStorage = TealiumDiskStorage(config: newConfig, forModule: TealiumPersistentKey.moduleName, isCritical: true)
+            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
+            enableRequest.bypassDidFinish = true
+            enable(enableRequest)
+        }
+        didFinish(request)
+    }
+
     /// Disables the module and deletes all associated data￼￼.
     ///
     /// - Parameter request: `TealiumDisableRequest`

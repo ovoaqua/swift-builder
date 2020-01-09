@@ -36,6 +36,15 @@ class TealiumDelegateModule: TealiumModule {
         }
     }
 
+    override func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            delegates = newConfig.delegates()
+        }
+        self.config = newConfig
+        didFinish(request)
+    }
+
     /// Notifies listening delegates of a completed track request.
     ///
     /// - Parameter request: `TealiumRequest`

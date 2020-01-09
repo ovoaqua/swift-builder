@@ -55,6 +55,8 @@ class TealiumDeviceDataModule: TealiumModule {
             enable(request)
         case let request as TealiumTrackRequest:
             track(request)
+        case let request as TealiumUpdateConfigRequest:
+            updateConfig(request)
         default:
             didFinishWithNoResponse(request)
         }
@@ -63,11 +65,22 @@ class TealiumDeviceDataModule: TealiumModule {
     override func enable(_ request: TealiumEnableRequest) {
         isEnabled = true
         data = enableTimeData()
-        let config = request.config
-        isMemoryEnabled = config.isMemoryReportingEnabled()
+        self.config = request.config
+        isMemoryEnabled = request.config.isMemoryReportingEnabled()
         if !request.bypassDidFinish {
             didFinish(request)
         }
+    }
+
+    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            self.config = newConfig
+            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
+            enableRequest.bypassDidFinish = true
+            enable(enableRequest)
+        }
+        didFinish(request)
     }
 
     override func track(_ request: TealiumTrackRequest) {

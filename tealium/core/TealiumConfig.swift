@@ -17,7 +17,7 @@ open class TealiumConfig {
     public let datasource: String?
     public lazy var optionalData = [String: Any]()
 
-    var copy: TealiumConfig {
+    public var copy: TealiumConfig {
             return TealiumConfig(account: self.account, profile: self.profile, environment: self.environment, datasource: self.datasource, optionalData: self.optionalData)
     }
 
@@ -146,5 +146,19 @@ public extension TealiumConfig {
 
     func getExistingVisitorId() -> String? {
         return self.optionalData[TealiumKey.visitorId] as? String
+    }
+}
+
+
+// Publish Settings
+public extension TealiumConfig {
+    var shouldUseRemotePublishSettings: Bool {
+        get {
+            return self.optionalData[TealiumKey.publishSettings] as? Bool ?? true
+        }
+        
+        set{
+            self.optionalData[TealiumKey.publishSettings] = newValue
+        }
     }
 }

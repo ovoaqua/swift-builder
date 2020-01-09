@@ -34,9 +34,11 @@ public class Tealium {
         self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
         modulesManager = TealiumModulesManager()
-        self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
-        if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
-            self.config = remoteConfig
+        if config.shouldUseRemotePublishSettings {
+            self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
+            if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
+                self.config = remoteConfig
+            }
         }
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
@@ -71,6 +73,8 @@ public class Tealium {
     public func update(config: TealiumConfig) {
         TealiumQueues.backgroundConcurrentQueue.write {
             self.modulesManager.update(config: config.copy, oldConfig: self.config.copy)
+            let updateConfigRequest = TealiumUpdateConfigRequest(config: config)
+            self.modulesManager.tealiumModuleRequests(module: nil, process: updateConfigRequest)
             self.config = config
         }
     }
@@ -105,8 +109,13 @@ public class Tealium {
     public func track(title: String,
                       data: [String: Any]?,
                       completion: ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)?) {
-        TealiumQueues.backgroundConcurrentQueue.write {
-            self.remotePublishSettingsRetriever?.refresh()
+        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+            guard let self = self else{
+                return
+            }
+            if self.config.shouldUseRemotePublishSettings {
+                self.remotePublishSettingsRetriever?.refresh()
+            }
             let trackData = Tealium.trackDataFor(title: title,
                                                  optionalData: data)
             let track = TealiumTrackRequest(data: trackData,

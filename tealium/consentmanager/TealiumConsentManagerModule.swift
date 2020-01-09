@@ -53,6 +53,20 @@ class TealiumConsentManagerModule: TealiumModule {
         consentManager.addConsentDelegate(self)
     }
 
+    override func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        ready = false
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumConsentManagerModule.moduleConfig().name, isCritical: true)
+                    consentManager.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {
+                self.ready = true
+                self.didFinish(request)
+                    }
+        }
+        config = newConfig
+        didFinish(request)
+    }
+
     override func handle(_ request: TealiumRequest) {
         switch request {
         case let request as TealiumEnableRequest:
@@ -63,6 +77,8 @@ class TealiumConsentManagerModule: TealiumModule {
             batchTrack(request)
         case let request as TealiumDisableRequest:
             disable(request)
+        case let request as TealiumUpdateConfigRequest:
+            updateConfig(request)
         default:
             didFinish(request)
         }

@@ -73,6 +73,21 @@ public struct TealiumEnableRequest: TealiumRequest {
     }
 }
 
+public struct TealiumUpdateConfigRequest: TealiumRequest {
+    public var typeId = TealiumUpdateConfigRequest.instanceTypeId()
+    public var moduleResponses = [TealiumModuleResponse]()
+    public var completion: TealiumCompletion?
+    public let config: TealiumConfig
+
+    public init(config: TealiumConfig) {
+        self.config = config
+    }
+
+    public static func instanceTypeId() -> String {
+        return "updateconfig"
+    }
+}
+
 /// Request to load persistent data.
 public struct TealiumLoadRequest: TealiumRequest {
     public var typeId = TealiumLoadRequest.instanceTypeId()

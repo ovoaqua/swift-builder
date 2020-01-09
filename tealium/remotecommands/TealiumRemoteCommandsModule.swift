@@ -39,6 +39,24 @@ public class TealiumRemoteCommandsModule: TealiumModule {
         }
     }
 
+    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            self.config = newConfig
+            var existingCommands = self.remoteCommands?.commands
+            if let newCommands = newConfig.getRemoteCommands() {
+                existingCommands?.append(contentsOf: newCommands)
+            }
+            existingCommands?.forEach {
+                newConfig.addRemoteCommand($0)
+            }
+            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
+            enableRequest.bypassDidFinish = true
+            enable(enableRequest)
+        }
+        didFinish(request)
+    }
+
     /// Allows Remote Commands to be added from the TealiumConfig object.
     ///￼
     /// - Parameter config: `TealiumConfig` object containing Remote Commands

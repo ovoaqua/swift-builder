@@ -20,14 +20,33 @@ class TealiumDispatchQueueModule: TealiumModule {
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     // when to start trimming the queue (default 20) - e.g. if offline
-    var maxQueueSize = TealiumDispatchQueueConstants.defaultMaxQueueSize
+//    var maxQueueSize = TealiumDispatchQueueConstants.defaultMaxQueueSize
+    var maxQueueSize: Int {
+            self.config?.getMaxQueueSize() ?? TealiumDispatchQueueConstants.defaultMaxQueueSize
+    }
      // max number of events in a single batch
-    var maxDispatchSize = TealiumValue.maxEventBatchSize
-    var eventsBeforeAutoDispatch = 1
-    var isBatchingEnabled = true
-    var batchingBypassKeys: [String]?
-    var batchExpirationDays: Int = TealiumDispatchQueueConstants.defaultBatchExpirationDays
-    var isRemoteAPIEnabled = false
+    var maxDispatchSize: Int {
+            self.config?.getBatchSize() ?? TealiumValue.maxEventBatchSize
+    }
+    var eventsBeforeAutoDispatch: Int {
+            self.config?.getDispatchAfterEvents() ?? 1
+    }
+    var isBatchingEnabled: Bool {
+            self.config?.getIsEventBatchingEnabled() ?? true
+    }
+    var batchingBypassKeys: [String]? {
+        self.config?.getBatchingBypassKeys()
+    }
+    var batchExpirationDays: Int {
+            self.config?.getBatchExpirationDays() ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
+    }
+    var isRemoteAPIEnabled: Bool {
+            #if os(iOS)
+            return self.config?.getIsRemoteAPIEnabled() ?? false
+            #else
+            return false
+            #endif
+    }
 
     #if os(iOS)
     class var sharedApplication: UIApplication? {
@@ -49,29 +68,40 @@ class TealiumDispatchQueueModule: TealiumModule {
 
     func enable(_ request: TealiumEnableRequest,
                 diskStorage: TealiumDiskStorageProtocol? = nil) {
-        batchingBypassKeys = request.config.getBatchingBypassKeys()
+        self.config = request.config.copy
+//        batchingBypassKeys = request.config.getBatchingBypassKeys()
         // allows overriding for unit tests, independently of enable call
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumDispatchQueueConstants.moduleName)
         }
         persistentQueue = TealiumPersistentDispatchQueue(diskStorage: self.diskStorage)
         // release any previously-queued track requests
-        if let maxSize = request.config.getMaxQueueSize() {
-            maxQueueSize = maxSize
-        }
+//        if let maxSize = request.config.getMaxQueueSize() {
+//            maxQueueSize = maxSize
+//        }
         removeOldDispatches()
-        eventsBeforeAutoDispatch = request.config.getDispatchAfterEvents()
-        maxDispatchSize = request.config.getBatchSize()
-        isBatchingEnabled = request.config.getIsEventBatchingEnabled()
-        batchExpirationDays = request.config.getBatchExpirationDays()
-        #if os(iOS)
-        isRemoteAPIEnabled = request.config.getIsRemoteAPIEnabled()
-        #endif
+//        eventsBeforeAutoDispatch = request.config.getDispatchAfterEvents()
+//        maxDispatchSize = request.config.getBatchSize()
+//        isBatchingEnabled = request.config.getIsEventBatchingEnabled()
+//        batchExpirationDays = request.config.getBatchExpirationDays()
+//        #if os(iOS)
+//        isRemoteAPIEnabled = request.config.getIsRemoteAPIEnabled()
+//        #endif
         isEnabled = true
         Tealium.lifecycleListeners.addDelegate(delegate: self)
         if !request.bypassDidFinish {
             didFinish(request)
         }
+    }
+
+    override func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            self.config = newConfig
+            self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumDispatchQueueConstants.moduleName)
+            persistentQueue = TealiumPersistentDispatchQueue(diskStorage: self.diskStorage)
+        }
+        didFinish(request)
     }
 
     override func handle(_ request: TealiumRequest) {
@@ -84,6 +114,8 @@ class TealiumDispatchQueueModule: TealiumModule {
             track(request)
         case let request as TealiumEnqueueRequest:
             queue(request)
+        case let request as TealiumUpdateConfigRequest:
+            updateConfig(request)
         case _ as TealiumReleaseQueuesRequest:
             releaseQueue()
         case _ as TealiumClearQueuesRequest:

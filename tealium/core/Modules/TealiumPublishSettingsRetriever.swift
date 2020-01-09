@@ -97,6 +97,9 @@ class TealiumPublishSettingsRetriever {
                 self.cachedSettings = settings
                 self.diskStorage.save(settings, completion: nil)
                 self.delegate?.didUpdate(settings)
+            } else {
+                self.cachedSettings?.lastFetch = Date()
+                self.diskStorage.save(settings, completion: nil)
             }
         }
 

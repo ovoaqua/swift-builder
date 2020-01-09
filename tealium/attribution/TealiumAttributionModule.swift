@@ -62,6 +62,17 @@ class TealiumAttributionModule: TealiumModule {
         }
     }
 
+    override func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumAttributionKey.moduleName)
+            self.attributionData = TealiumAttributionData(diskStorage: self.diskStorage,
+                                                          isSearchAdsEnabled: request.config.isSearchAdsEnabled())
+        }
+        self.config = newConfig
+        didFinish(request)
+    }
+
     /// Adds current AttributionData to the track request￼.
     ///
     /// - Parameter track: `TealiumTrackRequest` to be modified

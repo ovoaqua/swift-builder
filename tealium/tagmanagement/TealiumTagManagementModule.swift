@@ -40,6 +40,8 @@ public class TealiumTagManagementModule: TealiumModule {
             dynamicTrack(request)
         case let request as TealiumRemoteAPIRequest:
             dynamicTrack(request)
+        case let request as TealiumUpdateConfigRequest:
+            updateConfig(request)
         default:
             didFinish(request)
         }
@@ -66,6 +68,8 @@ public class TealiumTagManagementModule: TealiumModule {
                     let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel() ?? TealiumLogLevel.errors)
                     logger.log(message: (error.localizedDescription), logLevel: .warnings)
                     self.errorState.incrementAndGet()
+                } else {
+                    self.errorState.resetToZero()
                 }
             }
         }
@@ -74,8 +78,23 @@ public class TealiumTagManagementModule: TealiumModule {
             guard let self = self else {
                 return
             }
-            self.didFinish(request)
+            if !request.bypassDidFinish {
+                self.didFinish(request)
+            }
         }
+    }
+
+    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            // block new requests
+            self.errorState.incrementAndGet()
+            self.config = newConfig
+            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
+            enableRequest.bypassDidFinish = true
+            enable(enableRequest)
+        }
+        didFinish(request)
     }
 
     /// Listens for notifications from the Remote Commands module. Typically these will be responses from a Remote Command that has finished executing.
@@ -189,12 +208,13 @@ public class TealiumTagManagementModule: TealiumModule {
     func dispatchTrack(_ request: TealiumRequest) {
         // Webview has failed for some reason
         if tagManagement?.isWebViewReady() == false {
+            self.enqueue(request)
             TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
                 guard let self = self else {
                     return
                 }
                 self.didFailToFinish(request,
-                                     info: nil,
+                                     info: ["error_status": "Will retry when webview ready"],
                                      error: TealiumTagManagementError.webViewNotYetReady)
             }
             return

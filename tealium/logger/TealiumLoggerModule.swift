@@ -33,12 +33,23 @@ class TealiumLoggerModule: TealiumModule {
             let id = "\(config.account):\(config.profile):\(config.environment)"
             logger = TealiumLogger(loggerId: id, logLevel: logLevel)
         }
-
         delegate?.tealiumModuleRequests(module: self,
                                         process: TealiumReportNotificationsRequest())
         if !request.bypassDidFinish {
             didFinish(request)
         }
+    }
+
+    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        let newConfig = request.config.copy
+        if newConfig != self.config {
+            self.config = newConfig
+            self.logger = nil
+            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
+            enableRequest.bypassDidFinish = true
+            enable(enableRequest)
+        }
+        didFinish(request)
     }
 
     override func disable(_ request: TealiumDisableRequest) {

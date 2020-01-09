@@ -18,7 +18,6 @@ class TealiumConnectivityModule: TealiumModule {
     static var isConnected: Bool?
     // used to simulate connection status for unit tests
     lazy var connectivity = TealiumConnectivity()
-    var config: TealiumConfig?
 
     @available(*, deprecated, message: "Internal only. Used only for unit tests. Using this method will disable connectivity checks.")
     public static func setConnectionOverride(shouldOverride override: Bool) {
@@ -47,6 +46,8 @@ class TealiumConnectivityModule: TealiumModule {
             dynamicDispatch(request)
         case let request as TealiumConnectivityRequest:
             handleConnectivityReport(request: request)
+        case let request as TealiumUpdateConfigRequest:
+            updateConfig(request)
         default:
             didFinishWithNoResponse(request)
         }

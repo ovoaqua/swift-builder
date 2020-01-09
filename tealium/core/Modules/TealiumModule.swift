@@ -38,7 +38,7 @@ open class TealiumModule: TealiumModuleProtocol {
 
     public weak var delegate: TealiumModuleDelegate?
     public var isEnabled: Bool = false
-
+    open var config: TealiumConfig?
     /// Constructor.￼
     ///
     /// - Parameter delegate: Delegate for module, usually the ModulesManager.
@@ -71,6 +71,8 @@ open class TealiumModule: TealiumModuleProtocol {
             disable(request)
         } else if let request = request as? TealiumTrackRequest {
             track(request)
+        } else if let request = request as? TealiumUpdateConfigRequest {
+            updateConfig(request)
         } else {
             didFinishWithNoResponse(request)
         }
@@ -107,6 +109,14 @@ open class TealiumModule: TealiumModuleProtocol {
         isEnabled = false
         didFinish(request)
 
+    }
+    
+    /// Updates the config of this module (if applicable)
+    ///
+    /// - Parameter request: `TealiumUpdateConfigRequest`.
+    open func updateConfig(_ request: TealiumUpdateConfigRequest) {
+        self.config = request.config
+        didFinish(request)
     }
 
     // MARK: SUBCLASS CONVENIENCE METHODS
