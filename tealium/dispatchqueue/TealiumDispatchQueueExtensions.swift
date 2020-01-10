@@ -122,7 +122,7 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
             backgroundTaskId = TealiumDispatchQueueModule.sharedApplication?.beginBackgroundTask {
                 if let taskId = backgroundTaskId {
                     TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
-                    backgroundTaskId = UIBackgroundTaskInvalid
+                    backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
                 }
             }
 
@@ -132,7 +132,7 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
         if let taskId = backgroundTaskId {
             TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
                 TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
-                backgroundTaskId = UIBackgroundTaskInvalid
+                backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
             }
         }
         #elseif os(watchOS)
@@ -161,4 +161,9 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
         }
     }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIdentifier) -> Int {
+	return input.rawValue
 }

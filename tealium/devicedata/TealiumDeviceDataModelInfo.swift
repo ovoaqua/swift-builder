@@ -38,7 +38,7 @@ extension TealiumDeviceData {
             return nil
         }
         if let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) {
-            if let result = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: [String: String]] {
+            if let result = ((try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: [String: String]]) as [String : [String : String]]??) {
                 return result
             }
         }
