@@ -87,7 +87,7 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
                 case .cancel:
                     decisionAction = .cancel
                 @unknown default:
-                    <#fatalError()#>
+                    decisionAction = .cancel
                 }
             }
             $0.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: customDecisionHandler)
