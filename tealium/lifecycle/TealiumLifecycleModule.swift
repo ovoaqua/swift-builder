@@ -59,21 +59,8 @@ public class TealiumLifecycleModule: TealiumModule {
         lifecycle = savedOrNewLifeycle()
         save()
         isEnabled = true
-        Tealium.lifecycleListeners.addDelegate(delegate: self)
-        if !request.bypassDidFinish {
-            didFinish(request)
-        }
-    }
-
-    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
-        let newConfig = request.config.copy
-        if newConfig != self.config,
-            newConfig.account != config?.account, newConfig.profile != config?.profile, newConfig.environment != config?.environment {
-            self.config = newConfig
-            self.diskStorage = TealiumDiskStorage(config: newConfig, forModule: TealiumLifecycleModuleKey.moduleName)
-            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
-            enableRequest.bypassDidFinish = true
-            enable(enableRequest)
+        if config.lifecycleAutoTrackingEnabled {
+           Tealium.lifecycleListeners.addDelegate(delegate: self)
         }
         didFinish(request)
     }

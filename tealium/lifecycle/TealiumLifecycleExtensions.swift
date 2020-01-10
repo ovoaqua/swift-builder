@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-// MARK: 
+// MARK:
 // MARK: EXTENSIONS
 
 public extension Tealium {
@@ -24,6 +24,20 @@ public extension Tealium {
         return module
     }
 
+}
+
+public extension TealiumConfig {
+ 
+    var lifecycleAutoTrackingEnabled: Bool {
+        get {
+            return optionalData[TealiumLifecycleConfigKey.autotrackingEnabled] as? Bool ?? true
+        }
+        
+        set {
+            optionalData[TealiumLifecycleConfigKey.autotrackingEnabled] = newValue
+        }
+    }
+    
 }
 
 extension TealiumLifecycleModule: TealiumLifecycleEvents {
