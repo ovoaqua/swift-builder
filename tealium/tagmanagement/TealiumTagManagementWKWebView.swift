@@ -158,7 +158,7 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
     /// Internal webview status check.
     ///
     /// - Returns: `Bool` indicating whether or not the internal webview is ready for dispatching.
-    public func isWebViewReady() -> Bool {
+    public var isWebViewReady: Bool {
         guard webview != nil else {
             return false
         }

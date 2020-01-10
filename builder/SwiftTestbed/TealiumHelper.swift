@@ -107,22 +107,22 @@ class TealiumHelper: NSObject {
                             self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
 
         }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-//            let config = config
-//            config.setIsEventBatchingEnabled(false)
-//            config.setMemoryReportingEnabled(false)
-//            self.tealium?.update(config: config)
-//        }
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 25) {
-//            self.track(title: "test track", data: nil)
-//        }
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 40) {
-//            let config = config
-//            config.setMemoryReportingEnabled(true)
-//            self.tealium?.update(config: config)
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            let config = config
+            config.setIsEventBatchingEnabled(false)
+            config.setMemoryReportingEnabled(false)
+            self.tealium?.update(config: config)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 25) {
+            self.track(title: "test track", data: nil)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 40) {
+            let config = config
+            config.setMemoryReportingEnabled(true)
+            self.tealium?.update(config: config)
+        }
         
     }
 

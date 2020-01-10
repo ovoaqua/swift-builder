@@ -15,6 +15,7 @@ public class TealiumTagManagementModule: TealiumModule {
     var tagManagement: TealiumTagManagementProtocol?
     var remoteCommandResponseObserver: NSObjectProtocol?
     var errorState = AtomicInteger()
+    var webViewState: Atomic<TealiumWebViewState>? = nil
     var pendingTrackRequests = [TealiumRequest]()
 
     override public class func moduleConfig() -> TealiumModuleConfig {
@@ -68,8 +69,11 @@ public class TealiumTagManagementModule: TealiumModule {
                     let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel() ?? TealiumLogLevel.errors)
                     logger.log(message: (error.localizedDescription), logLevel: .warnings)
                     self.errorState.incrementAndGet()
+                    self.webViewState?.value = .loadFailure
                 } else {
                     self.errorState.resetToZero()
+                    self.webViewState = Atomic(value: .loadSuccess)
+                    self.flushQueue()
                 }
             }
         }
@@ -88,7 +92,7 @@ public class TealiumTagManagementModule: TealiumModule {
         let newConfig = request.config.copy
         if newConfig != self.config {
             // block new requests
-            self.errorState.incrementAndGet()
+//            self.errorState.incrementAndGet()
             self.config = newConfig
             var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
             enableRequest.bypassDidFinish = true
@@ -122,6 +126,14 @@ public class TealiumTagManagementModule: TealiumModule {
         return newRequest
     }
 
+    func flushQueue() {
+        let pending = self.pendingTrackRequests
+        self.pendingTrackRequests = []
+        pending.forEach {
+            self.dynamicTrack($0)
+        }
+    }
+    
     /// Detects track type and dispatches appropriately.
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
@@ -144,13 +156,15 @@ public class TealiumTagManagementModule: TealiumModule {
                 }
             }
             return
+        } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
+            self.enqueue(track)
+            self.didFailToFinish(track,
+                 info: ["error_status": "Will retry when webview ready"],
+                 error: TealiumTagManagementError.webViewNotYetReady)
+            return
         }
 
-        let pending = self.pendingTrackRequests
-        self.pendingTrackRequests = []
-        pending.forEach {
-            self.dynamicTrack($0)
-        }
+        flushQueue()
 
         switch track {
         case let track as TealiumTrackRequest:
@@ -206,19 +220,20 @@ public class TealiumTagManagementModule: TealiumModule {
     ///￼
     /// - Parameter track: `TealiumTrackRequest` to be sent to the webview
     func dispatchTrack(_ request: TealiumRequest) {
-        // Webview has failed for some reason
-        if tagManagement?.isWebViewReady() == false {
-            self.enqueue(request)
-            TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.didFailToFinish(request,
-                                     info: ["error_status": "Will retry when webview ready"],
-                                     error: TealiumTagManagementError.webViewNotYetReady)
-            }
-            return
-        }
+//        // Webview has failed for some reason
+//        if tagManagement?.isWebViewReady == false {
+//            self.enqueue(request)
+//            TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+//                guard let self = self else {
+//                    return
+//                }
+//                self.didFailToFinish(request,
+//                                     info: ["error_status": "Will retry when webview ready"],
+//                                     error: TealiumTagManagementError.webViewNotYetReady)
+//
+//            }
+//            return
+//        }
         switch request {
         case let track as TealiumBatchTrackRequest:
                 let allTrackData = track.trackRequests.map {
@@ -335,3 +350,5 @@ public class TealiumTagManagementModule: TealiumModule {
     }
 
 }
+
+//extension TealiumTagManagementModule: WKNavigationDelegate

@@ -36,7 +36,7 @@ public protocol TealiumTagManagementProtocol {
     /// Internal webview status check.
     ///
     /// - Returns: `Bool` indicating whether or not the internal webview is ready for dispatching.
-    func isWebViewReady() -> Bool
+    var isWebViewReady: Bool { get }
 
     /// Reloads the webview
     ///

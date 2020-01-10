@@ -54,14 +54,18 @@ class TealiumConsentManagerModule: TealiumModule {
     }
 
     override func updateConfig(_ request: TealiumUpdateConfigRequest) {
-        ready = false
         let newConfig = request.config.copy
-        if newConfig != self.config {
+        if newConfig != self.config,
+        newConfig.account != config?.account,
+        newConfig.profile != config?.profile,
+        newConfig.getInitialUserConsentCategories() != config?.getInitialUserConsentCategories(),
+        newConfig.getInitialUserConsentStatus() != config?.getInitialUserConsentStatus() {
+            ready = false
             self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumConsentManagerModule.moduleConfig().name, isCritical: true)
-                    consentManager.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {
+            consentManager.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {
                 self.ready = true
                 self.didFinish(request)
-                    }
+            }
         }
         config = newConfig
         didFinish(request)
