@@ -44,27 +44,19 @@ open class TealiumModulesManager: NSObject {
     public func update(config: TealiumConfig,
                        oldConfig: TealiumConfig?,
                        enableCompletion: TealiumEnableCompletion?) {
-//        self.modules?.removeAll()
-        
-        // TODO: Enable/disable select modules as required
         
         let currentModulesList: [String]? = modules?.map {
             return $0.description.replacingOccurrences(of: ".module", with: "")
         }
         
         var modulesToInit = [String]()
-        
-        // 1. go through new modules list (which includes modules all modules, not just delta). Init any not found in current modules, but in new list, deinit any not in new list but already initialized
-        // 2. go through new modules and init any that aren't in the current list
-         // if list was originally a whitelist, we don't want to add all other modules in
-        
+
         if let newModulesList = config.getModulesList()?.filtered {
             newModulesList.forEach { module in
                 if currentModulesList?.contains(module.description) == false {
                     modulesToInit.append(module)
                 }
             }
-            
             
             self.modules = self.modules?.filter {
                 newModulesList.contains($0.description.replacingOccurrences(of: ".module", with: "")) == true
@@ -80,12 +72,6 @@ open class TealiumModulesManager: NSObject {
             enableRequest.bypassDidFinish = true
             $0.enable(enableRequest)
         }
-        
-        // TODO: Broadcast updated config to each module as required, rather than re-enabling
-        
-        
-//        enable(config: config,
-//               enableCompletion: enableCompletion)
     }
 
     /// Enables modules￼.

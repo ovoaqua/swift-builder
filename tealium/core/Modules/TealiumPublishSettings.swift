@@ -9,19 +9,6 @@
 import Foundation
 
 struct RemotePublishSettings: Codable {
-    /* ALL STRINGS
-    battery_saver: true/false
-    dispatch_expiration: -1
-    enable_collect: true/false
-    enable_tag_management: true/false
-    event_batch_size: 1
-    minutes_between_refresh: 15.0
-    offline_dispatch_limit: 100,
-    override_log,
-    wifi_only_sending: false
-    _is_enabled: true
-     // TODO: Last updated
-    **/
 
     var batterySaver: Bool
     var dispatchExpiration: Int
@@ -106,7 +93,6 @@ struct RemotePublishSettings: Codable {
         try container.encode(batchSize, forKey: .event_batch_size)
         try container.encode(minutesBetweenRefresh, forKey: .minutes_between_refresh)
         try container.encode(dispatchQueueLimit, forKey: .offline_dispatch_limit)
-        // TODO: this is different to the original value, so won't encode
         try container.encode(overrideLog.description, forKey: .override_log)
         try container.encode(wifiOnlySending, forKey: .wifi_only_sending)
         try container.encode(isEnabled, forKey: ._is_enabled)

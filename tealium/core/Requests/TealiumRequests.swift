@@ -259,7 +259,6 @@ public struct TealiumSaveRequest: TealiumRequest {
     }
 }
 
-// TODO: Remote API
 public struct TealiumRemoteAPIRequest: TealiumRequest {
     public var typeId = TealiumRemoteAPIRequest.instanceTypeId()
     public var moduleResponses = [TealiumModuleResponse]()

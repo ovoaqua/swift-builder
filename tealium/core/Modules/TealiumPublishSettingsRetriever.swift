@@ -40,8 +40,6 @@ protocol TealiumPublishSettingsDelegate: class {
 
 class TealiumPublishSettingsRetriever {
     
-    // todo: head request
-    
     var diskStorage: TealiumDiskStorageProtocol
     var urlSession: URLSessionProtocol?
     weak var delegate: TealiumPublishSettingsDelegate?
@@ -113,7 +111,6 @@ class TealiumPublishSettingsRetriever {
         request.httpMethod = "GET"
         if let lastFetch = lastFetch {
             request.setValue(lastFetch.httpIfModifiedHeader, forHTTPHeaderField: "If-Modified-Since")
-            request.setValue(nil, forHTTPHeaderField: "If-None-Match")
             request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         }
         

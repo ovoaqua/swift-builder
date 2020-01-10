@@ -240,18 +240,6 @@ extension TealiumAutotrackingModuleTests: TealiumModuleDelegate {
     }
 }
 
-//extension TealiumAutotrackingModuleTests : TealiumAutotrackingDelegate {
-//    
-//    func tealiumAutotrackShouldTrack(data: [String : Any]) -> Bool {
-//        expectationShouldTrack?.fulfill()
-//        return true
-//    }
-//    
-//    func tealiumAutotrackCompleted(success: Bool, info: [String : Any]?, error: Error?) {
-//        expectationDidComplete?.fulfill()
-//    }
-//}
-
 class TestObject: NSObject {
 
 }
