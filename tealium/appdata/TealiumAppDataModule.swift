@@ -77,7 +77,7 @@ class TealiumAppDataModule: TealiumModule {
             didFinishWithNoResponse(track)
             return
         }
-
+        let track = addModuleName(to: track)
         // do not add data to queued hits
         guard track.trackDictionary[TealiumKey.wasQueued] as? String == nil else {
             didFinishWithNoResponse(track)

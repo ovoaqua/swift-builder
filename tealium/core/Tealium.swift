@@ -44,6 +44,9 @@ public class Tealium {
             guard let self = self else {
                 return
             }
+            guard self.config.isEnabled else {
+                return
+            }
             self.enable(tealiumInstance: self)
             TealiumInstanceManager.shared.addInstance(self, config: config)
         }
@@ -110,7 +113,7 @@ public class Tealium {
                       data: [String: Any]?,
                       completion: ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)?) {
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-            guard let self = self else{
+            guard let self = self else {
                 return
             }
             if self.config.shouldUseRemotePublishSettings {

@@ -114,6 +114,7 @@ class TealiumCollectModule: TealiumModule {
     /// - Parameter request: `TealiumTrackRequest` to be insepcted/modified
     /// - Returns: `TealiumTrackRequest`
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
+        let request = addModuleName(to: request)
         var newTrack = request.trackDictionary
         if newTrack[TealiumKey.account] == nil,
             newTrack[TealiumKey.profile] == nil {

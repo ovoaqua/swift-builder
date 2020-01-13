@@ -71,6 +71,8 @@ public enum TealiumKey {
     public static let diskStorageDirectory = "disk_storage_directory"
     public static let remoteAPICallType = "remote_api"
     public static let publishSettings = "remote_publish_settings"
+    public static let enabledModules = "enabled_modules"
+    public static let libraryEnabled = "library_is_enabled"
 }
 
 public enum TealiumModulesManagerError: Error {

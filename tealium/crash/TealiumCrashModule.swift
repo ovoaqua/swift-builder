@@ -113,6 +113,8 @@ class TealiumCrashModule: TealiumModule {
             return
         }
 
+        let track = addModuleName(to: track)
+        
         guard let crashReporter = crashReporter else {
             didFinishWithNoResponse(track)
             return

@@ -83,7 +83,7 @@ class TealiumPersistentDataModule: TealiumModule {
             didFinishWithNoResponse(track)
             return
         }
-
+        let track = addModuleName(to: track)
         guard let persistentData = self.persistentData else {
             // Unable to load persistent data - continue with track call
             didFinish(track)

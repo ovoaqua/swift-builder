@@ -205,6 +205,7 @@ class TealiumDispatchQueueModule: TealiumModule {
             didFinishWithNoResponse(request)
             return
         }
+        let request = addModuleName(to: request)
         self.triggerRemoteAPIRequest(request)
         let canWrite = diskStorage.canWrite()
         var data = request.trackDictionary

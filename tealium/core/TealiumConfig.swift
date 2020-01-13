@@ -154,11 +154,23 @@ public extension TealiumConfig {
 public extension TealiumConfig {
     var shouldUseRemotePublishSettings: Bool {
         get {
-            return self.optionalData[TealiumKey.publishSettings] as? Bool ?? true
+            return optionalData[TealiumKey.publishSettings] as? Bool ?? true
         }
         
         set{
-            self.optionalData[TealiumKey.publishSettings] = newValue
+            optionalData[TealiumKey.publishSettings] = newValue
+        }
+    }
+}
+
+public extension TealiumConfig {
+    var isEnabled: Bool {
+        get {
+            return optionalData[TealiumKey.libraryEnabled] as? Bool ?? true
+        }
+        
+        set {
+            optionalData[TealiumKey.libraryEnabled] = newValue
         }
     }
 }

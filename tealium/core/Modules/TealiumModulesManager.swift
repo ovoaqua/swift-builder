@@ -45,6 +45,16 @@ open class TealiumModulesManager: NSObject {
                        oldConfig: TealiumConfig?,
                        enableCompletion: TealiumEnableCompletion?) {
         
+        guard config.isEnabled else {
+            self.disable()
+            return
+        }
+        
+        if oldConfig?.isEnabled == false, config.isEnabled == true {
+            self.enable(config: config, enableCompletion: enableCompletion)
+            return
+        }
+        
         let currentModulesList: [String]? = modules?.map {
             return $0.description.replacingOccurrences(of: ".module", with: "")
         }

@@ -194,7 +194,16 @@ open class TealiumModule: TealiumModuleProtocol {
     ///
     /// - Parameter request: `TealiumTrackRequest` to process.
     open func track(_ request: TealiumTrackRequest) {
-        didFinishWithNoResponse(request)
+        let newRequest = addModuleName(to: request)
+        didFinishWithNoResponse(newRequest)
+    }
+    
+    open func addModuleName(to request: TealiumTrackRequest) -> TealiumTrackRequest {
+        var requestData = request.trackDictionary
+        var modulesList = requestData[TealiumKey.enabledModules] as? [String] ?? [String]()
+        modulesList.append(description.replacingOccurrences(of: ".module", with: ""))
+        requestData[TealiumKey.enabledModules] = modulesList.sorted()
+        return TealiumTrackRequest(data: requestData, completion: request.completion)
     }
 
 }

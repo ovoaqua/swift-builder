@@ -87,7 +87,7 @@ class TealiumDeviceDataModule: TealiumModule {
         guard isEnabled else {
             return
         }
-
+        let request = addModuleName(to: request)
         // do not add data to queued hits
         guard request.trackDictionary[TealiumKey.wasQueued] as? String == nil else {
             didFinishWithNoResponse(request)

@@ -93,6 +93,7 @@ class TealiumVolatileDataModule: TealiumModule {
     ///￼
     /// - Parameter track: `TealiumTrackRequest`
     override func track(_ track: TealiumTrackRequest) {
+        let track = addModuleName(to: track)
         var newData = [String: Any]()
 
         newData += track.trackDictionary

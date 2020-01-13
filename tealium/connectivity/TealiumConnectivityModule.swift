@@ -84,6 +84,7 @@ class TealiumConnectivityModule: TealiumModule {
     /// - Parameter request: `TealiumTrackRequest` to be insepcted/modified
     /// - Returns: `TealiumTrackRequest`
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
+        let request = addModuleName(to: request)
         var newData = request.trackDictionary
         // do not add data to queued hits
         if newData[TealiumKey.wasQueued] as? String == nil {

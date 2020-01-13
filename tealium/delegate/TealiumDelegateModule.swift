@@ -67,6 +67,7 @@ class TealiumDelegateModule: TealiumModule {
     ///
     /// - Parameter track: `TealiumTrackRequest`
     override func track(_ track: TealiumTrackRequest) {
+        let track = addModuleName(to: track)
         if delegates?.invokeShouldTrack(data: track.trackDictionary) == false {
             // Suppress the event from further processing
             track.completion?(false, nil, TealiumDelegateError.suppressedByShouldTrackDelegate)
