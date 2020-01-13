@@ -221,20 +221,6 @@ public class TealiumTagManagementModule: TealiumModule {
     ///￼
     /// - Parameter track: `TealiumTrackRequest` to be sent to the webview
     func dispatchTrack(_ request: TealiumRequest) {
-//        // Webview has failed for some reason
-//        if tagManagement?.isWebViewReady == false {
-//            self.enqueue(request)
-//            TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-//                guard let self = self else {
-//                    return
-//                }
-//                self.didFailToFinish(request,
-//                                     info: ["error_status": "Will retry when webview ready"],
-//                                     error: TealiumTagManagementError.webViewNotYetReady)
-//
-//            }
-//            return
-//        }
         switch request {
         case let track as TealiumBatchTrackRequest:
                 let allTrackData = track.trackRequests.map {
@@ -351,5 +337,3 @@ public class TealiumTagManagementModule: TealiumModule {
     }
 
 }
-
-//extension TealiumTagManagementModule: WKNavigationDelegate
