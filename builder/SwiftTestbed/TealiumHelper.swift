@@ -20,6 +20,7 @@ import TealiumTagManagement
 import TealiumPersistentData
 import TealiumVolatileData
 import TealiumVisitorService
+import TealiumLocation
 
 extension String: Error {}
 
@@ -78,6 +79,14 @@ class TealiumHelper: NSObject {
         config.addVisitorServiceDelegate(self)
         config.setIsRemoteAPIEnabled(true)
         config.setLogLevel(.verbose)
+        config.setIsEventBatchingEnabled(false)
+        
+        // Location
+        config.useHighAccuracy = true
+        config.updateDistance = 150.0
+        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+        config.shouldRequestPermission = true
+        
         #endif
         #if os(iOS)
         
