@@ -18,7 +18,7 @@ open class TealiumConfig {
     public lazy var optionalData = [String: Any]()
 
     public var copy: TealiumConfig {
-            return TealiumConfig(account: self.account, profile: self.profile, environment: self.environment, datasource: self.datasource, optionalData: self.optionalData)
+            return TealiumConfig(account: self.account, profile: self.profile, environment: self.environment, datasource: self.datasource, optionalData: optionalData)
     }
 
     /// Convenience constructor.
@@ -106,7 +106,7 @@ public extension TealiumConfig {
     ///
     /// - Returns: TealiumModulesList as an optional.
     func getModulesList() -> TealiumModulesList? {
-        guard let list = self.optionalData[TealiumModulesListKey.config] as? TealiumModulesList else {
+        guard let list = optionalData[TealiumModulesListKey.config] as? TealiumModulesList else {
             return nil
         }
 
@@ -117,7 +117,7 @@ public extension TealiumConfig {
     ///￼
     /// - Parameter list: The TealiumModulesList to assign.
     func setModulesList(_ list: TealiumModulesList ) {
-        self.optionalData[TealiumModulesListKey.config] = list
+        optionalData[TealiumModulesListKey.config] = list
     }
 }
 
@@ -126,14 +126,14 @@ public extension TealiumConfig {
 
     /// - Returns: `TealiumLogLevel` (default is `.errors`)
     func getLogLevel() -> TealiumLogLevel? {
-       return self.optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
+       return optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
     }
 
     /// Sets the log level to be used by the library
     ///
     /// - Parameter logLevel: `TealiumLogLevel`
     func setLogLevel(_ logLevel: TealiumLogLevel) {
-        self.optionalData[TealiumKey.logLevelConfig] = logLevel
+        optionalData[TealiumKey.logLevelConfig] = logLevel
     }
 }
 
@@ -141,11 +141,11 @@ public extension TealiumConfig {
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
     /// Should only be used in cases where the user has an existing visitor ID
     func setExistingVisitorId(_ visitorId: String) {
-        self.optionalData[TealiumKey.visitorId] = visitorId
+        optionalData[TealiumKey.visitorId] = visitorId
     }
 
     func getExistingVisitorId() -> String? {
-        return self.optionalData[TealiumKey.visitorId] as? String
+        return optionalData[TealiumKey.visitorId] as? String
     }
 }
 
@@ -154,23 +154,102 @@ public extension TealiumConfig {
 public extension TealiumConfig {
     var shouldUseRemotePublishSettings: Bool {
         get {
-            return optionalData[TealiumKey.publishSettings] as? Bool ?? true
+            optionalData[TealiumKey.publishSettings] as? Bool ?? true
         }
         
-        set{
+        set {
             optionalData[TealiumKey.publishSettings] = newValue
         }
     }
-}
-
-public extension TealiumConfig {
-    var isEnabled: Bool {
+    
+    var isEnabled: Bool? {
         get {
-            return optionalData[TealiumKey.libraryEnabled] as? Bool ?? true
+            optionalData[TealiumKey.libraryEnabled] as? Bool
         }
         
         set {
             optionalData[TealiumKey.libraryEnabled] = newValue
+        }
+    }
+ 
+    var batterySaverEnabled: Bool? {
+        get {
+            optionalData[TealiumKey.batterySaver] as? Bool
+        }
+        
+        set {
+            optionalData[TealiumKey.batterySaver] = newValue
+        }
+    }
+    
+    var dispatchExpiration: Int? {
+        get {
+            optionalData["batch_expiration_days"] as? Int
+        }
+        
+        set {
+            optionalData["batch_expiration_days"] = newValue
+        }
+    }
+    
+    var batchingEnabled: Bool? {
+        get {
+            optionalData["batching_enabled"] as? Bool
+        }
+        
+        set {
+            optionalData["batching_enabled"] = newValue
+        }
+    }
+    
+    var batchSize: Int? {
+        get {
+            optionalData["queue_size"] as? Int
+        }
+        
+        set {
+            optionalData["queue_size"] = newValue
+        }
+        
+    }
+    
+    var dispatchQueueLimit: Int? {
+        get {
+            optionalData["queue_size"] as? Int
+        }
+        
+        set {
+            optionalData["queue_size"] = newValue
+        }
+    }
+    
+    var wifiOnlySending: Bool? {
+        get {
+            optionalData["wifi_only_sending"] as? Bool
+        }
+        
+        set {
+            optionalData["wifi_only_sending"] = newValue
+        }
+    }
+    
+    var minutesBetweenRefresh: Double? {
+        get {
+            optionalData["minutes_between_refresh"] as? Double
+        }
+        
+        set {
+            optionalData["minutes_between_refresh"] = newValue
+        }
+    }
+    
+    var logLevel: TealiumLogLevel? {
+        get {
+            optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
+        }
+        
+        set {
+            optionalData[TealiumKey.logLevelConfig] = newValue
         }
     }
 }

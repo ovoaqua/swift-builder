@@ -45,7 +45,7 @@ open class TealiumModulesManager: NSObject {
                        oldConfig: TealiumConfig?,
                        enableCompletion: TealiumEnableCompletion?) {
         
-        guard config.isEnabled else {
+        guard config.isEnabled == true else {
             self.disable()
             return
         }

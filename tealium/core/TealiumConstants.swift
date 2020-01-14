@@ -73,6 +73,7 @@ public enum TealiumKey {
     public static let publishSettings = "remote_publish_settings"
     public static let enabledModules = "enabled_modules"
     public static let libraryEnabled = "library_is_enabled"
+    public static let batterySaver = "battery_saver"
 }
 
 public enum TealiumModulesManagerError: Error {

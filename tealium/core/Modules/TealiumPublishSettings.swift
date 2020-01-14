@@ -101,38 +101,50 @@ struct RemotePublishSettings: Codable {
     
     public func newConfig(with config: TealiumConfig) -> TealiumConfig {
         let config = config.copy
-        var optionalData = config.optionalData
+//        var optionalData = config.optionalData
         //    case battery_saver
-        optionalData["battery_saver_enabled"] = batterySaver
+        config.batterySaverEnabled = batterySaver
         //    case dispatch_expiration
-        let dispatchExpiration = optionalData["batch_expiration_days"] as? Int
-        optionalData["batch_expiration_days"] = dispatchExpiration ?? self.dispatchExpiration
+//        let dispatchExpiration = optionalData["batch_expiration_days"] as? Int
+//        optionalData["batch_expiration_days"] = dispatchExpiration ?? self.dispatchExpiration
         
+        config.dispatchExpiration = config.dispatchExpiration ?? dispatchExpiration
         
-        let batchingEnabled = optionalData["batching_enabled"] as? Bool
-        optionalData["batching_enabled"] = batchingEnabled ?? (self.batchSize > 1)
+//        let batchingEnabled = optionalData["batching_enabled"] as? Bool
+//        optionalData["batching_enabled"] = batchingEnabled ?? (self.batchSize > 1)
+        
+        config.batchingEnabled = config.batchingEnabled ?? (batchSize > 1)
         
         //    case event_batch_size
-        let batchSize = optionalData["batch_size"] as? Int
-        optionalData["batch_size"] = batchSize ?? self.batchSize
+//        let batchSize = optionalData["batch_size"] as? Int
+//        optionalData["batch_size"] = batchSize ?? self.batchSize
+        
+        config.batchSize = config.batchSize ?? batchSize
         
 //        //    case event_batch_size
 //        let dispatchAfter = optionalData["event_limit"] as? Int
 //        optionalData["event_limit"] = dispatchAfter ?? self.batchSize
         
         //    case offline_dispatch_limit
-        let eventLimit = optionalData["queue_size"] as? Int
-        optionalData["queue_size"] = eventLimit ?? self.dispatchQueueLimit
+//        let eventLimit = optionalData["queue_size"] as? Int
+//        optionalData["queue_size"] = eventLimit ?? self.dispatchQueueLimit
+        
+        config.dispatchQueueLimit = config.dispatchQueueLimit ?? dispatchQueueLimit
         
         //    case wifi_only_sending
-        optionalData["wifi_only_sending"] = self.wifiOnlySending
+//        optionalData["wifi_only_sending"] = self.wifiOnlySending
+        
+        config.wifiOnlySending = config.wifiOnlySending ?? self.wifiOnlySending
+        
         //    case minutes_between_refresh
-        optionalData["minutes_between_refresh"] = self.minutesBetweenRefresh
+//        optionalData["minutes_between_refresh"] = self.minutesBetweenRefresh
+        config.minutesBetweenRefresh = config.minutesBetweenRefresh ?? minutesBetweenRefresh
         //    case _is_enabled
-        optionalData["library_is_enabled"] = self.isEnabled
+//        optionalData["library_is_enabled"] = self.isEnabled
+        config.isEnabled = config.isEnabled ?? isEnabled
         
 //        var newModulesList: TealiumModulesList
-        config.optionalData = optionalData
+//        config.optionalData = optionalData
         
         // START TM/collect
         if let existingModulesList = config.getModulesList() {

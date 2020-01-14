@@ -72,7 +72,8 @@ let package = Package(
     .target(
       name: "TealiumAppData",
       dependencies: ["TealiumCore"],
-      path: "tealium/appdata/"
+      path: "tealium/appdata/",
+      swiftSettings: [.define("appdata")]
     ),
     // .target(
     //   name: "TealiumAutotracking",
