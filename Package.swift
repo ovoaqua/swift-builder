@@ -28,9 +28,9 @@ let package = Package(
     .library(
       name: "TealiumConsentManager",
       targets: ["TealiumConsentManager"]),
-    .library(
-      name: "TealiumCrash",
-      targets: ["TealiumCrash"]),
+//    .library(
+//      name: "TealiumCrash",
+//      targets: ["TealiumCrash"]),
     .library(
       name: "TealiumDelegate",
       targets: ["TealiumDelegate"]),
@@ -105,12 +105,12 @@ let package = Package(
       path: "tealium/consentmanager/",
       swiftSettings: [.define("consentmanager")]
     ),
-    .target(
-      name: "TealiumCrash",
-      dependencies: ["TealiumCore"],
-      path: "tealium/crash/",
-      swiftSettings: [.define("crash")]
-    ),
+//    .target(
+//      name: "TealiumCrash",
+//      dependencies: ["TealiumCore"],
+//      path: "tealium/crash/",
+//      swiftSettings: [.define("crash")]
+//    ),
     .target(
       name: "TealiumDelegate",
       dependencies: ["TealiumCore"],
