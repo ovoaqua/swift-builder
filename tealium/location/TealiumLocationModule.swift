@@ -28,10 +28,18 @@ class TealiumLocationModule: TealiumModule {
     ///
     /// - Parameter request: TealiumEnableRequest - the request from the core library to enable this module
     override func enable(_ request: TealiumEnableRequest) {
-        tealiumLocationManager = TealiumLocation(config: request.config, locationListener: self) // {
-            isEnabled = true
-            didFinishWithNoResponse(request)
-       // }
+        // A location mgr object has to be initialized on the main queue
+        if Thread.isMainThread {
+            tealiumLocationManager = TealiumLocation(config: request.config, locationListener: self)
+        } else {
+            TealiumQueues.mainQueue.sync {
+                tealiumLocationManager = TealiumLocation(config: request.config, locationListener: self)
+            }
+        }
+        isEnabled = true
+        if !request.bypassDidFinish {
+            didFinish(request)
+        }
     }
 
     /// Adds current AppData to the track request
@@ -41,11 +49,21 @@ class TealiumLocationModule: TealiumModule {
         guard isEnabled else {
             return didFinishWithNoResponse(track)
         }
+        
+        let track = addModuleName(to: track)
+        // do not add data to queued hits
+        guard track.trackDictionary[TealiumKey.wasQueued] as? String == nil else {
+            didFinishWithNoResponse(track)
+            return
+        }
+        // Populate data stream
         let location = tealiumLocationManager.latestLocation
         var newData: [String: Any] = [TealiumLocationKey.latitude: "\(location.coordinate.latitude)",
             TealiumLocationKey.longitude: "\(location.coordinate.longitude)"]
         newData.merge(track.trackDictionary) { $1 }
-        let newTrack = TealiumTrackRequest(data: newData, completion: track.completion)
+
+        let newTrack = TealiumTrackRequest(data: newData,
+                                           completion: track.completion)
         didFinish(newTrack)
     }
 
@@ -56,9 +74,11 @@ class TealiumLocationModule: TealiumModule {
         guard isEnabled else {
             return didFinishWithNoResponse(request)
         }
+        isEnabled = false
         tealiumLocationManager.disable()
         didFinish(request)
     }
+    
 }
 
 extension TealiumLocationModule: LocationListener {
@@ -72,3 +92,5 @@ extension TealiumLocationModule: LocationListener {
         delegate?.tealiumModuleRequests(module: self, process: trackRequest)
     }
 }
+
+

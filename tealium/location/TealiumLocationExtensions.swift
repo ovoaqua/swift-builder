@@ -9,11 +9,25 @@
 
 import Foundation
 import UIKit
-//#if location
+#if location
     import TealiumCore
-//#endif
+#endif
 
 // MARK: EXTENSIONS
+public extension Tealium {
+
+    /// Get the Data Manager instance for accessing file persistence and auto data variable APIs.
+    ///
+    /// - Returns: `TealiumLocation?` instance (nil if disabled)
+    func location() -> TealiumLocation? {
+        guard let module = modulesManager.getModule(forName: TealiumLocationKey.name) as? TealiumLocationModule else {
+            return nil
+        }
+
+        return module.tealiumLocationManager
+    }
+
+}
 
 public extension TealiumConfig {
 
