@@ -2531,7 +2531,7 @@
 		CFF242A123CE774C0091B7BF /* TealiumLocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumLocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFF242A323CE774C0091B7BF /* TealiumLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TealiumLocation.h; sourceTree = "<group>"; };
 		CFF242A423CE774C0091B7BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CFF242BE23CE778B0091B7BF /* TealiumRemoteCommandsTests-iOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumRemoteCommandsTests-iOS copy-Info.plist"; path = "/Users/christina/Projects/work-repos/github/tealium-swift-builder/builder/TealiumRemoteCommandsTests-iOS copy-Info.plist"; sourceTree = "<absolute>"; };
+		CFF242BE23CE778B0091B7BF /* TealiumLocation-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumLocation-Info.plist"; path = "/Users/christina/Projects/work-repos/github/tealium-swift-builder/builder/TealiumLocation-Info.plist"; sourceTree = "<absolute>"; };
 		CFF242C023CE77F10091B7BF /* TealiumLocationModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLocationModule.swift; sourceTree = "<group>"; };
 		CFF242C123CE77F10091B7BF /* Geofences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geofences.swift; sourceTree = "<group>"; };
 		CFF242C223CE77F10091B7BF /* TealiumLocationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLocationExtensions.swift; sourceTree = "<group>"; };
@@ -3756,7 +3756,7 @@
 				D7805837233A65FE00DAD90E /* TealiumVisitorService-Info.plist */,
 				D7B04D2E219995CD00C87E22 /* TealiumVolatileData-Info.plist */,
 				D798C4692342416600EE665E /* TealiumTests-Info.plist */,
-				CFF242BE23CE778B0091B7BF /* TealiumRemoteCommandsTests-iOS copy-Info.plist */,
+				CFF242BE23CE778B0091B7BF /* TealiumLocation-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -10374,7 +10374,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = TealiumLocation/Info.plist;
+				INFOPLIST_FILE = "TealiumLocation-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -10384,10 +10384,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "location DEBUG";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -10414,7 +10414,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = TealiumLocation/Info.plist;
+				INFOPLIST_FILE = "TealiumLocation-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -10423,10 +10423,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = location;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
