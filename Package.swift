@@ -44,6 +44,9 @@ let package = Package(
       name: "TealiumLifecycle",
       targets: ["TealiumLifecycle"]),
     .library(
+      name: "TealiumLocation",
+      targets: ["TealiumLocation"]),
+    .library(
       name: "TealiumLogger",
       targets: ["TealiumLogger"]),
     .library(
@@ -134,6 +137,12 @@ let package = Package(
       dependencies: ["TealiumCore"],
       path: "tealium/lifecycle/",
       swiftSettings: [.define("lifecycle")]
+    ),
+    .target(
+      name: "TealiumLocation",
+      dependencies: ["TealiumCore"],
+      path: "tealium/location/",
+      swiftSettings: [.define("location")]
     ),
     .target(
       name: "TealiumLogger",
