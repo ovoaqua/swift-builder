@@ -28,9 +28,10 @@ class TealiumLocationModule: TealiumModule {
     ///
     /// - Parameter request: TealiumEnableRequest - the request from the core library to enable this module
     override func enable(_ request: TealiumEnableRequest) {
-        tealiumLocationManager = TealiumLocation(config: request.config, locationListener: self)
-        isEnabled = true
-        didFinish(request)
+        tealiumLocationManager = TealiumLocation(config: request.config, locationListener: self) // {
+            isEnabled = true
+            didFinishWithNoResponse(request)
+       // }
     }
 
     /// Adds current AppData to the track request

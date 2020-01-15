@@ -105,6 +105,7 @@ class TealiumHelper: NSObject {
 
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
+            print("🌎🌎 Tealium initialized")
         // Optional processing post init.
         // Optionally, join a trace. Trace ID must be generated server-side in UDH.
 //        self.tealium?.leaveTrace(killVisitorSession: true)

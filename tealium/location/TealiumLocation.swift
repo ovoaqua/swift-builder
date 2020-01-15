@@ -19,17 +19,23 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     var lastLocation: CLLocation?
     var geofences = Geofences()
     var locationListener: LocationListener?
-   // var logger: TealiumLogger? include when merged w/1.8
+    var logger: TealiumLogger?
     
     init(config: TealiumConfig,
         bundle: Bundle = Bundle.main,
         locationListener: LocationListener? = nil,
-        locationManager: LocationManager = CLLocationManager()) {
+        locationManager: LocationManager = CLLocationManager() /*,
+        completion: () -> Void*/) {
         self.config = config
-        // self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: config.getLogLevel())
         self.locationListener = locationListener
         self.locationManager = locationManager
-        super.init() // Needs to be called here.
+        
+        if let logLevel = config.getLogLevel() {
+            self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: logLevel)
+
+        }
+        
+        super.init()
         
         switch config.initializeGeofenceDataFrom {
             case .localFile(let file):
@@ -39,7 +45,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             case .json(let jsonString):
                 geofences = GeofenceData(json: jsonString)?.geofences ?? Geofences()
             default:
-                geofences = GeofenceData(url: geofencesUrl(from: config))?.geofences ?? Geofences()
+                geofences = GeofenceData(url: geofencesUrl)?.geofences ?? Geofences()
                 break
         }
         
@@ -51,7 +57,18 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         requestPermissions()
         clearMonitoredGeofences()
         startLocationUpdates()
+//        defer {
+//            completion()
+//        }
     }
+    
+    /// Builds a URL from a Tealium config pointing to a hosted JSON file on the Tealium DLE
+    ///
+    /// - parameter config: `TealiumConfig` tealium config to be read from
+    var geofencesUrl: String {
+        return "\(TealiumLocationKey.dleBaseUrl)\(config.account)/\(config.profile)/\(TealiumLocationKey.fileName).json"
+    }
+
     
     /// Gets the permission status of Location Services
     ///
@@ -84,16 +101,16 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     /// Update frequency is dependant on config.useHighAccuracy, a parameter passed on initisalizatuion of this class.
     func startLocationUpdates() {
         guard locationServiceEnabled else {
-            // add logger
+            logInfo(message: "🌎🌎 Location Updates Service Not Enabled 🌎🌎")
             return
         }
         guard config.useHighAccuracy else {
             locationManager.startMonitoringSignificantLocationChanges()
-            // logger?.log(message: "🌎🌎 Location Updates Significant Location Change Accuracy Started 🌎🌎", logLevel: .verbose)
+            logInfo(message: "🌎🌎 Location Updates Significant Location Change Accuracy Started 🌎🌎")
             return
         }
         locationManager.startUpdatingLocation()
-        // logger?.log(message: "🌎🌎 Location Updates High Accuracy Started 🌎🌎", logLevel: .verbose)
+        logInfo(message: "🌎🌎 Location Updates High Accuracy Started 🌎🌎")
     }
     
     /// Stops the updating of location data through the location client.
@@ -102,14 +119,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             return
         }
         locationManager.stopUpdatingLocation()
-        // logger?.log(message: "🌎🌎 Location Updates Stopped 🌎🌎", logLevel: .verbose)
-    }
-    
-    /// Builds a URL from a Tealium config pointing to a hosted JSON file on the Tealium DLE
-    ///
-    /// - parameter config: `TealiumConfig` tealium config to be read from
-    func geofencesUrl(from config: TealiumConfig) -> String {
-        return "\(TealiumLocationKey.dleBaseUrl)\(config.account)/\(config.profile)/\(TealiumLocationKey.fileName).json"
+        logInfo(message: "🌎🌎 Location Updates Stopped 🌎🌎")
     }
     
     /// CLLocationManagerDelegate method
@@ -122,7 +132,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         if let lastLocation = locations.last {
             self.lastLocation = lastLocation
         }
-        // logger?.log(message: "🌎🌎 Location updated: \(String(describing: lastLocation?.coordinate)) 🌎🌎", logLevel: .verbose)
+        logInfo(message: "🌎🌎 Location updated: \(String(describing: lastLocation?.coordinate)) 🌎🌎")
         geofences.regions.forEach {
             let geofenceLocation = CLLocation(latitude: $0.center.latitude, longitude: $0.center.longitude)
             
@@ -143,7 +153,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = error as? CLError,
             error.code == .denied {
-            // logger?.log(message: "🌎🌎 An error has occured: \(String(describing: error.localizedDescription)) 🌎🌎", logLevel: .errors)
+            logger?.log(message: "🌎🌎 An error has occured: \(String(describing: error.localizedDescription)) 🌎🌎", logLevel: .errors)
             locationManager.stopUpdatingLocation()
         }
     }
@@ -221,7 +231,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     func startMonitoring(geofence: CLCircularRegion) {
         if !locationManager.monitoredRegions.contains(geofence) {
             locationManager.startMonitoring(for: geofence)
-            // logger?.log(message: "🌎🌎 \(geofence.identifier) Added to monitored client 🌎🌎", logLevel: .verbose)
+            logInfo(message: "🌎🌎 \(geofence.identifier) Added to monitored client 🌎🌎")
         }
     }
     
@@ -246,7 +256,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     func stopMonitoring(geofence: CLCircularRegion) {
         if locationManager.monitoredRegions.contains(geofence) {
             locationManager.stopMonitoring(for: geofence)
-            // logger?.log(message: "🌎🌎 \(geofence.identifier) Removed from monitored client 🌎🌎", logLevel: .verbose)
+            logInfo(message: "🌎🌎 \(geofence.identifier) Removed from monitored client 🌎🌎")
         }
     }
 
@@ -283,6 +293,10 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         stopLocationUpdates()
         clearMonitoredGeofences()
         self.geofences = Geofences()
+    }
+    
+    func logInfo(message: String) {
+        logger?.log(message: message, logLevel: .verbose)
     }
 
 }
