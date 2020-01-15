@@ -144,7 +144,6 @@ let package = Package(
       path: "tealium/location/",
       swiftSettings: [.define("location")]
     ),
-    
     .target(
       name: "TealiumLogger",
       dependencies: ["TealiumCore"],
