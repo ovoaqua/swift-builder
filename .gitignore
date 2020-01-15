@@ -11,3 +11,4 @@ Cartfile.resolved
 .idea
 Pods/
 build/
+.swiftpm/
