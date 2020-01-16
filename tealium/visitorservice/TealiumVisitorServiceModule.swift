@@ -60,7 +60,7 @@ public class TealiumVisitorServiceModule: TealiumModule {
         isEnabled = true
         guard visitor != nil else {
             visitorProfileManager = TealiumVisitorProfileManager(config: request.config,
-                                                                 delegates: request.config.getVisitorServiceDelegates(),
+                                                                 delegates: request.config.visitorServiceDelegates,
                                                                  diskStorage: self.diskStorage)
 
             if !request.bypassDidFinish {

@@ -86,7 +86,7 @@ extension TealiumConfig: Equatable {
         if lhs.environment != rhs.environment { return false }
         let lhsKeys = lhs.optionalData.keys.sorted()
         let rhsKeys = rhs.optionalData.keys.sorted()
-        if lhs.getModulesList() != rhs.getModulesList() { return false }
+        if lhs.modulesList != rhs.modulesList { return false }
         if lhsKeys.count != rhsKeys.count { return false }
         for (index, key) in lhsKeys.enumerated() {
             if key != rhsKeys[index] { return false }
@@ -105,6 +105,7 @@ public extension TealiumConfig {
     /// Get the existing modules list assigned to this config object.
     ///
     /// - Returns: TealiumModulesList as an optional.
+    @available(*, deprecated, message: "Please switch to config.modulesList")
     func getModulesList() -> TealiumModulesList? {
         guard let list = optionalData[TealiumModulesListKey.config] as? TealiumModulesList else {
             return nil
@@ -116,8 +117,19 @@ public extension TealiumConfig {
     /// Set a net modules list to this config object.
     ///￼
     /// - Parameter list: The TealiumModulesList to assign.
+    @available(*, deprecated, message: "Please switch to config.modulesList")
     func setModulesList(_ list: TealiumModulesList ) {
         optionalData[TealiumModulesListKey.config] = list
+    }
+    
+    var modulesList: TealiumModulesList? {
+        get {
+            optionalData[TealiumModulesListKey.config] as? TealiumModulesList
+        }
+        
+        set {
+            optionalData[TealiumModulesListKey.config] = newValue
+        }
     }
 }
 

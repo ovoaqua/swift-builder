@@ -147,7 +147,7 @@ struct RemotePublishSettings: Codable {
 //        config.optionalData = optionalData
         
         // START TM/collect
-        if let existingModulesList = config.getModulesList() {
+        if let existingModulesList = config.modulesList {
          
             let isWhiteList = existingModulesList.isWhitelist,
             moduleNames = existingModulesList.moduleNames
@@ -178,7 +178,7 @@ struct RemotePublishSettings: Codable {
                 }
             }
 
-            config.setModulesList(TealiumModulesList(isWhitelist: isWhiteList, moduleNames: newModuleNames))
+            config.modulesList = TealiumModulesList(isWhitelist: isWhiteList, moduleNames: newModuleNames)
             
         } else {
             var newModuleNames = Set<String>()
@@ -191,12 +191,9 @@ struct RemotePublishSettings: Codable {
                newModuleNames.insert(TealiumKey.collectModuleName)
             }
             
-            config.setModulesList(TealiumModulesList(isWhitelist: false, moduleNames: newModuleNames))
+            config.modulesList = TealiumModulesList(isWhitelist: false, moduleNames: newModuleNames)
         }
         
-        // end TM/Collect
-        
-        //    case override_log
         let overrideLog = config.logLevel
         config.logLevel = (overrideLog ?? self.overrideLog)
 

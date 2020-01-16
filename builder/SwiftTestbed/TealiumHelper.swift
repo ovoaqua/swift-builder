@@ -73,7 +73,7 @@ class TealiumHelper: NSObject {
                                       moduleNames: ["autotracking"])
 //              let list = TealiumModulesList(isWhitelist: true,
 //                                              moduleNames: ["tagmanagement", "logger"])
-        config.setModulesList(list)
+        config.modulesList = list
         config.setDiskStorageEnabled(isEnabled: true)
         config.addVisitorServiceDelegate(self)
         config.setIsRemoteAPIEnabled(true)

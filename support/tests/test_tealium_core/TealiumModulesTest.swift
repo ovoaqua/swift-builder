@@ -48,7 +48,7 @@ class TealiumModulesTest: XCTestCase {
 
         config.setModulesList(modulesList)
 
-        let modules = TealiumModules.initializeModulesFor(config.getModulesList(),
+        let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
         XCTAssert(modules.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
@@ -68,7 +68,7 @@ class TealiumModulesTest: XCTestCase {
 
         config.setModulesList(modulesList)
 
-        let modules = TealiumModules.initializeModulesFor(config.getModulesList(),
+        let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
         XCTAssert(modules.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
@@ -95,7 +95,7 @@ class TealiumModulesTest: XCTestCase {
 
         config.setModulesList(modulesList)
 
-        let modules = TealiumModules.initializeModulesFor(config.getModulesList(),
+        let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
         XCTAssert(modules.count == modulesList.moduleNames.count, "Modules contains too many elements: \(modules)")
@@ -117,7 +117,7 @@ class TealiumModulesTest: XCTestCase {
                                    environment: "dev",
                                    optionalData: nil)
 
-        let list = config.getModulesList()
+        let list = config.modulesList
 
         let modules = TealiumModules.initializeModulesFor(list,
                                                           assigningDelegate: self)
@@ -136,7 +136,7 @@ class TealiumModulesTest: XCTestCase {
 
         config.setModulesList(modulesList)
 
-        let modules = TealiumModules.initializeModulesFor(config.getModulesList(),
+        let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
         XCTAssert(modules.count == modulesList.moduleNames.count, "Modules contains too many elements: \(modules)")
