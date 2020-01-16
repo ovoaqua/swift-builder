@@ -19,7 +19,7 @@ class TealiumLocationModule: TealiumModule {
 
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: "location",
-            priority: 50,
+            priority: 500,
             build: 3,
             enabled: true)
     }
@@ -57,7 +57,32 @@ class TealiumLocationModule: TealiumModule {
             return
         }
         // Populate data stream
+//        if tealiumLocationManager.lastLocation?.coordinate.latitude != 0.0 {
+//            addLocationData(to: track)
+//        } else {
+//            TealiumQueues.mainQueue.asyncAfter(deadline: .now() + 1.0) {
+//                self.addLocationData(to: track)
+//            }
+//        }
+        var newData = [String: Any]()
         let location = tealiumLocationManager.latestLocation
+        
+        // May not have location data on very first launch of app (waiting on user to grant permission)
+        if location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
+            newData = [TealiumLocationKey.latitude: "\(location.coordinate.latitude)",
+                TealiumLocationKey.longitude: "\(location.coordinate.longitude)"]
+        }
+        
+        newData.merge(track.trackDictionary) { $1 }
+        
+        let newTrack = TealiumTrackRequest(data: newData,
+                                           completion: track.completion)
+        didFinish(newTrack)
+    }
+    
+    func addLocationData(to track: TealiumTrackRequest) {
+        let location = tealiumLocationManager.latestLocation
+        print("🌎🌎 latest location: \(location)")
         var newData: [String: Any] = [TealiumLocationKey.latitude: "\(location.coordinate.latitude)",
             TealiumLocationKey.longitude: "\(location.coordinate.longitude)"]
         newData.merge(track.trackDictionary) { $1 }

@@ -328,7 +328,7 @@ class TealiumLocationUnitTests: XCTestCase {
         
         let region2 = CLCircularRegion(center: coordinate, radius: 10.0, identifier: "testRegion2")
         
-        let region3 = CLCircularRegion(center: coordinate, radius: 10.0, identifier: "testRegion3")
+        let region3 = CLCircularRegion(center: coordinate, radius: 10.0, identifier: "testRegion")
         
         tealiumLocation.startMonitoring(geofences: [region1, region2])
         XCTAssertEqual(2, locationManager.startMonitoringCount)

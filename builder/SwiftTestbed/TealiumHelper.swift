@@ -71,13 +71,13 @@ class TealiumHelper: NSObject {
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: ["autotracking"])
+                                      moduleNames: ["autotracking", "tagmanagement"])
 //              let list = TealiumModulesList(isWhitelist: true,
 //                                              moduleNames: ["tagmanagement", "logger"])
         config.setModulesList(list)
         config.setDiskStorageEnabled(isEnabled: true)
         config.addVisitorServiceDelegate(self)
-        config.setIsRemoteAPIEnabled(true)
+        //config.setIsRemoteAPIEnabled(true)
         config.setLogLevel(.verbose)
         config.setIsEventBatchingEnabled(false)
         

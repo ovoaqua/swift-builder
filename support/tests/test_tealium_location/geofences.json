@@ -9,8 +9,8 @@
       },
       {
         "name": "Tealium_San_Diego",
-        "latitude": 32.9061189,
-        "longitude": -117.2379163,
+        "latitude": 32.84173,
+        "longitude": -117.02026,
         "radius": 100,
         "trigger_on_enter": true,
         "trigger_on_exit": true,

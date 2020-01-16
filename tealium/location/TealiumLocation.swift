@@ -20,6 +20,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     var geofences = Geofences()
     var locationListener: LocationListener?
     var logger: TealiumLogger?
+    var didEnterRegionWorking = false
     
     init(config: TealiumConfig,
         bundle: Bundle = Bundle.main,
@@ -160,7 +161,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     /// - parameter manager: `CLLocationManager` instance
     /// - parameter region: `CLRegion` that was entered
     public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.entered)
+        //sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.entered)
     }
     
     /// CLLocationManagerDelegate method
@@ -231,6 +232,10 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     public func startMonitoring(geofence: CLCircularRegion) {
         if !locationManager.monitoredRegions.contains(geofence) {
             locationManager.startMonitoring(for: geofence)
+            // It appears as though the didEnterRegion method is never getting called, but the didExitRegion method is
+            // had to manually track when user enters a geofence, but not sure if this is right
+            // should I remove didEnter delegate method and fire from here?
+            sendGeofenceTrackingEvent(region: geofence, triggeredTransition: TealiumLocationKey.entered)
             logInfo(message: "🌎🌎 \(geofence.identifier) Added to monitored client 🌎🌎")
         }
     }
