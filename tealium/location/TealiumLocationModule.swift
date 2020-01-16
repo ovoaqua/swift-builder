@@ -8,9 +8,9 @@
 //
 
 import Foundation
-//#if location
+#if location
     import TealiumCore
-//#endif
+#endif
 
 /// Module to add app related data to track calls.
 class TealiumLocationModule: TealiumModule {
