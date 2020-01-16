@@ -36,7 +36,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     public init(config: TealiumConfig,
                 forModule module: String,
                 isCritical: Bool = false) {
-        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.getLogLevel() ?? defaultTealiumLogLevel)
+        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.logLevel ?? defaultTealiumLogLevel)
         // The subdirectory to use for this data
         filePrefix = "\(config.account).\(config.profile)/"
         minimumDiskSpace = config.getMinimumFreeDiskSpace()

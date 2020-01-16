@@ -155,41 +155,40 @@ struct RemotePublishSettings: Codable {
             
             var newModuleNames = moduleNames
             if isWhiteList {
-                if moduleNames.contains("tagmanagement"), !self.tagManagementEnabled {
-                    newModuleNames.remove("tagmanagement")
-                } else if !moduleNames.contains("tagmanagement"), self.tagManagementEnabled {
-                    newModuleNames.insert("tagmanagement")
+                if moduleNames.contains(TealiumKey.tagManagementModuleName), !self.tagManagementEnabled {
+                    newModuleNames.remove(TealiumKey.tagManagementModuleName)
+                } else if !moduleNames.contains(TealiumKey.tagManagementModuleName), self.tagManagementEnabled {
+                    newModuleNames.insert(TealiumKey.tagManagementModuleName)
                 }
-                if moduleNames.contains("collect"), !self.collectEnabled {
-                    newModuleNames.remove("collect")
-                } else if !moduleNames.contains("collect"), self.collectEnabled {
-                    newModuleNames.insert("collect")
+                if moduleNames.contains(TealiumKey.collectModuleName), !self.collectEnabled {
+                    newModuleNames.remove(TealiumKey.collectModuleName)
+                } else if !moduleNames.contains(TealiumKey.collectModuleName), self.collectEnabled {
+                    newModuleNames.insert(TealiumKey.collectModuleName)
                 }
             } else {
-                if moduleNames.contains("tagmanagement"), self.tagManagementEnabled {
-                    newModuleNames.remove("tagmanagement")
-                } else if !moduleNames.contains("tagmanagement"), !self.tagManagementEnabled {
-                    newModuleNames.insert("tagmanagement")
+                if moduleNames.contains(TealiumKey.tagManagementModuleName), self.tagManagementEnabled {
+                    newModuleNames.remove(TealiumKey.tagManagementModuleName)
+                } else if !moduleNames.contains(TealiumKey.tagManagementModuleName), !self.tagManagementEnabled {
+                    newModuleNames.insert(TealiumKey.tagManagementModuleName)
                 }
-                if moduleNames.contains("collect"), self.collectEnabled {
-                    newModuleNames.remove("collect")
-                } else if !moduleNames.contains("collect"), !self.collectEnabled {
-                    newModuleNames.insert("collect")
+                if moduleNames.contains(TealiumKey.collectModuleName), self.collectEnabled {
+                    newModuleNames.remove(TealiumKey.collectModuleName)
+                } else if !moduleNames.contains(TealiumKey.collectModuleName), !self.collectEnabled {
+                    newModuleNames.insert(TealiumKey.collectModuleName)
                 }
             }
 
             config.setModulesList(TealiumModulesList(isWhitelist: isWhiteList, moduleNames: newModuleNames))
-//            var newModulesList = TealiumModulesList(isWhitelist: isWhiteList, moduleNames: <#T##Set<String>#>)
             
         } else {
             var newModuleNames = Set<String>()
             
             if !self.tagManagementEnabled {
-               newModuleNames.insert("tagmanagement")
+                newModuleNames.insert(TealiumKey.tagManagementModuleName)
             }
            
             if !self.collectEnabled {
-               newModuleNames.insert("collect")
+               newModuleNames.insert(TealiumKey.collectModuleName)
             }
             
             config.setModulesList(TealiumModulesList(isWhitelist: false, moduleNames: newModuleNames))
@@ -198,8 +197,8 @@ struct RemotePublishSettings: Codable {
         // end TM/Collect
         
         //    case override_log
-        let overrideLog = config.getLogLevel()
-        config.setLogLevel(overrideLog ?? self.overrideLog)
+        let overrideLog = config.logLevel
+        config.logLevel = (overrideLog ?? self.overrideLog)
 
         return config
     }

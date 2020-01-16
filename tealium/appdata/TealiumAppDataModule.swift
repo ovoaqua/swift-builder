@@ -51,7 +51,7 @@ class TealiumAppDataModule: TealiumModule {
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumAppDataKey.moduleName, isCritical: true)
         }
-        self.appData = self.appData ?? TealiumAppData(diskStorage: self.diskStorage, existingVisitorId: request.config.getExistingVisitorId())
+        self.appData = self.appData ?? TealiumAppData(diskStorage: self.diskStorage, existingVisitorId: request.config.existingVisitorId)
         isEnabled = true
         if !request.bypassDidFinish {
             didFinish(request)
@@ -62,7 +62,7 @@ class TealiumAppDataModule: TealiumModule {
         let newConfig = request.config.copy
         if newConfig != self.config {
             self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumAppDataKey.moduleName, isCritical: true)
-            self.appData = TealiumAppData(diskStorage: self.diskStorage, existingVisitorId: request.config.getExistingVisitorId())
+            self.appData = TealiumAppData(diskStorage: self.diskStorage, existingVisitorId: request.config.existingVisitorId)
         }
         self.config = newConfig
         didFinish(request)

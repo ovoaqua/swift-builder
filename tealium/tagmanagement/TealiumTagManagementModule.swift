@@ -66,7 +66,7 @@ public class TealiumTagManagementModule: TealiumModule {
                     return
                 }
                 if let error = error {
-                    let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.getLogLevel() ?? TealiumLogLevel.errors)
+                    let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.logLevel ?? TealiumLogLevel.errors)
                     logger.log(message: (error.localizedDescription), logLevel: .warnings)
                     self.errorState.incrementAndGet()
                     self.webViewState?.value = .loadFailure

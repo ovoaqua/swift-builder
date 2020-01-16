@@ -12,17 +12,9 @@ import TealiumCore
 #endif
 enum TealiumDispatchQueueConstants {
     static let defaultMaxQueueSize = 40
-    static let moduleName = "dispatchqueue"
-    // max stored events (e.g. if offline) to limit disk space consumed
-    static let queueSizeKey = "queue_size"
-    // number of events in a batch, max 10
-    static let batchSizeKey = "batch_size"
-    // dispatchEventLimit
-    static let eventLimit = "event_limit"
-    static let batchingEnabled = "batching_enabled"
-    static let batchingBypassKeys = "batching_bypass_keys"
     static let defaultBatchExpirationDays = 7
-    static let batchExpirationDaysKey = "batch_expiration_days"
+    static let moduleName = "dispatchqueue"
+    static let batchingBypassKeys = "batching_bypass_keys"
     static let isRemoteAPIEnabled = "remote_api_enabled"
 }
 

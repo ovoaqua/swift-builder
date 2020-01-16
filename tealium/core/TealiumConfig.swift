@@ -125,6 +125,7 @@ public extension TealiumConfig {
 public extension TealiumConfig {
 
     /// - Returns: `TealiumLogLevel` (default is `.errors`)
+    @available(*, deprecated, message: "Please switch to config.logLevel")
     func getLogLevel() -> TealiumLogLevel? {
        return optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
     }
@@ -132,21 +133,48 @@ public extension TealiumConfig {
     /// Sets the log level to be used by the library
     ///
     /// - Parameter logLevel: `TealiumLogLevel`
+    @available(*, deprecated, message: "Please switch to config.logLevel")
     func setLogLevel(_ logLevel: TealiumLogLevel) {
         optionalData[TealiumKey.logLevelConfig] = logLevel
+    }
+    
+    /// Sets a known visitor ID. Must be unique (i.e. UUID).
+    /// Should only be used in cases where the user has an existing visitor ID
+    var logLevel: TealiumLogLevel? {
+        get {
+            optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
+        }
+        
+        set {
+            optionalData[TealiumKey.logLevelConfig] = newValue
+        }
     }
 }
 
 public extension TealiumConfig {
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
     /// Should only be used in cases where the user has an existing visitor ID
+    @available(*, deprecated, message: "Please switch to config.existingVisitorId")
     func setExistingVisitorId(_ visitorId: String) {
         optionalData[TealiumKey.visitorId] = visitorId
     }
-
+    @available(*, deprecated, message: "Please switch to config.existingVisitorId")
     func getExistingVisitorId() -> String? {
-        return optionalData[TealiumKey.visitorId] as? String
+        optionalData[TealiumKey.visitorId] as? String
     }
+    
+    /// Sets a known visitor ID. Must be unique (i.e. UUID).
+    /// Should only be used in cases where the user has an existing visitor ID
+    var existingVisitorId: String? {
+        get {
+            optionalData[TealiumKey.visitorId] as? String
+        }
+        
+        set {
+            optionalData[TealiumKey.visitorId] = newValue
+        }
+    }
+    
 }
 
 
@@ -184,72 +212,62 @@ public extension TealiumConfig {
     
     var dispatchExpiration: Int? {
         get {
-            optionalData["batch_expiration_days"] as? Int
+            optionalData[TealiumKey.batchExpirationDaysKey] as? Int
         }
         
         set {
-            optionalData["batch_expiration_days"] = newValue
+            optionalData[TealiumKey.batchExpirationDaysKey] = newValue
         }
     }
     
     var batchingEnabled: Bool? {
         get {
-            optionalData["batching_enabled"] as? Bool
+            optionalData[TealiumKey.batchingEnabled] as? Bool
         }
         
         set {
-            optionalData["batching_enabled"] = newValue
+            optionalData[TealiumKey.batchingEnabled] = newValue
         }
     }
     
     var batchSize: Int? {
         get {
-            optionalData["queue_size"] as? Int
+            optionalData[TealiumKey.batchSizeKey] as? Int
         }
         
         set {
-            optionalData["queue_size"] = newValue
+            optionalData[TealiumKey.batchSizeKey] = newValue
         }
         
     }
     
     var dispatchQueueLimit: Int? {
         get {
-            optionalData["queue_size"] as? Int
+            optionalData[TealiumKey.eventLimit] as? Int
         }
         
         set {
-            optionalData["queue_size"] = newValue
+            optionalData[TealiumKey.eventLimit] = newValue
         }
     }
     
     var wifiOnlySending: Bool? {
         get {
-            optionalData["wifi_only_sending"] as? Bool
+            optionalData[TealiumKey.wifiOnlyKey] as? Bool
         }
         
         set {
-            optionalData["wifi_only_sending"] = newValue
+            optionalData[TealiumKey.wifiOnlyKey] = newValue
         }
     }
     
     var minutesBetweenRefresh: Double? {
         get {
-            optionalData["minutes_between_refresh"] as? Double
+            optionalData[TealiumKey.minutesBetweenRefresh] as? Double
         }
         
         set {
-            optionalData["minutes_between_refresh"] = newValue
-        }
-    }
-    
-    var logLevel: TealiumLogLevel? {
-        get {
-            optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
-        }
-        
-        set {
-            optionalData[TealiumKey.logLevelConfig] = newValue
+            optionalData[TealiumKey.minutesBetweenRefresh] = newValue
         }
     }
 }

@@ -77,7 +77,7 @@ class TealiumHelper: NSObject {
         config.setDiskStorageEnabled(isEnabled: true)
         config.addVisitorServiceDelegate(self)
         config.setIsRemoteAPIEnabled(true)
-        config.setLogLevel(.verbose)
+        config.logLevel = .verbose
         #endif
         #if os(iOS)
         
