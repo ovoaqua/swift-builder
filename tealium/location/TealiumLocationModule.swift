@@ -19,7 +19,7 @@ class TealiumLocationModule: TealiumModule {
 
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: "location",
-            priority: 500,
+            priority: 50,
             build: 3,
             enabled: true)
     }
@@ -61,7 +61,7 @@ class TealiumLocationModule: TealiumModule {
         var newData: [String: Any] = [TealiumLocationKey.latitude: "\(location.coordinate.latitude)",
             TealiumLocationKey.longitude: "\(location.coordinate.longitude)"]
         newData.merge(track.trackDictionary) { $1 }
-
+        
         let newTrack = TealiumTrackRequest(data: newData,
                                            completion: track.completion)
         didFinish(newTrack)

@@ -19,7 +19,7 @@ public enum TealiumLocationKey {
     static let geofenceTransition = "geofence_transition_type"
     static let latitude = "latitude"
     static let longitude = "longitude"
-    static let timestamp = "timestamp"
+    static let timestamp = "location_timestamp"
     static let speed = "movement_speed"
     static let additionRange = 500.0
 }

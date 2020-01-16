@@ -172,6 +172,10 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.exited)
     }
     
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        startLocationUpdates()
+    }
+    
     /// Sends a Tealium tracking event, appending geofence data to the track.
     ///
     /// - parameter region: `CLRegion` that was entered
