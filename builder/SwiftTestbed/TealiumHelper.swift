@@ -74,7 +74,7 @@ class TealiumHelper: NSObject {
 //              let list = TealiumModulesList(isWhitelist: true,
 //                                              moduleNames: ["tagmanagement", "logger"])
         config.modulesList = list
-        config.setDiskStorageEnabled(isEnabled: true)
+        config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
         config.setIsRemoteAPIEnabled(true)
         config.logLevel = .verbose

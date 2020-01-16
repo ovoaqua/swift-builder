@@ -60,7 +60,7 @@ public extension TealiumConfig {
     /// - Parameter enabled: `Bool`
     func setIsEventBatchingEnabled(_ enabled: Bool) {
         // batching requires disk storage
-        guard isDiskStorageEnabled() == true else {
+        guard diskStorageEnabled == true else {
             optionalData[TealiumKey.batchingEnabled] = false
             return
         }
@@ -70,7 +70,7 @@ public extension TealiumConfig {
     /// - Returns: `Bool` `true` if batching is enabled, else `false`
     func getIsEventBatchingEnabled() -> Bool {
         // batching requires disk storage
-        guard isDiskStorageEnabled() == true else {
+        guard diskStorageEnabled == true else {
             return false
         }
         return optionalData[TealiumKey.batchingEnabled] as? Bool ?? false
