@@ -28,7 +28,7 @@ class TealiumDelegateModule: TealiumModule {
     override func enable(_ request: TealiumEnableRequest) {
         isEnabled = true
 
-        delegates = request.config.delegates()
+        delegates = request.config.delegates
         delegate?.tealiumModuleRequests(module: self,
                                         process: TealiumReportNotificationsRequest())
         if !request.bypassDidFinish {
@@ -39,7 +39,7 @@ class TealiumDelegateModule: TealiumModule {
     override func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
         if newConfig != self.config {
-            delegates = newConfig.delegates()
+            delegates = newConfig.delegates
         }
         self.config = newConfig
         didFinish(request)

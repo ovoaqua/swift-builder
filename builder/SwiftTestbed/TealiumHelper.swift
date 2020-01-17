@@ -48,11 +48,11 @@ class TealiumHelper: NSObject {
                                    optionalData: nil)
 
         // OPTIONALLY set log level
-        config.setConnectivityRefreshInterval(5)
+        config.connectivityRefreshInterval = 5
 //        config.setLogLevel(.verbose)
-        config.setConsentLoggingEnabled(true)
-        config.setSearchAdsEnabled(true)
-        config.setInitialUserConsentStatus(.consented)
+        config.consentLoggingEnabled = true
+        config.searchAdsEnabled = true
+        config.initialUserConsentStatus = .consented
         config.shouldAddCookieObserver = false
 //        config.setBatchSize(5)
 //        config.setDispatchAfter(numberOfEvents: 5)

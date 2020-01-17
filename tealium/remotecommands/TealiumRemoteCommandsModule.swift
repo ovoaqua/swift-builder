@@ -44,7 +44,7 @@ public class TealiumRemoteCommandsModule: TealiumModule {
         if newConfig != self.config {
             self.config = newConfig
             var existingCommands = self.remoteCommands?.commands
-            if let newCommands = newConfig.getRemoteCommands() {
+            if let newCommands = newConfig.remoteCommands {
                 existingCommands?.append(contentsOf: newCommands)
             }
             existingCommands?.forEach {
@@ -61,7 +61,7 @@ public class TealiumRemoteCommandsModule: TealiumModule {
     ///￼
     /// - Parameter config: `TealiumConfig` object containing Remote Commands
     private func addCommandsFromConfig(_ config: TealiumConfig) {
-        if let commands = config.getRemoteCommands() {
+        if let commands = config.remoteCommands {
             for command in commands {
                 self.remoteCommands?.add(command)
             }
