@@ -74,8 +74,8 @@ class TealiumHelper: NSObject {
                                       moduleNames: ["autotracking", "tagmanagement"])
 //              let list = TealiumModulesList(isWhitelist: true,
 //                                              moduleNames: ["tagmanagement", "logger"])
-        config.setModulesList(list)
-        config.setDiskStorageEnabled(isEnabled: true)
+        config.modulesList = list
+        config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
         //config.setIsRemoteAPIEnabled(true)
         config.setLogLevel(.verbose)
@@ -87,6 +87,8 @@ class TealiumHelper: NSObject {
         config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         config.shouldRequestPermission = true
         
+        config.setIsRemoteAPIEnabled(true)
+        config.logLevel = .verbose
         #endif
         #if os(iOS)
         

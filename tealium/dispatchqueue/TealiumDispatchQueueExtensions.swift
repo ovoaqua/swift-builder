@@ -23,36 +23,36 @@ public extension TealiumConfig {
     /// - Parameter size: `Int` representing the max event batch size
     func setBatchSize(_ size: Int) {
         let size = size > TealiumValue.maxEventBatchSize ? TealiumValue.maxEventBatchSize: size
-        optionalData[TealiumDispatchQueueConstants.batchSizeKey] = size
+        optionalData[TealiumKey.batchSizeKey] = size
     }
 
     /// - Returns: `Int` containing the batch size to use. Defaults to 10 if not set
     func getBatchSize() -> Int {
-        return optionalData[TealiumDispatchQueueConstants.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
+        return optionalData[TealiumKey.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
     }
 
     /// Sets the number of events after which the queue will be flushed
     ///
     /// - Parameter events: `Int`
     func setDispatchAfter(numberOfEvents events: Int) {
-        optionalData[TealiumDispatchQueueConstants.eventLimit] = events
+        optionalData[TealiumKey.eventLimit] = events
     }
 
     /// - Returns: `Int` - the number of events after which the queue will be flushed
-    func getDispatchAfterEvents() -> Int {
-        return optionalData[TealiumDispatchQueueConstants.eventLimit] as? Int ?? getBatchSize()
+    func getDispatchAfterEvents() -> Int? {
+        return optionalData[TealiumKey.eventLimit] as? Int
     }
 
     /// Sets the maximum number of queued events. If this number is reached, and the queue has not been flushed, the oldest events will be deleted.
     ///
     /// - Parameter queueSize: `Int`
     func setMaxQueueSize(_ queueSize: Int) {
-        optionalData[TealiumDispatchQueueConstants.queueSizeKey] = queueSize
+        optionalData[TealiumKey.queueSizeKey] = queueSize
     }
 
     /// - Returns: `Int?` - the maximum queue size allowed to be stored on the device
     func getMaxQueueSize() -> Int? {
-        return optionalData[TealiumDispatchQueueConstants.queueSizeKey] as? Int
+        return optionalData[TealiumKey.eventLimit] as? Int
     }
 
     /// Enables (`true`) or disables (`false`) event batching. Default `false`
@@ -60,20 +60,20 @@ public extension TealiumConfig {
     /// - Parameter enabled: `Bool`
     func setIsEventBatchingEnabled(_ enabled: Bool) {
         // batching requires disk storage
-        guard isDiskStorageEnabled() == true else {
-            optionalData[TealiumDispatchQueueConstants.batchingEnabled] = false
+        guard diskStorageEnabled == true else {
+            optionalData[TealiumKey.batchingEnabled] = false
             return
         }
-        optionalData[TealiumDispatchQueueConstants.batchingEnabled] = enabled
+        optionalData[TealiumKey.batchingEnabled] = enabled
     }
 
     /// - Returns: `Bool` `true` if batching is enabled, else `false`
     func getIsEventBatchingEnabled() -> Bool {
         // batching requires disk storage
-        guard isDiskStorageEnabled() == true else {
+        guard diskStorageEnabled == true else {
             return false
         }
-        return optionalData[TealiumDispatchQueueConstants.batchingEnabled] as? Bool ?? false
+        return optionalData[TealiumKey.batchingEnabled] as? Bool ?? false
     }
 
     /// Sets a list of event names for which batching will be bypassed (sent as individual events)
@@ -92,12 +92,12 @@ public extension TealiumConfig {
     ///
     /// - Parameter days: `Int`
     func setBatchExpirationDays(_ days: Int) {
-        self.optionalData[TealiumDispatchQueueConstants.batchExpirationDaysKey] = days
+        self.optionalData[TealiumKey.batchExpirationDaysKey] = days
     }
 
     /// - Returns: `Int` containing the maximum age of any track request in the queue
     func getBatchExpirationDays() -> Int {
-        return self.optionalData[TealiumDispatchQueueConstants.batchExpirationDaysKey] as? Int ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
+        return self.optionalData[TealiumKey.batchExpirationDaysKey] as? Int ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
     }
 
     #if os(iOS)

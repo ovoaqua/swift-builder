@@ -74,6 +74,17 @@ public enum TealiumKey {
     public static let enabledModules = "enabled_modules"
     public static let libraryEnabled = "library_is_enabled"
     public static let batterySaver = "battery_saver"
+    public static let queueSizeKey = "queue_size"
+    // number of events in a batch, max 10
+    public static let batchSizeKey = "batch_size"
+    // max stored events (e.g. if offline) to limit disk space consumed
+    public static let eventLimit = "event_limit"
+    public static let batchingEnabled = "batching_enabled"
+    public static let batchExpirationDaysKey = "batch_expiration_days"
+    public static let wifiOnlyKey = "wifi_only_sending"
+    public static let minutesBetweenRefresh = "minutes_between_refresh"
+    public static let collectModuleName = "collect"
+    public static let tagManagementModuleName = "tagmanagement"
 }
 
 public enum TealiumModulesManagerError: Error {

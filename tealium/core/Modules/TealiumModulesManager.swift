@@ -24,7 +24,7 @@ open class TealiumModulesManager: NSObject {
     ///
     /// - Parameter config: `TealiumConfig` instance
     func setupModulesFrom(config: TealiumConfig) {
-        let modulesList = config.getModulesList()
+        let modulesList = config.modulesList
         let newModules = TealiumModules.initializeModulesFor(modulesList, assigningDelegate: self)
         self.modules = newModules.prioritized()
     }
@@ -61,7 +61,7 @@ open class TealiumModulesManager: NSObject {
         
         var modulesToInit = [String]()
 
-        if let newModulesList = config.getModulesList()?.filtered {
+        if let newModulesList = config.modulesList?.filtered {
             newModulesList.forEach { module in
                 if currentModulesList?.contains(module.description) == false {
                     modulesToInit.append(module)

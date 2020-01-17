@@ -36,15 +36,15 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     public init(config: TealiumConfig,
                 forModule module: String,
                 isCritical: Bool = false) {
-        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.getLogLevel() ?? defaultTealiumLogLevel)
+        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.logLevel ?? defaultTealiumLogLevel)
         // The subdirectory to use for this data
         filePrefix = "\(config.account).\(config.profile)/"
-        minimumDiskSpace = config.getMinimumFreeDiskSpace()
+        minimumDiskSpace = config.minimumFreeDiskSpace ?? TealiumValue.defaultMinimumDiskSpace
         self.module = module
         self.isCritical = isCritical
-        self.isDiskStorageEnabled = config.isDiskStorageEnabled()
+        self.isDiskStorageEnabled = config.diskStorageEnabled
         let defaultDirectory = self.defaultDirectory
-        currentDirectory = config.getOverrideDiskStorageDirectory() ?? defaultDirectory
+        currentDirectory = config.diskStorageDirectory ?? defaultDirectory
         // Provides userdefaults backing for critical data (e.g. appdata, consentmanager)
         if isCritical {
             self.defaultsStorage = UserDefaults(suiteName: filePath)
