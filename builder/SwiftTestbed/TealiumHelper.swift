@@ -50,7 +50,6 @@ class TealiumHelper: NSObject {
 
         // OPTIONALLY set log level
         config.setConnectivityRefreshInterval(5)
-        config.setLogLevel(.verbose)
         config.setConsentLoggingEnabled(true)
         config.setSearchAdsEnabled(true)
         config.setInitialUserConsentStatus(.consented)
@@ -77,8 +76,6 @@ class TealiumHelper: NSObject {
         config.modulesList = list
         config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
-        //config.setIsRemoteAPIEnabled(true)
-        config.setLogLevel(.verbose)
         config.setIsEventBatchingEnabled(false)
         
         // Location
@@ -107,11 +104,9 @@ class TealiumHelper: NSObject {
 
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
-            print("🌎🌎 Tealium initialized")
         // Optional processing post init.
         // Optionally, join a trace. Trace ID must be generated server-side in UDH.
 //        self.tealium?.leaveTrace(killVisitorSession: true)
-           // self?.tealium?.location()?.locationManager.self.startUpdatingLocation()
         self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
             
         self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
