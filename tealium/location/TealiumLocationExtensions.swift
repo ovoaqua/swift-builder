@@ -64,7 +64,7 @@ public extension TealiumConfig {
     /// Gets the name of the local file to read geofence data from
     ///
     /// - `String` name of local file to read
-    var assetFileName: String? {
+    var geofenceFileName: String? {
         get {
             optionalData[TealiumLocationConfigKey.geofenceAssetName] as? String
         }
@@ -119,7 +119,7 @@ public extension TealiumConfig {
     
     /// `TealiumLocationConfig`: The Geofences data retrieved from either a local file, url, or DLE 
     var initializeGeofenceDataFrom: TealiumLocationConfig {
-        if let geofenceAsset = self.assetFileName {
+        if let geofenceAsset = self.geofenceFileName {
             return .localFile(geofenceAsset)
         } else if let geofenceUrl = self.geofenceUrl {
             return .customUrl(geofenceUrl)

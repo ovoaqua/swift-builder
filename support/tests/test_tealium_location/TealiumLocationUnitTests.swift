@@ -56,7 +56,7 @@ class TealiumLocationUnitTests: XCTestCase {
     }
 
     func testValidAsset() {
-        config.assetFileName = "validGeofences"
+        config.geofenceFileName = "validGeofences"
         let tealiumLocation = TealiumLocation(config: config,
             bundle: Bundle(for: type(of: self)),
             locationManager: locationManager)
@@ -67,7 +67,7 @@ class TealiumLocationUnitTests: XCTestCase {
     }
 
     func testInvalidAsset() {
-        config.assetFileName = "invalidGeofences"
+        config.geofenceFileName = "invalidGeofences"
         let tealiumLocation = TealiumLocation(config: config,
             bundle: Bundle(for: type(of: self)),
             locationManager: locationManager)
@@ -78,7 +78,7 @@ class TealiumLocationUnitTests: XCTestCase {
     }
 
     func testValidAndInvalidAsset() {
-        config.assetFileName = "validAndInvalidGeofences"
+        config.geofenceFileName = "validAndInvalidGeofences"
         let tealiumLocation = TealiumLocation(config: config,
             bundle: Bundle(for: type(of: self)),
             locationManager: locationManager)
@@ -90,7 +90,7 @@ class TealiumLocationUnitTests: XCTestCase {
     }
 
     func testNonExistentAsset() {
-        config.assetFileName = "SomeJsonFileThatDoesntExist"
+        config.geofenceFileName = "SomeJsonFileThatDoesntExist"
         let tealiumLocation = TealiumLocation(config: config,
             bundle: Bundle(for: type(of: self)),
             locationManager: locationManager)
