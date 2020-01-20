@@ -16,7 +16,7 @@ import TealiumCore
 // MARK: EXTENSIONS
 
 public extension TealiumConfig {
-    
+
     /// Adds optional delegates to the WebView instance.
     ///￼
     /// - Parameter delegates: `[WKNavigationDelegate]` Array of delegates.
@@ -37,7 +37,7 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumTagManagementConfigKey.delegate] as? [WKNavigationDelegate]
         }
-        
+
         set {
             optionalData[TealiumTagManagementConfigKey.delegate] = newValue
         }
@@ -55,12 +55,12 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumTagManagementConfigKey.overrideURL] as? String
         }
-        
+
         set {
             optionalData[TealiumTagManagementConfigKey.overrideURL] = newValue
         }
     }
-    
+
     /// Gets the URL to be loaded by the webview (mobile.html).
     ///
     /// - Returns: `URL` representing either the custom URL provided in the `TealiumConfig` object, or the default Tealium mCDN URL
@@ -71,7 +71,7 @@ public extension TealiumConfig {
             return URL(string: "\(TealiumTagManagementKey.defaultUrlStringPrefix)/\(self.account)/\(self.profile)/\(self.environment)/mobile.html")
         }
     }
-    
+
     /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
     ///￼
     /// - Parameter view: `UIView` instance for `WKWebView` to be attached to
@@ -87,18 +87,17 @@ public extension TealiumConfig {
     func getRootView() -> UIView? {
         rootView
     }
-    
+
     /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
     var rootView: UIView? {
         get {
             optionalData[TealiumTagManagementConfigKey.uiview] as? UIView
         }
-        
+
         set {
             optionalData[TealiumTagManagementConfigKey.uiview] = newValue
         }
     }
-    
 
     var shouldAddCookieObserver: Bool {
         get {

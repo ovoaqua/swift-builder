@@ -20,12 +20,12 @@ public extension TealiumConfig {
     func setCollectOverrideURL(url: String) {
         collectOverrideURL = url
     }
-    
+
     var collectOverrideURL: String? {
         get {
             optionalData[TealiumCollectKey.overrideCollectUrl] as? String
         }
-        
+
         set {
             guard let newValue = newValue else {
                 return
@@ -52,12 +52,12 @@ public extension TealiumConfig {
     func setCollectOverrideProfile(profile: String) {
         collectOverrideProfile = profile
     }
-    
+
     var collectOverrideProfile: String? {
         get {
             optionalData[TealiumCollectKey.overrideCollectProfile] as? String
         }
-        
+
         set {
             optionalData[TealiumCollectKey.overrideCollectProfile] = newValue
         }

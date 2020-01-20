@@ -21,96 +21,138 @@ public extension TealiumConfig {
     /// Sets the amount of events to combine into a single batch request. Maxiumum 10.
     ///
     /// - Parameter size: `Int` representing the max event batch size
+    @available(*, deprecated, message: "Please switch to config.batchSize")
     func setBatchSize(_ size: Int) {
         let size = size > TealiumValue.maxEventBatchSize ? TealiumValue.maxEventBatchSize: size
         optionalData[TealiumKey.batchSizeKey] = size
     }
 
     /// - Returns: `Int` containing the batch size to use. Defaults to 10 if not set
+    @available(*, deprecated, message: "Please switch to config.batchSize")
     func getBatchSize() -> Int {
         return optionalData[TealiumKey.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
     }
 
+    // config.batchSize in `Core` module, since it's required for remote publish settings
+
     /// Sets the number of events after which the queue will be flushed
     ///
     /// - Parameter events: `Int`
+    @available(*, deprecated, message: "Please switch to config.dispatchAfter")
     func setDispatchAfter(numberOfEvents events: Int) {
-        optionalData[TealiumKey.eventLimit] = events
+        dispatchAfter = events
     }
 
     /// - Returns: `Int` - the number of events after which the queue will be flushed
+    @available(*, deprecated, message: "Please switch to config.dispatchAfter")
     func getDispatchAfterEvents() -> Int? {
-        return optionalData[TealiumKey.eventLimit] as? Int
+        dispatchAfter
+    }
+
+    /// The number of events after which the queue will be flushed
+    var dispatchAfter: Int {
+        get {
+            optionalData[TealiumKey.eventLimit] as? Int ?? batchSize
+        }
+
+        set {
+            optionalData[TealiumKey.eventLimit] = newValue
+        }
     }
 
     /// Sets the maximum number of queued events. If this number is reached, and the queue has not been flushed, the oldest events will be deleted.
     ///
     /// - Parameter queueSize: `Int`
+    @available(*, deprecated, message: "Please switch to config.dispatchQueueLimit")
     func setMaxQueueSize(_ queueSize: Int) {
         optionalData[TealiumKey.queueSizeKey] = queueSize
     }
 
     /// - Returns: `Int?` - the maximum queue size allowed to be stored on the device
+    @available(*, deprecated, message: "Please switch to config.dispatchQueueLimit")
     func getMaxQueueSize() -> Int? {
         return optionalData[TealiumKey.eventLimit] as? Int
     }
 
+    // config.dispatchQueueLimit in `Core` module, since it's required for remote publish settings
+
     /// Enables (`true`) or disables (`false`) event batching. Default `false`
     ///
     /// - Parameter enabled: `Bool`
+    @available(*, deprecated, message: "Please switch to config.batchingEnabled")
     func setIsEventBatchingEnabled(_ enabled: Bool) {
-        // batching requires disk storage
-        guard diskStorageEnabled == true else {
-            optionalData[TealiumKey.batchingEnabled] = false
-            return
-        }
-        optionalData[TealiumKey.batchingEnabled] = enabled
+        batchingEnabled = enabled
     }
 
     /// - Returns: `Bool` `true` if batching is enabled, else `false`
+    @available(*, deprecated, message: "Please switch to config.batchingEnabled")
     func getIsEventBatchingEnabled() -> Bool {
-        // batching requires disk storage
-        guard diskStorageEnabled == true else {
-            return false
-        }
-        return optionalData[TealiumKey.batchingEnabled] as? Bool ?? false
+        batchingEnabled ?? false
     }
 
     /// Sets a list of event names for which batching will be bypassed (sent as individual events)
     ///
     /// - Parameter keys: `[String]` containing the event names to be bypassed
+    @available(*, deprecated, message: "Please switch to config.batchingBypassKeys")
     func setBatchingBypassKeys(_ keys: [String]) {
-        self.optionalData[TealiumDispatchQueueConstants.batchingBypassKeys] = keys
+        batchingBypassKeys = keys
     }
 
     /// - Returns: `[String]?` containing a list of keys for which to bypass batching.
+    @available(*, deprecated, message: "Please switch to config.batchingBypassKeys")
     func getBatchingBypassKeys() -> [String]? {
-        return self.optionalData[TealiumDispatchQueueConstants.batchingBypassKeys] as? [String]
+        batchingBypassKeys
+    }
+
+    var batchingBypassKeys: [String]? {
+        get {
+            optionalData[TealiumDispatchQueueConstants.batchingBypassKeys] as? [String]
+        }
+
+        set {
+            optionalData[TealiumDispatchQueueConstants.batchingBypassKeys] = newValue
+        }
     }
 
     /// Sets the batch expiration in days. If the device is offline for an extended period, events older than this will be deleted
     ///
     /// - Parameter days: `Int`
+    @available(*, deprecated, message: "Please switch to config.dispatchExpiration")
     func setBatchExpirationDays(_ days: Int) {
-        self.optionalData[TealiumKey.batchExpirationDaysKey] = days
+        dispatchExpiration = days
     }
 
     /// - Returns: `Int` containing the maximum age of any track request in the queue
+    @available(*, deprecated, message: "Please switch to config.dispatchExpiration")
     func getBatchExpirationDays() -> Int {
-        return self.optionalData[TealiumKey.batchExpirationDaysKey] as? Int ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
+        dispatchExpiration ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
     }
+
+    // config.dispatchExpiration in `Core` module, since it's required for remote publish settings
 
     #if os(iOS)
     /// Enables (`true`) or disables (`false`) `remote_api` event. Required for RemoteCommands module if DispatchQueue module in use.
     ///
     /// - Parameter enabled: `Bool`
+    @available(*, deprecated, message: "Please switch to config.remoteAPIEnabled")
     func setIsRemoteAPIEnabled(_ enabled: Bool) {
-        self.optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] = enabled
+        remoteAPIEnabled = enabled
     }
 
     /// - Returns: `Bool` if `remote_api` calls have been enabled (required for RemoteCommands module if DispatchQueue module in use).
+    @available(*, deprecated, message: "Please switch to config.remoteAPIEnabled")
     func getIsRemoteAPIEnabled() -> Bool {
-        return self.optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] as? Bool ?? false
+        remoteAPIEnabled ?? false
+    }
+
+    var remoteAPIEnabled: Bool? {
+        get {
+            optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] as? Bool
+        }
+
+        set {
+            optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] = newValue
+        }
     }
     #endif
 }
@@ -164,6 +206,6 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
 }
 
 // Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIdentifier) -> Int {
+private func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIdentifier) -> Int {
 	return input.rawValue
 }

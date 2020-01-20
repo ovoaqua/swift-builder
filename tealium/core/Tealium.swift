@@ -44,7 +44,7 @@ public class Tealium {
             guard let self = self else {
                 return
             }
-            guard self.config.isEnabled == true else {
+            guard self.config.isEnabled == nil || self.config.isEnabled == true else {
                 return
             }
             self.enable(tealiumInstance: self)

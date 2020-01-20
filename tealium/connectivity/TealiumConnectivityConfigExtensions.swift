@@ -26,12 +26,12 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumConnectivityKey.refreshIntervalKey] as? Int
         }
-        
+
         set {
             optionalData[TealiumConnectivityKey.refreshIntervalKey] = newValue
         }
     }
-    
+
     /// Determines if connectivity status checks should be carried out automatically.
     /// If `true` (default), queued track calls will be flushed when connectivity is restored.
     ///￼
@@ -40,14 +40,14 @@ public extension TealiumConfig {
     func setConnectivityRefreshEnabled(_ enabled: Bool) {
         connectivityRefreshEnabled = enabled
     }
-    
+
     /// Determines if connectivity status checks should be carried out automatically.
     /// If `true` (default), queued track calls will be flushed when connectivity is restored.
     var connectivityRefreshEnabled: Bool? {
         get {
             optionalData[TealiumConnectivityKey.refreshEnabledKey] as? Bool
         }
-        
+
         set {
             optionalData[TealiumConnectivityKey.refreshEnabledKey] = newValue
         }

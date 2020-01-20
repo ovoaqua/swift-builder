@@ -28,12 +28,12 @@ public extension TealiumConfig {
     func setSearchAdsEnabled(_ enabled: Bool) {
         searchAdsEnabled = enabled
     }
-    
+
     var searchAdsEnabled: Bool {
         get {
             optionalData[TealiumAttributionKey.isSearchAdsEnabled] as? Bool ?? false
         }
-        
+
         set {
             optionalData[TealiumAttributionKey.isSearchAdsEnabled] = newValue
         }

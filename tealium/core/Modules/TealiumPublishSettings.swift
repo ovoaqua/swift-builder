@@ -119,7 +119,7 @@ struct RemotePublishSettings: Codable {
 //        let batchSize = optionalData["batch_size"] as? Int
 //        optionalData["batch_size"] = batchSize ?? self.batchSize
         
-        config.batchSize = config.batchSize ?? batchSize
+        config.batchSize = (config.batchSize != TealiumValue.maxEventBatchSize) ? config.batchSize : batchSize
         
 //        //    case event_batch_size
 //        let dispatchAfter = optionalData["event_limit"] as? Int

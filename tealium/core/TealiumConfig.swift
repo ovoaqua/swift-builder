@@ -125,12 +125,12 @@ public extension TealiumConfig {
     func setModulesList(_ list: TealiumModulesList ) {
         optionalData[TealiumModulesListKey.config] = list
     }
-    
+
     var modulesList: TealiumModulesList? {
         get {
             optionalData[TealiumModulesListKey.config] as? TealiumModulesList
         }
-        
+
         set {
             optionalData[TealiumModulesListKey.config] = newValue
         }
@@ -153,14 +153,14 @@ public extension TealiumConfig {
     func setLogLevel(_ logLevel: TealiumLogLevel) {
         optionalData[TealiumKey.logLevelConfig] = logLevel
     }
-    
+
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
     /// Should only be used in cases where the user has an existing visitor ID
     var logLevel: TealiumLogLevel? {
         get {
             optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
         }
-        
+
         set {
             optionalData[TealiumKey.logLevelConfig] = newValue
         }
@@ -178,110 +178,117 @@ public extension TealiumConfig {
     func getExistingVisitorId() -> String? {
         optionalData[TealiumKey.visitorId] as? String
     }
-    
+
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
     /// Should only be used in cases where the user has an existing visitor ID
     var existingVisitorId: String? {
         get {
             optionalData[TealiumKey.visitorId] as? String
         }
-        
+
         set {
             optionalData[TealiumKey.visitorId] = newValue
         }
     }
-    
+
 }
 
-
-// Publish Settings
+// MARK: Publish Settings
 public extension TealiumConfig {
+    /// Whether or not remote publish settings should be used. Default `true`.
     var shouldUseRemotePublishSettings: Bool {
         get {
             optionalData[TealiumKey.publishSettings] as? Bool ?? true
         }
-        
+
         set {
             optionalData[TealiumKey.publishSettings] = newValue
         }
     }
-    
+
+    /// If `false`, the entire library is disabled, and no tracking calls are sent.
     var isEnabled: Bool? {
         get {
             optionalData[TealiumKey.libraryEnabled] as? Bool
         }
-        
+
         set {
             optionalData[TealiumKey.libraryEnabled] = newValue
         }
     }
- 
+
+    /// If true, calls will only be sent if the device has sufficient battery levels (>20%).
     var batterySaverEnabled: Bool? {
         get {
             optionalData[TealiumKey.batterySaver] as? Bool
         }
-        
+
         set {
             optionalData[TealiumKey.batterySaver] = newValue
         }
     }
-    
+
     var dispatchExpiration: Int? {
         get {
             optionalData[TealiumKey.batchExpirationDaysKey] as? Int
         }
-        
+
         set {
             optionalData[TealiumKey.batchExpirationDaysKey] = newValue
         }
     }
-    
+
+    /// Enables (`true`) or disables (`false`) event batching. Default `false`
     var batchingEnabled: Bool? {
         get {
-            optionalData[TealiumKey.batchingEnabled] as? Bool
+            // batching requires disk storage
+            guard diskStorageEnabled == true else {
+                return false
+            }
+            return optionalData[TealiumKey.batchingEnabled] as? Bool
         }
-        
+
         set {
             optionalData[TealiumKey.batchingEnabled] = newValue
         }
     }
-    
-    var batchSize: Int? {
+
+    var batchSize: Int {
         get {
-            optionalData[TealiumKey.batchSizeKey] as? Int
+            optionalData[TealiumKey.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
         }
-        
+
         set {
             optionalData[TealiumKey.batchSizeKey] = newValue
         }
-        
+
     }
-    
+
     var dispatchQueueLimit: Int? {
         get {
-            optionalData[TealiumKey.eventLimit] as? Int
+            optionalData[TealiumKey.queueSizeKey] as? Int
         }
-        
+
         set {
-            optionalData[TealiumKey.eventLimit] = newValue
+            optionalData[TealiumKey.queueSizeKey] = newValue
         }
     }
-    
+
     var wifiOnlySending: Bool? {
         get {
             optionalData[TealiumKey.wifiOnlyKey] as? Bool
         }
-        
+
         set {
             optionalData[TealiumKey.wifiOnlyKey] = newValue
         }
     }
-    
+
     var minutesBetweenRefresh: Double? {
         get {
             optionalData[TealiumKey.minutesBetweenRefresh] as? Double
         }
-        
+
         set {
             optionalData[TealiumKey.minutesBetweenRefresh] = newValue
         }

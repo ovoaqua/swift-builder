@@ -50,10 +50,12 @@ class TealiumHelper: NSObject {
         // OPTIONALLY set log level
         config.connectivityRefreshInterval = 5
 //        config.setLogLevel(.verbose)
+        config.logLevel = .verbose
         config.consentLoggingEnabled = true
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
         config.shouldAddCookieObserver = false
+        config.shouldUseRemotePublishSettings = false
 //        config.setBatchSize(5)
 //        config.setDispatchAfter(numberOfEvents: 5)
 //        config.setMaxQueueSize(200)
@@ -76,8 +78,9 @@ class TealiumHelper: NSObject {
         config.modulesList = list
         config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
-        config.setIsRemoteAPIEnabled(true)
+        config.remoteAPIEnabled = true
         config.logLevel = .verbose
+        config.batterySaverEnabled = true
         #endif
         #if os(iOS)
         

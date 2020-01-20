@@ -20,19 +20,19 @@ public extension TealiumConfig {
     func setVisitorServiceRefresh(interval: Int64) {
         visitorServiceRefreshInterval = interval
     }
-    
+
     /// Sets the default refresh interval for visitor profile retrieval. Default is 5 minutes
     /// Set to `0` if the profile should always be fetched following a track request.
     var visitorServiceRefreshInterval: Int64? {
         get {
             optionalData[TealiumVisitorProfileConstants.refreshInterval] as? Int64
         }
-        
+
         set {
             optionalData[TealiumVisitorProfileConstants.refreshInterval] = newValue
         }
     }
-    
+
     /// Adds a new visitor service delegate to be notified of any changes to the visitor profile.
     /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
     /// - Parameter delegate: class conforming to `TealiumVisitorServiceDelegate`
@@ -47,14 +47,14 @@ public extension TealiumConfig {
     func getVisitorServiceDelegates() -> [TealiumVisitorServiceDelegate]? {
         visitorServiceDelegates
     }
-    
+
     /// Visitor service delegates to be notified of any changes to the visitor profile.
     /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
     var visitorServiceDelegates: [TealiumVisitorServiceDelegate]? {
         get {
             optionalData[TealiumVisitorProfileConstants.visitorProfileDelegate] as? [TealiumVisitorServiceDelegate]
         }
-        
+
         set {
             optionalData[TealiumVisitorProfileConstants.visitorProfileDelegate] = newValue
         }
@@ -73,14 +73,14 @@ public extension TealiumConfig {
     func getVisitorServiceOverrideURL() -> String? {
         visitorServiceOverrideURL
     }
-    
+
     /// Overrides the default visitor service URL (visitor-service.tealiumiq.com).  If an invalid URL is passed, the default is used instead.
     /// Format: https://overridden-subdomain.yourdomain.com/
     var visitorServiceOverrideURL: String? {
         get {
             optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideURL] as? String
         }
-        
+
         set {
             optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideURL] = newValue
         }
@@ -98,13 +98,13 @@ public extension TealiumConfig {
     func getVisitorServiceOverrideProfile() -> String? {
         visitorServiceOverrideProfile
     }
-    
+
     /// Sets a specific overridden profile from which to fetch the visitor profile.
     var visitorServiceOverrideProfile: String? {
         get {
             optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideProfile] as? String
         }
-        
+
         set {
             optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideProfile] = newValue
         }

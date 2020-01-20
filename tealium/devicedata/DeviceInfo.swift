@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 struct DeviceInfo {
     static let data: [String: Any] = [
             "iPhone4,1": [

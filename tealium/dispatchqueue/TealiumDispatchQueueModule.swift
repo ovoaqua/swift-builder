@@ -19,38 +19,38 @@ class TealiumDispatchQueueModule: TealiumModule {
 
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
-    
+
     // when to start trimming the queue (default 20) - e.g. if offline
 //    var maxQueueSize = TealiumDispatchQueueConstants.defaultMaxQueueSize
-    
+
     var maxQueueSize: Int {
         config?.dispatchQueueLimit ?? TealiumDispatchQueueConstants.defaultMaxQueueSize
     }
-    
+
     // max number of events in a single batch
     var maxDispatchSize: Int {
         config?.batchSize ?? TealiumValue.maxEventBatchSize
     }
-    
+
     var eventsBeforeAutoDispatch: Int {
-        config?.getDispatchAfterEvents() ?? maxDispatchSize
+        config?.dispatchAfter ?? maxDispatchSize
     }
-    
+
     var isBatchingEnabled: Bool {
         config?.batchingEnabled ?? true
     }
-    
+
     var batchingBypassKeys: [String]? {
-        config?.getBatchingBypassKeys()
+        config?.batchingBypassKeys
     }
-    
+
     var batchExpirationDays: Int {
         config?.dispatchExpiration ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
     }
-    
+
     var isRemoteAPIEnabled: Bool {
             #if os(iOS)
-            return config?.getIsRemoteAPIEnabled() ?? false
+            return config?.remoteAPIEnabled ?? false
             #else
             return false
             #endif
@@ -193,7 +193,8 @@ class TealiumDispatchQueueModule: TealiumModule {
     // swiftlint:disable function_body_length
     override func track(_ request: TealiumTrackRequest) {
         defer {
-            if persistentQueue.currentEvents >= self.eventsBeforeAutoDispatch {
+            if persistentQueue.currentEvents >= self.eventsBeforeAutoDispatch,
+                hasSufficientBattery(track: persistentQueue.peek()?.last) {
                 releaseQueue()
             }
         }
@@ -201,15 +202,26 @@ class TealiumDispatchQueueModule: TealiumModule {
             didFinishWithNoResponse(request)
             return
         }
+
         let request = addModuleName(to: request)
         self.triggerRemoteAPIRequest(request)
         let canWrite = diskStorage.canWrite()
         var data = request.trackDictionary
+        let newTrack = TealiumTrackRequest(data: data, completion: request.completion)
+        guard canWrite else {
+            let report = TealiumReportRequest(message: "Insufficient disk storage available. Event Batching has been disabled.")
+            delegate?.tealiumModuleRequests(module: self, process: report)
+            self.didFinishWithNoResponse(newTrack)
+            return
+        }
+        guard hasSufficientBattery(track: request) else {
+            enqueue(request, reason: "Insufficient Battery")
+            return
+        }
         var shouldBypass = false
         if data["bypass_queue"] as? Bool == true {
             shouldBypass = data.removeValue(forKey: "bypass_queue") as? Bool ?? false
         }
-        let newTrack = TealiumTrackRequest(data: data, completion: request.completion)
         guard isBatchingEnabled else {
             self.didFinishWithNoResponse(newTrack)
             return
@@ -217,13 +229,6 @@ class TealiumDispatchQueueModule: TealiumModule {
 
         guard eventsBeforeAutoDispatch > 1 else {
             didFinishWithNoResponse(newTrack)
-            return
-        }
-
-        guard canWrite else {
-            let report = TealiumReportRequest(message: "Insufficient disk storage available. Event Batching has been disabled.")
-            delegate?.tealiumModuleRequests(module: self, process: report)
-            self.didFinishWithNoResponse(newTrack)
             return
         }
 
@@ -247,16 +252,41 @@ class TealiumDispatchQueueModule: TealiumModule {
             didFinishWithNoResponse(newTrack)
             return
         }
+
+        enqueue(request, reason: nil)
+    }
+    // swiftlint:enable function_body_length
+
+    func hasSufficientBattery(track: TealiumTrackRequest?) -> Bool {
+        guard let track = track else {
+            return true
+        }
+        guard config?.batterySaverEnabled == true else {
+            return true
+        }
+        guard let batteryPercentString = track.trackDictionary["battery_percent"] as? String, let batteryPercent = Double(batteryPercentString) else {
+            return true
+        }
+        guard batteryPercent != -100 else {
+            return true
+        }
+        guard batteryPercent >= 20.0 else {
+            return false
+        }
+        return true
+    }
+
+    func enqueue(_ request: TealiumTrackRequest,
+                 reason: String?) {
         // no conditions preventing queueing, so queue request
-        var requestData = newTrack.trackDictionary
-        requestData[TealiumKey.queueReason] = TealiumKey.batchingEnabled
+        var requestData = request.trackDictionary
+        requestData[TealiumKey.queueReason] = reason ?? TealiumKey.batchingEnabled
         requestData[TealiumKey.wasQueued] = "true"
-        let newRequest = TealiumTrackRequest(data: requestData, completion: newTrack.completion)
+        let newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
         persistentQueue.appendDispatch(newRequest)
 
         logQueue(request: newRequest)
     }
-    // swiftlint:enable function_body_length
 
     func triggerRemoteAPIRequest(_ request: TealiumTrackRequest) {
         guard isRemoteAPIEnabled else {

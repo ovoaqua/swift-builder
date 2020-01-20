@@ -31,18 +31,18 @@ public extension TealiumConfig {
         }
         return false
     }
-    
+
     /// Determines whether consent logging events should be sent to Tealium UDH￼.
     var consentLoggingEnabled: Bool {
         get {
             optionalData[TealiumConsentConstants.consentLoggingEnabled] as? Bool ?? false
         }
-        
+
         set {
             optionalData[TealiumConsentConstants.consentLoggingEnabled] = newValue
         }
     }
-    
+
     /// Overrides the consent policy (default GDPR)￼.
     ///
     /// - Parameter policy: `String` containing the policy (e.g. "CCPA)
@@ -64,12 +64,12 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumConsentConstants.policyKey] as? String
         }
-        
+
         set {
             optionalData[TealiumConsentConstants.policyKey] = newValue
         }
     }
-    
+
     /// Sets the initial consent status to be used before the user has selected an option￼.
     ///
     /// - Parameter status: `TealiumConsentStatus`
@@ -88,18 +88,18 @@ public extension TealiumConfig {
         }
         return nil
     }
-    
+
     /// Initial consent status to be used before the user has selected an option￼.
     var initialUserConsentStatus: TealiumConsentStatus? {
         get {
             optionalData[TealiumConsentConstants.consentStatus] as? TealiumConsentStatus
         }
-        
+
         set {
             optionalData[TealiumConsentConstants.consentStatus] = newValue
         }
     }
-    
+
     /// Sets the initial consent categories to be used before the user has selected an option￼.
     ///
     /// - Parameter categories: `[TealiumConsentCategories]`
@@ -118,13 +118,13 @@ public extension TealiumConfig {
         }
         return nil
     }
-    
+
     /// Initial consent categories to be used before the user has selected an option￼.
     var initialUserConsentCategories: [TealiumConsentCategories]? {
         get {
             optionalData[TealiumConsentConstants.consentCategoriesKey] as? [TealiumConsentCategories]
         }
-        
+
         set {
             optionalData[TealiumConsentConstants.consentCategoriesKey] = newValue
         }

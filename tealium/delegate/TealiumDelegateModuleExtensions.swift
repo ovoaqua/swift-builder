@@ -23,7 +23,7 @@ public extension Tealium {
 }
 
 public extension TealiumConfig {
-    
+
     var delegates: TealiumDelegates {
         get {
             optionalData[TealiumDelegateKey.multicastDelegates] as? TealiumDelegates ?? TealiumDelegates()
