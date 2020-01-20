@@ -117,10 +117,4 @@ class TealiumCollectTests: XCTestCase {
         waiter.wait(for: [expectation], timeout: 1.0)
     }
 
-    func validCollectEndpoint(urlString: String) -> Bool {
-        // TODO:
-
-        return false
-    }
-
 }

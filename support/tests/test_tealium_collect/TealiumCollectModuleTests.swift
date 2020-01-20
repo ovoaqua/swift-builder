@@ -106,12 +106,12 @@ class TealiumCollectModuleTests: XCTestCase {
     }
 
     func testOverrideCollectURL() {
-        testTealiumConfig.setCollectOverrideURL(url: "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile")
+        testTealiumConfig.collectOverrideURL = "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile"
         XCTAssertTrue(testTealiumConfig.optionalData[TealiumCollectKey.overrideCollectUrl] as! String == "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile&")
     }
 
     func testOverrideCollectProfile() {
-        testTealiumConfig.setCollectOverrideProfile(profile: "hello")
+        testTealiumConfig.collectOverrideProfile = "hello"
         XCTAssertTrue(testTealiumConfig.optionalData[TealiumCollectKey.overrideCollectProfile] as! String == "hello")
     }
 

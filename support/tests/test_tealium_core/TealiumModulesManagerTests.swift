@@ -53,7 +53,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let enableExpectation = self.expectation(description: "testEnable")
 
         modulesManager = TealiumModulesManager()
-        testTealiumConfig.setInitialUserConsentStatus(.consented)
+        testTealiumconfig.initialUserConsentStatus = .consented
         // tag management cannot work properly in tests due to UIKit dependency
         let list = TealiumModulesList(isWhitelist: false, moduleNames: ["tagmanagement"])
         testTealiumConfig.setModulesList(list)

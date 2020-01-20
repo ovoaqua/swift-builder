@@ -76,8 +76,8 @@ class ConsentManagerTests: XCTestCase {
         expectations.append(expectation)
         runMultiple(expectations) {
             let config = tealHelper.getConfig()
-            config.setConsentLoggingEnabled(false)
-            config.setInitialUserConsentStatus(.consented)
+            config.consentLoggingEnabled = false
+            config.initialUserConsentStatus = .consented
             consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
                 XCTAssertFalse(self.consentManager?.consentLoggingEnabled ?? true, "Consent Manager Test: \(#function) -Auditing flag unexpectedly enabled")
                 XCTAssertTrue(self.consentManager?.getUserConsentPreferences()?.consentStatus == .consented, "Consent Manager Test: \(#function) -  Incorrect initial consent status from config")
@@ -92,8 +92,8 @@ class ConsentManagerTests: XCTestCase {
         expectations.append(expectation)
         runMultiple(expectations) {
             let config = tealHelper.getConfig()
-            config.setConsentLoggingEnabled(false)
-            config.setInitialUserConsentCategories([.cdp, .analytics])
+            config.consentLoggingEnabled = false
+            config.initialUserConsentCategories = [.cdp, .analytics]
             consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
                 XCTAssertFalse(self.consentManager?.consentLoggingEnabled ?? true, "Consent Manager Test: \(#function) -Auditing flag unexpectedly enabled")
                 XCTAssertTrue(self.consentManager?.getUserConsentPreferences()?.consentCategories == [.cdp, .analytics], "Consent Manager Test: \(#function) -  Incorrect initial consent categories from config.")
@@ -122,8 +122,8 @@ class ConsentManagerTests: XCTestCase {
         currentTest = "testUpdatePreferencesFromConfig"
         runMultiple {
             let config = tealHelper.newConfig()
-            config.setInitialUserConsentCategories([.analytics, .cdp, .bigData])
-            config.setInitialUserConsentStatus(.consented)
+            config.initialUserConsentCategories = [.analytics, .cdp, .bigData]
+            config.initialUserConsentStatus = .consented
             consentManager?.updateConsentPreferencesFromConfig(config)
             XCTAssertTrue(consentManager?.getUserConsentStatus() == .consented, "Consent Manager Test: \(#function) - Incorrect consent status")
             XCTAssertTrue(consentManager?.getUserConsentCategories() == [.analytics, .cdp, .bigData], "Consent Manager Test: \(#function) - Incorrect Consent Categories")
@@ -172,8 +172,8 @@ class ConsentManagerTests: XCTestCase {
         let expectation = self.expectation(description: "testloadSavedPreferencesFull")
         expectations.append(expectation)
         runMultiple(expectations) {
-            config.setInitialUserConsentStatus(.consented)
-            config.setInitialUserConsentCategories([.cdp, .analytics])
+            config.initialUserConsentStatus = .consented
+            config.initialUserConsentCategories = [.cdp, .analytics]
             consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
                 if let savedConfig = self.consentManager?.getSavedPreferences() {
                     let categories = savedConfig.consentCategories, status = savedConfig.consentStatus
@@ -215,7 +215,7 @@ class ConsentManagerTests: XCTestCase {
         runMultiple(expectations) {
             consentManager?.resetUserConsentPreferences()
             let config = tealHelper.getConfig()
-            config.setInitialUserConsentCategories([.cdp, .analytics])
+            config.initialUserConsentCategories = [.cdp, .analytics]
             consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
                 self.consentManager?.setUserConsentCategories([.bigData])
                 XCTAssertTrue(self.consentManager?.getSavedPreferences()?.consentCategories == [.bigData])
@@ -231,7 +231,7 @@ class ConsentManagerTests: XCTestCase {
         runMultiple(expectations) {
             consentManager?.resetUserConsentPreferences()
             let config = tealHelper.getConfig()
-            config.setInitialUserConsentStatus(.consented)
+            config.initialUserConsentStatus = .consented
             consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
                 self.consentManager?.setUserConsentStatus(.notConsented)
                 XCTAssertTrue(self.consentManager?.getSavedPreferences()?.consentStatus == .notConsented)
@@ -246,8 +246,8 @@ class ConsentManagerTests: XCTestCase {
         expectations.append(expectation)
         runMultiple(expectations) {
             let config = tealHelper.newConfig()
-            config.setInitialUserConsentStatus(.notConsented)
-            config.setInitialUserConsentCategories([.cdp, .analytics])
+            config.initialUserConsentStatus = .notConsented
+            config.initialUserConsentCategories = [.cdp, .analytics]
             consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
                 if let _ = self.consentManager?.getSavedPreferences() {
                     XCTAssertTrue(self.consentManager?.getTrackingStatus() == .trackingForbidden, "Consent Manager Test: \(#function) - getTrackingStatus returned unexpected value")
