@@ -158,7 +158,7 @@ class TealiumModulesTest: XCTestCase {
         modulesManager.setupModulesFrom(config: initialConfig)
         modulesManager.enable(config: initialConfig, enableCompletion: nil)
 
-        XCTAssert(modulesManager.modules!.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: false,
@@ -167,12 +167,13 @@ class TealiumModulesTest: XCTestCase {
         let newConfig = TealiumConfig(account: "test",
                                       profile: "test",
                                       environment: "test")
+        newConfig.isEnabled = true
 
         newConfig.modulesList = newModulesList
 
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == (numberOfCurrentModules - newModulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == (numberOfCurrentModules - newModulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
         for module in modulesManager.modules! where module is TealiumAppDataModule {
             XCTFail("Failed to disable the appData module.")
@@ -194,7 +195,7 @@ class TealiumModulesTest: XCTestCase {
         let modulesManager = TealiumModulesManager()
         modulesManager.setupModulesFrom(config: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
@@ -203,12 +204,12 @@ class TealiumModulesTest: XCTestCase {
         let newConfig = TealiumConfig(account: "test",
                                       profile: "test",
                                       environment: "test")
-
+        newConfig.isEnabled = true
         newConfig.modulesList = newModulesList
 
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
     }
 
     func testEnableMoreModulesAfterExitingConfigAlreadyActived() {
@@ -237,7 +238,7 @@ class TealiumModulesTest: XCTestCase {
                                       environment: "test")
 
         newConfig.modulesList = newModulesList
-
+        newConfig.isEnabled = true
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
         XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")
@@ -269,7 +270,7 @@ class TealiumModulesTest: XCTestCase {
                                       environment: "test")
 
         newConfig.modulesList = newModulesList
-
+        newConfig.isEnabled = true
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
         XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")

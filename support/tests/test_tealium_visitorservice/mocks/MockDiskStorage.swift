@@ -43,12 +43,14 @@ public class MockTealiumDiskStorage: TealiumDiskStorageProtocol {
     public func append<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
     }
 
-    public func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+    public func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
         retrieveCount += 1
+        return nil
     }
 
-    public func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+    public func retrieve<T>(_ fileName: String, as type: T.Type) -> T? where T: Decodable {
         retrieveCount += 1
+        return nil
     }
 
    public func retrieve(fileName: String, completion: (Bool, [String: Any]?, Error?) -> Void) {
