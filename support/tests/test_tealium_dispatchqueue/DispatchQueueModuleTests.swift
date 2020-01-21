@@ -48,7 +48,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     func testTrack() {
         let module = TealiumDispatchQueueModule(delegate: nil)
         let config = TestTealiumHelper().getConfig()
-        config.setIsEventBatchingEnabled(true)
+        config.batchingEnabled = true
         module.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: diskStorage)
         module.clearQueue()
         let trackRequest = TealiumTrackRequest(data: ["tealium_event": "hello"], completion: nil)
@@ -99,7 +99,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         delegate = RemoteAPIDelegate()
         let module = TealiumDispatchQueueModule(delegate: delegate!)
         let config = TestTealiumHelper().getConfig()
-        config.setIsRemoteAPIEnabled(true)
+        config.remoteAPIEnabled = true
         module.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: diskStorage)
         let trackRequest = TealiumTrackRequest(data: ["tealium_event": "myevent"], completion: nil)
         module.track(trackRequest)
@@ -118,6 +118,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
 
     func testCanQueueRequest() {
         let module = TealiumDispatchQueueModule(delegate: nil)
+        module.config = testTealiumConfig
         module.diskStorage = diskStorage
         XCTAssertFalse(module.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "grant_full_consent"], completion: nil)))
         XCTAssertTrue(module.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "view"], completion: nil)))
@@ -150,7 +151,6 @@ class RemoteAPIDelegate: TealiumModuleDelegate {
 
     func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
         guard let request = process as? TealiumRemoteAPIRequest else {
-            XCTFail()
             return
         }
         XCTAssertEqual(request.trackRequest.trackDictionary["tealium_event"] as! String, "myevent")

@@ -39,22 +39,20 @@ class TealiumDiskTests: XCTestCase {
     func testSave() {
         let diskstorage = TealiumDiskStorage(config: config, forModule: "Tests")
         diskstorage.save(TealiumTrackRequest(data: ["hello": "testing"], completion: nil), completion: nil)
-        diskstorage.retrieve(as: TealiumTrackRequest.self) { _, data, _ in
-            XCTAssertNotNil(data?.trackDictionary["hello"], "data unexpectedly missing")
-            XCTAssertEqual(data?.trackDictionary["hello"] as! String, "testing", "unexpected data retrieved")
-        }
+        let data = diskstorage.retrieve(as: TealiumTrackRequest.self)
+        XCTAssertNotNil(data?.trackDictionary["hello"], "data unexpectedly missing")
+        XCTAssertEqual(data?.trackDictionary["hello"] as! String, "testing", "unexpected data retrieved")
     }
 
     func testAppend() {
         let diskstorage = TealiumDiskStorage(config: config, forModule: "Tests")
         diskstorage.save(TealiumTrackRequest(data: ["hello": "testing"], completion: nil), completion: nil)
         diskstorage.append(TealiumTrackRequest(data: ["newkey": "testing"], completion: nil)) { _, _, _ in
-            diskstorage.retrieve(as: TealiumTrackRequest.self) { _, data, _ in
-                XCTAssertNotNil(data?.trackDictionary["hello"], "data unexpectedly missing")
-                XCTAssertEqual(data?.trackDictionary["hello"] as? String, "testing", "unexpected data retrieved")
-                XCTAssertNotNil(data?.trackDictionary["newkey"], "data unexpectedly missing")
-                XCTAssertEqual(data?.trackDictionary["newkey"] as! String, "testing", "unexpected data retrieved")
-            }
+            let data = diskstorage.retrieve(as: TealiumTrackRequest.self)
+            XCTAssertNotNil(data?.trackDictionary["hello"], "data unexpectedly missing")
+            XCTAssertEqual(data?.trackDictionary["hello"] as? String, "testing", "unexpected data retrieved")
+            XCTAssertNotNil(data?.trackDictionary["newkey"], "data unexpectedly missing")
+            XCTAssertEqual(data?.trackDictionary["newkey"] as! String, "testing", "unexpected data retrieved")
         }
     }
 

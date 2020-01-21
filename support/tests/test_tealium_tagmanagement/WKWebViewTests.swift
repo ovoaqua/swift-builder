@@ -15,7 +15,7 @@ import XCTest
 class WKWebViewTests: XCTestCase {
 
     let tagManagementWKWebView = TealiumTagManagementWKWebView()
-    let testURL = TestTealiumHelper().newConfig().webviewURL()
+    let testURL = TestTealiumHelper().newConfig().webviewURL
     let userDefaults = UserDefaults(suiteName: #file)
 
     override func setUp() {
@@ -26,12 +26,12 @@ class WKWebViewTests: XCTestCase {
     func testWKWebViewInstance() {
         XCTAssertNotNil(tagManagementWKWebView, "Webview class unexpectedly nil")
         XCTAssertNil(tagManagementWKWebView.webview, "WKWebView instance should not be initialized until enable call")
-        XCTAssertEqual(tagManagementWKWebView.isWebViewReady(), false, "Webview was unexpectedly initialized")
+        XCTAssertEqual(tagManagementWKWebView.isWebViewReady, false, "Webview was unexpectedly initialized")
     }
 
     func testEnableWebView() {
         let expectation = self.expectation(description: "testEnableWebView")
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, view: nil) { _, _ in
+        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil) { _, _ in
             XCTAssertNotNil(self.tagManagementWKWebView.webview, "Webview instance was unexpectedly nil")
             expectation.fulfill()
         }
@@ -39,7 +39,7 @@ class WKWebViewTests: XCTestCase {
     }
 
     func testDisableWebView() {
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, view: nil, completion: nil)
+        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil, completion: nil)
         tagManagementWKWebView.disable()
         XCTAssertNil(tagManagementWKWebView.webview, "WKWebView instance did not successfully deinit")
     }
@@ -51,7 +51,7 @@ class WKWebViewTests: XCTestCase {
                         {\n  "test_track" : "track me"\n}
                         """
         let expectedJS = "utag.track(\'link\',\(dataString))"
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, view: nil, completion: nil)
+        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil, completion: nil)
         tagManagementWKWebView.track(data) { _, info, error in
             XCTAssertNil(error, "Error returned from track call")
             if let jsFromInfoDictionary = info[TealiumTagManagementKey.jsCommand] as? String,
@@ -66,11 +66,11 @@ class WKWebViewTests: XCTestCase {
 
     func testWebViewStateDidChange() {
         let expectation = self.expectation(description: "testWebViewStateDidChange")
-        XCTAssertFalse(tagManagementWKWebView.isWebViewReady(), "Webview should not be ready yet; webview has not been enabled")
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, view: nil) { _, _ in
-            XCTAssertTrue(self.tagManagementWKWebView.isWebViewReady(), "Webview should be ready, but was found to be nil")
+        XCTAssertFalse(tagManagementWKWebView.isWebViewReady, "Webview should not be ready yet; webview has not been enabled")
+        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil) { _, _ in
+            XCTAssertTrue(self.tagManagementWKWebView.isWebViewReady, "Webview should be ready, but was found to be nil")
             self.tagManagementWKWebView.webviewStateDidChange(.loadFailure, withError: nil)
-            XCTAssertFalse(self.tagManagementWKWebView.isWebViewReady(), "Webview should not be ready - failure condition expected")
+            XCTAssertFalse(self.tagManagementWKWebView.isWebViewReady, "Webview should not be ready - failure condition expected")
             expectation.fulfill()
         }
 
@@ -94,7 +94,7 @@ class WKWebViewTests: XCTestCase {
         if let hasMigrated = userDefaults?.bool(forKey: "com.tealium.tagmanagement.cookiesMigrated") {
             XCTAssertTrue(hasMigrated, "Migration flag was not set correctly")
             // API check of userDefaults
-            XCTAssertTrue(tagManagementWKWebView.getHasMigrated(userDefaults: userDefaults) ?? false, "GetHasMigrated should return true")
+            XCTAssertTrue(tagManagementWKWebView.getHasMigrated(userDefaults: userDefaults), "GetHasMigrated should return true")
         } else {
             XCTFail("Migrated flag not found in userDefaults")
         }

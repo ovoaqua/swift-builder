@@ -41,7 +41,13 @@ class TealiumDispatchQueueModule: TealiumModule {
     }
 
     var batchingBypassKeys: [String]? {
-        config?.batchingBypassKeys
+        get {
+            config?.batchingBypassKeys
+        }
+
+        set {
+            config?.batchingBypassKeys = newValue
+        }
     }
 
     var batchExpirationDays: Int {

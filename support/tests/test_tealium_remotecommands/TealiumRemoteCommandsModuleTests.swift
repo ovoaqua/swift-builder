@@ -42,7 +42,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
                                    environment: "test",
                                    datasource: "test",
                                    optionalData: nil)
-        config.disableRemoteHTTPCommand()
+        config.remoteHTTPCommandDisabled = true
         let module = TealiumRemoteCommandsModule(delegate: nil)
         module.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
 
@@ -57,7 +57,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
                                    environment: "test",
                                    datasource: "test",
                                    optionalData: nil)
-        config.enableRemoteHTTPCommand()
+        config.remoteHTTPCommandDisabled = false
         let module = TealiumRemoteCommandsModule(delegate: nil)
         module.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
 

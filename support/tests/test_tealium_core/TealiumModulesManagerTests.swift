@@ -53,10 +53,10 @@ class TealiumModulesManagerTests: XCTestCase {
         let enableExpectation = self.expectation(description: "testEnable")
 
         modulesManager = TealiumModulesManager()
-        testTealiumconfig.initialUserConsentStatus = .consented
+        testTealiumConfig.initialUserConsentStatus = .consented
         // tag management cannot work properly in tests due to UIKit dependency
         let list = TealiumModulesList(isWhitelist: false, moduleNames: ["tagmanagement"])
-        testTealiumConfig.setModulesList(list)
+        testTealiumConfig.modulesList = list
         // Tealium must be initialized in order for callback to work
         let instance = Tealium(config: testTealiumConfig)
         modulesManager?.enable(config: testTealiumConfig, enableCompletion: { _ in
@@ -150,7 +150,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let manager = TealiumModulesManager()
         manager.enable(config: config, enableCompletion: nil)
 
-        XCTAssert(manager.modules.count == 0, "Unexpected number of modules initialized: \(manager.modules)")
+        XCTAssert(manager.modules!.count == 0, "Unexpected number of modules initialized: \(manager.modules)")
 
         let expectation = self.expectation(description: "testPublicTrackOneModule")
 
@@ -259,7 +259,7 @@ class TealiumModulesManagerTests: XCTestCase {
     }
 
     func testTealiumModulesArray_ModuleNames() {
-        let allModules = TealiumModules.initializeModules(delegate: self)
+        let allModules = TealiumModules.initializeModules(modulesList: nil, delegate: self)
 
         // Alphabetically instead of by priority
         let result = allModules.moduleNames().sorted()
@@ -277,11 +277,11 @@ class TealiumModulesManagerTests: XCTestCase {
 extension TealiumModulesManagerTests: TealiumModuleDelegate {
 
     func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        if module == modulesManager?.modules.last {
+        if module == modulesManager?.modules!.last {
             process.completion?(true, nil, nil)
         }
 
-        let nextModule = modulesManager?.modules.next(after: module)
+        let nextModule = modulesManager?.modules!.next(after: module)
 
         nextModule?.handle(process)
     }

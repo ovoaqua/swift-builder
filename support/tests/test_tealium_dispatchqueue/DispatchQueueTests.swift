@@ -60,9 +60,8 @@ class TealiumPersistentQueueTests: XCTestCase {
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
         XCTAssertEqual(persistentQueue?.currentEvents, 5)
-        persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self) { _, data, _ in
-            XCTAssertEqual(data!.count, 5)
-        }
+        let data = persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self)
+        XCTAssertEqual(data!.count, 5)
         guard let savedTrackData = persistentQueue?.peek() else {
                 XCTFail()
                 return
@@ -78,14 +77,12 @@ class TealiumPersistentQueueTests: XCTestCase {
         let track = TealiumTrackRequest(data: [key: "true"], completion: nil)
         persistentQueue?.diskStorage.append(track, completion: nil)
         persistentQueue?.diskStorage.append(track, completion: nil)
-        persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self) { _, data, _ in
-            XCTAssertEqual(data!.count, 2)
-        }
+        var data = persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self)
+        XCTAssertEqual(data!.count, 2)
         persistentQueue?.clearQueue()
         XCTAssertEqual(persistentQueue?.currentEvents, 0)
-        persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self) { _, data, _ in
-            XCTAssertEqual(data!.count, 0)
-        }
+        data = persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self)
+        XCTAssertEqual(data!.count, 0)
     }
 
     func testDequeueDispatches() {
