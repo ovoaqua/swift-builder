@@ -70,7 +70,6 @@ class TealiumPublishSettingsRetriever {
             return
         }
         self.getAndSave(baseUrl: "https://tags.tiqcdn.com", account: config.account, profile: config.profile, env: config.environment)
-        
     }
     
     func getCachedSettings() -> RemotePublishSettings? {

@@ -664,6 +664,12 @@
 		D7CED26B21932E2B00ACD291 /* UIApplication+TealiumTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 71D2B34F1E2FE3670049BCF3 /* UIApplication+TealiumTracker.h */; };
 		D7CED26C21932E2B00ACD291 /* UIViewController+TealiumTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 71D2B3511E2FE3670049BCF3 /* UIViewController+TealiumTracker.h */; };
 		D7CED26D21932E3900ACD291 /* TealiumAutotrackingModule.swift in Headers */ = {isa = PBXBuildFile; fileRef = 71D2B34E1E2FE3670049BCF3 /* TealiumAutotrackingModule.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		D7D5C1AC23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AB23D74B44002DB7C6 /* PublishSettingsTests.swift */; };
+		D7D5C1AD23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AB23D74B44002DB7C6 /* PublishSettingsTests.swift */; };
+		D7D5C1AE23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AB23D74B44002DB7C6 /* PublishSettingsTests.swift */; };
+		D7D5C1B023D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
+		D7D5C1B123D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
+		D7D5C1B223D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
 		D7DE4F5C22F8796B000FA7CB /* TealiumLegacyMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DE4F5A22F8796B000FA7CB /* TealiumLegacyMigrator.swift */; };
 		D7E4184122831ED200BD8EB9 /* TealiumAppDataProtocol.swift in Headers */ = {isa = PBXBuildFile; fileRef = D73B4BA2223A5F220039AEB9 /* TealiumAppDataProtocol.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4184222831ED200BD8EB9 /* TealiumAppDataCollection.swift in Headers */ = {isa = PBXBuildFile; fileRef = D73B4BA9223A5F8F0039AEB9 /* TealiumAppDataCollection.swift */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2763,6 +2769,8 @@
 		D7D436E02090BF3200534960 /* TealiumConsentUserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumConsentUserPreferences.swift; sourceTree = "<group>"; };
 		D7D436EB2091E43D00534960 /* TealiumConsentPreferencesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumConsentPreferencesStorage.swift; sourceTree = "<group>"; };
 		D7D436F5209366B500534960 /* TealiumDispatchQueueConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumDispatchQueueConstants.swift; sourceTree = "<group>"; };
+		D7D5C1AB23D74B44002DB7C6 /* PublishSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishSettingsTests.swift; sourceTree = "<group>"; };
+		D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSessionPublishSettings.swift; sourceTree = "<group>"; };
 		D7DE4F5A22F8796B000FA7CB /* TealiumLegacyMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumLegacyMigrator.swift; sourceTree = "<group>"; };
 		D7F1EBD42361CBF80088B103 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		D7F2DEE2233279A1000D0E0F /* TealiumCoreTests-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumCoreTests-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3613,6 +3621,8 @@
 				D7AD890A218B53500018E2FA /* TealiumUtilsTests.swift */,
 				D719955F22B8E47D005BE543 /* TealiumDiskTests.swift */,
 				7153ADE81E7715A80020CDA5 /* TealiumDatasourceModuleTests.swift */,
+				D7D5C1AB23D74B44002DB7C6 /* PublishSettingsTests.swift */,
+				D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */,
 			);
 			path = test_tealium_core;
 			sourceTree = "<group>";
@@ -8393,8 +8403,10 @@
 			files = (
 				D788A4B12319719F00BC6D60 /* TealiumConfigTests.swift in Sources */,
 				D788A4B22319719F00BC6D60 /* TealiumConstantsTests.swift in Sources */,
+				D7D5C1B023D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */,
 				D788A4B32319719F00BC6D60 /* TealiumModuleConfigTests.swift in Sources */,
 				D788A4B42319719F00BC6D60 /* TealiumModulesManagerTests.swift in Sources */,
+				D7D5C1AC23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */,
 				D788A4B52319719F00BC6D60 /* TealiumModulesTest.swift in Sources */,
 				D788A4B62319719F00BC6D60 /* TealiumModuleTests.swift in Sources */,
 				D788A4B82319719F00BC6D60 /* TealiumUtilsTests.swift in Sources */,
@@ -8834,8 +8846,10 @@
 			files = (
 				D7F2DED3233279A1000D0E0F /* TealiumConfigTests.swift in Sources */,
 				D7F2DED4233279A1000D0E0F /* TealiumConstantsTests.swift in Sources */,
+				D7D5C1B123D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */,
 				D7F2DED5233279A1000D0E0F /* TealiumModuleConfigTests.swift in Sources */,
 				D7F2DED6233279A1000D0E0F /* TealiumModulesManagerTests.swift in Sources */,
+				D7D5C1AD23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */,
 				D7F2DED7233279A1000D0E0F /* TealiumModulesTest.swift in Sources */,
 				D7F2DED8233279A1000D0E0F /* TealiumModuleTests.swift in Sources */,
 				D7F2DED9233279A1000D0E0F /* TealiumUtilsTests.swift in Sources */,
@@ -8850,8 +8864,10 @@
 			files = (
 				D7F2DF00233279B2000D0E0F /* TealiumConfigTests.swift in Sources */,
 				D7F2DF01233279B2000D0E0F /* TealiumConstantsTests.swift in Sources */,
+				D7D5C1B223D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */,
 				D7F2DF02233279B2000D0E0F /* TealiumModuleConfigTests.swift in Sources */,
 				D7F2DF03233279B2000D0E0F /* TealiumModulesManagerTests.swift in Sources */,
+				D7D5C1AE23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */,
 				D7F2DF04233279B2000D0E0F /* TealiumModulesTest.swift in Sources */,
 				D7F2DF05233279B2000D0E0F /* TealiumModuleTests.swift in Sources */,
 				D7F2DF06233279B2000D0E0F /* TealiumUtilsTests.swift in Sources */,
