@@ -61,7 +61,7 @@ class PublishSettingsTests: XCTestCase {
 
         let publishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, diskStorage: nil, urlSession: MockURLSessionPublishSettings(), delegate: self)
         publishSettingsRetriever.getRemoteSettings(url: URL(string: "https://tags.tiqcdn.com/utag/tealiummobile/demo/dev/mobile.html")!, lastFetch: Date(timeIntervalSince1970: 0)) { settings in
-            guard let _ = settings else {
+            guard settings != nil else {
                 XCTFail("Publish settings not returned")
                 return
             }
@@ -92,7 +92,7 @@ class PublishSettingsTests: XCTestCase {
         config.shouldUseRemotePublishSettings = true
 
         let publishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, diskStorage: nil, urlSession: MockURLSessionPublishSettings(), delegate: GetSavePublishSettings())
-        publishSettingsRetriever.getAndSave(baseUrl: "https://tags.tiqcdn.com/", account: config.account, profile: config.profile, env: config.environment)
+        publishSettingsRetriever.getAndSave()
         wait(for: [PublishSettingsTests.delegateExpectationSuccess!], timeout: 5)
     }
 

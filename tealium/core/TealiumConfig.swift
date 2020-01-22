@@ -195,6 +195,7 @@ public extension TealiumConfig {
 
 // MARK: Publish Settings
 public extension TealiumConfig {
+
     /// Whether or not remote publish settings should be used. Default `true`.
     var shouldUseRemotePublishSettings: Bool {
         get {
@@ -203,6 +204,33 @@ public extension TealiumConfig {
 
         set {
             optionalData[TealiumKey.publishSettings] = newValue
+        }
+    }
+
+    /// Overrides the publish settings URL. Default is https://tags.tiqcdn.com/utag/ACCOUNT/PROFILE/ENVIRONMENT/mobile.html
+    /// If overriding, you must provide the entire URL, not just the domain.
+    /// Usage: `config.publishSettingsURL = "https://mycompany.org/utag/ACCOUNT/PROFILE/ENVIRONMENT/mobile.html"`
+    /// Takes precendence over `publishSettingsProfile`
+    var publishSettingsURL: String? {
+        get {
+            optionalData[TealiumKey.publishSettingsURL] as? String
+        }
+
+        set {
+            optionalData[TealiumKey.publishSettingsURL] = newValue
+        }
+    }
+
+    /// Overrides the publish settings profile. Default is to use the profile set on the `TealiumConfig` object.
+    /// Use this if you need to load the publish settings from a central profile that is different to the profile you're sending data to.
+    /// Usage: `config.publishSettingsProfile = "myprofile"`
+    var publishSettingsProfile: String? {
+        get {
+            optionalData[TealiumKey.publishSettingsProfile] as? String
+        }
+
+        set {
+            optionalData[TealiumKey.publishSettingsProfile] = newValue
         }
     }
 
@@ -217,7 +245,7 @@ public extension TealiumConfig {
         }
     }
 
-    /// If true, calls will only be sent if the device has sufficient battery levels (>20%).
+    /// If `true`, calls will only be sent if the device has sufficient battery levels (>20%).
     var batterySaverEnabled: Bool? {
         get {
             optionalData[TealiumKey.batterySaver] as? Bool
@@ -228,6 +256,7 @@ public extension TealiumConfig {
         }
     }
 
+    /// How long the data persists in the app if no data has been sent back (`-1` = no dispatch expiration). Default value is `7` days.
     var dispatchExpiration: Int? {
         get {
             optionalData[TealiumKey.batchExpirationDaysKey] as? Int
@@ -253,6 +282,8 @@ public extension TealiumConfig {
         }
     }
 
+    /// How many events should be batched together
+    /// If set to `1`, events will be sent individually
     var batchSize: Int {
         get {
             optionalData[TealiumKey.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
@@ -264,6 +295,8 @@ public extension TealiumConfig {
 
     }
 
+    /// The maximum amount of events that will be stored offline
+    /// Oldest events are deleted to make way for new events if this limit is reached
     var dispatchQueueLimit: Int? {
         get {
             optionalData[TealiumKey.queueSizeKey] as? Int
@@ -274,6 +307,8 @@ public extension TealiumConfig {
         }
     }
 
+    /// Restricts event data transmission to wifi only
+    /// Data will be queued if on cellular connection
     var wifiOnlySending: Bool? {
         get {
             optionalData[TealiumKey.wifiOnlyKey] as? Bool
@@ -284,6 +319,8 @@ public extension TealiumConfig {
         }
     }
 
+    /// Determines how often the publish settings should be fetched from the CDN
+    /// Usually set automatically by the response from the remote publish settings
     var minutesBetweenRefresh: Double? {
         get {
             optionalData[TealiumKey.minutesBetweenRefresh] as? Double

@@ -14,6 +14,10 @@ public enum TealiumValue {
     // This is the current limit for performance reasons. May be increased in future
     public static let maxEventBatchSize = 10
     public static let defaultMinimumDiskSpace: Int32 = 20_000_000
+    public static let tiqBaseURL = "https://tags.tiqcdn.com/utag/"
+    public static let tiqURLSuffix = "mobile.html"
+    public static let defaultBatchExpirationDays = 7
+    public static let defaultMaxQueueSize = 40
 }
 
 // MARK: ENUMS
@@ -71,6 +75,8 @@ public enum TealiumKey {
     public static let diskStorageDirectory = "disk_storage_directory"
     public static let remoteAPICallType = "remote_api"
     public static let publishSettings = "remote_publish_settings"
+    public static let publishSettingsURL = "publish_settings_url"
+    public static let publishSettingsProfile = "publish_settings_profile"
     public static let enabledModules = "enabled_modules"
     public static let libraryEnabled = "library_is_enabled"
     public static let batterySaver = "battery_saver"

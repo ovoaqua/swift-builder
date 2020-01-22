@@ -24,7 +24,7 @@ extension Date {
         guard let timeInterval = TimeInterval(exactly: seconds) else {
             return nil
         }
-        return self.addingTimeInterval(timeInterval)
+        return addingTimeInterval(timeInterval)
     }
 }
 
@@ -46,6 +46,17 @@ class TealiumPublishSettingsRetriever {
     var cachedSettings: RemotePublishSettings?
     var config: TealiumConfig
     var hasFetched = false
+    var publishSettingsURL: URL? {
+        get {
+            if let urlString = config.publishSettingsURL,
+                let url = URL(string: urlString) {
+                return url
+            } else if let profile = config.publishSettingsProfile {
+                return URL(string: "\(TealiumValue.tiqBaseURL)\(config.account)/\(profile)/\(config.environment)/\(TealiumValue.tiqURLSuffix)")
+            }
+            return URL(string: "\(TealiumValue.tiqBaseURL)\(config.account)/\(config.profile)/\(config.environment)/\(TealiumValue.tiqURLSuffix)")
+        }
+    }
     
     init(config: TealiumConfig,
          diskStorage: TealiumDiskStorageProtocol? = nil,
@@ -56,40 +67,36 @@ class TealiumPublishSettingsRetriever {
         self.cachedSettings = getCachedSettings()
         self.urlSession = urlSession
         self.delegate = delegate
-        self.refresh()
+        refresh()
     }
     
     func refresh() {
         // always request on launch
-        if !hasFetched || self.cachedSettings == nil {
-            self.getAndSave(baseUrl: "https://tags.tiqcdn.com", account: config.account, profile: config.profile, env: config.environment)
+        if !hasFetched || cachedSettings == nil {
+            getAndSave()
             return
         }
         
-        guard let date = self.cachedSettings?.lastFetch.addMinutes(self.cachedSettings?.minutesBetweenRefresh), Date() > date else {
+        guard let date = cachedSettings?.lastFetch.addMinutes(cachedSettings?.minutesBetweenRefresh), Date() > date else {
             return
         }
-        self.getAndSave(baseUrl: "https://tags.tiqcdn.com", account: config.account, profile: config.profile, env: config.environment)
+        getAndSave()
     }
     
     func getCachedSettings() -> RemotePublishSettings? {
-        let settings = self.diskStorage.retrieve(as: RemotePublishSettings.self)
+        let settings = diskStorage.retrieve(as: RemotePublishSettings.self)
         return settings
     }
     
-    func getAndSave(baseUrl: String,
-                     account: String,
-                     profile: String,
-                     env: String) {
+    func getAndSave() {
         hasFetched = true
-        let url = URL(string: "\(baseUrl)/utag/\(account)/\(profile)/\(env)")
 
-        guard let mobileHTML = url?.appendingPathComponent("mobile.html") else {
+        guard let mobileHTML = publishSettingsURL else {
             return
         }
         
-        self.getRemoteSettings(url: mobileHTML,
-                               lastFetch: self.cachedSettings?.lastFetch) { settings in
+        getRemoteSettings(url: mobileHTML,
+                               lastFetch: cachedSettings?.lastFetch) { settings in
             if let settings = settings {
                 self.cachedSettings = settings
                 self.diskStorage.save(settings, completion: nil)
@@ -113,7 +120,7 @@ class TealiumPublishSettingsRetriever {
             request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         }
         
-        self.urlSession?.tealiumDataTask(with: request) { data, response, error in
+        urlSession?.tealiumDataTask(with: request) { data, response, error in
             
             guard let response = response as? HTTPURLResponse else {
                 completion(nil)

@@ -15,16 +15,15 @@ import UIKit
 #else
 #endif
 
+// swiftlint:disable type_body_length
 class TealiumDispatchQueueModule: TealiumModule {
 
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
 
     // when to start trimming the queue (default 20) - e.g. if offline
-//    var maxQueueSize = TealiumDispatchQueueConstants.defaultMaxQueueSize
-
     var maxQueueSize: Int {
-        config?.dispatchQueueLimit ?? TealiumDispatchQueueConstants.defaultMaxQueueSize
+        config?.dispatchQueueLimit ?? TealiumValue.defaultMaxQueueSize
     }
 
     // max number of events in a single batch
@@ -51,7 +50,7 @@ class TealiumDispatchQueueModule: TealiumModule {
     }
 
     var batchExpirationDays: Int {
-        config?.dispatchExpiration ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
+        config?.dispatchExpiration ?? TealiumValue.defaultBatchExpirationDays
     }
 
     var isRemoteAPIEnabled: Bool {
@@ -61,6 +60,9 @@ class TealiumDispatchQueueModule: TealiumModule {
             return false
             #endif
     }
+
+    var lowPowerModeEnabled = false
+    var lowPowerNotificationObserver: NSObjectProtocol?
 
     #if os(iOS)
     class var sharedApplication: UIApplication? {
@@ -91,6 +93,7 @@ class TealiumDispatchQueueModule: TealiumModule {
         removeOldDispatches()
         isEnabled = true
         Tealium.lifecycleListeners.addDelegate(delegate: self)
+        registerForPowerNotifications()
         if !request.bypassDidFinish {
             didFinish(request)
         }
@@ -98,10 +101,10 @@ class TealiumDispatchQueueModule: TealiumModule {
 
     override func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
-        if newConfig != self.config {
-            self.config = newConfig
-            self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumDispatchQueueConstants.moduleName)
-            persistentQueue = TealiumPersistentDispatchQueue(diskStorage: self.diskStorage)
+        if newConfig != config {
+            config = newConfig
+            diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumDispatchQueueConstants.moduleName)
+            persistentQueue = TealiumPersistentDispatchQueue(diskStorage: diskStorage)
         }
         didFinish(request)
     }
@@ -170,7 +173,7 @@ class TealiumDispatchQueueModule: TealiumModule {
                 case let val where val <= 1:
                     if var data = batch.first?.trackDictionary {
                         // for all release calls, bypass the queue and send immediately
-                        data += ["bypass_queue": true]
+                        data += [TealiumDispatchQueueConstants.bypassQueueKey: true]
                         let request = TealiumTrackRequest(data: data, completion: nil)
                             delegate?.tealiumModuleRequests(module: self,
                                                             process: request)
@@ -197,9 +200,10 @@ class TealiumDispatchQueueModule: TealiumModule {
     }
 
     // swiftlint:disable function_body_length
+    // swiftlint:disable cyclomatic_complexity
     override func track(_ request: TealiumTrackRequest) {
         defer {
-            if persistentQueue.currentEvents >= self.eventsBeforeAutoDispatch,
+            if persistentQueue.currentEvents >= eventsBeforeAutoDispatch,
                 hasSufficientBattery(track: persistentQueue.peek()?.last) {
                 releaseQueue()
             }
@@ -210,26 +214,26 @@ class TealiumDispatchQueueModule: TealiumModule {
         }
 
         let request = addModuleName(to: request)
-        self.triggerRemoteAPIRequest(request)
+        triggerRemoteAPIRequest(request)
         let canWrite = diskStorage.canWrite()
         var data = request.trackDictionary
         let newTrack = TealiumTrackRequest(data: data, completion: request.completion)
         guard canWrite else {
             let report = TealiumReportRequest(message: "Insufficient disk storage available. Event Batching has been disabled.")
             delegate?.tealiumModuleRequests(module: self, process: report)
-            self.didFinishWithNoResponse(newTrack)
+            didFinishWithNoResponse(newTrack)
             return
         }
         guard hasSufficientBattery(track: request) else {
-            enqueue(request, reason: "Insufficient Battery")
+            enqueue(request, reason: TealiumDispatchQueueConstants.insufficientBatteryQueueReason)
             return
         }
         var shouldBypass = false
-        if data["bypass_queue"] as? Bool == true {
-            shouldBypass = data.removeValue(forKey: "bypass_queue") as? Bool ?? false
+        if data[TealiumDispatchQueueConstants.bypassQueueKey] as? Bool == true {
+            shouldBypass = data.removeValue(forKey: TealiumDispatchQueueConstants.bypassQueueKey) as? Bool ?? false
         }
         guard isBatchingEnabled else {
-            self.didFinishWithNoResponse(newTrack)
+            didFinishWithNoResponse(newTrack)
             return
         }
 
@@ -261,6 +265,7 @@ class TealiumDispatchQueueModule: TealiumModule {
 
         enqueue(request, reason: nil)
     }
+    // swiftlint:enable cyclomatic_complexity
     // swiftlint:enable function_body_length
 
     func hasSufficientBattery(track: TealiumTrackRequest?) -> Bool {
@@ -270,13 +275,21 @@ class TealiumDispatchQueueModule: TealiumModule {
         guard config?.batterySaverEnabled == true else {
             return true
         }
+
+        if lowPowerModeEnabled == true {
+            return false
+        }
+
         guard let batteryPercentString = track.trackDictionary["battery_percent"] as? String, let batteryPercent = Double(batteryPercentString) else {
             return true
         }
-        guard batteryPercent != -100 else {
+
+        // simulator case
+        guard batteryPercent != TealiumDispatchQueueConstants.simulatorBatteryConstant else {
             return true
         }
-        guard batteryPercent >= 20.0 else {
+
+        guard batteryPercent >= TealiumDispatchQueueConstants.lowBatteryThreshold else {
             return false
         }
         return true
@@ -328,4 +341,6 @@ class TealiumDispatchQueueModule: TealiumModule {
 
         return shouldQueue
     }
+
 }
+// swiftlint:enable type_body_length

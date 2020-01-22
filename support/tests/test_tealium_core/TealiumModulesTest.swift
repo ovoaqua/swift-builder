@@ -227,7 +227,7 @@ class TealiumModulesTest: XCTestCase {
         let modulesManager = TealiumModulesManager()
         modulesManager.setupModulesFrom(config: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
@@ -241,7 +241,7 @@ class TealiumModulesTest: XCTestCase {
         newConfig.isEnabled = true
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
     }
 
     func testEnableCompletelyDifferentModulesAfterExitingConfigAlreadyActived() {
@@ -259,7 +259,7 @@ class TealiumModulesTest: XCTestCase {
         let modulesManager = TealiumModulesManager()
         modulesManager.setupModulesFrom(config: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
@@ -273,7 +273,7 @@ class TealiumModulesTest: XCTestCase {
         newConfig.isEnabled = true
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules)")
+        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
         for module in modulesManager.modules! {
             if module is TealiumDelegateModule {

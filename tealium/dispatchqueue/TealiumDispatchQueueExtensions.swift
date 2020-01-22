@@ -125,7 +125,7 @@ public extension TealiumConfig {
     /// - Returns: `Int` containing the maximum age of any track request in the queue
     @available(*, deprecated, message: "Please switch to config.dispatchExpiration")
     func getBatchExpirationDays() -> Int {
-        dispatchExpiration ?? TealiumDispatchQueueConstants.defaultBatchExpirationDays
+        dispatchExpiration ?? TealiumValue.defaultBatchExpirationDays
     }
 
     // config.dispatchExpiration in `Core` module, since it's required for remote publish settings
@@ -208,4 +208,24 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
 // Helper function inserted by Swift 4.2 migrator.
 private func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIdentifier) -> Int {
 	return input.rawValue
+}
+
+// Power state notifications
+extension TealiumDispatchQueueModule {
+
+    func registerForPowerNotifications() {
+        lowPowerNotificationObserver = NotificationCenter.default.addObserver(forName: .NSProcessInfoPowerStateDidChange, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            if ProcessInfo.processInfo.isLowPowerModeEnabled {
+                self.lowPowerModeEnabled = true
+            } else {
+                self.lowPowerModeEnabled = false
+                self.releaseQueue()
+            }
+        }
+
+    }
+
 }

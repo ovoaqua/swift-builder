@@ -115,7 +115,7 @@ class TealiumModulesManagerTests: XCTestCase {
                                    environment: "test")
         let list = TealiumModulesList(isWhitelist: true,
                                       moduleNames: Set<String>())
-        config.setModulesList(list)
+        config.modulesList = list
 
         let manager = TealiumModulesManager()
         manager.enable(config: config, enableCompletion: nil)
@@ -145,12 +145,12 @@ class TealiumModulesManagerTests: XCTestCase {
                                    environment: "test")
         let list = TealiumModulesList(isWhitelist: false,
                                       moduleNames: Set(TestTealiumHelper.allTealiumModuleNames()))
-        config.setModulesList(list)
+        config.modulesList = list
 
         let manager = TealiumModulesManager()
         manager.enable(config: config, enableCompletion: nil)
 
-        XCTAssert(manager.modules!.count == 0, "Unexpected number of modules initialized: \(manager.modules)")
+        XCTAssert(manager.modules!.count == 0, "Unexpected number of modules initialized: \(manager.modules!)")
 
         let expectation = self.expectation(description: "testPublicTrackOneModule")
 
@@ -239,7 +239,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let result = manager.allModulesReady()
 
         // Assert
-        XCTAssert(result == true, "Unexpected result from modules: \(manager.modules)")
+        XCTAssert(result == true, "Unexpected result from modules: \(manager.modules!)")
     }
 
     func testTrackAllModulesNotYetReady() {
@@ -255,7 +255,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let result = manager.allModulesReady()
 
         // Assert
-        XCTAssert(result == false, "Unexpected result from modules: \(manager.modules)")
+        XCTAssert(result == false, "Unexpected result from modules: \(manager.modules!)")
     }
 
     func testTealiumModulesArray_ModuleNames() {
