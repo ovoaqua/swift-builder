@@ -23,14 +23,13 @@ public extension TealiumConfig {
     /// - Parameter size: `Int` representing the max event batch size
     @available(*, deprecated, message: "Please switch to config.batchSize")
     func setBatchSize(_ size: Int) {
-        let size = size > TealiumValue.maxEventBatchSize ? TealiumValue.maxEventBatchSize: size
-        optionalData[TealiumKey.batchSizeKey] = size
+        batchSize = size
     }
 
     /// - Returns: `Int` containing the batch size to use. Defaults to 10 if not set
     @available(*, deprecated, message: "Please switch to config.batchSize")
     func getBatchSize() -> Int {
-        return optionalData[TealiumKey.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
+        batchSize
     }
 
     // config.batchSize in `Core` module, since it's required for remote publish settings

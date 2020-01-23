@@ -301,7 +301,7 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
 
     public var data: AnyEncodable
 
-    public var trackDictionary: [String: Any]   {
+    public var trackDictionary: [String: Any] {
         if let data = data.value as? [String: Any] {
             return data
         }

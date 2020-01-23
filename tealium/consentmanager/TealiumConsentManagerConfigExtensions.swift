@@ -18,7 +18,7 @@ public extension TealiumConfig {
     /// - Parameter enabled: `Bool` `true` if enabled
     @available(*, deprecated, message: "Please switch to config.consentLoggingEnabled")
     func setConsentLoggingEnabled(_ enabled: Bool) {
-        optionalData[TealiumConsentConstants.consentLoggingEnabled] = enabled
+        consentLoggingEnabled = enabled
     }
 
     /// Checks if consent logging is currently enabled.
@@ -26,10 +26,7 @@ public extension TealiumConfig {
     /// - Returns: `Bool` true if enabled
     @available(*, deprecated, message: "Please switch to config.consentLoggingEnabled")
     func isConsentLoggingEnabled() -> Bool {
-        if let enabled = optionalData[TealiumConsentConstants.consentLoggingEnabled] as? Bool {
-            return enabled
-        }
-        return false
+        consentLoggingEnabled
     }
 
     /// Determines whether consent logging events should be sent to Tealium UDH￼.
@@ -48,7 +45,7 @@ public extension TealiumConfig {
     /// - Parameter policy: `String` containing the policy (e.g. "CCPA)
     @available(*, deprecated, message: "Please switch to config.consentPolicyOverride")
     func setOverrideConsentPolicy(_ policy: String) {
-        optionalData[TealiumConsentConstants.policyKey] = policy
+        consentPolicyOverride = policy
     }
 
     /// Retrieves the current overridden consent policy.
@@ -56,7 +53,7 @@ public extension TealiumConfig {
     /// - Returns: `String?` containing the consent policy
     @available(*, deprecated, message: "Please switch to config.consentPolicyOverride")
     func getOverrideConsentPolicy() -> String? {
-        return optionalData[TealiumConsentConstants.policyKey] as? String
+        consentPolicyOverride
     }
 
     /// Overrides the consent policy (defaults to GDPR)￼. e.g. CCPA
@@ -75,7 +72,7 @@ public extension TealiumConfig {
     /// - Parameter status: `TealiumConsentStatus`
     @available(*, deprecated, message: "Please switch to config.initialUserConsentStatus")
     func setInitialUserConsentStatus(_ status: TealiumConsentStatus) {
-        optionalData[TealiumConsentConstants.consentStatus] = status
+        initialUserConsentStatus = status
     }
 
     /// Gets the initial consent status to be used before the user has selected an option.
@@ -83,10 +80,7 @@ public extension TealiumConfig {
     /// - Returns: `TealiumConsentStatus?`
     @available(*, deprecated, message: "Please switch to config.initialUserConsentStatus")
     func getInitialUserConsentStatus() -> TealiumConsentStatus? {
-        if let status = optionalData[TealiumConsentConstants.consentStatus] as? TealiumConsentStatus {
-            return status
-        }
-        return nil
+        initialUserConsentStatus
     }
 
     /// Initial consent status to be used before the user has selected an option￼.
@@ -105,7 +99,7 @@ public extension TealiumConfig {
     /// - Parameter categories: `[TealiumConsentCategories]`
     @available(*, deprecated, message: "Please switch to config.initialUserConsentCategories")
     func setInitialUserConsentCategories(_ categories: [TealiumConsentCategories]) {
-        optionalData[TealiumConsentConstants.consentCategoriesKey] = categories
+        initialUserConsentCategories = categories
     }
 
     /// Gets the initial consent status to be used before the user has selected an option.
@@ -113,10 +107,7 @@ public extension TealiumConfig {
     /// - Returns: `[TealiumConsentCategories]?`
     @available(*, deprecated, message: "Please switch to config.initialUserConsentCategories")
     func getInitialUserConsentCategories() -> [TealiumConsentCategories]? {
-        if let categories = optionalData[TealiumConsentConstants.consentCategoriesKey] as? [TealiumConsentCategories] {
-            return categories
-        }
-        return nil
+        initialUserConsentCategories
     }
 
     /// Initial consent categories to be used before the user has selected an option￼.

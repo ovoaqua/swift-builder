@@ -52,14 +52,4 @@ public extension TealiumConfig {
             optionalData[TealiumConnectivityKey.refreshEnabledKey] = newValue
         }
     }
-
-    var wifiOnlySending: Bool {
-        get {
-            return self.optionalData["wifi_only_sending"] as? Bool ?? false
-        }
-
-        set {
-            self.optionalData["wifi_only_sending"] = newValue
-        }
-    }
 }

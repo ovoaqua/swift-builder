@@ -111,11 +111,7 @@ public extension TealiumConfig {
     /// - Returns: TealiumModulesList as an optional.
     @available(*, deprecated, message: "Please switch to config.modulesList")
     func getModulesList() -> TealiumModulesList? {
-        guard let list = optionalData[TealiumModulesListKey.config] as? TealiumModulesList else {
-            return nil
-        }
-
-        return list
+        modulesList
     }
 
     /// Set a net modules list to this config object.
@@ -123,7 +119,7 @@ public extension TealiumConfig {
     /// - Parameter list: The TealiumModulesList to assign.
     @available(*, deprecated, message: "Please switch to config.modulesList")
     func setModulesList(_ list: TealiumModulesList ) {
-        optionalData[TealiumModulesListKey.config] = list
+        modulesList = list
     }
 
     var modulesList: TealiumModulesList? {
@@ -143,7 +139,7 @@ public extension TealiumConfig {
     /// - Returns: `TealiumLogLevel` (default is `.errors`)
     @available(*, deprecated, message: "Please switch to config.logLevel")
     func getLogLevel() -> TealiumLogLevel? {
-       return optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
+       logLevel
     }
 
     /// Sets the log level to be used by the library
@@ -151,7 +147,7 @@ public extension TealiumConfig {
     /// - Parameter logLevel: `TealiumLogLevel`
     @available(*, deprecated, message: "Please switch to config.logLevel")
     func setLogLevel(_ logLevel: TealiumLogLevel) {
-        optionalData[TealiumKey.logLevelConfig] = logLevel
+        self.logLevel = logLevel
     }
 
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
@@ -172,11 +168,12 @@ public extension TealiumConfig {
     /// Should only be used in cases where the user has an existing visitor ID
     @available(*, deprecated, message: "Please switch to config.existingVisitorId")
     func setExistingVisitorId(_ visitorId: String) {
-        optionalData[TealiumKey.visitorId] = visitorId
+        existingVisitorId = visitorId
     }
+
     @available(*, deprecated, message: "Please switch to config.existingVisitorId")
     func getExistingVisitorId() -> String? {
-        optionalData[TealiumKey.visitorId] as? String
+        existingVisitorId
     }
 
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
@@ -290,7 +287,8 @@ public extension TealiumConfig {
         }
 
         set {
-            optionalData[TealiumKey.batchSizeKey] = newValue
+            let size = newValue > TealiumValue.maxEventBatchSize ? TealiumValue.maxEventBatchSize: newValue
+            optionalData[TealiumKey.batchSizeKey] = size
         }
 
     }

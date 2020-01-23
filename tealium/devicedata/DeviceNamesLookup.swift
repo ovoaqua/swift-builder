@@ -1,5 +1,5 @@
 //
-//  DeviceInfo.swift
+//  DeviceNamesLookup.swift
 //  TealiumDeviceData
 //
 //  Created by Craig Rouse on 14/01/2020.
@@ -9,7 +9,8 @@
 
 import Foundation
 
-struct DeviceInfo {
+// swiftlint:disable type_body_length
+struct DeviceNamesLookup {
     static let data: [String: Any] = [
             "iPhone4,1": [
                 "model_name": "iPhone 4S",
@@ -450,3 +451,4 @@ struct DeviceInfo {
     ]
 
 }
+// swiftlint:enable type_body_length

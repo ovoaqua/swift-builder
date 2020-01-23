@@ -47,24 +47,22 @@ class TealiumHelper: NSObject {
                                    datasource: "test12",
                                    optionalData: nil)
 
-        // OPTIONALLY set log level
         config.connectivityRefreshInterval = 5
-//        config.setLogLevel(.verbose)
         config.logLevel = .verbose
         config.consentLoggingEnabled = true
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
         config.shouldAddCookieObserver = false
         config.shouldUseRemotePublishSettings = false
-//        config.setBatchSize(5)
-//        config.setDispatchAfter(numberOfEvents: 5)
-//        config.setMaxQueueSize(200)
-//        config.setIsEventBatchingEnabled(true)
-//        config.setVisitorServiceRefresh(interval: 0)
-//        config.setVisitorServiceOverrideProfile("main")
+        config.batchSize = 5
+        config.dispatchAfter = 5
+        config.dispatchQueueLimit = 200
+        config.batchingEnabled = true
+        config.visitorServiceRefreshInterval = 0
+        config.visitorServiceOverrideProfile = "main"
         // OPTIONALLY add an external delegate
         config.addDelegate(self)
-        config.setMemoryReportingEnabled(true)
+        config.memoryReportingEnabled = true
 
         #if AUTOTRACKING
 //        print("*** TealiumHelper: Autotracking enabled.")

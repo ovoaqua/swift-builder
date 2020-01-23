@@ -212,7 +212,7 @@
 		D75209B9230BFB0A0037711D /* TealiumDeviceDataScreenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75209B4230BFB0A0037711D /* TealiumDeviceDataScreenInfo.swift */; };
 		D75209BF230BFBCB0037711D /* TealiumDeviceDataOSInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75209BA230BFBCB0037711D /* TealiumDeviceDataOSInfo.swift */; };
 		D75209C5230BFCAD0037711D /* TealiumDeviceDataCarrierInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75209C0230BFCAD0037711D /* TealiumDeviceDataCarrierInfo.swift */; };
-		D752999223CDFDA800B445AA /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D752999123CDFDA800B445AA /* DeviceInfo.swift */; };
+		D752999223CDFDA800B445AA /* DeviceNamesLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D752999123CDFDA800B445AA /* DeviceNamesLookup.swift */; };
 		D755DC9A21945E41003C6BA1 /* Tealium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F085C51DDE154C008850C8 /* Tealium.swift */; };
 		D755DCA121945E41003C6BA1 /* TealiumConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F085C61DDE154C008850C8 /* TealiumConfig.swift */; };
 		D755DCA721945E41003C6BA1 /* TealiumNetworkUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7795933218CF0E900EA94A5 /* TealiumNetworkUtils.swift */; };
@@ -2612,7 +2612,7 @@
 		D75209B4230BFB0A0037711D /* TealiumDeviceDataScreenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumDeviceDataScreenInfo.swift; sourceTree = "<group>"; };
 		D75209BA230BFBCB0037711D /* TealiumDeviceDataOSInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumDeviceDataOSInfo.swift; sourceTree = "<group>"; };
 		D75209C0230BFCAD0037711D /* TealiumDeviceDataCarrierInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumDeviceDataCarrierInfo.swift; sourceTree = "<group>"; };
-		D752999123CDFDA800B445AA /* DeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
+		D752999123CDFDA800B445AA /* DeviceNamesLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceNamesLookup.swift; sourceTree = "<group>"; };
 		D755DD0D21945E41003C6BA1 /* TealiumCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D755DD0E21945E41003C6BA1 /* TealiumCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TealiumCore-Info.plist"; sourceTree = SOURCE_ROOT; };
 		D755DD8621945F99003C6BA1 /* TealiumTagManagement.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumTagManagement.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3825,6 +3825,7 @@
 			isa = PBXGroup;
 			children = (
 				D7AD88FA218896120018E2FA /* device-names.json */,
+				D752999123CDFDA800B445AA /* DeviceNamesLookup.swift */,
 				71E4CEC51F39244100F9267C /* TealiumDeviceDataModule.swift */,
 				D7229CEA230BEBD2002E9F60 /* TealiumDeviceDataModuleExtensions.swift */,
 				4B7444A82006BA9500616F95 /* TealiumDeviceData.swift */,
@@ -3835,7 +3836,6 @@
 				D75209C0230BFCAD0037711D /* TealiumDeviceDataCarrierInfo.swift */,
 				D70C5CB6230BFE0B00B80B81 /* TealiumDeviceDataMemoryInfo.swift */,
 				D70C5CC6230C06B800B80B81 /* TealiumDeviceDataModelInfo.swift */,
-				D752999123CDFDA800B445AA /* DeviceInfo.swift */,
 			);
 			path = devicedata;
 			sourceTree = "<group>";
@@ -8150,7 +8150,7 @@
 				D736D71A2195E1DE00B3BDEE /* TealiumDeviceData.swift in Sources */,
 				D75209BF230BFBCB0037711D /* TealiumDeviceDataOSInfo.swift in Sources */,
 				D7229CEF230BEBD2002E9F60 /* TealiumDeviceDataModuleExtensions.swift in Sources */,
-				D752999223CDFDA800B445AA /* DeviceInfo.swift in Sources */,
+				D752999223CDFDA800B445AA /* DeviceNamesLookup.swift in Sources */,
 				D7229CFC230BF185002E9F60 /* TealiumDeviceDataCollection.swift in Sources */,
 				D75209C5230BFCAD0037711D /* TealiumDeviceDataCarrierInfo.swift in Sources */,
 				D7229CF6230BEBF3002E9F60 /* TealiumDeviceDataConstants.swift in Sources */,
