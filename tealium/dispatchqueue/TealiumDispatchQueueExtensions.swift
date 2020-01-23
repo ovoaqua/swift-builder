@@ -217,12 +217,16 @@ extension TealiumDispatchQueueModule {
             guard let self = self else {
                 return
             }
+            #if os(macOS)
+            self.lowPowerModeEnabled = false
+            #else
             if ProcessInfo.processInfo.isLowPowerModeEnabled {
                 self.lowPowerModeEnabled = true
             } else {
                 self.lowPowerModeEnabled = false
                 self.releaseQueue()
             }
+            #endif
         }
 
     }
