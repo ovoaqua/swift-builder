@@ -213,22 +213,22 @@ private func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIden
 extension TealiumDispatchQueueModule {
 
     func registerForPowerNotifications() {
+        #if os(macOS)
+        self.lowPowerModeEnabled = false
+        #else
         lowPowerNotificationObserver = NotificationCenter.default.addObserver(forName: .NSProcessInfoPowerStateDidChange, object: nil, queue: nil) { [weak self] _ in
             guard let self = self else {
                 return
             }
-            #if os(macOS)
-            self.lowPowerModeEnabled = false
-            #else
+
             if ProcessInfo.processInfo.isLowPowerModeEnabled {
                 self.lowPowerModeEnabled = true
             } else {
                 self.lowPowerModeEnabled = false
                 self.releaseQueue()
             }
-            #endif
         }
-
+        #endif
     }
 
 }
