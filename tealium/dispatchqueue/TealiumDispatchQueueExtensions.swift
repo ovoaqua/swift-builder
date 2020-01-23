@@ -203,12 +203,12 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
     }
 
 }
-
+#if os(iOS)
 // Helper function inserted by Swift 4.2 migrator.
 private func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIdentifier) -> Int {
 	return input.rawValue
 }
-
+#endif
 // Power state notifications
 extension TealiumDispatchQueueModule {
 
