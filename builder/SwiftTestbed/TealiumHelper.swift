@@ -71,8 +71,6 @@ class TealiumHelper: NSObject {
         
         let list = TealiumModulesList(isWhitelist: false,
                                       moduleNames: ["autotracking"])
-//              let list = TealiumModulesList(isWhitelist: true,
-//                                              moduleNames: ["tagmanagement", "logger"])
         config.modulesList = list
         config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)

@@ -18,7 +18,7 @@ public extension TealiumConfig {
     /// - Parameter interval: `Int` representing the number of seconds between connectivity checks (default 30s)
     @available(*, deprecated, message: "Please switch to config.connectivityRefreshInterval")
     func setConnectivityRefreshInterval(_ interval: Int) {
-        optionalData[TealiumConnectivityKey.refreshIntervalKey] = interval
+        connectivityRefreshInterval = interval
     }
 
     /// Sets the interval with which new connectivity checks will be carried out.

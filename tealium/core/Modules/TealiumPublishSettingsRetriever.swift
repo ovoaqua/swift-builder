@@ -144,15 +144,14 @@ class TealiumPublishSettingsRetriever {
     
     
     func getPublishSettings(from data: Data) -> RemotePublishSettings? {
-        guard let dataString = String(data: data, encoding: .utf8) else {
+        guard let dataString = String(data: data, encoding: .utf8),
+            let startScript = dataString.range(of: "var mps = "),
+            let endScript = dataString.range(of: "</script>") else {
             return nil
         }
-
-        let startScript = dataString.range(of: "var mps = ")
-        let endScript = dataString.range(of: "</script>")
-
-        let string = dataString[..<endScript!.lowerBound]
-        let newSubString = string[startScript!.upperBound...]
+        
+        let string = dataString[..<endScript.lowerBound]
+        let newSubString = string[startScript.upperBound...]
 
         guard let data = newSubString.data(using: .utf8) else {
             return nil
