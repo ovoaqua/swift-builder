@@ -39,6 +39,7 @@ public struct TealiumModulesList: Equatable {
         case devicedata
         case dispatchqueue
         case lifecycle
+        case location
         case logger
         case persistentdata
         case remotecommands
