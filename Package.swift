@@ -88,7 +88,7 @@ let package = Package(
       dependencies: ["TealiumCore"],
       path: "tealium/attribution/",
       swiftSettings: [.define("attribution")],
-      linkerSettings: [.linkedFramework("sports", .when(platforms: [.iOS]))]
+      linkerSettings: [.linkedFramework("AdSupport", .when(platforms: [.iOS]))]
     ),
     .target(
       name: "TealiumCollect",
@@ -124,7 +124,8 @@ let package = Package(
       name: "TealiumDeviceData",
       dependencies: ["TealiumCore"],
       path: "tealium/devicedata/",
-      swiftSettings: [.define("devicedata")]
+      swiftSettings: [.define("devicedata")],
+      linkerSettings: [.linkedFramework("CoreTelephony", .when(platforms: [.iOS, .macOS]))]
     ),
     .target(
       name: "TealiumDispatchQueue",
@@ -166,7 +167,8 @@ let package = Package(
       name: "TealiumTagManagement",
       dependencies: ["TealiumCore"],
       path: "tealium/tagmanagement/",
-      swiftSettings: [.define("tagmanagement")]
+      swiftSettings: [.define("tagmanagement")],
+      linkerSettings: [.linkedFramework("WebKit", .when(platforms: [.iOS]))]
     ),
   .target(
       name: "TealiumVisitorService",
