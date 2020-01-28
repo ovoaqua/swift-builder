@@ -120,7 +120,6 @@ class TealiumPersistentDataTests: XCTestCase {
     }
 
     func testDeleteAllData() {
-        let expectation = self.expectation(description: "diskStorage")
         let diskStorage = PersistentDataMockDiskStorage()
         persistentData = TealiumPersistentData(diskStorage: diskStorage)
 
@@ -138,11 +137,8 @@ class TealiumPersistentDataTests: XCTestCase {
             return
         }
 
-        diskStorage.retrieve(as: TealiumPersistentDataStorage.self) { _, data, _ in
-            XCTAssertNil(data)
-            expectation.fulfill()
-        }
-        self.waitForExpectations(timeout: 1.0, handler: nil)
+        let data = diskStorage.retrieve(as: TealiumPersistentDataStorage.self)
+        XCTAssertNil(data)
     }
 
 }

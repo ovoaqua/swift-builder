@@ -43,12 +43,12 @@ struct RemotePublishSettings: Codable {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let v5 = try values.nestedContainer(keyedBy: CodingKeys.self, forKey: .v5)
             self.batterySaver = try v5.decode(String.self, forKey: .battery_saver) == "true" ? true : false
-            self.dispatchExpiration = Int(try v5.decode(String.self, forKey: .dispatch_expiration), radix: 10) ?? -1
+            self.dispatchExpiration = Int(try v5.decode(String.self, forKey: .dispatch_expiration), radix: 10) ?? TealiumValue.defaultBatchExpirationDays
             self.collectEnabled = try v5.decode(String.self, forKey: .enable_collect) == "true" ? true : false
             self.tagManagementEnabled = try v5.decode(String.self, forKey: .enable_tag_management) == "true" ? true : false
             self.batchSize = Int(try v5.decode(String.self, forKey: .event_batch_size), radix: 10) ?? 1
             self.minutesBetweenRefresh = Double(try v5.decode(String.self, forKey: .minutes_between_refresh)) ?? 15.0
-            self.dispatchQueueLimit = Int(try v5.decode(String.self, forKey: .offline_dispatch_limit), radix: 10) ?? 100
+            self.dispatchQueueLimit = Int(try v5.decode(String.self, forKey: .offline_dispatch_limit), radix: 10) ?? TealiumValue.defaultMaxQueueSize
             let logLevel = try v5.decode(String.self, forKey: .override_log)
             
             switch logLevel {
@@ -101,52 +101,15 @@ struct RemotePublishSettings: Codable {
     
     public func newConfig(with config: TealiumConfig) -> TealiumConfig {
         let config = config.copy
-//        var optionalData = config.optionalData
-        //    case battery_saver
         config.batterySaverEnabled = batterySaver
-        //    case dispatch_expiration
-//        let dispatchExpiration = optionalData["batch_expiration_days"] as? Int
-//        optionalData["batch_expiration_days"] = dispatchExpiration ?? self.dispatchExpiration
-        
         config.dispatchExpiration = config.dispatchExpiration ?? dispatchExpiration
-        
-//        let batchingEnabled = optionalData["batching_enabled"] as? Bool
-//        optionalData["batching_enabled"] = batchingEnabled ?? (self.batchSize > 1)
-        
         config.batchingEnabled = config.batchingEnabled ?? (batchSize > 1)
-        
-        //    case event_batch_size
-//        let batchSize = optionalData["batch_size"] as? Int
-//        optionalData["batch_size"] = batchSize ?? self.batchSize
-        
-        config.batchSize = config.batchSize ?? batchSize
-        
-//        //    case event_batch_size
-//        let dispatchAfter = optionalData["event_limit"] as? Int
-//        optionalData["event_limit"] = dispatchAfter ?? self.batchSize
-        
-        //    case offline_dispatch_limit
-//        let eventLimit = optionalData["queue_size"] as? Int
-//        optionalData["queue_size"] = eventLimit ?? self.dispatchQueueLimit
-        
+        config.batchSize = (config.batchSize != TealiumValue.maxEventBatchSize) ? config.batchSize : batchSize
         config.dispatchQueueLimit = config.dispatchQueueLimit ?? dispatchQueueLimit
-        
-        //    case wifi_only_sending
-//        optionalData["wifi_only_sending"] = self.wifiOnlySending
-        
         config.wifiOnlySending = config.wifiOnlySending ?? self.wifiOnlySending
-        
-        //    case minutes_between_refresh
-//        optionalData["minutes_between_refresh"] = self.minutesBetweenRefresh
         config.minutesBetweenRefresh = config.minutesBetweenRefresh ?? minutesBetweenRefresh
-        //    case _is_enabled
-//        optionalData["library_is_enabled"] = self.isEnabled
         config.isEnabled = config.isEnabled ?? isEnabled
-        
-//        var newModulesList: TealiumModulesList
-//        config.optionalData = optionalData
-        
-        // START TM/collect
+
         if let existingModulesList = config.modulesList {
          
             let isWhiteList = existingModulesList.isWhitelist,

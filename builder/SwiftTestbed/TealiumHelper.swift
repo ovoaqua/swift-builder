@@ -48,21 +48,22 @@ class TealiumHelper: NSObject {
                                    datasource: "test12",
                                    optionalData: nil)
 
-        // OPTIONALLY set log level
-        config.setConnectivityRefreshInterval(5)
-        config.setConsentLoggingEnabled(true)
-        config.setSearchAdsEnabled(true)
-        config.setInitialUserConsentStatus(.consented)
+        config.connectivityRefreshInterval = 5
+        config.logLevel = .verbose
+        config.consentLoggingEnabled = true
+        config.searchAdsEnabled = true
+        config.initialUserConsentStatus = .consented
         config.shouldAddCookieObserver = false
-//        config.setBatchSize(5)
-//        config.setDispatchAfter(numberOfEvents: 5)
-//        config.setMaxQueueSize(200)
-//        config.setIsEventBatchingEnabled(true)
-//        config.setVisitorServiceRefresh(interval: 0)
-//        config.setVisitorServiceOverrideProfile("main")
+        config.shouldUseRemotePublishSettings = false
+        config.batchSize = 5
+        config.dispatchAfter = 5
+        config.dispatchQueueLimit = 200
+        config.batchingEnabled = true
+        config.visitorServiceRefreshInterval = 0
+        config.visitorServiceOverrideProfile = "main"
         // OPTIONALLY add an external delegate
         config.addDelegate(self)
-        config.setMemoryReportingEnabled(true)
+        config.memoryReportingEnabled = true
 
         #if AUTOTRACKING
 //        print("*** TealiumHelper: Autotracking enabled.")
@@ -70,22 +71,13 @@ class TealiumHelper: NSObject {
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: ["autotracking", "tagmanagement"])
-//              let list = TealiumModulesList(isWhitelist: true,
-//                                              moduleNames: ["tagmanagement", "logger"])
+                                      moduleNames: ["autotracking"])
         config.modulesList = list
         config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
-        config.setIsEventBatchingEnabled(false)
-        
-        // Location
-        config.useHighAccuracy = true
-        config.updateDistance = 150.0
-        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
-        config.shouldRequestPermission = true
-        
-        config.setIsRemoteAPIEnabled(true)
+        config.remoteAPIEnabled = true
         config.logLevel = .verbose
+        config.batterySaverEnabled = true
         #endif
         #if os(iOS)
         

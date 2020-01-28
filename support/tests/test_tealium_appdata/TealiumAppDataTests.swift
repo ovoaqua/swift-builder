@@ -194,6 +194,7 @@ extension TealiumAppDataTests: TealiumModuleDelegate {
 }
 
 class MockDiskStorage: TealiumDiskStorageProtocol {
+
     func append(_ data: [String: Any], fileName: String, completion: TealiumCompletion?) {
 
     }
@@ -231,6 +232,17 @@ class MockDiskStorage: TealiumDiskStorageProtocol {
     }
 
     func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+    }
+
+    func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
+        guard T.self == PersistentAppData.self else {
+            return nil
+        }
+        return PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID) as? T
+    }
+
+    func retrieve<T>(_ fileName: String, as type: T.Type) -> T? where T: Decodable {
+        return nil
     }
 
     func retrieve(fileName: String, completion: (Bool, [String: Any]?, Error?) -> Void) {

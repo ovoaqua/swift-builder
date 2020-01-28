@@ -35,12 +35,10 @@ class TealiumUtilsTests: XCTestCase {
     }
 
     func testURLRequest() {
-
-        let urlRequest = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: "https://collect.tealiumiq.com/event")
-
+        let urlRequest = urlPOSTRequestWithJSONString(self.testJSONString, dispatchURL: "https://collect.tealiumiq.com/event")
         XCTAssertNotNil(urlRequest, "URLRequest was nil")
         XCTAssertTrue(urlRequest?.httpMethod == "POST", "Unexpected request type")
-        XCTAssertTrue(try! urlRequest?.httpBody?.gunzipped() == testJSONString.data(using: .utf8), "Unexpected request body")
+        XCTAssertTrue(try! urlRequest?.httpBody?.gunzipped() == self.testJSONString.data(using: .utf8), "Unexpected request body")
     }
 
 }

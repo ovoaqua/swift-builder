@@ -21,8 +21,7 @@ class MockURLSession: URLSessionProtocol {
         return DataTask(completionHandler: completionHandler, url: with.url!)
     }
 
-    func finishTasksAndInvalidate() {
-        finishTasksAndInvalidate()
+    func finishTealiumTasksAndInvalidate() {
     }
 
 }
@@ -54,7 +53,6 @@ class MockURLSessionError: URLSessionProtocol {
     }
 
     func finishTealiumTasksAndInvalidate() {
-        finishTasksAndInvalidate()
     }
 
 }

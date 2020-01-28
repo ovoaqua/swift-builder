@@ -73,7 +73,7 @@ class TealiumVisitorProfileRetrieverTests: XCTestCase {
         XCTAssertEqual(true, visitorProfileRetriever.shouldFetchVisitorProfile)
 
         tealConfig = TealiumConfig(account: "test", profile: "test", environment: "prod")
-        tealConfig.setVisitorServiceRefresh(interval: 0)
+        tealConfig.visitorServiceRefreshInterval = 0
         visitorProfileRetriever = TealiumVisitorProfileRetriever(config: tealConfig, visitorId: "test")
         visitorProfileRetriever.lastFetch = timeTraveler.travel(by: (60 * 2 + 1) * -1)
         XCTAssertEqual(true, visitorProfileRetriever.shouldFetchVisitorProfile)
@@ -85,7 +85,7 @@ class TealiumVisitorProfileRetrieverTests: XCTestCase {
 
         tealConfig = TealiumConfig(account: "test", profile: "test", environment: "prod")
         // resetting back to default
-        tealConfig.setVisitorServiceRefresh(interval: 300)
+        tealConfig.visitorServiceRefreshInterval = 300
         visitorProfileRetriever = TealiumVisitorProfileRetriever(config: tealConfig, visitorId: "test")
         visitorProfileRetriever.lastFetch = timeTraveler.travel(by: (60 * 2 + 1) * -1)
         XCTAssertEqual(false, visitorProfileRetriever.shouldFetchVisitorProfile)

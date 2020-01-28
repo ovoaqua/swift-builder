@@ -14,6 +14,10 @@ public enum TealiumValue {
     // This is the current limit for performance reasons. May be increased in future
     public static let maxEventBatchSize = 10
     public static let defaultMinimumDiskSpace: Int32 = 20_000_000
+    public static let tiqBaseURL = "https://tags.tiqcdn.com/utag/"
+    public static let tiqURLSuffix = "mobile.html"
+    public static let defaultBatchExpirationDays = 7
+    public static let defaultMaxQueueSize = 40
 }
 
 // MARK: ENUMS
@@ -71,6 +75,8 @@ public enum TealiumKey {
     public static let diskStorageDirectory = "disk_storage_directory"
     public static let remoteAPICallType = "remote_api"
     public static let publishSettings = "remote_publish_settings"
+    public static let publishSettingsURL = "publish_settings_url"
+    public static let publishSettingsProfile = "publish_settings_profile"
     public static let enabledModules = "enabled_modules"
     public static let libraryEnabled = "library_is_enabled"
     public static let batterySaver = "battery_saver"
@@ -117,56 +123,5 @@ public enum TealiumTrackType {
     }
 
 }
-
-// MARK: STRUCTS
-
-/// White or black list of module names to enable. TealiumConfig can be set
-///     with this list which will be read by internal components to determine
-///     which modules to spin up, if they are included with the existing build.
-public struct TealiumModulesList: Equatable {
-    public let isWhitelist: Bool
-    public let moduleNames: Set<String>
-    var filtered: Set<String> {
-        let moduleNames: Set<String> = Set(TealiumModuleNames.allCases.map {
-            $0.rawValue
-        })
-        return moduleNames.filter {
-            if self.isWhitelist == false {
-                return !self.moduleNames.contains($0)
-            } else {
-                return self.moduleNames.contains($0)
-            }
-        }
-    }
-
-    enum TealiumModuleNames: String, CaseIterable {
-        case autotracking
-        case appdata
-        case attribution
-        case collect
-        case connectivity
-        case consentmanager
-        case crash
-        case delegate
-        case devicedata
-        case dispatchqueue
-        case lifecycle
-        case location
-        case logger
-        case persistentdata
-        case remotecommands
-        case tagmanagement
-        case visitorservice
-        case volatiledata
-    }
-
-    public init(isWhitelist: Bool,
-                moduleNames: Set<String>) {
-        self.isWhitelist = isWhitelist
-        self.moduleNames = moduleNames
-    }
-}
-
-// MARK: TYPEALIASES
 
 public typealias TealiumCompletion = ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)

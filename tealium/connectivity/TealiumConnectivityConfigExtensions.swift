@@ -16,25 +16,40 @@ public extension TealiumConfig {
     /// Sets the interval with which new connectivity checks will be carried out.
     ///￼
     /// - Parameter interval: `Int` representing the number of seconds between connectivity checks (default 30s)
+    @available(*, deprecated, message: "Please switch to config.connectivityRefreshInterval")
     func setConnectivityRefreshInterval(_ interval: Int) {
-        optionalData[TealiumConnectivityKey.refreshIntervalKey] = interval
+        connectivityRefreshInterval = interval
+    }
+
+    /// Sets the interval with which new connectivity checks will be carried out.
+    var connectivityRefreshInterval: Int? {
+        get {
+            optionalData[TealiumConnectivityKey.refreshIntervalKey] as? Int
+        }
+
+        set {
+            optionalData[TealiumConnectivityKey.refreshIntervalKey] = newValue
+        }
     }
 
     /// Determines if connectivity status checks should be carried out automatically.
     /// If `true` (default), queued track calls will be flushed when connectivity is restored.
     ///￼
     /// - Parameter enabled: `Bool` (default `true` - set to `false` if needing to disable this functionality)
+    @available(*, deprecated, message: "Please switch to config.connectivityRefreshEnabled")
     func setConnectivityRefreshEnabled(_ enabled: Bool) {
-        optionalData[TealiumConnectivityKey.refreshEnabledKey] = enabled
+        connectivityRefreshEnabled = enabled
     }
 
-    var wifiOnlySending: Bool {
+    /// Determines if connectivity status checks should be carried out automatically.
+    /// If `true` (default), queued track calls will be flushed when connectivity is restored.
+    var connectivityRefreshEnabled: Bool? {
         get {
-            return self.optionalData["wifi_only_sending"] as? Bool ?? false
+            optionalData[TealiumConnectivityKey.refreshEnabledKey] as? Bool
         }
 
         set {
-            self.optionalData["wifi_only_sending"] = newValue
+            optionalData[TealiumConnectivityKey.refreshEnabledKey] = newValue
         }
     }
 }

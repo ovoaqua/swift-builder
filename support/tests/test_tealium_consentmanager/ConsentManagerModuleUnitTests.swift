@@ -122,7 +122,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         runMultiple {
             let helper = TestTealiumHelper()
             let config = helper.getConfig()
-            config.setConsentLoggingEnabled(true)
+            config.consentLoggingEnabled = true
             let module = TealiumConsentManagerModule(delegate: self)
             module.consentManager.resetUserConsentPreferences()
             let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
@@ -139,7 +139,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         runMultiple {
             let helper = TestTealiumHelper()
             let config = helper.getConfig()
-            config.setConsentLoggingEnabled(true)
+            config.consentLoggingEnabled = true
             let module = TealiumConsentManagerModule(delegate: self)
             module.consentManager.resetUserConsentPreferences()
             let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
@@ -156,7 +156,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         runMultiple {
             let helper = TestTealiumHelper()
             let config = helper.getConfig()
-            config.setConsentLoggingEnabled(true)
+            config.consentLoggingEnabled = true
             let module = TealiumConsentManagerModule(delegate: self)
             module.consentManager.resetUserConsentPreferences()
             let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
@@ -173,7 +173,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         runMultiple {
             let helper = TestTealiumHelper()
             let config = helper.getConfig()
-            config.setConsentLoggingEnabled(true)
+            config.consentLoggingEnabled = true
             let module = TealiumConsentManagerModule(delegate: self)
             module.consentManager.resetUserConsentPreferences()
             let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
@@ -190,7 +190,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         runMultiple {
             let helper = TestTealiumHelper()
             let config = helper.getConfig()
-            config.setConsentLoggingEnabled(false)
+            config.consentLoggingEnabled = false
             let module = TealiumConsentManagerModule(delegate: self)
             module.consentManager.resetUserConsentPreferences()
             let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)

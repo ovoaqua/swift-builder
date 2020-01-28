@@ -15,7 +15,7 @@ public class TealiumTagManagementModule: TealiumModule {
     var tagManagement: TealiumTagManagementProtocol?
     var remoteCommandResponseObserver: NSObjectProtocol?
     var errorState = AtomicInteger()
-    var webViewState: Atomic<TealiumWebViewState>? = nil
+    var webViewState: Atomic<TealiumWebViewState>?
     var pendingTrackRequests = [TealiumRequest]()
 
     override public class func moduleConfig() -> TealiumModuleConfig {
@@ -57,7 +57,7 @@ public class TealiumTagManagementModule: TealiumModule {
         let config = request.config
         enableNotifications()
 
-        self.tagManagement?.enable(webviewURL: config.webviewURL(), shouldMigrateCookies: true, delegates: config.getWebViewDelegates(), shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.getRootView()) { [weak self] _, error in
+        self.tagManagement?.enable(webviewURL: config.webviewURL, shouldMigrateCookies: true, delegates: config.webViewDelegates, shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.rootView) { [weak self] _, error in
             guard let self = self else {
                 return
             }
@@ -134,7 +134,7 @@ public class TealiumTagManagementModule: TealiumModule {
             self.dynamicTrack($0)
         }
     }
-    
+
     /// Detects track type and dispatches appropriately.
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
@@ -160,8 +160,8 @@ public class TealiumTagManagementModule: TealiumModule {
         } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
             self.enqueue(track)
             self.didFailToFinish(track,
-                 info: ["error_status": "Will retry when webview ready"],
-                 error: TealiumTagManagementError.webViewNotYetReady)
+                                 info: ["error_status": "Will retry when webview ready"],
+                                 error: TealiumTagManagementError.webViewNotYetReady)
             return
         }
 

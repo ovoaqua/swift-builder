@@ -203,10 +203,10 @@ class TealiumConnectivityModule: TealiumModule {
 
     /// Starts monitoring for connectivity changes.
     func refreshConnectivityStatus() {
-        if let interval = config?.optionalData[TealiumConnectivityKey.refreshIntervalKey] as? Int {
+        if let interval = config?.connectivityRefreshInterval {
             connectivity.refreshConnectivityStatus(interval)
         } else {
-            if config?.optionalData[TealiumConnectivityKey.refreshEnabledKey] as? Bool == false {
+            if config?.connectivityRefreshEnabled == false {
                 return
             }
             connectivity.refreshConnectivityStatus()

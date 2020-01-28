@@ -89,19 +89,18 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
     }
-    
+
     func testManualLifecycleTrackingConfigSetting() {
         expectationRequest = expectation(description: "lifecycleKeysNotPresent")
-        
+
         let lifecycleModule = TealiumLifecycleModule(delegate: self)
         let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
-        
-        
+
         let track = TealiumTrackRequest(data: ["tealium_event": "testEvent"])
         lifecycleModule.track(track)
-        
+
         var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
@@ -110,110 +109,109 @@ class TealiumLifecycleModuleTests: XCTestCase {
         let expectedMissingKeys = ["lifecycle_type", "lifecycle_isfirstlaunch"]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedMissingKeys)
-        
+
         XCTAssertTrue(missingKeys.count == 2, "Unexpected keys missing:\(missingKeys)")
-        
+
         self.waitForExpectations(timeout: 10.0, handler: nil)
-        
+
     }
-    
+
     func testManualLaunchMethodCall() {
         expectationRequest = expectation(description: "manualLaunchProducesExpectedData")
-        
+
         let lifecycleModule = TealiumLifecycleModule(delegate: self)
         let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
-        
-        
+
         lifecycleModule.launch(at: Date())
-        
+
         var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
 
         let expectedKeys = ["lifecycle_type", "lifecycle_isfirstlaunch"]
-        
+
         let expectedValues = ["launch", "true"]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
-        
+
         XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
-        
+
         _ = expectedKeys.enumerated().map {
             if let value = returnData[$1] as? String {
                 XCTAssertEqual(value, expectedValues[$0])
             }
         }
-        
+
         self.waitForExpectations(timeout: 5.0, handler: nil)
     }
-    
+
     func testManualSleepMethodCall() {
         sleepExpectation = expectation(description: "manualSleepProducesExpectedData")
-        
+
         let lifecycleModule = TealiumLifecycleModule(delegate: self)
         let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
-        
+
         lifecycleModule.launch(at: Date())
         lifecycleModule.sleep()
-        
+
         var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
 
         let expectedKeys = ["lifecycle_type", "lifecycle_sleepcount"]
-        
+
         let expectedValues = ["sleep", "1"]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
-        
+
         XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
-        
+
         _ = expectedKeys.enumerated().map {
             if let value = returnData[$1] as? String {
                 XCTAssertEqual(value, expectedValues[$0])
             }
         }
-        
+
         self.waitForExpectations(timeout: 8.0, handler: nil)
     }
-    
+
     func testManualWakeMethodCall() {
         wakeExpectation = expectation(description: "manualWakeProducesExpectedData")
-        
+
         let lifecycleModule = TealiumLifecycleModule(delegate: self)
         let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
-        
+
         lifecycleModule.launch(at: Date())
         lifecycleModule.sleep()
         lifecycleModule.wake()
-        
+
         var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
 
         let expectedKeys = ["lifecycle_type", "lifecycle_wakecount"]
-        
+
         let expectedValues = ["wake", "2"]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
-        
+
         XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
-        
+
         _ = expectedKeys.enumerated().map {
             if let value = returnData[$1] as? String {
                 XCTAssertEqual(value, expectedValues[$0])
             }
         }
-        
+
         self.waitForExpectations(timeout: 8.0, handler: nil)
     }
 
@@ -227,12 +225,12 @@ extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
             module.handleReport(testEnableRequest)
             return
         }
-        
+
         if let process = process as? TealiumTrackRequest {
                 expectationRequest?.fulfill()
                 requestProcess = process
         }
-        
+
     }
 
     func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {

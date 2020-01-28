@@ -202,7 +202,7 @@ open class TealiumModule: TealiumModuleProtocol {
         var requestData = request.trackDictionary
         var modulesList = requestData[TealiumKey.enabledModules] as? [String] ?? [String]()
         modulesList.append(description.replacingOccurrences(of: ".module", with: ""))
-        requestData[TealiumKey.enabledModules] = modulesList.sorted()
+        requestData[TealiumKey.enabledModules] = Array(Set(modulesList)).sorted()
         var newRequest =  TealiumTrackRequest(data: requestData, completion: request.completion)
         newRequest.moduleResponses = request.moduleResponses
         return newRequest

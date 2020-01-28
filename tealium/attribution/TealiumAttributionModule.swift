@@ -55,7 +55,7 @@ class TealiumAttributionModule: TealiumModule {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumAttributionKey.moduleName)
         }
         self.attributionData = TealiumAttributionData(diskStorage: self.diskStorage,
-                                                      isSearchAdsEnabled: request.config.isSearchAdsEnabled())
+                                                      isSearchAdsEnabled: request.config.searchAdsEnabled)
         isEnabled = true
         if !request.bypassDidFinish {
             didFinish(request)
@@ -67,7 +67,7 @@ class TealiumAttributionModule: TealiumModule {
         if newConfig != self.config {
             self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumAttributionKey.moduleName)
             self.attributionData = TealiumAttributionData(diskStorage: self.diskStorage,
-                                                          isSearchAdsEnabled: request.config.isSearchAdsEnabled())
+                                                          isSearchAdsEnabled: request.config.searchAdsEnabled)
         }
         self.config = newConfig
         didFinish(request)

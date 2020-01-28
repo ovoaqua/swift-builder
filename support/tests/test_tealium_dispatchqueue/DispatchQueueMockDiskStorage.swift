@@ -52,20 +52,19 @@ class DispatchQueueMockDiskStorage: TealiumDiskStorageProtocol {
     func append<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
     }
 
-    func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
-        guard T.self == [TealiumTrackRequest].self,
-            let completion = completion as? (Bool, [TealiumTrackRequest]?, Error?) -> Void
-            else {
-                return
+    func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
+        guard T.self == [TealiumTrackRequest].self else {
+                return nil
         }
         if let dispatchQueueData = self.dispatchQueueData {
-            completion(true, dispatchQueueData, nil)
+            return dispatchQueueData as? T
         } else {
-            completion(false, nil, nil)
+            return nil
         }
     }
 
-    func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+    func retrieve<T>(_ fileName: String, as type: T.Type) -> T? where T: Decodable {
+        return nil
     }
 
     func retrieve(fileName: String, completion: (Bool, [String: Any]?, Error?) -> Void) {

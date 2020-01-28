@@ -50,7 +50,7 @@ class TealiumAttributionModuleTests: XCTestCase {
     // note - test data is mocked to remove reliance on Apple API. Breakpoints in Apple code will not be hit.
     func testFullTrack() {
         expectation = self.expectation(description: "full track")
-        testTealiumConfig.setSearchAdsEnabled(true)
+        testTealiumConfig.searchAdsEnabled = true
 
         let attributionData = TealiumAttributionData(diskStorage: AttributionMockDiskStorage(), isSearchAdsEnabled: true, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
 //        module?.enable(TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil), diskStorage: AttributionMockDiskStorage())
@@ -118,7 +118,7 @@ class TealiumAttributionModuleTests: XCTestCase {
         expectation = self.expectation(description: "attribution-enabled")
         let testID = TealiumTestValue.testIDFAString
         let attributionData = TealiumAttributionData(diskStorage: AttributionMockDiskStorage(), isSearchAdsEnabled: false, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
-        testTealiumConfig.setSearchAdsEnabled(true)
+        testTealiumConfig.searchAdsEnabled = true
         module?.enable(TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil), diskStorage: AttributionMockDiskStorage())
         module?.attributionData = attributionData
         let testTrack = TealiumTrackRequest(data: [String: AnyObject](),

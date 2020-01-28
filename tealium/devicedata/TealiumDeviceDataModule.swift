@@ -66,7 +66,7 @@ class TealiumDeviceDataModule: TealiumModule {
         isEnabled = true
         data = enableTimeData()
         self.config = request.config
-        isMemoryEnabled = request.config.isMemoryReportingEnabled()
+        isMemoryEnabled = request.config.memoryReportingEnabled
         if !request.bypassDidFinish {
             didFinish(request)
         }

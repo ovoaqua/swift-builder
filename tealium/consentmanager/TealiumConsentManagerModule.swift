@@ -58,8 +58,8 @@ class TealiumConsentManagerModule: TealiumModule {
         if newConfig != self.config,
         newConfig.account != config?.account,
         newConfig.profile != config?.profile,
-        newConfig.getInitialUserConsentCategories() != config?.getInitialUserConsentCategories(),
-        newConfig.getInitialUserConsentStatus() != config?.getInitialUserConsentStatus() {
+        newConfig.initialUserConsentCategories != config?.initialUserConsentCategories,
+        newConfig.initialUserConsentStatus != config?.initialUserConsentStatus {
             ready = false
             self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumConsentManagerModule.moduleConfig().name, isCritical: true)
             consentManager.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {

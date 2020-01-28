@@ -46,20 +46,20 @@ class ConsentMockDiskStorage: TealiumDiskStorageProtocol {
     func append<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
     }
 
-    func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
-        guard T.self == TealiumConsentUserPreferences.self,
-            let completion = completion as? (Bool, TealiumConsentUserPreferences?, Error?) -> Void
+    func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
+        guard T.self == TealiumConsentUserPreferences.self
             else {
-                return
+                return nil
         }
         if let consentPreferences = self.consentPreferences {
-            completion(true, consentPreferences, nil)
+            return consentPreferences as? T
         } else {
-            completion(false, nil, nil)
+            return nil
         }
     }
 
-    func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+    func retrieve<T>(_ fileName: String, as type: T.Type) -> T? where T: Decodable {
+        return nil
     }
 
     func retrieve(fileName: String, completion: (Bool, [String: Any]?, Error?) -> Void) {
