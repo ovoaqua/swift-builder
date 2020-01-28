@@ -20,6 +20,7 @@ import TealiumTagManagement
 import TealiumPersistentData
 import TealiumVolatileData
 import TealiumVisitorService
+import TealiumLocation
 
 extension String: Error {}
 

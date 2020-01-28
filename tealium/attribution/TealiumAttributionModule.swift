@@ -103,6 +103,7 @@ class TealiumAttributionModule: TealiumModule {
 
         didFinish(newTrack)
     }
+    
 
     /// Disables the module and deletes all associated data￼.
     /// 
