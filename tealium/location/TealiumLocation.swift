@@ -162,9 +162,9 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     /// - parameter state: `CLRegionState` state of the device with reference to a region.
     /// - parameter region: `CLRegion` that was entered
     public func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        if state == .inside {
+        if state == .inside && region.notifyOnEntry {
             sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.entered)
-        } else if state == .outside {
+        } else if state == .outside && region.notifyOnExit {
             sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.exited)
         }
     }
