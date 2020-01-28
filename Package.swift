@@ -88,7 +88,7 @@ let package = Package(
       dependencies: ["TealiumCore"],
       path: "tealium/attribution/",
       swiftSettings: [.define("attribution")],
-      linkerSettings: [.linkedFramework("AdSupport", .when(platforms: [.iOS]))]
+      linkerSettings: [.linkedFramework("sports", .when(platforms: [.iOS]))]
     ),
     .target(
       name: "TealiumCollect",
