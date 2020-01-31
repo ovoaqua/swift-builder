@@ -15,12 +15,18 @@ class TealiumLifecycleModuleTests: XCTestCase {
     var expectationRequest: XCTestExpectation?
     var sleepExpectation: XCTestExpectation?
     var wakeExpectation: XCTestExpectation?
+    var autotrackedRequest: XCTestExpectation?
     var requestProcess: TealiumRequest?
     let helper = TestTealiumHelper()
+    var lifecycleModule: TealiumLifecycleModule!
+    var config: TealiumConfig!
+    var returnData: [String: Any]!
 
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        lifecycleModule = TealiumLifecycleModule(delegate: self)
+        config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
+        returnData = [String: Any]()
     }
 
     override func tearDown() {
@@ -81,7 +87,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
             XCTFail("\n\nFailure: Process not a track request.\n")
             return
         }
-        let returnData = request.trackDictionary
+        returnData = request.trackDictionary
 
         let expectedKeys = ["tealium_event"]
 
@@ -93,15 +99,12 @@ class TealiumLifecycleModuleTests: XCTestCase {
     func testManualLifecycleTrackingConfigSetting() {
         expectationRequest = expectation(description: "lifecycleKeysNotPresent")
 
-        let lifecycleModule = TealiumLifecycleModule(delegate: self)
-        let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
 
         let track = TealiumTrackRequest(data: ["tealium_event": "testEvent"])
         lifecycleModule.track(track)
 
-        var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
@@ -119,14 +122,11 @@ class TealiumLifecycleModuleTests: XCTestCase {
     func testManualLaunchMethodCall() {
         expectationRequest = expectation(description: "manualLaunchProducesExpectedData")
 
-        let lifecycleModule = TealiumLifecycleModule(delegate: self)
-        let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
 
         lifecycleModule.launch(at: Date())
 
-        var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
@@ -151,15 +151,12 @@ class TealiumLifecycleModuleTests: XCTestCase {
     func testManualSleepMethodCall() {
         sleepExpectation = expectation(description: "manualSleepProducesExpectedData")
 
-        let lifecycleModule = TealiumLifecycleModule(delegate: self)
-        let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
 
         lifecycleModule.launch(at: Date())
         lifecycleModule.sleep()
 
-        var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
@@ -184,8 +181,6 @@ class TealiumLifecycleModuleTests: XCTestCase {
     func testManualWakeMethodCall() {
         wakeExpectation = expectation(description: "manualWakeProducesExpectedData")
 
-        let lifecycleModule = TealiumLifecycleModule(delegate: self)
-        let config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
 
@@ -193,7 +188,6 @@ class TealiumLifecycleModuleTests: XCTestCase {
         lifecycleModule.sleep()
         lifecycleModule.wake()
 
-        var returnData = [String: Any]()
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
@@ -214,6 +208,74 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         self.waitForExpectations(timeout: 8.0, handler: nil)
     }
+    
+    func testAutotrackedTrue() {
+        autotrackedRequest = expectation(description: "testAutotrackedTrue")
+
+        lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
+        Tealium.lifecycleListeners.addDelegate(delegate: self)
+            
+        lifecycleModule.processDetected(type: .launch)
+        
+        if let request = requestProcess as? TealiumTrackRequest {
+            returnData = request.trackDictionary
+        }
+        
+        guard let autotracked = returnData["autotracked"] as? Bool else {
+            XCTFail("`autotracked` should not be nil")
+            return
+        }
+        
+        XCTAssertTrue(autotracked)
+        
+        self.waitForExpectations(timeout: 8.0, handler: nil)
+    }
+    
+    func testAutotrackedNil() {
+        autotrackedRequest = expectation(description: "testAutotrackedNil")
+
+        lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
+        Tealium.lifecycleListeners.addDelegate(delegate: self)
+            
+        let track = TealiumTrackRequest(data: ["hello": "world"])
+        
+        lifecycleModule.track(track)
+        
+        if let request = requestProcess as? TealiumTrackRequest {
+            returnData = request.trackDictionary
+        }
+        
+        guard let _ = returnData["autotracked"] as? Bool else {
+            autotrackedRequest?.fulfill()
+            XCTAssert(true)
+            self.waitForExpectations(timeout: 8.0, handler: nil)
+            return
+        }
+        
+        XCTFail("`autotracked` should be nil")
+    }
+    
+    func testAutotrackedFalse() {
+        autotrackedRequest = expectation(description: "testAutotrackedFalse")
+
+        config.lifecycleAutoTrackingEnabled = false
+        lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
+        
+        self.launch(at: Date())
+        
+        if let request = requestProcess as? TealiumTrackRequest {
+            returnData = request.trackDictionary
+        }
+        
+        guard let autotracked = returnData["autotracked"] as? Bool else {
+            XCTFail("`autotracked` should not be nil")
+            return
+        }
+        
+        XCTAssertFalse(autotracked)
+        
+        self.waitForExpectations(timeout: 8.0, handler: nil)
+    }
 
 }
 
@@ -227,8 +289,8 @@ extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
         }
 
         if let process = process as? TealiumTrackRequest {
-                expectationRequest?.fulfill()
-                requestProcess = process
+            expectationRequest?.fulfill()
+            requestProcess = process
         }
 
     }
@@ -242,8 +304,28 @@ extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
             if wakeExpectation?.description == "manualWakeProducesExpectedData" && (process.trackDictionary["lifecycle_type"] as! String) == "wake" {
                 wakeExpectation?.fulfill()
             }
+            if autotrackedRequest?.description == "testAutotrackedTrue" ||
+                autotrackedRequest?.description == "testAutotrackedFalse" {
+                autotrackedRequest?.fulfill()
+            }
             requestProcess = process
         }
     }
 
+}
+
+extension TealiumLifecycleModuleTests: TealiumLifecycleEvents {
+    
+    func sleep() {
+        // ...
+    }
+    
+    func wake() {
+        // ...
+    }
+    
+    func launch(at date: Date) {
+        lifecycleModule.process(type: .launch, at: Date())
+    }
+    
 }
