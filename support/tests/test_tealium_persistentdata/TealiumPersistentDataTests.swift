@@ -140,5 +140,28 @@ class TealiumPersistentDataTests: XCTestCase {
         let data = diskStorage.retrieve(as: TealiumPersistentDataStorage.self)
         XCTAssertNil(data)
     }
+    
+    func testGetDictionary() {
+        let diskStorage = PersistentDataMockDiskStorage()
+        persistentData = TealiumPersistentData(diskStorage: diskStorage)
+
+        persistentData?.add(data: TealiumPersistentDataTests.testPersistentData)
+        
+        // Check cache
+        guard var cache = persistentData?.persistentDataCache else {
+            XCTFail("Cache unexpectedly nil.")
+            return
+        }
+
+        guard !cache.isEmpty else {
+            XCTFail("Cache unexpectedly empty.")
+            return
+        }
+        
+        let data = persistentData?.dictionary
+        data?.forEach {
+            XCTAssertNotNil(data![$0.key], "Expected data missing: \($0.key)")
+        }
+    }
 
 }

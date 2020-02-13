@@ -90,10 +90,34 @@ class TealiumLifecycleModuleTests: XCTestCase {
         returnData = request.trackDictionary
 
         let expectedKeys = ["tealium_event"]
+        let expectedDictKeys = ["lifecycle_lastwakedate",
+        "lifecycle_firstlaunchdate_MMDDYYYY",
+        "lifecycle_launchcount",
+        "lifecycle_hourofday_local",
+        "autotracked",
+        "lifecycle_secondsawake",
+        "lifecycle_dayofweek_local",
+        "lifecycle_type",
+        "lifecycle_totalcrashcount",
+        "lifecycle_totallaunchcount",
+        "lifecycle_firstlaunchdate",
+        "lifecycle_sleepcount",
+        "lifecycle_totalsecondsawake",
+        "lifecycle_priorsecondsawake",
+        "lifecycle_lastlaunchdate",
+        "lifecycle_dayssincelastwake",
+        "lifecycle_dayssincelaunch",
+        "lifecycle_wakecount",
+        "lifecycle_totalsleepcount",
+        "lifecycle_totalwakecount"]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
+        
+        let missingDictKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedDictKeys)
 
         XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
+        
+        XCTAssertTrue(missingDictKeys.count == 0, "Unexpected keys missing:\(missingDictKeys)")
     }
 
     func testManualLifecycleTrackingConfigSetting() {

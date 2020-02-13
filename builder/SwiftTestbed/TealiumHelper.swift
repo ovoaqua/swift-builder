@@ -21,6 +21,7 @@ import TealiumPersistentData
 import TealiumVolatileData
 import TealiumVisitorService
 import TealiumLocation
+import TealiumLifecycle
 
 extension String: Error {}
 
@@ -106,7 +107,10 @@ class TealiumHelper: NSObject {
             
                             self?.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
                             self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
-
+            
+            print("Persistent Data: \(String(describing: self?.tealium?.persistentData()?.dictionary))")
+            
+            print("Lifecycle Data: \(String(describing: self?.tealium?.lifecycle()?.dictionary))")
         }
     }
 

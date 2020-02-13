@@ -13,7 +13,7 @@ import Foundation
 public struct TealiumLifecycle: Codable {
 
     var autotracked: String?
-
+    
     // Cache of session properties to avoid iterating sessions for each event
     var countLaunch: Int
     var countSleep: Int
@@ -164,7 +164,7 @@ public struct TealiumLifecycle: Codable {
     /// - Parameters:
     ///     - type: `String` containing the lifecycle type to be tracked
     ///     - date: `Date` for the lifecycle event
-    func asDictionary(type: String?,
+    public func asDictionary(type: String?,
                       for date: Date) -> [String: Any] {
         var dict = [String: Any]()
 
@@ -212,7 +212,6 @@ public struct TealiumLifecycle: Codable {
             // We've just reset values
             dict[TealiumLifecycleKey.updateLaunchDate] = dateLastUpdate?.iso8601String
         }
-
         return dict
     }
 
