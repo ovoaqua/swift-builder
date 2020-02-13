@@ -78,6 +78,7 @@ class TealiumHelper: NSObject {
         config.remoteAPIEnabled = true
         config.logLevel = .verbose
         config.batterySaverEnabled = true
+        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         #endif
         #if os(iOS)
         

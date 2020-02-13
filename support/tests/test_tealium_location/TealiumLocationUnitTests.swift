@@ -131,27 +131,7 @@ class TealiumLocationUnitTests: XCTestCase {
     }
 
     func testStartMonitoringGeofencesGoodArray() {
-        config.geofenceJsonString = """
-        [
-            {
-              "name": "Tealium_Reading",
-              "latitude": 51.4610304,
-              "longitude": -0.9707625,
-              "radius": 100,
-              "trigger_on_enter": true,
-              "trigger_on_exit": true,
-            },
-            {
-              "name": "Tealium_San_Diego",
-              "latitude": 32.9061189,
-              "longitude": -117.2379163,
-              "radius": 100,
-              "trigger_on_enter": true,
-              "trigger_on_exit": true,
-
-            }
-        ]
-        """
+        config.geofenceFileName = "validGeofences.json"
 
         let tealiumLocation = TealiumLocation(config: config,
             locationManager: locationManager)
@@ -187,26 +167,6 @@ class TealiumLocationUnitTests: XCTestCase {
         tealiumLocation.startMonitoring(geofences: [region])
 
         XCTAssertEqual(tealiumLocation.locationManager.monitoredRegions.contains(region), true)
-    }
-
-    func testRequestPermissionsTrue() {
-        config.shouldRequestPermission = true
-        let tealiumLocation = TealiumLocation(config: config,
-            locationManager: locationManager)
-        locationManager.delegate = tealiumLocation
-        tealiumLocation.requestPermissions()
-        XCTAssert(MockLocationManager.authorizationStatusCount > 0)
-        XCTAssertEqual(2, locationManager.requestWhenInUseAuthorizationCount)
-    }
-
-    func testRequestPermissionsFalse() {
-        config.shouldRequestPermission = false
-        let tealiumLocation = TealiumLocation(config: config,
-            locationManager: locationManager)
-        locationManager.delegate = tealiumLocation
-        tealiumLocation.requestPermissions()
-        XCTAssert(MockLocationManager.authorizationStatusCount > 0)
-        XCTAssertEqual(0, locationManager.requestWhenInUseAuthorizationCount)
     }
 
     func testStartLocationUpdatesWithDefaults() {
@@ -399,27 +359,7 @@ class TealiumLocationUnitTests: XCTestCase {
     }
     
     func testDisableLocationManager() {
-        config.geofenceJsonString = """
-        [
-            {
-              "name": "Tealium_Reading",
-              "latitude": 51.4610304,
-              "longitude": -0.9707625,
-              "radius": 100,
-              "trigger_on_enter": true,
-              "trigger_on_exit": true,
-            },
-            {
-              "name": "Tealium_San_Diego",
-              "latitude": 32.9061189,
-              "longitude": -117.2379163,
-              "radius": 100,
-              "trigger_on_enter": true,
-              "trigger_on_exit": true,
-
-            }
-        ]
-        """
+        config.geofenceFileName = "validGeofences.json"
 
         let tealiumLocation = TealiumLocation(config: config,
             locationManager: locationManager)
