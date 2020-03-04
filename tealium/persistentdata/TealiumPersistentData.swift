@@ -28,7 +28,7 @@ public class TealiumPersistentData {
         self.setExistingPersistentData()
 
     }
-    
+
     public var dictionary: [String: Any]? {
         persistentDataCache.data.value as? [String: Any]
     }

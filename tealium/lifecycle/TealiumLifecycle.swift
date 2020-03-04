@@ -13,7 +13,7 @@ import Foundation
 public struct TealiumLifecycle: Codable {
 
     var autotracked: String?
-    
+
     // Cache of session properties to avoid iterating sessions for each event
     var countLaunch: Int
     var countSleep: Int

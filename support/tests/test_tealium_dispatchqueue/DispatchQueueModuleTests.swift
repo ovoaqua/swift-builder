@@ -45,6 +45,17 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         self.waitForExpectations(timeout: 4.0, handler: nil)
     }
 
+    func testNegativeDispatchLimit() {
+        let module = TealiumDispatchQueueModule(delegate: nil)
+        module.config = testTealiumConfig.copy
+        module.config?.dispatchQueueLimit = -1
+        XCTAssertEqual(module.maxQueueSize, TealiumValue.defaultMaxQueueSize)
+        module.config?.dispatchQueueLimit = -100
+        XCTAssertEqual(module.maxQueueSize, TealiumValue.defaultMaxQueueSize)
+        module.config?.dispatchQueueLimit = -5
+        XCTAssertEqual(module.maxQueueSize, TealiumValue.defaultMaxQueueSize)
+    }
+
     func testTrack() {
         let module = TealiumDispatchQueueModule(delegate: nil)
         let config = TestTealiumHelper().getConfig()

@@ -45,7 +45,7 @@ class TealiumHelper: NSObject {
         // REQUIRED Config object for lib
         let config = TealiumConfig(account: "tealiummobile",
                                    profile: "demo",
-                                   environment: "dev",
+                                   environment: "qa",
                                    datasource: "test12",
                                    optionalData: nil)
 
@@ -55,10 +55,10 @@ class TealiumHelper: NSObject {
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
         config.shouldAddCookieObserver = false
-        config.shouldUseRemotePublishSettings = false
+        config.shouldUseRemotePublishSettings = true
         config.batchSize = 5
         config.dispatchAfter = 5
-        config.dispatchQueueLimit = 200
+//        config.dispatchQueueLimit = 200
         config.batchingEnabled = true
         config.visitorServiceRefreshInterval = 0
         config.visitorServiceOverrideProfile = "main"

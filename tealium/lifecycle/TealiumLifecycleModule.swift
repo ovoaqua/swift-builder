@@ -32,7 +32,7 @@ public class TealiumLifecycleModule: TealiumModule {
     public var dictionary: [String: Any]? {
         lifecycle?.asDictionary(type: nil, for: Date())
     }
-    
+
     override public class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumLifecycleModuleKey.moduleName,
                                    priority: 175,
@@ -155,7 +155,7 @@ public class TealiumLifecycleModule: TealiumModule {
         save()
 
         data[TealiumLifecycleKey.autotracked] = autotracked
-        
+
         // Make the track request to the modulesManager
         requestTrack(data: data)
     }
