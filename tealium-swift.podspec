@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "tealium-swift"
   s.module_name  = "TealiumSwift"
-  s.version      = "1.9.2"
+  s.version      = "1.9.4"
   s.summary      = "Tealium Swift Integration Library"
 
   # This description is used to generate tags and improve search results.
@@ -92,12 +92,12 @@ Pod::Spec.new do |s|
   s.default_subspec = "TealiumFull"
 
   s.subspec "TealiumFull" do |full|
-    full.source_files  = "tealium/appdata/*", "tealium/core/**/*", "tealium/attribution/*", "tealium/autotracking/*", "tealium/collect/*", "tealium/connectivity/*", "tealium/consentmanager/*", "tealium/persistentdata/*", "tealium/delegate/*", "tealium/devicedata/*.swift", "tealium/dispatchqueue/*", "tealium/lifecycle/*", "tealium/remotecommands/*", "tealium/tagmanagement/*", "tealium/volatiledata/*", "tealium/crash/*", "tealium/logger/*", "tealium/visitorservice/*", "tealium/location/*"
+    full.source_files  = "tealium/appdata/*","tealium/core/**/*","tealium/attribution/*","tealium/autotracking/*","tealium/collect/*","tealium/connectivity/*","tealium/consentmanager/*","tealium/persistentdata/*","tealium/delegate/*","tealium/devicedata/*.swift","tealium/dispatchqueue/*","tealium/lifecycle/*","tealium/remotecommands/*","tealium/tagmanagement/*","tealium/volatiledata/*","tealium/crash/*","tealium/logger/*","tealium/visitorservice/*","tealium/location/*"
     full.ios.exclude_files = "tealium/scripts/*"
     full.ios.dependency "TealiumCrashReporter"
-    full.tvos.exclude_files = "tealium/tagmanagement/*", "tealium/remotecommands/*", "tealium/attribution/*", "tealium/crash/*", "tealium/scripts/*", "tealium/location/*"
-    full.watchos.exclude_files = "tealium/tagmanagement/*", "tealium/autotracking/*", "tealium/connectivity/*", "tealium/remotecommands/*", "tealium/attribution/*", "tealium/crash/*", "tealium/scripts/*", "tealium/location/*"
-    full.osx.exclude_files = "tealium/tagmanagement/*", "tealium/autotracking/*", "tealium/remotecommands/*", "tealium/attribution/*", "tealium/crash/*", "tealium/scripts/*", "tealium/location/*"
+    full.tvos.exclude_files = "tealium/tagmanagement/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*"
+    full.watchos.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/connectivity/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*"
+    full.osx.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*"
     full.resources = "tealium/devicedata/device-names.json"
   end
 

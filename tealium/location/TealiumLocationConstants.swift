@@ -6,22 +6,25 @@
 //  Updated by Christina Sund on 1/13/2020.
 //  Copyright © 2019 Tealium, Inc. All rights reserved.
 //
-
+#if os(iOS)
 import Foundation
 
 public enum TealiumLocationKey {
     static let name = "TealiumLocationModule"
     static let dleBaseUrl = "https://tags.tiqcdn.com/dle/"
     static let fileName = "geofences"
-    static let entered = "entered"
-    static let exited = "exited"
+    static let entered = "geofence_entered"
+    static let exited = "geofence_exited"
     static let geofenceName = "geofence_name"
     static let geofenceTransition = "geofence_transition_type"
-    static let latitude = "latitude"
-    static let longitude = "longitude"
+    static let deviceLatitude = "latitude"
+    static let deviceLongitude = "longitude"
     static let timestamp = "location_timestamp"
     static let speed = "movement_speed"
+    static let accuracy = "location_accuracy"
     static let additionRange = 500.0
+    static let highAccuracy = "high"
+    static let lowAccuracy = "low"
 }
 
 public enum TealiumLocationConfigKey {
@@ -45,3 +48,4 @@ public enum TealiumLocationErrors: String {
     case couldNotRetrieve = "Could not retrieve JSON."
     case couldNotDecode = "Could not decode JSON."
 }
+#endif

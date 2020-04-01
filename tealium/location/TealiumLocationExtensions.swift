@@ -6,9 +6,8 @@
 //  Updated by Christina Sund on 1/13/2020.
 //  Copyright © 2019 Tealium, Inc. All rights reserved.
 //
-
+#if os(iOS)
 import Foundation
-import UIKit
 #if location
     import TealiumCore
 #endif
@@ -88,7 +87,7 @@ public extension TealiumConfig {
         }
     }
     
-    /// `TealiumLocationConfig`: The Geofences data retrieved from either a local file, url, or DLE 
+    /// `TealiumLocationConfig`: The Geofences data retrieved from either a local file, url, or DLE
     var initializeGeofenceDataFrom: TealiumLocationConfig {
         if let geofenceAsset = self.geofenceFileName {
             return .localFile(geofenceAsset)
@@ -98,3 +97,4 @@ public extension TealiumConfig {
         return .tealium
     }
 }
+#endif
