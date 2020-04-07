@@ -169,12 +169,12 @@ func copySourceFiles() {
     print("Support (unit tests) folder copied")
 }
 
+// TODO: Make consolidated unit test targets for iOS, macOS, and tvOS
+// This currently takes too long with all the test schemes/targets
 func runTests() {
     cleanctx.currentdirectory = "\(builderRepoPath ?? "")/builder"
-    //cleanctx.run(bash: "chmod +x unit-tests.sh")
-    //let _ = cleanctx.runAsync(bash: "./unit-tests.sh > ~/Desktop/testoutput.txt").onCompletion { command in
-    cleanctx.run(bash: "chmod +x test.sh")
-    let tests = cleanctx.runAsync(bash: "./test.sh > ~/Desktop/testoutput.txt").onCompletion { command in
+    cleanctx.run(bash: "chmod +x unit-tests.sh")
+    let tests = cleanctx.runAsync(bash: "./unit-tests.sh > ~/Desktop/testoutput.txt").onCompletion { command in
         print("🤯complete")
         if let readfile = try? open("~/Desktop/testoutput.txt") {
             let contents = readfile.read()
@@ -182,7 +182,7 @@ func runTests() {
             print("There were \(numberOfFailures.count - 1) failures in the unit tests. Please fix the failing tests and/or update the code, then come back and try again 😁")
         }
     }
-    try? tests.finish()
+    _ = try? tests.finish()
 }
 
 func generateNewProject() {
@@ -199,18 +199,6 @@ func removeUneccessaryFiles() {
     print("Extra folders/files removed")
 }
 
-func checkForNewTargets() {
-    print("Do you need to add any new targets to the podfile and Package.swift?")
-    while let newTargets = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        if newTargets.lowercased() == "y" {
-            // TODO: change the podspec and script for them
-            print("Please manually update the tealium-swift.podspec and Package.swift by adding your new targets, then rerun the script")
-            exit(0)
-        }
-        break
-    }
-}
-
 func commitAndPushToBuilder(_ version: String) {
     // Committing version (podspec), module (package.swift), and formatting (swiftlint) changes to builder
     cleanctx.currentdirectory = builderRepoPath ?? ""
@@ -218,9 +206,10 @@ func commitAndPushToBuilder(_ version: String) {
     cleanctx.run(bash: "git add --all")
     cleanctx.run(bash: "git commit -m \"Updated .podspec (possibly Package.swift) and formatteed using swfitlint for version \(version)\"")
     cleanctx.run(bash: "git push branch release-script/\(version)-cleanup")
-    // submit pr
+    // prompt to create PR - createPR()
 }
 
+// TODO: Create method to autmatically create PR - createPR()
 func commitAndPush(_ version: String) {
     cleanctx.run(bash: "git add --all")
     print("Added changes")
@@ -239,24 +228,25 @@ func commitAndPush(_ version: String) {
 //        break
 //    }
     print("""
-            🎉🎉 All Done! Once your PR is merged on both the builder and public repos, don't forget to do the following:
-            1. Create a Release on GitHub
-            2. Push to Cocoapods
-            3. Update documentation/release notes
-            4. Announce the new release in #support_mobile (slack)
+            🎉🎉 All Done! 🎉🎉 Don't forget to do the following:
+            1. Create a PR on both the builder and the public repos
+            2. Once PR is merged...Create a Release on GitHub
+            3. Push to Cocoapods
+            4. Update documentation/release notes
+            5. Announce the new release in #support_mobile (slack)
           """)
     
-    // git push
-    // use github api to create PR
     // Remind them to publish release/tag on github <--script using github api // https://github.community/t5/How-to-use-Git-and-GitHub/How-to-create-full-release-from-command-line-not-just-a-tag/td-p/6895
     // look in .ssh config for .pub (prompt for name)
-    // Push to cocoapods
-    // Have you updated the documentation, including release notes
-    // Announce in support mobile with documentation links - slack api? (send event to AS?)
 
 }
 
+// TODO:
+func createPR() {
+    
+}
 
+// TODO:
 //runTests()
 getRepoPaths()
 guard let _ = builderRepoPath,
@@ -281,9 +271,5 @@ commitAndPushToBuilder(version)
 generateNewProject()
 removeUneccessaryFiles()
 commitAndPush(version)
-// git push
-// submit PR
-// Remind them to publish release/tag on github <--script using github api // https://github.community/t5/How-to-use-Git-and-GitHub/How-to-create-full-release-from-command-line-not-just-a-tag/td-p/6895
-// look in .ssh config for .pub (prompt for name)
 
 RunLoop.main.run()
