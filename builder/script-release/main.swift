@@ -138,14 +138,14 @@ func checkIfBranchAlreadyExists(_ version: String) {
 func copyPodspec(_ version: String) {
     // Copy podspec over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
-    cleanctx.run(bash: "rsync -arv \(builderRepoPath)/tealium-swift.podspec ./")
+    cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/tealium-swift.podspec ./")
     print("podspec copied")
 }
 
 func copyPackage() {
     // Copy Package.swift over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
-    cleanctx.run(bash: "rsync -arv \(builderRepoPath)/Package.swift ./")
+    cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/Package.swift ./")
     print("Package.swift copied")
 }
 
@@ -160,17 +160,17 @@ func swiftFormat() {
 func copySourceFiles() {
     // Copy tealium folder over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
-    cleanctx.run(bash: "rsync -arv \(builderRepoPath)/tealium ./")
+    cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/tealium ./")
     print("Tealium folder copied")
     
     // Copy unit tests folder over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
-    cleanctx.run(bash: "rsync -arv \(builderRepoPath)/support ./")
+    cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/support ./")
     print("Support (unit tests) folder copied")
 }
 
 func runTests() {
-    cleanctx.currentdirectory = "\(builderRepoPath)/builder"
+    cleanctx.currentdirectory = "\(builderRepoPath ?? "")/builder"
     //cleanctx.run(bash: "chmod +x unit-tests.sh")
     //let _ = cleanctx.runAsync(bash: "./unit-tests.sh > ~/Desktop/testoutput.txt").onCompletion { command in
     cleanctx.run(bash: "chmod +x test.sh")
@@ -187,7 +187,7 @@ func runTests() {
 
 func generateNewProject() {
     cleanctx.currentdirectory = publicRepoPath ?? ""
-    cleanctx.run(bash: "cp \(builderRepoPath)/project.yml ./")
+    cleanctx.run(bash: "cp \(builderRepoPath ?? "")/project.yml ./")
     result = cleanctx.run(bash: "xcodegen generate -p ./builder")
     cleanctx.run(bash: "rm ./project.yml")
     print("New project generated")
@@ -226,11 +226,11 @@ func commitAndPush(_ version: String) {
     print("Added changes")
     cleanctx.run(bash: "git commit -m \(version)")
     print("Committed new version")
-    print("Which remote would you like to push to? e.g. origin")
-    while let remote = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        cleanctx.run(bash: "git push \(remote) \(version)")
-        break
-    }
+//    print("Which remote would you like to push to? e.g. origin")
+//    while let remote = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
+//        cleanctx.run(bash: "git push \(remote) \(version)")
+//        break
+//    }
 //    print("Would you like to create a PR? y/n")
 //    while let pr = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
 //        if pr == "y" {
