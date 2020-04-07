@@ -1,6 +1,7 @@
 name: tealium-swift
 options:
   bundleIdPrefix: com.tealium
+  carthageBuildPath: ../Carthage/Build
 targets:
   TealiumCore:
     type: framework
@@ -465,8 +466,6 @@ targets:
           TARGETED_DEVICE_FAMILY: "1,2,3,4"
           IPHONEOS_DEPLOYMENT_TARGET: 9.0
           FRAMEWORK_SEARCH_PATHS: "$(PROJECT_DIR)/../Carthage/Build/iOS"
-          # CARTHAGE_BUILD_PATH: "../Carthage/Build/iOS"
-          #OTHER_LDFLAGS: "-F$(SRCROOT)/../Carthage/Build/iOS"
       configs:
         debug:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash DEBUG
@@ -481,25 +480,27 @@ targets:
   TealiumCrashTests-iOS:
     type: bundle.unit-test
     platform: iOS
+    directlyEmbedCarthageDependencies: false
     sources:
       - path: support/tests/test_tealium_crash
         buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
+        excludes:
+          - "resources/*" 
+      - path: support/tests/test_tealium_crash/resources     
+        buildPhase: resources
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
         DEVELOPMENT_TEAM: ""         
-    settings:
-      base:
-        FRAMEWORK_SEARCH_PATHS: "$(PROJECT_DIR)/../Carthage/Build/iOS"
-        #FRAMEWORK_SEARCH_PATHS: "../Carthage/Build/iOS"
-        #CARTHAGE_BUILD_PATH: "../Carthage/Build/iOS"
     dependencies:
-      - target: TealiumCore
+      - target: TealiumDeviceData
+        link: false
+      - target: TealiumAppData
+        link: false
+      - target: TealiumVolatileData
+        link: false
       - target: TealiumCrash
-      #- framework: ../Carthage/Build/iOS/TealiumCrashReporteriOS.framework
-      - carthage: TealiumCrashReporteriOS
+        link: false
   TealiumDelegate:
     type: framework
     platform: iOS
@@ -1668,3 +1669,4 @@ schemes:
       targets:
         - TealiumVolatileDataTests-tvOS
         - name: TealiumVolatileData
+          parallelizable: true
