@@ -56,10 +56,10 @@ class TealiumConsentManagerModule: TealiumModule {
     override func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
         if newConfig != self.config,
-        newConfig.account != config?.account,
-        newConfig.profile != config?.profile,
-        newConfig.initialUserConsentCategories != config?.initialUserConsentCategories,
-        newConfig.initialUserConsentStatus != config?.initialUserConsentStatus {
+            newConfig.account != config?.account,
+            newConfig.profile != config?.profile,
+            newConfig.initialUserConsentCategories != config?.initialUserConsentCategories,
+            newConfig.initialUserConsentStatus != config?.initialUserConsentStatus {
             ready = false
             self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumConsentManagerModule.moduleConfig().name, isCritical: true)
             consentManager.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {
@@ -148,7 +148,7 @@ class TealiumConsentManagerModule: TealiumModule {
         let track = addModuleName(to: track)
         // allow tracking calls to continue if they are for auditing purposes
         if let event = track.trackDictionary[TealiumKey.event] as? String, (event == TealiumConsentConstants.consentPartialEventName
-                || event == TealiumConsentConstants.consentGrantedEventName || event == TealiumConsentConstants.consentDeclinedEventName || event == TealiumKey.updateConsentCookieEventName) {
+            || event == TealiumConsentConstants.consentGrantedEventName || event == TealiumConsentConstants.consentDeclinedEventName || event == TealiumKey.updateConsentCookieEventName) {
             didFinishWithNoResponse(track)
             return
         }
@@ -170,11 +170,11 @@ class TealiumConsentManagerModule: TealiumModule {
         case .trackingQueued:
             queue(newTrack)
             consentManager.willQueueTrackingCall(newTrack)
-                // yes, user has allowed tracking
+        // yes, user has allowed tracking
         case .trackingAllowed:
             consentManager.willSendTrackingCall(newTrack)
             didFinishWithNoResponse(newTrack)
-                // user declined tracking. we will discard this request
+        // user declined tracking. we will discard this request
         case .trackingForbidden:
             self.purgeQueue()
             consentManager.willDropTrackingCall(newTrack)

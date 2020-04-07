@@ -29,7 +29,7 @@ public protocol TealiumAttributionDataProtocol {
     var isAdvertisingTrackingEnabled: String { get }
 
     /// Requests Apple Search Ads data from AdClient API￼.
-    /// 
+    ///
     /// - Parameter completion: Completion block to be executed asynchronously when Search Ads data is returned
     func appleSearchAdsData(_ completion: @escaping (PersistentAttributionData) -> Void)
 }

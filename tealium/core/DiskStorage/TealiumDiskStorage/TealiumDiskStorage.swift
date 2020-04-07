@@ -75,7 +75,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     public func canWrite<T: Encodable>(data: T) -> Bool {
         guard let available = Disk.availableCapacity,
             let fileSize = size(of: data) else {
-            return false
+                return false
         }
         // make sure we have sufficient disk capacity (20MB)
         return available > minimumDiskSpace && fileSize < available
@@ -84,7 +84,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     /// - Returns: `Bool` `true` if there is sufficient disk space
     public func canWrite() -> Bool {
         guard let available = Disk.availableCapacity else {
-                return false
+            return false
         }
         // make sure we have sufficient disk capacity (20MB)
         return available > minimumDiskSpace
@@ -192,11 +192,11 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
             }
             do {
                 guard self.canWrite(data: data) == true else {
-                        self.log(error: DiskStorageErrors.couldNotEncode.rawValue)
-                        completion?(false, nil, nil)
-                        return
+                    self.log(error: DiskStorageErrors.couldNotEncode.rawValue)
+                    completion?(false, nil, nil)
+                    return
                 }
-	                try Disk.save(data, to: self.currentDirectory, as: self.filePath(fileName))
+                try Disk.save(data, to: self.currentDirectory, as: self.filePath(fileName))
             } catch let error {
                 completion?(false, nil, error)
             }
@@ -322,7 +322,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
             guard self.isDiskStorageEnabled else {
                 let decoder = JSONDecoder()
                 if let data = self.getFromDefaults(key: self.filePath(fileName)) as? Data,
-                    let decoded = ((try? decoder.decode(AnyCodable.self, from: data).value as? [String: Any]) as [String : Any]??) {
+                    let decoded = ((try? decoder.decode(AnyCodable.self, from: data).value as? [String: Any]) as [String: Any]??) {
                     completion(true, decoded, nil)
                 } else {
                     log(error: DiskStorageErrors.couldNotDecode.rawValue)
@@ -378,9 +378,9 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
         let data = retrieve(module, as: type.self)
         let encoder = JSONEncoder()
         guard let encoded = try? encoder.encode(data),
-            let dictionary = ((try? JSONSerialization.jsonObject(with: encoded, options: .allowFragments) as? [String: Any]) as [String : Any]??),
+            let dictionary = ((try? JSONSerialization.jsonObject(with: encoded, options: .allowFragments) as? [String: Any]) as [String: Any]??),
             var dict = dictionary else {
-            return
+                return
         }
         dict[key] = value
         let decoder = JSONDecoder()

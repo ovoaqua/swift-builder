@@ -27,7 +27,7 @@ public class TealiumConnectivity {
     static var currentConnectionStatus: Bool?
 
     /// Retrieves the current connection type used by the device.
-    /// 
+    ///
     /// - Returns: `String` containing the current connection type
     public class func currentConnectionType() -> String {
         let isConnected = TealiumConnectivity.isConnectedToNetwork()

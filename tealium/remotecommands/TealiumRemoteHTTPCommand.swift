@@ -26,23 +26,23 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
 
                                         let task = TealiumRemoteCommand.urlSession.tealiumDataTask(with: request,
                                                                                                    completionHandler: { data, urlResponse, error in
-                                                                                // Legacy status reporting
-                                                                                if let err = error {
-                                                                                    response.error = err
-                                                                                    response.status = TealiumRemoteCommandStatusCode.failure.rawValue
-                                                                                } else {
-                                                                                    response.status = TealiumRemoteCommandStatusCode.success.rawValue
-                                                                                }
-                                                                                if data == nil {
-                                                                                    response.status = TealiumRemoteCommandStatusCode.noContent.rawValue
-                                                                                }
-                                                                                if urlResponse == nil {
-                                                                                    response.status = TealiumRemoteCommandStatusCode.failure.rawValue
-                                                                                }
-                                                                                response.urlResponse = urlResponse
-                                                                                response.data = data
-                                                                                TealiumRemoteHTTPCommand.sendCompletionNotification(for: TealiumRemoteHTTPCommandKey.commandId,
-                                                                                                                                    response: response)
+                                                                                                    // Legacy status reporting
+                                                                                                    if let err = error {
+                                                                                                        response.error = err
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.failure.rawValue
+                                                                                                    } else {
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.success.rawValue
+                                                                                                    }
+                                                                                                    if data == nil {
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.noContent.rawValue
+                                                                                                    }
+                                                                                                    if urlResponse == nil {
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.failure.rawValue
+                                                                                                    }
+                                                                                                    response.urlResponse = urlResponse
+                                                                                                    response.data = data
+                                                                                                    TealiumRemoteHTTPCommand.sendCompletionNotification(for: TealiumRemoteHTTPCommandKey.commandId,
+                                                                                                                                                        response: response)
                                         })
 
                                         task.resume()

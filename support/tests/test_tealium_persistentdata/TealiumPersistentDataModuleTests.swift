@@ -65,16 +65,16 @@ class TealiumPersistentDataModuleTests: XCTestCase {
         let testTrack = TealiumTrackRequest(data: testDataDictionary,
                                             completion: { success, info, _ in
 
-                XCTAssertTrue(success, "Track mock did not return success.")
+                                                XCTAssertTrue(success, "Track mock did not return success.")
 
-                guard let payload = info?[PersistentDataModuleTestKey.payload] as? [String: Any] else {
-                    XCTFail("test failed")
-                    return
-                }
+                                                guard let payload = info?[PersistentDataModuleTestKey.payload] as? [String: Any] else {
+                                                    XCTFail("test failed")
+                                                    return
+                                                }
 
-                let event = payload[TealiumKey.event] as! String
+                                                let event = payload[TealiumKey.event] as! String
 
-                XCTAssertTrue(event == TealiumTestValue.title)
+                                                XCTAssertTrue(event == TealiumTestValue.title)
 
         })
 

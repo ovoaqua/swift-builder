@@ -146,11 +146,11 @@ public extension TealiumConfig {
 
     var remoteAPIEnabled: Bool? {
         get {
-            optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] as? Bool
+        optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] as? Bool
         }
 
         set {
-            optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] = newValue
+        optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] = newValue
         }
     }
     #endif
@@ -160,12 +160,12 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
     func sleep() {
         #if os(iOS)
         var backgroundTaskId: UIBackgroundTaskIdentifier?
-            backgroundTaskId = TealiumDispatchQueueModule.sharedApplication?.beginBackgroundTask {
-                if let taskId = backgroundTaskId {
-                    TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
-                    backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
-                }
+        backgroundTaskId = TealiumDispatchQueueModule.sharedApplication?.beginBackgroundTask {
+            if let taskId = backgroundTaskId {
+                TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
+                backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
             }
+        }
 
         TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
             self.releaseQueue()
@@ -206,7 +206,7 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
 #if os(iOS)
 // Helper function inserted by Swift 4.2 migrator.
 private func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIdentifier) -> Int {
-	return input.rawValue
+    return input.rawValue
 }
 #endif
 // Power state notifications

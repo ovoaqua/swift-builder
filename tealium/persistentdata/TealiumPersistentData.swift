@@ -39,7 +39,7 @@ public class TealiumPersistentData {
             add(data: data)
         } else {
             guard let data = diskStorage.retrieve(as: TealiumPersistentDataStorage.self) else {
-                    return
+                return
             }
             self.persistentDataCache = data
         }

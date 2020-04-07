@@ -68,13 +68,13 @@ class TealiumConsentPreferencesStorage {
     }
 
     /// Gets the saved consent preferences from persistent storage.
-    /// 
+    ///
     /// - Returns: `TealiumConsentUserPreferences?` containing the saved consent preferences. Nil if empty.
     private func read() -> TealiumConsentUserPreferences? {
         readWriteQueue.read {
             guard let data = diskStorage.retrieve(as: TealiumConsentUserPreferences.self) else {
-                    return nil
-                }
+                return nil
+            }
             return data
         }
     }

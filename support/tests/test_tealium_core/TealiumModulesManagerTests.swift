@@ -15,9 +15,7 @@
 @testable import TealiumLogger
 @testable import TealiumVisitorService
 import XCTest
-#if os(iOS)
-@testable import TealiumCrashReporteriOS
-#endif
+
 let defaultTealiumConfig = TealiumConfig(account: "tealiummobile",
                                          profile: "demo",
                                          environment: "dev",
@@ -72,27 +70,27 @@ class TealiumModulesManagerTests: XCTestCase {
 
         self.wait(for: [enableExpectation], timeout: 5.0)
 
-                let trackExpectation = self.expectation(description: "testPublicTrack")
-                let testTrack = TealiumTrackRequest(data: [:],
-                                                    completion: { _, _, error in
+        let trackExpectation = self.expectation(description: "testPublicTrack")
+        let testTrack = TealiumTrackRequest(data: [:],
+                                            completion: { _, _, error in
 
-                        if let error = error {
-                            switch error {
-                            case TealiumCollectError.xErrorDetected:
-                                XCTAssertTrue(true, "Error is expected due to invalid account/profile")
-                            default:
-                                XCTFail("Track error detected:\(String(describing: error))")
-                            }
-                        }
+                                                if let error = error {
+                                                    switch error {
+                                                    case TealiumCollectError.xErrorDetected:
+                                                        XCTAssertTrue(true, "Error is expected due to invalid account/profile")
+                                                    default:
+                                                        XCTFail("Track error detected:\(String(describing: error))")
+                                                    }
+                                                }
 
-                        trackExpectation.fulfill()
+                                                trackExpectation.fulfill()
 
-                })
+        })
 
-                modulesManager?.track(testTrack)
+        modulesManager?.track(testTrack)
 
-                // Only testing that the completion handler is called.
-                self.wait(for: [trackExpectation], timeout: 5.0)
+        // Only testing that the completion handler is called.
+        self.wait(for: [trackExpectation], timeout: 5.0)
     }
 
     // Note: Set baseline of 0.5s in Xcode before running this test
@@ -124,14 +122,14 @@ class TealiumModulesManagerTests: XCTestCase {
 
         let testTrack = TealiumTrackRequest(data: [:],
                                             completion: { success, _, error in
-                guard let error = error else {
-                    XCTFail("Error should have returned")
-                    return
-                }
+                                                guard let error = error else {
+                                                    XCTFail("Error should have returned")
+                                                    return
+                                                }
 
-                XCTAssertFalse(success, "Track did not fail as expected. Error: \(error)")
+                                                XCTAssertFalse(success, "Track did not fail as expected. Error: \(error)")
 
-                expectation.fulfill()
+                                                expectation.fulfill()
         })
 
         manager.track(testTrack)
@@ -157,14 +155,14 @@ class TealiumModulesManagerTests: XCTestCase {
         let testTrack = TealiumTrackRequest(data: [:],
                                             completion: { success, _, error in
 
-                guard let error = error else {
-                    XCTFail("Error should have returned")
-                    return
-                }
+                                                guard let error = error else {
+                                                    XCTFail("Error should have returned")
+                                                    return
+                                                }
 
-                XCTAssertFalse(success, "Track did not fail as expected. Error: \(error)")
+                                                XCTAssertFalse(success, "Track did not fail as expected. Error: \(error)")
 
-                expectation.fulfill()
+                                                expectation.fulfill()
 
         })
 
@@ -261,15 +259,17 @@ class TealiumModulesManagerTests: XCTestCase {
     func testTealiumModulesArray_ModuleNames() {
         let allModules = TealiumModules.initializeModules(modulesList: nil, delegate: self)
 
-        // Alphabetically instead of by priority
-        let result = allModules.moduleNames().sorted()
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) {
+            // Alphabetically instead of by priority
+            let result = allModules.moduleNames().sorted()
 
-        let expected = TestTealiumHelper.allTealiumModuleNames().sorted()
+            let expected = TestTealiumHelper.allTealiumModuleNames().sorted()
 
-        let missing = TestTealiumHelper.missingStrings(fromArray: expected,
-                                                       anotherArray: result)
+            let missing = TestTealiumHelper.missingStrings(fromArray: expected,
+                                                           anotherArray: result)
 
-        XCTAssert(result == expected, "Mismatch in module names returned: \(missing)")
+            XCTAssert(result == expected, "Mismatch in module names returned: \(missing)")
+        }
     }
 
 }

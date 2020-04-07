@@ -10,7 +10,7 @@
 import Foundation
 import CoreLocation
 #if location
-    import TealiumCore
+import TealiumCore
 #endif
 
 public class TealiumLocation: NSObject, CLLocationManagerDelegate {
@@ -22,45 +22,44 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     var logger: TealiumLogger?
     var didEnterRegionWorking = false
     var locationAccuracy = TealiumLocationKey.lowAccuracy
-    
+
     init(config: TealiumConfig,
-        bundle: Bundle = Bundle.main,
-        locationListener: LocationListener? = nil,
-        locationManager: LocationManager = CLLocationManager()) {
+         bundle: Bundle = Bundle.main,
+         locationListener: LocationListener? = nil,
+         locationManager: LocationManager = CLLocationManager()) {
         self.config = config
         self.locationListener = locationListener
         self.locationManager = locationManager
-        
+
         if let logLevel = config.logLevel {
             self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: logLevel)
 
         }
-        
+
         super.init()
-        
+
         switch config.initializeGeofenceDataFrom {
-            case .localFile(let file):
-                geofences = GeofenceData(file: file, bundle: bundle)?.geofences ?? Geofences()
-            case .customUrl(let url):
-                geofences = GeofenceData(url: url)?.geofences ?? Geofences()
-            default:
-                geofences = GeofenceData(url: geofencesUrl)?.geofences ?? Geofences()
-                break
+        case .localFile(let file):
+            geofences = GeofenceData(file: file, bundle: bundle)?.geofences ?? Geofences()
+        case .customUrl(let url):
+            geofences = GeofenceData(url: url)?.geofences ?? Geofences()
+        default:
+            geofences = GeofenceData(url: geofencesUrl)?.geofences ?? Geofences()
+            break
         }
-        
-        
+
         self.locationManager.distanceFilter = config.updateDistance
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         if config.useHighAccuracy {
             locationAccuracy = TealiumLocationKey.highAccuracy
         }
-        
+
         requestPermissions()
         clearMonitoredGeofences()
         startLocationUpdates()
     }
-    
+
     /// Builds a URL from a Tealium config pointing to a hosted JSON file on the Tealium DLE
     ///
     /// - parameter config: `TealiumConfig` tealium config to be read from
@@ -68,7 +67,6 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         return "\(TealiumLocationKey.dleBaseUrl)\(config.account)/\(config.profile)/\(TealiumLocationKey.fileName).json"
     }
 
-    
     /// Gets the permission status of Location Services
     ///
     /// - return: `Bool` LocationManager services enabled true/false
@@ -76,24 +74,24 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         let permissionStatus = type(of: locationManager).self.authorizationStatus()
         guard (permissionStatus == .authorizedAlways || permissionStatus == .authorizedWhenInUse),
             type(of: locationManager).self.locationServicesEnabled() else {
-            return false
+                return false
         }
         return true
     }
-    
+
     /// Prompts the user to enable permission for location servies
     public func requestPermissions() {
         let permissionStatus = type(of: locationManager).self.authorizationStatus()
-        
+
         if permissionStatus != .authorizedAlways {
             locationManager.requestAlwaysAuthorization()
         }
-        
+
         if  permissionStatus != .authorizedWhenInUse {
             locationManager.requestWhenInUseAuthorization()
         }
     }
-    
+
     /// Enables regular updates of location data through the location client
     /// Update frequency is dependant on config.useHighAccuracy, a parameter passed on initisalizatuion of this class.
     public func startLocationUpdates() {
@@ -109,7 +107,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
         logInfo(message: "🌎🌎 Location Updates High Accuracy Started 🌎🌎")
     }
-    
+
     /// Stops the updating of location data through the location client.
     public func stopLocationUpdates() {
         guard locationServiceEnabled else {
@@ -118,7 +116,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
         logInfo(message: "🌎🌎 Location Updates Stopped 🌎🌎")
     }
-    
+
     /// CLLocationManagerDelegate method
     /// Updates a member variable containing the most recent device location alongisde
     /// updating the monitored geofences based on the users last location. (Dynamic Geofencing)
@@ -132,16 +130,16 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         logInfo(message: "🌎🌎 Location updated: \(String(describing: lastLocation?.coordinate)) 🌎🌎")
         geofences.regions.forEach {
             let geofenceLocation = CLLocation(latitude: $0.center.latitude, longitude: $0.center.longitude)
-            
+
             guard let distance = lastLocation?.distance(from: geofenceLocation),
                 distance.isLess(than: TealiumLocationKey.additionRange) else {
-                stopMonitoring(geofence: $0)
-                return
+                    stopMonitoring(geofence: $0)
+                    return
             }
             startMonitoring(geofence: $0)
         }
     }
-    
+
     /// CLLocationManagerDelegate method
     /// If the location client encounters an error, location updates are stopped
     ///
@@ -154,7 +152,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             locationManager.stopUpdatingLocation()
         }
     }
-    
+
     /// CLLocationManagerDelegate method
     /// Calls for the sending of a Tealium tracking calls on geofence enter and exit event
     ///
@@ -168,7 +166,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.exited)
         }
     }
-    
+
     /// CLLocationManagerDelegate method
     /// Calls for the sending of a Tealium tracking calls on geofence enter and exit event
     ///
@@ -177,17 +175,17 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         startLocationUpdates()
     }
-    
+
     /// Sends a Tealium tracking event, appending geofence data to the track.
     ///
     /// - parameter region: `CLRegion` that was entered
     /// - parameter triggeredTransition: `String` Type of transition that occured
     public func sendGeofenceTrackingEvent(region: CLRegion, triggeredTransition: String) {
-        var data = [String : Any]()
+        var data = [String: Any]()
         data[TealiumLocationKey.geofenceName] = "\(region.identifier)"
         data[TealiumLocationKey.geofenceTransition] = "\(triggeredTransition)"
         data[TealiumKey.event] = triggeredTransition
-        
+
         if let lastLocation = lastLocation {
             data[TealiumLocationKey.deviceLatitude] = "\(lastLocation.coordinate.latitude)"
             data[TealiumLocationKey.deviceLongitude] = "\(lastLocation.coordinate.longitude)"
@@ -195,14 +193,14 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             data[TealiumLocationKey.speed] = "\(lastLocation.speed)"
             data[TealiumLocationKey.accuracy] = locationAccuracy
         }
-        
+
         if triggeredTransition == TealiumLocationKey.exited {
             locationListener?.didExitGeofence(data)
         } else if triggeredTransition == TealiumLocationKey.entered {
             locationListener?.didEnterGeofence(data)
         }
     }
-    
+
     /// Gets the user's last known location
     ///
     /// - returns: `CLLocation` location object
@@ -212,22 +210,22 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         }
         return lastLocation
     }
-    
+
     /// Adds geofences to the Location Client to be monitored
     ///
     /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be added
-    public func startMonitoring(geofences: Array<CLCircularRegion>) {
+    public func startMonitoring(geofences: [CLCircularRegion]) {
         if geofences.capacity == 0 {
             return
         }
-        
+
         geofences.forEach {
             if !(locationManager.monitoredRegions.contains($0)) {
                 locationManager.startMonitoring(for: $0)
             }
         }
     }
-    
+
     /// Adds geofences to the Location Client to be monitored
     ///
     /// - parameter geofence: `CLCircularRegion` Geofence to be added
@@ -237,22 +235,22 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             logInfo(message: "🌎🌎 \(geofence.identifier) Added to monitored client 🌎🌎")
         }
     }
-    
+
     /// Removes geofences from being monitored by the Location Client
     ///
     /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be removed
-    public func stopMonitoring(geofences: Array<CLCircularRegion>) {
+    public func stopMonitoring(geofences: [CLCircularRegion]) {
         if geofences.capacity == 0 {
             return
         }
-        
+
         geofences.forEach {
             if locationManager.monitoredRegions.contains($0) {
                 locationManager.stopMonitoring(for: $0)
             }
         }
     }
-    
+
     /// Removes geofences from being monitored by the Location Client
     ///
     /// - parameter geofence: `CLCircularRegion` Geofence to be removed
@@ -272,7 +270,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         }
         return locationManager.monitoredRegions.map { $0.identifier }
     }
-    
+
     /// Returns the names of all the created geofences (those currently being monitored and those that are not)
     ///
     /// - return: `[String]` Array containing the names of all geofences
@@ -282,14 +280,14 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         }
         return geofences.map { $0.name }
     }
-    
+
     /// Removes all geofences that are currently being monitored from the Location Client
     public func clearMonitoredGeofences() {
         locationManager.monitoredRegions.forEach {
             locationManager.stopMonitoring(for: $0)
         }
     }
-    
+
     /// Stops location updates, Removes all active geofences from being monitored,
     /// and resets the array of created geofences
     public func disable() {
@@ -297,7 +295,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         clearMonitoredGeofences()
         self.geofences = Geofences()
     }
-    
+
     /// Logs verbose information about events occuring in the `TealiumLocation` module
     /// - Parameter message: `String` message to log to the console
     func logInfo(message: String) {

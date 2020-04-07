@@ -207,11 +207,11 @@ extension TealiumVisitorProfileModuleTests: TealiumModuleDelegate {
         if let _ = process as? TealiumBatchTrackRequest {
             switch currentTest {
             case "testVisitorServiceNotEnabledUponBatchTrackAndDidFinishWithNoResponseExecuted":
-               XCTAssertEqual(module.isEnabled, false)
-               getExpectation(forDescription: "testVisitorServiceNotEnabledUponBatchTrackAndDidFinishWithNoResponseExecuted")?.fulfill()
+                XCTAssertEqual(module.isEnabled, false)
+                getExpectation(forDescription: "testVisitorServiceNotEnabledUponBatchTrackAndDidFinishWithNoResponseExecuted")?.fulfill()
             case "testVisitorIdNilUponBatchTrackAndDidFinishWithNoResponseExecuted":
                 XCTAssertNil(process.moduleResponses.last?.info?["tealium_visitor_id"])
-                 getExpectation(forDescription: "testVisitorServiceNotEnabledUponBatchTrackAndDidFinishWithNoResponseExecuted")?.fulfill()
+                getExpectation(forDescription: "testVisitorServiceNotEnabledUponBatchTrackAndDidFinishWithNoResponseExecuted")?.fulfill()
             case "testVisitorServiceNotEnabledUponTrackAndDidFinishWithNoResponseExecuted":
                 XCTAssertEqual(module.isEnabled, false)
                 self.getExpectation(forDescription: "testVisitorServiceNotEnabledUponTrackAndDidFinishWithNoResponseExecuted")?.fulfill()

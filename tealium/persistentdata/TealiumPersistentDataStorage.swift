@@ -11,8 +11,8 @@ import Foundation
 import TealiumCore
 #endif
 
-//// MARK:
-//// MARK: PERSISTENT DATA
+// MARK: 
+// MARK: PERSISTENT DATA
 
 public struct TealiumPersistentDataStorage: Codable {
     var data: AnyCodable

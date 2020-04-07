@@ -105,7 +105,7 @@ class TealiumAttributionModule: TealiumModule {
     }
 
     /// Disables the module and deletes all associated data￼.
-    /// 
+    ///
     /// - Parameter request: `TealiumDisableRequest`
     override func disable(_ request: TealiumDisableRequest) {
         isEnabled = false

@@ -54,7 +54,7 @@ class TealiumPersistentDispatchQueue {
 
     func dequeueDispatches(clear clearQueue: Bool? = true) -> [TealiumTrackRequest]? {
         guard let queuedDispatches = diskStorage.retrieve(as: [TealiumTrackRequest].self) else {
-                return nil
+            return nil
         }
 
         if clearQueue == true {
@@ -92,7 +92,7 @@ class TealiumPersistentDispatchQueue {
                 }
 
                 guard let interval = TimeInterval(timestamp) else {
-                        return true
+                    return true
                 }
 
                 hasModified = true

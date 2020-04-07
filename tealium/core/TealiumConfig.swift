@@ -18,11 +18,11 @@ open class TealiumConfig {
     public lazy var optionalData = [String: Any]()
 
     public var copy: TealiumConfig {
-            return TealiumConfig(account: self.account,
-                                 profile: self.profile,
-                                 environment: self.environment,
-                                 datasource: self.datasource,
-                                 optionalData: optionalData)
+        return TealiumConfig(account: self.account,
+                             profile: self.profile,
+                             environment: self.environment,
+                             datasource: self.datasource,
+                             optionalData: optionalData)
     }
 
     /// Convenience constructor.
@@ -139,7 +139,7 @@ public extension TealiumConfig {
     /// - Returns: `TealiumLogLevel` (default is `.errors`)
     @available(*, deprecated, message: "Please switch to config.logLevel")
     func getLogLevel() -> TealiumLogLevel? {
-       logLevel
+        logLevel
     }
 
     /// Sets the log level to be used by the library

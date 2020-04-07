@@ -37,7 +37,7 @@ public extension TealiumAppDataCollection {
     }
 
     /// Retrieves app build number from Bundle￼￼￼￼￼￼.
-    /// 
+    ///
     /// - Parameter bundle: `Bundle`
     /// - Returns: `String?` containing the app build number
     func build(bundle: Bundle) -> String? {
@@ -50,7 +50,7 @@ public extension Tealium {
     func appData() -> TealiumAppDataProtocol? {
         guard let module = modulesManager.getModule(forName: TealiumAppDataKey.moduleName) as? TealiumAppDataModule,
             let appData = module.appData else {
-            return nil
+                return nil
         }
 
         return appData

@@ -25,6 +25,5 @@ public protocol LocationManager {
     func startMonitoring(for region: CLRegion)
 }
 
-
 extension CLLocationManager: LocationManager { }
 #endif

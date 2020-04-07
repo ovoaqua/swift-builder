@@ -18,8 +18,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D762FC30232F97EF00CBC4D0"
-               BuildableName = "TealiumLocationTests-iOSs.xctest"
-               BlueprintName = "TealiumLocationTests-iOSs"
+               BuildableName = "TealiumLocationTests-iOS.xctest"
+               BlueprintName = "TealiumLocationTests-iOS"
                ReferencedContainer = "container:tealium-swift.xcodeproj">
             </BuildableReference>
          </TestableReference>

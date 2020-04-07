@@ -28,7 +28,7 @@ public struct TealiumAttributionKey {
         TealiumAttributionKey.adKeywordMatchType,
         TealiumAttributionKey.creativeSetId,
         TealiumAttributionKey.creativeSetName,
-        TealiumAttributionKey.region,
+        TealiumAttributionKey.region
     ]
 
     // Internal module keys
@@ -74,7 +74,7 @@ public struct AppleInternalKeys {
         AppleInternalKeys.keywordMatchType,
         AppleInternalKeys.creativeSetId,
         AppleInternalKeys.creativeSetName,
-        AppleInternalKeys.region,
+        AppleInternalKeys.region
     ]
 
     static let attribution = "iad-attribution"

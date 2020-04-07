@@ -57,11 +57,11 @@ class TealiumDispatchQueueModule: TealiumModule {
     }
 
     var isRemoteAPIEnabled: Bool {
-            #if os(iOS)
-            return config?.remoteAPIEnabled ?? false
-            #else
-            return false
-            #endif
+        #if os(iOS)
+        return config?.remoteAPIEnabled ?? false
+        #else
+        return false
+        #endif
     }
 
     var lowPowerModeEnabled = false
@@ -178,14 +178,14 @@ class TealiumDispatchQueueModule: TealiumModule {
                         // for all release calls, bypass the queue and send immediately
                         data += [TealiumDispatchQueueConstants.bypassQueueKey: true]
                         let request = TealiumTrackRequest(data: data, completion: nil)
-                            delegate?.tealiumModuleRequests(module: self,
-                                                            process: request)
+                        delegate?.tealiumModuleRequests(module: self,
+                                                        process: request)
                     }
 
                 case let val where val > 1:
                     let batchRequest = TealiumBatchTrackRequest(trackRequests: batch, completion: nil)
-                        delegate?.tealiumModuleRequests(module: self,
-                                                        process: batchRequest)
+                    delegate?.tealiumModuleRequests(module: self,
+                                                    process: batchRequest)
                 default:
                     // should never reach here
                     return
@@ -338,8 +338,8 @@ class TealiumDispatchQueueModule: TealiumModule {
             bypassKeys += batchingBypassKeys
         }
         for key in bypassKeys where key == event {
-                shouldQueue = false
-                break
+            shouldQueue = false
+            break
         }
 
         return shouldQueue

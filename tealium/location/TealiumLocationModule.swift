@@ -9,7 +9,7 @@
 #if os(iOS)
 import Foundation
 #if location
-    import TealiumCore
+import TealiumCore
 #endif
 
 /// Module to add app related data to track calls.
@@ -19,11 +19,11 @@ class TealiumLocationModule: TealiumModule {
 
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: "location",
-            priority: 500,
-            build: 3,
-            enabled: true)
+                                   priority: 500,
+                                   build: 3,
+                                   enabled: true)
     }
-    
+
     /// Enables the module and loads AppData into memory
     ///
     /// - Parameter request: TealiumEnableRequest - the request from the core library to enable this module
@@ -49,7 +49,7 @@ class TealiumLocationModule: TealiumModule {
         guard isEnabled else {
             return didFinishWithNoResponse(track)
         }
-        
+
         let track = addModuleName(to: track)
         // do not add data to queued hits
         guard track.trackDictionary[TealiumKey.wasQueued] as? String == nil else {
@@ -59,28 +59,28 @@ class TealiumLocationModule: TealiumModule {
         // Populate data stream
         var newData = [String: Any]()
         let location = tealiumLocationManager.latestLocation
-        
+
         // May not have location data on very first launch of app (waiting on user to grant permission)
         if location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
             newData = [TealiumLocationKey.deviceLatitude: "\(location.coordinate.latitude)",
                 TealiumLocationKey.deviceLongitude: "\(location.coordinate.longitude)",
                 TealiumLocationKey.accuracy: tealiumLocationManager.locationAccuracy]
         }
-        
+
         newData.merge(track.trackDictionary) { $1 }
-        
+
         let newTrack = TealiumTrackRequest(data: newData,
                                            completion: track.completion)
         didFinish(newTrack)
     }
-    
+
     func addLocationData(to track: TealiumTrackRequest) {
         let location = tealiumLocationManager.latestLocation
         var newData: [String: Any] = [TealiumLocationKey.deviceLatitude: "\(location.coordinate.latitude)",
             TealiumLocationKey.deviceLongitude: "\(location.coordinate.longitude)",
             TealiumLocationKey.accuracy: tealiumLocationManager.locationAccuracy]
         newData.merge(track.trackDictionary) { $1 }
-        
+
         let newTrack = TealiumTrackRequest(data: newData,
                                            completion: track.completion)
         didFinish(newTrack)
@@ -97,7 +97,7 @@ class TealiumLocationModule: TealiumModule {
         tealiumLocationManager.disable()
         didFinish(request)
     }
-    
+
 }
 
 extension TealiumLocationModule: LocationListener {

@@ -44,7 +44,7 @@ public class TealiumVolatileData: NSObject, TealiumVolatileDataCollection {
     /// - Parameter currentData: `[String: Any]` containing existing volatile data
     /// - Returns: `[String: Any]`
     func getData(currentData: [String: Any]) -> [String: Any] {
-       return TealiumQueues.backgroundConcurrentQueue.read { () -> [String: Any] in
+        return TealiumQueues.backgroundConcurrentQueue.read { () -> [String: Any] in
             var data = [String: Any]()
 
             data[TealiumVolatileDataKey.random] = TealiumVolatileData.getRandom(length: 16)
@@ -58,7 +58,7 @@ public class TealiumVolatileData: NSObject, TealiumVolatileDataCollection {
             data += volatileData
 
             return data
-       }
+        }
     }
 
     /// Checks that the dispatch contains all expected timestamps.
@@ -66,13 +66,13 @@ public class TealiumVolatileData: NSObject, TealiumVolatileDataCollection {
     /// - Parameter currentData: `[String: Any]` containing existing volatile data
     /// - Returns: `Bool` `true` if dispatch contains existing timestamps
     func dispatchHasExistingTimestamps(_ currentData: [String: Any]) -> Bool {
-       return TealiumQueues.backgroundConcurrentQueue.read { () -> Bool in
-        return (currentData[TealiumVolatileDataKey.timestampEpoch] != nil) &&
+        return TealiumQueues.backgroundConcurrentQueue.read { () -> Bool in
+            return (currentData[TealiumVolatileDataKey.timestampEpoch] != nil) &&
                 (currentData[TealiumVolatileDataKey.timestamp] != nil) &&
                 (currentData[TealiumVolatileDataKey.timestampLocal] != nil) &&
                 (currentData[TealiumVolatileDataKey.timestampOffset] != nil) &&
                 (currentData[TealiumVolatileDataKey.timestampUnix] != nil)
-       }
+        }
     }
 
     /// Deletes volatile data for specific keys.
@@ -173,7 +173,7 @@ public class TealiumVolatileData: NSObject, TealiumVolatileDataCollection {
             TealiumVolatileDataKey.timestampUnixMilliseconds: date.unixTimeMilliseconds,
             TealiumVolatileDataKey.timestampUnixMillisecondsLegacy: date.unixTimeMilliseconds, // included to prevent mapping issues. Will be removed in future release
             TealiumVolatileDataKey.timestampUnix: date.unixTimeSeconds,
-            TealiumVolatileDataKey.timestampUnixLegacy: date.unixTimeSeconds, // included to prevent mapping issues. Will be removed in future release
+            TealiumVolatileDataKey.timestampUnixLegacy: date.unixTimeSeconds // included to prevent mapping issues. Will be removed in future release
         ]
     }
 

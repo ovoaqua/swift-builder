@@ -99,7 +99,7 @@ class TealiumDeviceDataModuleTests: XCTestCase {
                 "network_name",
                 "network_mnc",
                 "network_mcc",
-                "network_iso_country_code",
+                "network_iso_country_code"
             ]
             #else
             let expectedKeys = [
@@ -123,7 +123,7 @@ class TealiumDeviceDataModuleTests: XCTestCase {
                 "device_is_charging",
                 "user_locale",
                 "device_orientation",
-                "device_orientation_extended",
+                "device_orientation_extended"
             ]
             #endif
 
@@ -134,7 +134,7 @@ class TealiumDeviceDataModuleTests: XCTestCase {
                 "memory_inactive",
                 "memory_compressed",
                 "memory_physical",
-                "app_memory_usage",
+                "app_memory_usage"
             ]
 
             for key in expectedKeys where trackData[key] == nil {
@@ -206,7 +206,7 @@ class TealiumDeviceDataModuleTests: XCTestCase {
                 "memory_inactive",
                 "memory_compressed",
                 "memory_physical",
-                "app_memory_usage",
+                "app_memory_usage"
             ]
             #else
             let expectedKeys = [
@@ -237,7 +237,7 @@ class TealiumDeviceDataModuleTests: XCTestCase {
                 "memory_inactive",
                 "memory_compressed",
                 "memory_physical",
-                "app_memory_usage",
+                "app_memory_usage"
             ]
             #endif
 
@@ -271,7 +271,7 @@ class TealiumDeviceDataModuleTests: XCTestCase {
             "os_version",
             "platform",
             "os_name",
-            "device_resolution",
+            "device_resolution"
         ]
         for key in expectedKeys where allData[key] == nil {
             XCTFail("Missing key: \(key). Device Data: \(allData)")
@@ -282,34 +282,34 @@ class TealiumDeviceDataModuleTests: XCTestCase {
         let module = TealiumDeviceDataModule(delegate: nil)
         let allData = module.trackTimeData()
         #if os(iOS)
-            let expectedKeys = [
-                "device_ischarging",
-                "device_battery_percent",
-                "battery_percent",
-                "device_is_charging",
-                "user_locale",
-                "app_orientation",
-                "device_orientation",
-                "device_orientation_extended",
-                "carrier",
-                "carrier_mnc",
-                "carrier_mcc",
-                "carrier_iso",
-                "network_name",
-                "network_mnc",
-                "network_mcc",
-                "network_iso_country_code",
-            ]
+        let expectedKeys = [
+            "device_ischarging",
+            "device_battery_percent",
+            "battery_percent",
+            "device_is_charging",
+            "user_locale",
+            "app_orientation",
+            "device_orientation",
+            "device_orientation_extended",
+            "carrier",
+            "carrier_mnc",
+            "carrier_mcc",
+            "carrier_iso",
+            "network_name",
+            "network_mnc",
+            "network_mcc",
+            "network_iso_country_code"
+        ]
         #else
-            let expectedKeys = [
-                "device_ischarging",
-                "device_battery_percent",
-                "battery_percent",
-                "device_is_charging",
-                "user_locale",
-                "device_orientation",
-                "device_orientation_extended",
-            ]
+        let expectedKeys = [
+            "device_ischarging",
+            "device_battery_percent",
+            "battery_percent",
+            "device_is_charging",
+            "user_locale",
+            "device_orientation",
+            "device_orientation_extended"
+        ]
         #endif
         for key in expectedKeys where allData[key] == nil {
             XCTFail("Missing key: \(key). Device Data: \(allData)")
@@ -326,7 +326,7 @@ class TealiumDeviceDataModuleTests: XCTestCase {
                 if simulator {
                     XCTAssertTrue(batteryPercent as? String == "-100.0")
                 } else {
-                 XCTAssertTrue(bpDouble >= 0.0 && bpDouble <= 100.0, "Battery percentage is not valid")
+                    XCTAssertTrue(bpDouble >= 0.0 && bpDouble <= 100.0, "Battery percentage is not valid")
                 }
             }
         } else {

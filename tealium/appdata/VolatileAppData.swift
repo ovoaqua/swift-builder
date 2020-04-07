@@ -13,10 +13,10 @@ import TealiumCore
 
 struct VolatileAppData: Codable {
     var name: String?,
-        rdns: String?,
-        version: String?,
-        build: String?,
-        persistentData: PersistentAppData?
+    rdns: String?,
+    version: String?,
+    build: String?,
+    persistentData: PersistentAppData?
 
     public func toDictionary() -> [String: Any] {
         var allData = [String: Any]()

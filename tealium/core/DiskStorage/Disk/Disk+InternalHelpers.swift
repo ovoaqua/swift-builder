@@ -37,8 +37,8 @@ extension Disk {
         }
         var searchPathDirectory: FileManager.SearchPathDirectory
         switch directory {
-        #if os(tvOS)
-        #else
+            #if os(tvOS)
+            #else
         case .documents:
             searchPathDirectory = .documentDirectory
         case .applicationSupport:
@@ -61,7 +61,7 @@ extension Disk {
                     recoverySuggestion: "Check that the app-group name in the entitlement matches the string provided."
                 )
             }
-        #endif
+            #endif
         case .caches:
             searchPathDirectory = .cachesDirectory
         case .temporary:
@@ -105,15 +105,15 @@ extension Disk {
 
     /// Find an existing file's URL or throw an error if it doesn't exist
     static func getExistingFileURL(for path: String?, in directory: Directory) throws -> URL {
-            let url = try createURL(for: path, in: directory)
-            guard FileManager.default.fileExists(atPath: url.path) else {
-                throw createError(
-                    .noFileFound,
-                    description: "Could not find an existing file or folder at \(url.path).",
-                    failureReason: "There is no existing file or folder at \(url.path)",
-                    recoverySuggestion: "Check if a file or folder exists before trying to commit an operation on it."
-                )
-            }
+        let url = try createURL(for: path, in: directory)
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            throw createError(
+                .noFileFound,
+                description: "Could not find an existing file or folder at \(url.path).",
+                failureReason: "There is no existing file or folder at \(url.path)",
+                recoverySuggestion: "Check if a file or folder exists before trying to commit an operation on it."
+            )
+        }
         return url
     }
 

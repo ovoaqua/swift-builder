@@ -51,11 +51,11 @@ class TealiumVolatileDataModule: TealiumModule {
         let config = request.config
 
         var currentStaticData = [TealiumKey.account: config.account,
-                                                TealiumKey.profile: config.profile,
-                                                TealiumKey.environment: config.environment,
-                                                TealiumKey.libraryName: TealiumValue.libraryName,
-                                                TealiumKey.libraryVersion: TealiumValue.libraryVersion,
-                                                TealiumKey.sessionId: TealiumVolatileData.newSessionId(),
+                                 TealiumKey.profile: config.profile,
+                                 TealiumKey.environment: config.environment,
+                                 TealiumKey.libraryName: TealiumValue.libraryName,
+                                 TealiumKey.libraryVersion: TealiumValue.libraryVersion,
+                                 TealiumKey.sessionId: TealiumVolatileData.newSessionId()
         ]
 
         if let dataSource = config.datasource {

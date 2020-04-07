@@ -110,7 +110,7 @@ open class TealiumModule: TealiumModuleProtocol {
         didFinish(request)
 
     }
-    
+
     /// Updates the config of this module (if applicable)
     ///
     /// - Parameter request: `TealiumUpdateConfigRequest`.
@@ -197,7 +197,7 @@ open class TealiumModule: TealiumModuleProtocol {
         let newRequest = addModuleName(to: request)
         didFinishWithNoResponse(newRequest)
     }
-    
+
     open func addModuleName(to request: TealiumTrackRequest) -> TealiumTrackRequest {
         var requestData = request.trackDictionary
         var modulesList = requestData[TealiumKey.enabledModules] as? [String] ?? [String]()

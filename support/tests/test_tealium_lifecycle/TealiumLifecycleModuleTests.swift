@@ -91,32 +91,32 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         let expectedKeys = ["tealium_event"]
         let expectedDictKeys = ["lifecycle_lastwakedate",
-        "lifecycle_firstlaunchdate_MMDDYYYY",
-        "lifecycle_launchcount",
-        "lifecycle_hourofday_local",
-        "autotracked",
-        "lifecycle_secondsawake",
-        "lifecycle_dayofweek_local",
-        "lifecycle_type",
-        "lifecycle_totalcrashcount",
-        "lifecycle_totallaunchcount",
-        "lifecycle_firstlaunchdate",
-        "lifecycle_sleepcount",
-        "lifecycle_totalsecondsawake",
-        "lifecycle_priorsecondsawake",
-        "lifecycle_lastlaunchdate",
-        "lifecycle_dayssincelastwake",
-        "lifecycle_dayssincelaunch",
-        "lifecycle_wakecount",
-        "lifecycle_totalsleepcount",
-        "lifecycle_totalwakecount"]
+                                "lifecycle_firstlaunchdate_MMDDYYYY",
+                                "lifecycle_launchcount",
+                                "lifecycle_hourofday_local",
+                                "autotracked",
+                                "lifecycle_secondsawake",
+                                "lifecycle_dayofweek_local",
+                                "lifecycle_type",
+                                "lifecycle_totalcrashcount",
+                                "lifecycle_totallaunchcount",
+                                "lifecycle_firstlaunchdate",
+                                "lifecycle_sleepcount",
+                                "lifecycle_totalsecondsawake",
+                                "lifecycle_priorsecondsawake",
+                                "lifecycle_lastlaunchdate",
+                                "lifecycle_dayssincelastwake",
+                                "lifecycle_dayssincelaunch",
+                                "lifecycle_wakecount",
+                                "lifecycle_totalsleepcount",
+                                "lifecycle_totalwakecount"]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
-        
+
         let missingDictKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedDictKeys)
 
         XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
-        
+
         XCTAssertTrue(missingDictKeys.count == 0, "Unexpected keys missing:\(missingDictKeys)")
     }
 
@@ -232,72 +232,72 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         self.waitForExpectations(timeout: 8.0, handler: nil)
     }
-    
+
     func testAutotrackedTrue() {
         autotrackedRequest = expectation(description: "testAutotrackedTrue")
 
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
         Tealium.lifecycleListeners.addDelegate(delegate: self)
-            
+
         lifecycleModule.processDetected(type: .launch)
-        
+
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
-        
+
         guard let autotracked = returnData["autotracked"] as? Bool else {
             XCTFail("`autotracked` should not be nil")
             return
         }
-        
+
         XCTAssertTrue(autotracked)
-        
+
         self.waitForExpectations(timeout: 8.0, handler: nil)
     }
-    
+
     func testAutotrackedNil() {
         autotrackedRequest = expectation(description: "testAutotrackedNil")
 
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
         Tealium.lifecycleListeners.addDelegate(delegate: self)
-            
+
         let track = TealiumTrackRequest(data: ["hello": "world"])
-        
+
         lifecycleModule.track(track)
-        
+
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
-        
+
         guard let _ = returnData["autotracked"] as? Bool else {
             autotrackedRequest?.fulfill()
             XCTAssert(true)
             self.waitForExpectations(timeout: 8.0, handler: nil)
             return
         }
-        
+
         XCTFail("`autotracked` should be nil")
     }
-    
+
     func testAutotrackedFalse() {
         autotrackedRequest = expectation(description: "testAutotrackedFalse")
 
         config.lifecycleAutoTrackingEnabled = false
         lifecycleModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil), diskStorage: LifecycleMockDiskStorage())
-        
+
         self.launch(at: Date())
-        
+
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
         }
-        
+
         guard let autotracked = returnData["autotracked"] as? Bool else {
             XCTFail("`autotracked` should not be nil")
             return
         }
-        
+
         XCTAssertFalse(autotracked)
-        
+
         self.waitForExpectations(timeout: 8.0, handler: nil)
     }
 
@@ -339,17 +339,17 @@ extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
 }
 
 extension TealiumLifecycleModuleTests: TealiumLifecycleEvents {
-    
+
     func sleep() {
         // ...
     }
-    
+
     func wake() {
         // ...
     }
-    
+
     func launch(at date: Date) {
         lifecycleModule.process(type: .launch, at: Date())
     }
-    
+
 }

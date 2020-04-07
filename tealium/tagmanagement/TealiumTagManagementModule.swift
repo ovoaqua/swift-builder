@@ -92,7 +92,7 @@ public class TealiumTagManagementModule: TealiumModule {
         let newConfig = request.config.copy
         if newConfig != self.config {
             // block new requests
-//            self.errorState.incrementAndGet()
+            //            self.errorState.incrementAndGet()
             self.config = newConfig
             var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
             enableRequest.bypassDidFinish = true
@@ -223,45 +223,45 @@ public class TealiumTagManagementModule: TealiumModule {
     func dispatchTrack(_ request: TealiumRequest) {
         switch request {
         case let track as TealiumBatchTrackRequest:
-                let allTrackData = track.trackRequests.map {
-                    $0.trackDictionary
-                }
+            let allTrackData = track.trackRequests.map {
+                $0.trackDictionary
+            }
 
-                #if TEST
-                #else
-                self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                        guard let self = self else {
-                            return
-                        }
-                        track.completion?(success, info, error)
-                        guard error == nil else {
-                            self.didFailToFinish(track, info: info, error: error!)
-                            return
-                        }
-                        self.didFinish(track,
-                                       info: info)
+            #if TEST
+            #else
+            self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
+                TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                    guard let self = self else {
+                        return
                     }
+                    track.completion?(success, info, error)
+                    guard error == nil else {
+                        self.didFailToFinish(track, info: info, error: error!)
+                        return
+                    }
+                    self.didFinish(track,
+                                   info: info)
                 }
-                #endif
+            }
+            #endif
         case let track as TealiumTrackRequest:
-                #if TEST
-                #else
-                self.tagManagement?.track(track.trackDictionary) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                        guard let self = self else {
-                            return
-                        }
-                        track.completion?(success, info, error)
-                        guard error == nil else {
-                            self.didFailToFinish(track, info: info, error: error!)
-                            return
-                        }
-                        self.didFinish(track,
-                                       info: info)
+            #if TEST
+            #else
+            self.tagManagement?.track(track.trackDictionary) { success, info, error in
+                TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                    guard let self = self else {
+                        return
                     }
+                    track.completion?(success, info, error)
+                    guard error == nil else {
+                        self.didFailToFinish(track, info: info, error: error!)
+                        return
+                    }
+                    self.didFinish(track,
+                                   info: info)
                 }
-                #endif
+            }
+            #endif
         default:
             let reportRequest = TealiumReportRequest(message: "Unexpected request type received. Will not process.")
             self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)

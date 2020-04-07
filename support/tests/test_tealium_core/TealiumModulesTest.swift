@@ -1,20 +1,22 @@
-////
-////  TealiumModulesTest.swift
-////  tealium-swift
-////
-////  Created by Jason Koo on 6/8/17.
-////  Copyright © 2017 Tealium, Inc. All rights reserved.
-////
 //
+//  TealiumModulesTest.swift
+//  tealium-swift
+//
+//  Created by Jason Koo on 6/8/17.
+//  Copyright © 2017 Tealium, Inc. All rights reserved.
+//
+
 @testable import TealiumAppData
 @testable import TealiumCollect
+@testable import TealiumConnectivity
 @testable import TealiumConsentManager
 @testable import TealiumCore
 @testable import TealiumDelegate
 @testable import TealiumDeviceData
-@testable import TealiumLogger
 @testable import TealiumPersistentData
 @testable import TealiumVisitorService
+@testable import TealiumVolatileData
+@testable import TealiumLogger
 import XCTest
 
 class TealiumModulesTest: XCTestCase {
@@ -35,7 +37,9 @@ class TealiumModulesTest: XCTestCase {
         // If nil assigned will return defaults
         let modules = TealiumModules.initializeModulesFor(nil, assigningDelegate: self)
 
-        XCTAssert(modules.count == numberOfCurrentModules, "Count detected: \(modules.count)\nExpected:\(numberOfCurrentModules)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modules.count == self.numberOfCurrentModules, "Count detected: \(modules.count)\nExpected:\(self.numberOfCurrentModules)")
+        }
     }
 
     func testBlacklistSingleModule() {
@@ -51,10 +55,12 @@ class TealiumModulesTest: XCTestCase {
         let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
-        XCTAssert(modules.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modules.count == (self.numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
 
-        for module in modules {
-            XCTAssert(!(module is TealiumLoggerModule), "Logger module was found when shouldn't have been present.")
+            for module in modules {
+                XCTAssert(!(module is TealiumLoggerModule), "Logger module was found when shouldn't have been present.")
+            }
         }
     }
 
@@ -71,14 +77,16 @@ class TealiumModulesTest: XCTestCase {
         let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
-        XCTAssert(modules.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modules.count == (self.numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
 
-        for module in modules {
-            if module is TealiumLoggerModule {
-                XCTFail("Logger module was found when shouldn't have been present.")
-            }
-            if module is TealiumAppDataModule {
-                XCTFail("AppData module was found when shouldn't have been present.")
+            for module in modules {
+                if module is TealiumLoggerModule {
+                    XCTFail("Logger module was found when shouldn't have been present.")
+                }
+                if module is TealiumAppDataModule {
+                    XCTFail("AppData module was found when shouldn't have been present.")
+                }
             }
         }
 
@@ -98,15 +106,17 @@ class TealiumModulesTest: XCTestCase {
         let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
-        XCTAssert(modules.count == modulesList.moduleNames.count, "Modules contains too many elements: \(modules)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modules.count == modulesList.moduleNames.count, "Modules contains too many elements: \(modules)")
 
-        let module = modules[0]
+            let module = modules[0]
 
-        if module is TealiumLoggerModule {
-            // How in the world do we do a 'is not' in Swift?
-        } else {
-            XCTFail("Incorrect module loaded: \(module)")
-            return
+            if module is TealiumLoggerModule {
+                // How in the world do we do a 'is not' in Swift?
+            } else {
+                XCTFail("Incorrect module loaded: \(module)")
+                return
+            }
         }
     }
 
@@ -122,7 +132,9 @@ class TealiumModulesTest: XCTestCase {
         let modules = TealiumModules.initializeModulesFor(list,
                                                           assigningDelegate: self)
 
-        XCTAssert(modules.count == numberOfCurrentModules, "Modules contains incorrect number of modules: \(modules)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modules.count == self.numberOfCurrentModules, "Modules contains incorrect number of modules: \(modules)")
+        }
     }
 
     func testEnableFromConfigWithWhitelistMultipleModulesListed() {
@@ -139,7 +151,9 @@ class TealiumModulesTest: XCTestCase {
         let modules = TealiumModules.initializeModulesFor(config.modulesList,
                                                           assigningDelegate: self)
 
-        XCTAssert(modules.count == modulesList.moduleNames.count, "Modules contains too many elements: \(modules)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modules.count == modulesList.moduleNames.count, "Modules contains too many elements: \(modules)")
+        }
     }
 
     func testDisableOneModuleWithBlacklistAfterExitingConfigAlreadyActived() {
@@ -158,7 +172,9 @@ class TealiumModulesTest: XCTestCase {
         modulesManager.setupModulesFrom(config: initialConfig)
         modulesManager.enable(config: initialConfig, enableCompletion: nil)
 
-        XCTAssert(modulesManager.modules!.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == (self.numberOfCurrentModules - modulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        }
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: false,
@@ -173,10 +189,12 @@ class TealiumModulesTest: XCTestCase {
 
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == (numberOfCurrentModules - newModulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == (self.numberOfCurrentModules - newModulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
-        for module in modulesManager.modules! where module is TealiumAppDataModule {
-            XCTFail("Failed to disable the appData module.")
+            for module in modulesManager.modules! where module is TealiumAppDataModule {
+                XCTFail("Failed to disable the appData module.")
+            }
         }
     }
 
@@ -195,7 +213,9 @@ class TealiumModulesTest: XCTestCase {
         let modulesManager = TealiumModulesManager()
         modulesManager.setupModulesFrom(config: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        }
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
@@ -209,7 +229,9 @@ class TealiumModulesTest: XCTestCase {
 
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        }
     }
 
     func testEnableMoreModulesAfterExitingConfigAlreadyActived() {
@@ -226,9 +248,9 @@ class TealiumModulesTest: XCTestCase {
 
         let modulesManager = TealiumModulesManager()
         modulesManager.setupModulesFrom(config: initialConfig)
-
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
-
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        }
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
                                                 moduleNames: ["appdata", "devicedata", "lifecycle"])
@@ -241,7 +263,9 @@ class TealiumModulesTest: XCTestCase {
         newConfig.isEnabled = true
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        }
     }
 
     func testEnableCompletelyDifferentModulesAfterExitingConfigAlreadyActived() {
@@ -259,7 +283,9 @@ class TealiumModulesTest: XCTestCase {
         let modulesManager = TealiumModulesManager()
         modulesManager.setupModulesFrom(config: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        }
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
@@ -273,16 +299,18 @@ class TealiumModulesTest: XCTestCase {
         newConfig.isEnabled = true
         modulesManager.update(config: newConfig, oldConfig: initialConfig)
 
-        XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
+            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
-        for module in modulesManager.modules! {
-            if module is TealiumDelegateModule {
-                XCTFail("Logger module was found when shouldn't have been present.")
-            }
-            if module is TealiumPersistentDataModule {
-                XCTFail("AppData module was found when shouldn't have been present.")
-            }
+            for module in modulesManager.modules! {
+                if module is TealiumDelegateModule {
+                    XCTFail("Logger module was found when shouldn't have been present.")
+                }
+                if module is TealiumPersistentDataModule {
+                    XCTFail("AppData module was found when shouldn't have been present.")
+                }
 
+            }
         }
     }
 

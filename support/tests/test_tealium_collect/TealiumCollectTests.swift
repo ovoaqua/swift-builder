@@ -42,7 +42,7 @@ class TealiumCollectTests: XCTestCase {
             TealiumKey.libraryVersion: TealiumValue.libraryVersion ,
             TealiumKey.sessionId: "someSessionId" ,
             TealiumKey.visitorId: "someVisitorId" ,
-            "tealium_random": "someRandomNumber",
+            "tealium_random": "someRandomNumber"
         ]
     }
 

@@ -50,7 +50,7 @@ public class TealiumVisitorProfileManager: TealiumVisitorProfileManagerProtocol 
         }
         self.diskStorage = diskStorage
         guard let profile = diskStorage.retrieve(as: TealiumVisitorProfile.self) else {
-                return
+            return
         }
         self.profileDidUpdate(profile: profile)
     }
@@ -73,7 +73,7 @@ public class TealiumVisitorProfileManager: TealiumVisitorProfileManagerProtocol 
 
         guard currentState.value == VisitorProfileStatus.ready.rawValue,
             let _ = visitorId else {
-            return
+                return
         }
         self.blockState()
         fetchProfile { profile, error in
@@ -95,9 +95,9 @@ public class TealiumVisitorProfileManager: TealiumVisitorProfileManagerProtocol 
         currentState.value = VisitorProfileStatus.blocked.rawValue
         stateTimer = TealiumRepeatingTimer(timeInterval: 10.0)
         stateTimer?.eventHandler = { [weak self] in
-               guard let self = self else {
-                   return
-               }
+            guard let self = self else {
+                return
+            }
             self.releaseState()
             self.stateTimer?.suspend()
         }
@@ -156,8 +156,8 @@ public class TealiumVisitorProfileManager: TealiumVisitorProfileManagerProtocol 
             case .success(let profile):
                 guard let profile = profile,
                     !profile.isEmpty else {
-                    completion(nil, nil)
-                    return
+                        completion(nil, nil)
+                        return
                 }
                 guard let lifetimeEventCount = profile.numbers?[TealiumVisitorProfileConstants.eventCountMetric],
                     self.lifetimeEventCountHasBeenUpdated(lifetimeEventCount) else {

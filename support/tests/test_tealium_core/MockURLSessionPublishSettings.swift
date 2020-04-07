@@ -16,7 +16,7 @@ class MockURLSessionPublishSettings: URLSessionProtocol {
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
     func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-//        let completion = DataTaskCompletion(nil, nil, nil)
+        //        let completion = DataTaskCompletion(nil, nil, nil)
         return DataTask(completionHandler: completionHandler, url: with.url!)
     }
 
@@ -59,7 +59,7 @@ class MockURLSessionPublishSettingsNoContent: URLSessionProtocol {
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
     func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-//        let completion = DataTaskCompletion(nil, nil, nil)
+        //        let completion = DataTaskCompletion(nil, nil, nil)
         return DataTaskNoContent(completionHandler: completionHandler, url: with.url!)
     }
 

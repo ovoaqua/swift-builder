@@ -58,7 +58,7 @@ class TealiumCollectModule: TealiumModule {
     override func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
         if newConfig != self.config,
-        (newConfig.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) != (config?.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) {
+            (newConfig.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) != (config?.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) {
             updateCollectDispatcher(config: newConfig, completion: nil)
             self.config = newConfig
             self.didFinish(request)
@@ -228,7 +228,7 @@ class TealiumCollectModule: TealiumModule {
                                              success: false,
                                              error: error)
         if let error = error as? URLError,
-        error.code == URLError.notConnectedToInternet || error.code == URLError.networkConnectionLost || error.code == URLError.timedOut {
+            error.code == URLError.notConnectedToInternet || error.code == URLError.networkConnectionLost || error.code == URLError.timedOut {
 
             switch request {
             case let request as TealiumTrackRequest:

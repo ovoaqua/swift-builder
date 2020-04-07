@@ -104,7 +104,7 @@ public class TealiumVisitorServiceModule: TealiumModule {
         let request = addModuleName(to: request)
 
         guard let visitorId = request.visitorId else {
-                didFinishWithNoResponse(request)
+            didFinishWithNoResponse(request)
             return
         }
         retrieveProfile(visitorId: visitorId)

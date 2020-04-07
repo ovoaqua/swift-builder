@@ -30,8 +30,8 @@ class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
 
     func save<T>(_ data: T, completion: TealiumCompletion?) where T: Encodable {
         guard T.self == TealiumPersistentDataStorage.self,
-        let data = data as? TealiumPersistentDataStorage else {
-            return
+            let data = data as? TealiumPersistentDataStorage else {
+                return
         }
         persistentData = data
         completion?(true, nil, nil)
@@ -48,7 +48,7 @@ class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
 
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
         guard T.self == TealiumPersistentDataStorage.self else {
-                return nil
+            return nil
         }
         if let persistentData = self.persistentData {
             return persistentData as? T

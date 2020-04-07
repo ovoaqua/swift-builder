@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "Optimizely",
-        "repositoryURL": "https://github.com/optimizely/swift-sdk.git",
+        "package": "SwiftShell",
+        "repositoryURL": "git@github.com:kareman/SwiftShell.git",
         "state": {
-          "branch": null,
-          "revision": "06181c4de7b401a29aad2c15522463875b4128a5",
-          "version": "3.3.0"
+          "branch": "master",
+          "revision": "fb7fc2c9ad8811caf324431a508fb79e3fb74f99",
+          "version": null
         }
       }
     ]

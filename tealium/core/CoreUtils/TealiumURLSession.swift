@@ -15,15 +15,15 @@ extension URLSession: URLSessionProtocol {
     public func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return (dataTask(with: url, completionHandler: completionHandler) as URLSessionDataTask) as URLSessionDataTaskProtocol
     }
-    
+
     public func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return (dataTask(with: with, completionHandler: completionHandler) as URLSessionDataTask) as URLSessionDataTaskProtocol
     }
-    
+
     public func finishTealiumTasksAndInvalidate() {
         finishTasksAndInvalidate()
     }
-    
+
 }
 
 extension URLSessionDataTask: URLSessionDataTaskProtocol {}

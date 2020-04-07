@@ -63,7 +63,7 @@ let testDataDictionary: [String: Any]  =
         TealiumKey.sessionId: TealiumTestValue.sessionId,
         TealiumKey.visitorId: TealiumTestValue.visitorID,
         TealiumKey.random: TealiumTestValue.random
-    ]
+]
 
 class TimeTraveler {
 
@@ -121,6 +121,7 @@ class TestTealiumHelper {
         // priority order
         #if os(iOS)
         return [
+            "location",
             "logger",
             "lifecycle",
             "autotracking",
@@ -137,7 +138,7 @@ class TestTealiumHelper {
             //            "crash", // crash is excluded; separate tests exist for crash
             "consentmanager",
             "dispatchqueue",
-            "visitorservice",
+            "visitorservice"
         ]
         #elseif os(tvOS)
         return [
@@ -153,24 +154,24 @@ class TestTealiumHelper {
             "collect",
             "consentmanager",
             "dispatchqueue",
-            "visitorservice",
+            "visitorservice"
         ]
         #else
-            return [
-                "logger",
-                "lifecycle",
-                "appdata",
-                "datasource",
-                "devicedata",
-                "persistentdata",
-                "volatiledata",
-                "delegate",
-                "connectivity",
-                "collect",
-                "consentmanager",
-                "dispatchqueue",
-                "visitorservice"
-            ]
+        return [
+            "logger",
+            "lifecycle",
+            "appdata",
+            "datasource",
+            "devicedata",
+            "persistentdata",
+            "volatiledata",
+            "delegate",
+            "connectivity",
+            "collect",
+            "consentmanager",
+            "dispatchqueue",
+            "visitorservice"
+        ]
         #endif
     }
 
@@ -183,7 +184,7 @@ class TestTealiumHelper {
             TealiumLoadRequest.instanceTypeId(),
             TealiumReportNotificationsRequest.instanceTypeId(),
             TealiumSaveRequest.instanceTypeId(),
-            TealiumTrackRequest.instanceTypeId(),
+            TealiumTrackRequest.instanceTypeId()
         ]
 
     }
@@ -204,7 +205,7 @@ class TestTealiumHelper {
             testLoadRequest,
             testReportNotificationRequest,
             testSaveRequest,
-            testTrackRequest,
+            testTrackRequest
         ]
     }
 
@@ -247,7 +248,7 @@ class TestTealiumHelper {
         testCompletion = completion
         successfulRequests.removeAll()
         let allTestRequests = TestTealiumHelper.allTestTealiumRequests()
-//        var failing = [String]()
+        //        var failing = [String]()
         module.delegate = self
 
         for request in allTestRequests {
@@ -255,18 +256,18 @@ class TestTealiumHelper {
             // fire
             module.handle(request)
 
-//            // check callback
-//            if successfulRequests.last == nil {
-//                failing.append(request.typeId)
-//                continue
-//            }
-//            if request.typeId != successfulRequests.last!.typeId {
-//                failing.append(request.typeId)
-//            }
+            //            // check callback
+            //            if successfulRequests.last == nil {
+            //                failing.append(request.typeId)
+            //                continue
+            //            }
+            //            if request.typeId != successfulRequests.last!.typeId {
+            //                failing.append(request.typeId)
+            //            }
 
         }
 
-//        completion(failing.isEmpty ? true : false, failing)
+        //        completion(failing.isEmpty ? true : false, failing)
     }
 
     func areTestsFinished() -> Bool {

@@ -64,7 +64,7 @@ public class TealiumLifecycleModule: TealiumModule {
         save()
         isEnabled = true
         if config.lifecycleAutoTrackingEnabled {
-           Tealium.lifecycleListeners.addDelegate(delegate: self)
+            Tealium.lifecycleListeners.addDelegate(delegate: self)
         }
         didFinish(request)
     }

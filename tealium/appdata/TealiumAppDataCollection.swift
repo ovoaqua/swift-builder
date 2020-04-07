@@ -28,7 +28,7 @@ public protocol TealiumAppDataCollection {
     func version(bundle: Bundle) -> String?
 
     /// Retrieves app build number from Bundle￼￼￼￼￼￼.
-    /// 
+    ///
     /// - Parameter bundle: `Bundle`
     /// - Returns: `String?` containing the app build number
     func build(bundle: Bundle) -> String?

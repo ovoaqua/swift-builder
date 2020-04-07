@@ -53,7 +53,7 @@ class AttributionMockDiskStorage: TealiumDiskStorageProtocol {
 
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
         guard T.self == PersistentAttributionData.self else {
-                return nil
+            return nil
         }
         let mockData: [String: String] = Dictionary(uniqueKeysWithValues: TealiumAttributionKey.allCases.map { ($0, "mockdata") })
         return PersistentAttributionData(withDictionary: mockData) as? T

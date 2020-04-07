@@ -9,7 +9,7 @@
 #if os(iOS)
 import Foundation
 #if location
-    import TealiumCore
+import TealiumCore
 #endif
 
 // MARK: EXTENSIONS
@@ -39,12 +39,12 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumLocationConfigKey.useHighAccuracy] as? Bool ?? false
         }
-        
+
         set {
             optionalData[TealiumLocationConfigKey.useHighAccuracy] = newValue
         }
     }
-    
+
     /// The distance at which location updates should be received, e.g. 500.0 for every 500 meters
     ///
     ///
@@ -53,12 +53,12 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumLocationConfigKey.updateDistance] as? Double ?? 500.0
         }
-        
+
         set {
             optionalData[TealiumLocationConfigKey.updateDistance] = newValue
         }
     }
-    
+
     /// The name of the local file to be read that contains geofence json data
     ///
     ///
@@ -67,12 +67,12 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumLocationConfigKey.geofenceAssetName] as? String
         }
-        
+
         set {
             optionalData[TealiumLocationConfigKey.geofenceAssetName] = newValue
         }
     }
-    
+
     /// The url to be read that contains geofence json data
     ///
     ///
@@ -81,12 +81,12 @@ public extension TealiumConfig {
         get {
             optionalData[TealiumLocationConfigKey.geofenceJsonUrl] as? String
         }
-        
+
         set {
             optionalData[TealiumLocationConfigKey.geofenceJsonUrl] = newValue
         }
     }
-    
+
     /// `TealiumLocationConfig`: The Geofences data retrieved from either a local file, url, or DLE
     var initializeGeofenceDataFrom: TealiumLocationConfig {
         if let geofenceAsset = self.geofenceFileName {

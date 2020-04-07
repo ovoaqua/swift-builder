@@ -36,7 +36,7 @@ extension TealiumDeviceData {
     }
 
     /// Retrieves the full consumer device name, e.g. iPhone SE, and other supplementary info.
-    /// 
+    ///
     /// - Returns: `[String: String]` of model information
     public func model() -> [String: String] {
         let model = basicModel()
@@ -47,13 +47,13 @@ extension TealiumDeviceData {
                 return [TealiumKey.deviceType: model,
                         TealiumKey.simpleModel: simpleModel,
                         TealiumKey.device: simpleModel,
-                        TealiumKey.fullModel: fullModel,
+                        TealiumKey.fullModel: fullModel
                 ]
             }
         }
         return [TealiumKey.deviceType: model,
                 TealiumKey.simpleModel: model,
-                TealiumKey.fullModel: "",
+                TealiumKey.fullModel: ""
         ]
     }
 }
