@@ -151,15 +151,6 @@ func copyPackage() {
     print("Package.swift copied")
 }
 
-// Update run-swiftlint.sh and remove this
-func swiftFormat() {
-    // Format .swift files in builder repo
-    cleanctx.currentdirectory = builderRepoPath ?? ""
-    cleanctx.run(bash: "brew install swiftlint")
-    cleanctx.run(bash: "swiftlint autocorrect --format --path tealium/")
-    cleanctx.run(bash: "swiftlint autocorrect --format --path support/")
-}
-
 func copySourceFiles() {
     // Copy tealium folder over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
@@ -265,7 +256,6 @@ guard let version = version else {
     exit(1)
 }
 checkIfBranchAlreadyExists(version)
-//swiftFormat()
 copySourceFiles()
 checkForNewModules(version)
 copyPackage()
