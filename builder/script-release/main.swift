@@ -82,9 +82,10 @@ func checkForNewModules(_ version: String) {
             print("Do you want to exclude any platforms from this module? y/n")
             while let shouldExclude = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
                 if shouldExclude == "y" {
+                    cleanctx.run(bash: "chmod +x new-module.py")
                     print("List your excluded platforms in a comma separated string e.g. tvos,osx")
                     while let excluded = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-                        result = cleanctx.run(bash: "python3 ./new-module.py -v \(version) -f \(newModuleName!) -s \(shortModuleName!) -e \(excluded)")
+                        cleanctx.run(bash: "python3 ./new-module.py -v \(version) -f \(newModuleName!) -s \(shortModuleName!) -e \(excluded)")
                         break
                     }
                 } else {
@@ -149,6 +150,7 @@ func copyPackage() {
     print("Package.swift copied")
 }
 
+// Update run-swiftlint.sh and remove this
 func swiftFormat() {
     // Format .swift files in builder repo
     cleanctx.currentdirectory = builderRepoPath ?? ""
@@ -262,7 +264,7 @@ guard let version = version else {
     exit(1)
 }
 checkIfBranchAlreadyExists(version)
-swiftFormat()
+//swiftFormat()
 copySourceFiles()
 checkForNewModules(version)
 copyPackage()

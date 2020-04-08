@@ -5,7 +5,10 @@ import PackageDescription
 let package = Package(
   name: "TealiumSwift",
   platforms: [ .iOS(.v9), .macOS(.v10_11), .tvOS(.v9), .watchOS(.v3) ],
-  products: [ 
+  products: [  
+    .library(
+      name: "TealiumCoolModule",
+      targets: ["TealiumCoolModule"]),
     .library(
       name: "TealiumAppData",
       targets: ["TealiumAppData"]),
@@ -71,6 +74,12 @@ let package = Package(
     .target(
       name: "TealiumCore",
       path: "tealium/core/"
+    ),
+    .target(
+      name: "TealiumCoolModule",
+      dependencies: ["TealiumCore"],
+      path: "tealium/coolmodule/",
+      swiftSettings: [.define("coolmodule")]
     ),
     .target(
       name: "TealiumAppData",
