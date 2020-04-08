@@ -101,6 +101,7 @@ func checkForNewModules(_ version: String) {
 }
 
 func checkForChanges() {
+    cleanctx.currentdirectory = publicRepoPath ?? ""
     cleanctx.run(bash: "git fetch")
     result = cleanctx.run(bash: "git status")
     if !result.stdout.contains("nothing to commit") {
