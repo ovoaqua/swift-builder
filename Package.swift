@@ -7,15 +7,6 @@ let package = Package(
   platforms: [ .iOS(.v9), .macOS(.v10_11), .tvOS(.v9), .watchOS(.v3) ],
   products: [    
     .library(
-      name: "TealiumNewModule",
-      targets: ["TealiumNewModule"]),
-    .library(
-      name: "TealiumNewModule",
-      targets: ["TealiumNewModule"]),
-    .library(
-      name: "TealiumCoolModule",
-      targets: ["TealiumCoolModule"]),
-    .library(
       name: "TealiumAppData",
       targets: ["TealiumAppData"]),
     .library(
@@ -80,24 +71,6 @@ let package = Package(
     .target(
       name: "TealiumCore",
       path: "tealium/core/"
-    ),
-    .target(
-      name: "TealiumNewModule",
-      dependencies: ["TealiumCore"],
-      path: "tealium/newmodule/",
-      swiftSettings: [.define("newmodule")]
-    ),
-    .target(
-      name: "TealiumNewModule",
-      dependencies: ["TealiumCore"],
-      path: "tealium/newmodule/",
-      swiftSettings: [.define("newmodule")]
-    ),
-    .target(
-      name: "TealiumCoolModule",
-      dependencies: ["TealiumCore"],
-      path: "tealium/coolmodule/",
-      swiftSettings: [.define("coolmodule")]
     ),
     .target(
       name: "TealiumAppData",
