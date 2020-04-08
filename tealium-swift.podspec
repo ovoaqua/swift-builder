@@ -92,12 +92,12 @@ Pod::Spec.new do |s|
   s.default_subspec = "TealiumFull"
 
   s.subspec "TealiumFull" do |full|
-    full.source_files  = "tealium/appdata/*","tealium/core/**/*","tealium/attribution/*","tealium/autotracking/*","tealium/collect/*","tealium/connectivity/*","tealium/consentmanager/*","tealium/persistentdata/*","tealium/delegate/*","tealium/devicedata/*.swift","tealium/dispatchqueue/*","tealium/lifecycle/*","tealium/remotecommands/*","tealium/tagmanagement/*","tealium/volatiledata/*","tealium/crash/*","tealium/logger/*","tealium/visitorservice/*","tealium/location/*","tealium/coolmodule/*" 
+    full.source_files  = "tealium/appdata/*","tealium/core/**/*","tealium/attribution/*","tealium/autotracking/*","tealium/collect/*","tealium/connectivity/*","tealium/consentmanager/*","tealium/persistentdata/*","tealium/delegate/*","tealium/devicedata/*.swift","tealium/dispatchqueue/*","tealium/lifecycle/*","tealium/remotecommands/*","tealium/tagmanagement/*","tealium/volatiledata/*","tealium/crash/*","tealium/logger/*","tealium/visitorservice/*","tealium/location/*","tealium/coolmodule/*" ,"tealium/newmodule/*" 
     full.ios.exclude_files = "tealium/scripts/*"
     full.ios.dependency "TealiumCrashReporter"
-    full.tvos.exclude_files = "tealium/tagmanagement/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*","tealium/coolmodule/*" 
+    full.tvos.exclude_files = "tealium/tagmanagement/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*","tealium/coolmodule/*" ,"tealium/newmodule/*" 
     full.watchos.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/connectivity/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*"
-    full.osx.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*","tealium/coolmodule/*" 
+    full.osx.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*","tealium/coolmodule/*" ,"tealium/newmodule/*" 
     full.resources = "tealium/devicedata/device-names.json"
   end
 
@@ -218,6 +218,13 @@ Pod::Spec.new do |s|
     coolmodule.osx.deployment_target = "10.11"
     coolmodule.source_files = "tealium/coolmodule/*"
     coolmodule.dependency "tealium-swift/Core"
+  end
+
+  s.subspec "TealiumNewModule" do |newmodule|
+    newmodule.tvos.deployment_target = "9.0"
+    newmodule.osx.deployment_target = "10.11"
+    newmodule.source_files = "tealium/newmodule/*"
+    newmodule.dependency "tealium-swift/Core"
   end
 
 end
