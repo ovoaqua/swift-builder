@@ -7,19 +7,19 @@ import subprocess
 
 excluded_platform_string = ""
 
-## LEFT OFF - need to add version to params in the builders cript for the python3 call
-
 def update_podspec_excluded(excluded_platforms, short_name):
 	global excluded_platform_string
-	excluded_platforms = excluded_platforms.split(',') 
-	excludedLookup = {"ios": "9.0", "watchos": "3.0", "osx": "10.11", "tvos": "9.0"}
+	excluded_platforms = excluded_platforms.split(',')
+	included_platforms = ["ios", "watchos", "osx", "tvos"] 
+	platformLookup = {"ios": "9.0", "watchos": "3.0", "osx": "10.11", "tvos": "9.0"}
 	for platform in excluded_platforms:
-		version = excludedLookup[platform]
-		excluded_platform_string += f"newline    {short_name}.{platform}.deployment_target = \"{version}\""
+		included_platforms.remove(platform)
 		subprocess.call([f"sed -i '' 's/full.{platform}.exclude_files = .*/&,\"tealium\\/{short_name}\\/\\*\" /' tealium-swift.podspec"], shell=True)
+	for platform in included_platforms:
+		version = platformLookup[platform]
+		excluded_platform_string += f"newline    {short_name}.{platform}.deployment_target = \"{version}\""	
 
 def update_podspec_full(short_name):
-	# subprocess.call([f"sed s/\\(\"[0-9]*.[0-9]*.[0-9]*\"\\).*?/{version}/ tealium-swift.podspec"], shell=True)		   	
 	subprocess.call([f"sed -i '' 's/full.source_files  = .*/&,\"tealium\\/{short_name}\\/\\*\" /' tealium-swift.podspec"], shell=True)   	
 
 def update_podspec_version(version):
@@ -34,9 +34,7 @@ def add_module_podspec(full_name, short_name):
 	subprocess.call([f"sed -i '' '$s/$/>end> s.subspec \"{full_name}\" do |{short_name}|{excluded_platform_string}newline    {short_name}.source_files = \"tealium\\/{short_name}\\/\\*\"newline    {short_name}.dependency \"tealium-swift\\/Core\"newline  endnewlinenewlineend/'  tealium-swift.podspec && sed -e 's/newline/\\'$'\n/g' tealium-swift.podspec > tealium-swift-new.podspec && mv tealium-swift-new.podspec tealium-swift.podspec && sed -e 's/end>end>/\'$' /g' tealium-swift.podspec > tealium-swift-new.podspec && mv tealium-swift-new.podspec tealium-swift.podspec"], shell=True)
 
 def update_package(full_name, short_name):
-	# Add new module to products section
 	subprocess.call([f"sed -i '' 's/products: \\[.*/& newline    .library(newline      name: \"{full_name}\",newline      targets: [\"{full_name}\"]),/' Package.swift && sed -e 's/newline/\\'$'\n/g' Package.swift > Package-new.swift && mv Package-new.swift Package.swift"], shell=True)   
-	# Add new module to dependencies section
 	text_to_search = "path: \"tealium/core/\""
 	replacement_text = f"path: \"tealium/core/\"\n    ),\n    .target(\n      name: \"{full_name}\",\n      dependencies: [\"TealiumCore\"],\n      path: \"tealium/{short_name}/\",\n      swiftSettings: [.define(\"{short_name}\")]"
 	with fileinput.FileInput("Package.swift", inplace=True) as file:
