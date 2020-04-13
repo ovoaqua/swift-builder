@@ -1,5 +1,5 @@
 //
-//  VisitorProfileModuleTests.swift
+//  TealiumVisitorServiceModuleTests.swift
 //  tealium-swift
 //
 //  Created by Christina Sund on 6/17/19.
@@ -11,9 +11,9 @@ import Foundation
 @testable import TealiumVisitorService
 import XCTest
 
-class TealiumVisitorProfileModuleTests: XCTestCase {
+class TealiumVisitorServiceModuleTests: XCTestCase {
 
-    var visitorProfileManager: TealiumVisitorProfileManager?
+    var visitorServiceManager: TealiumVisitorServiceManager?
     var mockDiskStorage: MockTealiumDiskStorage!
     let tealHelper = TestTealiumHelper()
     var expectations = [XCTestExpectation]()
@@ -34,8 +34,8 @@ class TealiumVisitorProfileModuleTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockDiskStorage = MockTealiumDiskStorage()
-        visitorProfileManager = TealiumVisitorProfileManager(config: tealHelper.getConfig(), delegates: nil, diskStorage: mockDiskStorage)
-        visitorProfileManager?.visitorId = "test"
+        visitorServiceManager = TealiumVisitorServiceManager(config: tealHelper.getConfig(), delegates: nil, diskStorage: mockDiskStorage)
+        visitorServiceManager?.visitorId = "test"
     }
 
     override func tearDown() {
@@ -73,9 +73,9 @@ class TealiumVisitorProfileModuleTests: XCTestCase {
         waiter.wait(for: [expect], timeout: 1.0)
     }
 
-    func testVisitorProfileServiceDisabled() {
-        currentTest = "testVisitorProfileServiceDisabled"
-        self.expectations.append(expectation(description: "testVisitorProfileServiceDisabled"))
+    func testVisitorServiceDisabled() {
+        currentTest = "testVisitorServiceDisabled"
+        self.expectations.append(expectation(description: "testVisitorServiceDisabled"))
         let module = TealiumVisitorServiceModule(delegate: nil)
         module.isEnabled = false
         let track = TealiumTrackRequest(data: ["visitor_profile": "true"], completion: nil)
@@ -88,7 +88,7 @@ class TealiumVisitorProfileModuleTests: XCTestCase {
         self.expectations.append(expectation(description: "testRequestVisitorProfileRunWhenFirstEventSentTrue"))
         let module = TealiumVisitorServiceModule(delegate: TestTealiumHelper())
         let enableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
-        let mock = MockTealiumVisitorProfileManager()
+        let mock = MockTealiumVisitorServiceManager()
         module.enable(enableRequest, visitor: mock)
         module.firstEventSent = true
         module.retrieveProfile(visitorId: "test")
@@ -103,7 +103,7 @@ class TealiumVisitorProfileModuleTests: XCTestCase {
         self.expectations.append(expectation(description: "testStartProfileUpdatesRunWhenFirstEventSentFalse"))
         let module = TealiumVisitorServiceModule(delegate: TestTealiumHelper())
         let enableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
-        let mock = MockTealiumVisitorProfileManager()
+        let mock = MockTealiumVisitorServiceManager()
         module.enable(enableRequest, visitor: mock)
         module.firstEventSent = false
         module.retrieveProfile(visitorId: "test")
@@ -141,7 +141,7 @@ class TealiumVisitorProfileModuleTests: XCTestCase {
         expectations.append(expectation(description: "testBatchTrackRetreiveProfileExecuted"))
         let module = TealiumVisitorServiceModule(delegate: self)
         let enableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
-        let mock = MockTealiumVisitorProfileManager()
+        let mock = MockTealiumVisitorServiceManager()
         module.enable(enableRequest, visitor: mock)
         module.firstEventSent = true
         let trackRequest = TealiumTrackRequest(data: ["hello": "world", "tealium_visitor_id": "test"], completion: nil)
@@ -180,7 +180,7 @@ class TealiumVisitorProfileModuleTests: XCTestCase {
         expectations.append(expectation(description: "testTrackRetreiveProfileExecuted"))
         let module = TealiumVisitorServiceModule(delegate: self)
         let enableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
-        let mock = MockTealiumVisitorProfileManager()
+        let mock = MockTealiumVisitorServiceManager()
         module.enable(enableRequest, visitor: mock)
         module.firstEventSent = true
         let trackRequest = TealiumTrackRequest(data: ["hello": "world", "tealium_visitor_id": "test"], completion: nil)
@@ -194,7 +194,7 @@ class TealiumVisitorProfileModuleTests: XCTestCase {
 
 }
 
-extension TealiumVisitorProfileModuleTests: TealiumModuleDelegate {
+extension TealiumVisitorServiceModuleTests: TealiumModuleDelegate {
     func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
         if let _ = process as? TealiumEnableRequest,
             currentTest == "testInitialVisitorProfileSettingsNotEnabled" {

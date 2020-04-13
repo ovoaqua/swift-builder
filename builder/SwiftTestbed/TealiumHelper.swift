@@ -165,8 +165,8 @@ extension TealiumHelper: TealiumDelegate {
 }
 
 extension TealiumHelper: TealiumVisitorServiceDelegate {
-    func profileDidUpdate(profile: TealiumVisitorProfile?) {
-        guard let profile = profile else {
+    func didUpdate(visitor profile: TealiumVisitorProfile?) {
+        guard let profile = visitorProfile else {
             return
         }
         if let json = try? JSONEncoder().encode(profile), let string = String(data: json, encoding: .utf8) {

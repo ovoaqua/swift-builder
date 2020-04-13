@@ -13,13 +13,13 @@ import TealiumCore
 
 public class TealiumVisitorServiceModule: TealiumModule {
 
-    var visitorProfileManager: TealiumVisitorProfileManagerProtocol?
+    var visitorServiceManager: TealiumVisitorServiceManagerProtocol?
     var diskStorage: TealiumDiskStorageProtocol!
     var visitorId: String?
     var firstEventSent = false
 
     override public class func moduleConfig() -> TealiumModuleConfig {
-        return TealiumModuleConfig(name: TealiumVisitorProfileConstants.moduleName,
+        return TealiumModuleConfig(name: TealiumVisitorServiceConstants.moduleName,
                                    priority: 1150,
                                    build: 1,
                                    enabled: true)
@@ -52,14 +52,14 @@ public class TealiumVisitorServiceModule: TealiumModule {
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
     public func enable(_ request: TealiumEnableRequest,
                        diskStorage: TealiumDiskStorageProtocol? = nil,
-                       visitor: TealiumVisitorProfileManagerProtocol? = nil) {
+                       visitor: TealiumVisitorServiceManagerProtocol? = nil) {
         if self.diskStorage == nil {
-            self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumVisitorProfileConstants.moduleName, isCritical: false)
+            self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumVisitorServiceConstants.moduleName, isCritical: false)
         }
 
         isEnabled = true
         guard visitor != nil else {
-            visitorProfileManager = TealiumVisitorProfileManager(config: request.config,
+            visitorServiceManager = TealiumVisitorServiceManager(config: request.config,
                                                                  delegates: request.config.visitorServiceDelegates,
                                                                  diskStorage: self.diskStorage)
 
@@ -68,7 +68,7 @@ public class TealiumVisitorServiceModule: TealiumModule {
             }
             return
         }
-        visitorProfileManager = visitor
+        visitorServiceManager = visitor
 
     }
 
@@ -76,7 +76,7 @@ public class TealiumVisitorServiceModule: TealiumModule {
         let newConfig = request.config.copy
         if newConfig != self.config {
             self.config = newConfig
-            self.diskStorage = TealiumDiskStorage(config: newConfig, forModule: TealiumVisitorProfileConstants.moduleName, isCritical: false)
+            self.diskStorage = TealiumDiskStorage(config: newConfig, forModule: TealiumVisitorServiceConstants.moduleName, isCritical: false)
             var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
             enableRequest.bypassDidFinish = true
             enable(enableRequest)
@@ -136,10 +136,10 @@ public class TealiumVisitorServiceModule: TealiumModule {
         TealiumQueues.backgroundConcurrentQueue.write(after: .now() + 2.1) {
             guard self.firstEventSent else {
                 self.firstEventSent = true
-                self.visitorProfileManager?.startProfileUpdates(visitorId: visitorId)
+                self.visitorServiceManager?.startProfileUpdates(visitorId: visitorId)
                 return
             }
-            self.visitorProfileManager?.requestVisitorProfile()
+            self.visitorServiceManager?.requestVisitorProfile()
         }
     }
 }

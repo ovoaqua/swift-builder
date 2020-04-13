@@ -138,7 +138,7 @@ extension OSXTealiumHelper: TealiumDelegate {
 }
 
 extension OSXTealiumHelper: TealiumVisitorServiceDelegate {
-    func profileDidUpdate(profile: TealiumVisitorProfile?) {
+    func didUpdate(visitor profile: TealiumVisitorProfile?) {
         guard let profile = profile else {
             return
         }
