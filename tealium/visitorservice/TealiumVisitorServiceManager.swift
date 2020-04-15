@@ -12,7 +12,7 @@ import TealiumCore
 #endif
 
 public protocol TealiumVisitorServiceDelegate: class {
-    func didUpdate(visitor profile: TealiumVisitorProfile?)
+    func didUpdate(visitor profile: TealiumVisitorProfile)
 }
 
 enum VisitorServiceStatus: Int {
@@ -27,7 +27,8 @@ public protocol TealiumVisitorServiceManagerProtocol {
 
 public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol {
 
-    private var visitorServiceDelegates = TealiumMulticastDelegate<TealiumVisitorServiceDelegate>()
+    // private var visitorServiceDelegates = TealiumMulticastDelegate<TealiumVisitorServiceDelegate>()
+    weak var delegate: TealiumVisitorServiceDelegate?
     var visitorServiceRetriever: TealiumVisitorServiceRetriever?
     var diskStorage: TealiumDiskStorageProtocol
     var timer: TealiumRepeatingTimer?
@@ -40,13 +41,13 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
     var maxPollingAttempts = 5
 
     init(config: TealiumConfig,
-         delegates: [TealiumVisitorServiceDelegate]?,
+         delegate: TealiumVisitorServiceDelegate?,
          diskStorage: TealiumDiskStorageProtocol) {
         tealiumConfig = config
-        if let delegates = delegates {
-            for delegate in delegates {
-                self.visitorServiceDelegates.add(delegate)
-            }
+        if let delegate = delegate {
+            //for delegate in delegates {
+                self.delegate = delegate
+            //}
         }
         self.diskStorage = diskStorage
         guard let profile = diskStorage.retrieve(as: TealiumVisitorProfile.self) else {
@@ -61,13 +62,9 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
         requestVisitorProfile()
     }
 
-    func hasDelegates() -> Bool {
-        return visitorServiceDelegates.count > 0
-    }
-
     public func requestVisitorProfile() {
         // No need to request if no delegates are listening
-        guard hasDelegates() else {
+        guard delegate != nil else {
             return
         }
 
@@ -110,7 +107,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
 
     func startPolling() {
         // No need to request if no delegates are listening
-        guard hasDelegates() else {
+        guard delegate != nil else {
             return
         }
         if timer != nil {
@@ -147,7 +144,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
 
     func fetchProfile(completion: @escaping (TealiumVisitorProfile?, NetworkError?) -> Void) {
         // No need to request if no delegates are listening
-        guard hasDelegates() else {
+        guard delegate != nil else {
             return
         }
         visitorServiceRetriever?.fetchVisitorProfile { [weak self] result in
@@ -186,38 +183,13 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
     }
 }
 
-// MARK: Invoke delegate methods
-extension TealiumVisitorServiceManager {
+public extension TealiumVisitorServiceManager {
 
     /// Called when the visitor profile has been updated
     ///
     /// - Parameter profile: `TealiumVisitorProfile` - Updated visitor profile accessible through helper methods
     func didUpdate(visitor profile: TealiumVisitorProfile) {
-        visitorServiceDelegates.invoke {
-            $0.didUpdate(visitor: profile)
-        }
-    }
-}
-
-public extension TealiumVisitorServiceManager {
-
-    /// Adds a new class conforming to `TealiumVisitorServiceDelegate`
-    ///
-    /// - Parameter delegate: Class conforming to `TealiumVisitorServiceDelegate` to be added
-    func addVisitorServiceDelegate(_ delegate: TealiumVisitorServiceDelegate) {
-        visitorServiceDelegates.add(delegate)
-    }
-
-    /// Removes all visitor service delegates except the visitor profile module itself.
-    func removeAllVisitorServiceDelegates() {
-        visitorServiceDelegates.removeAll()
-    }
-
-    /// Removes a specific visitor service delegate.
-    ///
-    /// - Parameter delegate: Class conforming to `TealiumVisitorServiceDelegate` to be removed
-    func removeSingleDelegate(delegate: TealiumVisitorServiceDelegate) {
-        visitorServiceDelegates.remove(delegate)
+        delegate?.didUpdate(visitor: profile)
     }
 
     /// - Returns: `TealiumVisitorProfile?` - the currrent cached profile from persistent storage.

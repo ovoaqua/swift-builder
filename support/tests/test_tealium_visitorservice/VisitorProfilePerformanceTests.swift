@@ -46,30 +46,4 @@ class VisitorProfilePerformanceTests: XCTestCase {
         }
     }
 
-    func testPerformanceVisitorProfileRaw() throws {
-        self.measure {
-            let profile = try! decoder.decode(TealiumVisitorProfileRaw.self, from: json)
-            XCTAssertEqual(profile.audiences?.count, 188)
-            XCTAssertEqual(profile.badges?.count, 256)
-            XCTAssertEqual(profile.dates?.count, 448)
-            XCTAssertEqual(profile.flags?.count, 176)
-            XCTAssertEqual(profile.flagLists?.count, 80)
-            XCTAssertEqual(profile.metrics?.count, 464)
-            XCTAssertEqual(profile.metricLists?.count, 48)
-            XCTAssertEqual(profile.metricSets?.count, 6)
-            XCTAssertEqual(profile.properties?.count, 288)
-            XCTAssertEqual(profile.propertyLists?.count, 50)
-            XCTAssertEqual(profile.propertySets?.count, 100)
-            XCTAssertEqual(profile.currentVisit?.dates?.count, 448)
-            XCTAssertEqual(profile.currentVisit?.flags?.count, 176)
-            XCTAssertEqual(profile.currentVisit?.flagLists?.count, 80)
-            XCTAssertEqual(profile.currentVisit?.metrics?.count, 464)
-            XCTAssertEqual(profile.currentVisit?.metricLists?.count, 48)
-            XCTAssertEqual(profile.currentVisit?.metricSets?.count, 6)
-            XCTAssertEqual(profile.currentVisit?.properties?.count, 288)
-            XCTAssertEqual(profile.currentVisit?.propertyLists?.count, 50)
-            XCTAssertEqual(profile.currentVisit?.propertySets?.count, 100)
-        }
-    }
-
 }

@@ -138,10 +138,7 @@ extension OSXTealiumHelper: TealiumDelegate {
 }
 
 extension OSXTealiumHelper: TealiumVisitorServiceDelegate {
-    func didUpdate(visitor profile: TealiumVisitorProfile?) {
-        guard let profile = profile else {
-            return
-        }
+    func didUpdate(visitor profile: TealiumVisitorProfile) {
         if let json = try? JSONEncoder().encode(profile), let string = String(data: json, encoding: .utf8) {
             if self.enableHelperLogs {
                 print(string)

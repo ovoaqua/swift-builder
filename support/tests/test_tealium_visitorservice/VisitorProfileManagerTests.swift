@@ -24,7 +24,7 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
         expectations = [XCTestExpectation]()
         visitorServiceManager = nil
         mockDiskStorage = MockTealiumDiskStorage()
-        visitorServiceManager = TealiumVisitorServiceManager(config: TestTealiumHelper().getConfig(), delegates: nil, diskStorage: mockDiskStorage)
+        visitorServiceManager = TealiumVisitorServiceManager(config: TestTealiumHelper().getConfig(), delegate: nil, diskStorage: mockDiskStorage)
         visitorServiceManager?.visitorServiceRetriever = TealiumVisitorServiceRetriever(config: TestTealiumHelper().getConfig(), visitorId: "abc123", urlSession: MockURLSession())
     }
 
@@ -53,7 +53,7 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
         let expectation = self.expectation(description: "testDelegateDidUpdateViaRequestVisitorProfile")
         currentTest = "testDelegateDidUpdateViaRequestVisitorProfile"
         expectations.append(expectation)
-        visitorServiceManager?.addVisitorServiceDelegate(self)
+        visitorServiceManager?.delegate = self
         visitorServiceManager?.visitorId = "test"
         visitorServiceManager?.requestVisitorProfile()
         waiter.wait(for: expectations, timeout: 5.0)
@@ -104,7 +104,7 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
 
 extension TealiumVisitorServiceManagerTests: TealiumVisitorServiceDelegate {
 
-    func didUpdate(visitor profile: TealiumVisitorProfile?) {
+    func didUpdate(visitor profile: TealiumVisitorProfile) {
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
             self.getExpectation(forDescription: "testDelegateDidUpdateViaRequestVisitorProfile")?.fulfill()
 //        }

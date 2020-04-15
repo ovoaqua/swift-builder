@@ -34,7 +34,7 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockDiskStorage = MockTealiumDiskStorage()
-        visitorServiceManager = TealiumVisitorServiceManager(config: tealHelper.getConfig(), delegates: nil, diskStorage: mockDiskStorage)
+        visitorServiceManager = TealiumVisitorServiceManager(config: tealHelper.getConfig(), delegate: nil, diskStorage: mockDiskStorage)
         visitorServiceManager?.visitorId = "test"
     }
 

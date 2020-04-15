@@ -38,7 +38,7 @@ class DataTask: URLSessionDataTaskProtocol {
     }
     func resume() {
         let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-        completionHandler(loadStub(from: "visitor", with: "json", for: VisitorProfileTests.self), urlResponse, nil)
+        //completionHandler(loadStub(from: "visitor", with: "json", for: VisitorProfileTests.self), urlResponse, nil)
     }
 
 }

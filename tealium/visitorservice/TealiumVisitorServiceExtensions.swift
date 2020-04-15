@@ -53,26 +53,11 @@ public extension TealiumConfig {
         }
     }
 
-    /// Adds a new visitor service delegate to be notified of any changes to the visitor profile.
-    /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
-    /// - Parameter delegate: class conforming to `TealiumVisitorServiceDelegate`
-    func addVisitorServiceDelegate(_ delegate: TealiumVisitorServiceDelegate) {
-        var delegates = visitorServiceDelegates ?? [TealiumVisitorServiceDelegate]()
-        delegates.append(delegate)
-        visitorServiceDelegates = delegates
-    }
-
-    /// - Returns:`[TealiumVisitorServiceDelegate]?`
-    @available(*, deprecated, message: "Please switch to config.visitorServiceDelegates")
-    func getVisitorServiceDelegates() -> [TealiumVisitorServiceDelegate]? {
-        visitorServiceDelegates
-    }
-
     /// Visitor service delegates to be notified of any changes to the visitor profile.
     /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
-    var visitorServiceDelegates: [TealiumVisitorServiceDelegate]? {
+    var visitorServiceDelegate: TealiumVisitorServiceDelegate? {
         get {
-            optionalData[TealiumVisitorServiceConstants.visitorServiceDelegate] as? [TealiumVisitorServiceDelegate]
+            optionalData[TealiumVisitorServiceConstants.visitorServiceDelegate] as? TealiumVisitorServiceDelegate
         }
 
         set {
