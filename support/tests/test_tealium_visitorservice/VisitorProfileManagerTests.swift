@@ -12,7 +12,7 @@ import XCTest
 
 class TealiumVisitorServiceManagerTests: XCTestCase {
 
-    var visitorServiceManager: TealiumvisitorServiceManager?
+    var visitorServiceManager: TealiumVisitorServiceManager?
     var mockDiskStorage: MockTealiumDiskStorage!
     let tealHelper = TestTealiumHelper()
     var expectations = [XCTestExpectation]()
@@ -24,8 +24,8 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
         expectations = [XCTestExpectation]()
         visitorServiceManager = nil
         mockDiskStorage = MockTealiumDiskStorage()
-        visitorServiceManager = TealiumvisitorServiceManager(config: TestTealiumHelper().getConfig(), delegates: nil, diskStorage: mockDiskStorage)
-        visitorServiceManager?.visitorServiceRetriever = TealiumvisitorServiceRetriever(config: TestTealiumHelper().getConfig(), visitorId: "abc123", urlSession: MockURLSession())
+        visitorServiceManager = TealiumVisitorServiceManager(config: TestTealiumHelper().getConfig(), delegates: nil, diskStorage: mockDiskStorage)
+        visitorServiceManager?.visitorServiceRetriever = TealiumVisitorServiceRetriever(config: TestTealiumHelper().getConfig(), visitorId: "abc123", urlSession: MockURLSession())
     }
 
     override func tearDown() {
@@ -102,7 +102,7 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
 
 }
 
-extension TealiumvisitorServiceManagerTests: TealiumVisitorServiceDelegate {
+extension TealiumVisitorServiceManagerTests: TealiumVisitorServiceDelegate {
 
     func didUpdate(visitor profile: TealiumVisitorProfile?) {
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
