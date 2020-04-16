@@ -20,7 +20,7 @@ public struct TealiumVisitorProfile: Codable {
     public var strings: [String: String]?
     public var arraysOfStrings: [String: [String]]?
     public var setsOfStrings: [String: Set<String>]?
-    public var currentVisit: CurrentVisitProfileRaw?
+    public var currentVisit: CurrentVisitProfile?
 
     enum CodingKeys: String, CodingKey {
         case audiences, badges, dates,
@@ -48,7 +48,7 @@ public struct TealiumVisitorProfile: Codable {
         strings = try values.decodeIfPresent([String: String].self, forKey: .strings)
         arraysOfStrings = try values.decodeIfPresent([String: [String]].self, forKey: .arraysOfStrings)
         setsOfStrings = try values.decodeIfPresent([String: Set<String>].self, forKey: .setsOfStrings)
-        currentVisit = try values.decodeIfPresent(CurrentVisitProfileRaw.self, forKey: .currentVisit)
+        currentVisit = try values.decodeIfPresent(CurrentVisitProfile.self, forKey: .currentVisit)
     }
 
     public var isEmpty: Bool {
@@ -68,7 +68,7 @@ public struct TealiumVisitorProfile: Codable {
 
 }
 
-public struct CurrentVisitProfileRaw: Codable {
+public struct CurrentVisitProfile: Codable {
     public var dates: [String: Double]?
     public var booleans: [String: Bool]?
     public var arraysOfBooleans: [String: [Bool]]?
