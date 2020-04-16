@@ -37,7 +37,7 @@ class VisitorProfileTests: XCTestCase {
         XCTAssertNil(visitor.audiences?["blah"])
         XCTAssertEqual(visitor.badges?["8535"], true)
         XCTAssertEqual(visitor.badges?["6301"], true)
-        XCTAssertEqual(visitor.badges?["9999"], false)
+        XCTAssertNil(visitor.badges?["9999"])
         XCTAssertNotNil(visitor.tallies?["8481"])
         XCTAssertNil(visitor.tallies?["9999"])
         guard let tally = visitor.tallies?["8481"] else {

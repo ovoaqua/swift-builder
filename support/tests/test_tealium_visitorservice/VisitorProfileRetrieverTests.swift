@@ -111,7 +111,7 @@ class TealiumVisitorServiceRetrieverTests: XCTestCase {
             }
             expect.fulfill()
         }
-        wait(for: [expect], timeout: 3.0)
+        wait(for: [expect], timeout: 1.0)
     }
 
     func testSendURLRequest_Non200Response() {

@@ -80,7 +80,7 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         module.isEnabled = false
         let track = TealiumTrackRequest(data: ["visitor_profile": "true"], completion: nil)
         module.track(track)
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 1.0)
     }
 
     func testRequestVisitorProfileRunWhenFirstEventSentTrue() {
@@ -92,10 +92,10 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         module.enable(enableRequest, visitor: mock)
         module.firstEventSent = true
         module.retrieveProfile(visitorId: "test")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             XCTAssertEqual(1, mock.requestVisitorProfileCount)
         }
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 3.0)
     }
 
     func testStartProfileUpdatesRunWhenFirstEventSentFalse() {
@@ -107,10 +107,10 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         module.enable(enableRequest, visitor: mock)
         module.firstEventSent = false
         module.retrieveProfile(visitorId: "test")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             XCTAssertEqual(1, mock.startProfileUpdatesCount)
         }
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 3.0)
     }
 
     func testVisitorServiceNotEnabledUponBatchTrackAndDidFinishWithNoResponseExecuted() {
@@ -122,7 +122,7 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         module.isEnabled = false
         module.batchTrack(batchTrackRequest)
         currentTest = ""
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 1.0)
     }
 
     func testVisitorIdNilUponBatchTrackAndDidFinishWithNoResponseExecuted() {
@@ -148,10 +148,10 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         let batchTrackRequest = TealiumBatchTrackRequest(trackRequests: [trackRequest], completion: nil)
         module.isEnabled = true
         module.batchTrack(batchTrackRequest)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             XCTAssertEqual(1, mock.requestVisitorProfileCount)
         }
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 3.0)
     }
 
     func testVisitorServiceNotEnabledUponTrackAndDidFinishWithNoResponseExecuted() {
@@ -162,7 +162,7 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         module.isEnabled = false
         module.track(trackRequest)
         currentTest = ""
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 1.0)
     }
 
     func testVisitorIdNilUponTrackAndDidFinishWithNoResponseExecuted() {
@@ -173,7 +173,7 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         module.isEnabled = true
         module.track(trackRequest)
         currentTest = ""
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 1.0)
     }
 
     func testTrackRetreiveProfileExecuted() {
@@ -186,10 +186,10 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
         let trackRequest = TealiumTrackRequest(data: ["hello": "world", "tealium_visitor_id": "test"], completion: nil)
         module.isEnabled = true
         module.track(trackRequest)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             XCTAssertEqual(1, mock.requestVisitorProfileCount)
         }
-        waiter.wait(for: expectations, timeout: 5.0)
+        waiter.wait(for: expectations, timeout: 3.0)
     }
 
 }

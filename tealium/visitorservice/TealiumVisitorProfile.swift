@@ -34,7 +34,7 @@ public struct TealiumVisitorProfile: Codable {
         setsOfStrings = "property_sets",
         currentVisit = "current_visit"
     }
-    // swiftlint:disable cyclomatic_complexity
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         audiences = try values.decodeIfPresent([String: String].self, forKey: .audiences)
@@ -50,7 +50,6 @@ public struct TealiumVisitorProfile: Codable {
         setsOfStrings = try values.decodeIfPresent([String: Set<String>].self, forKey: .setsOfStrings)
         currentVisit = try values.decodeIfPresent(CurrentVisitProfileRaw.self, forKey: .currentVisit)
     }
-    // swiftlint:enable cyclomatic_complexity
 
     public var isEmpty: Bool {
         return self.audiences == nil &&
@@ -81,7 +80,7 @@ public struct CurrentVisitProfileRaw: Codable {
     public var setsOfStrings: [String: Set<String>]?
 
     enum CodingKeys: String, CodingKey {
-        case dates, booleans,
+        case dates, booleans = "flags",
         arraysOfBooleans = "flag_lists",
         numbers = "metrics",
         arraysOfNumbers =  "metric_lists",
