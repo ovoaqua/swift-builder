@@ -7,9 +7,6 @@
 //
 
 import Foundation
-#if logger
-import TealiumCore
-#endif
 
 public extension Tealium {
 

@@ -8,10 +8,6 @@
 
 import Foundation
 
-#if logger
-import TealiumCore
-#endif
-
 /// Module for adding basic console log output.
 class TealiumLoggerModule: TealiumModule {
 
