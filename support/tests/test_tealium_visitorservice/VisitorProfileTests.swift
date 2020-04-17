@@ -401,4 +401,31 @@ class VisitorProfileTests: XCTestCase {
            XCTAssertTrue(true)
        }
 
+    func testAttributeMapping() {
+        visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
+
+        if let tally = visitor.tallies?["8481"], let tallyValue = tally["category 3"] {
+            print("Tally value for id 5381 and key 'red shirts': \(tallyValue)")
+        }
+
+        if let arraysOfBooleans = visitor.currentVisit?.arraysOfBooleans?["8479"] {
+            let numberOfPositiveBools = arraysOfBooleans.filter { $0 == true }.count
+            XCTAssertEqual(4, numberOfPositiveBools)
+        }
+        if let arraysOfNumbers = visitor.arraysOfNumbers?["8487"] {
+            let result = arraysOfNumbers.filter { $0 == 1.0 }
+            XCTAssertEqual(11, result.count)
+        }
+
+        var count = 0
+        if let arraysOfStrings = visitor.arraysOfStrings?["8483"] {
+            arraysOfStrings.forEach { string in
+                if string.lowercased().contains("category 4") {
+                    count += 1
+                }
+            }
+        }
+        XCTAssertTrue(count == 1)
+    }
+
 }

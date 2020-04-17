@@ -11,23 +11,23 @@ import Foundation
 public struct TealiumVisitorProfile: Codable {
     public var audiences: [String: String]?
     public var badges: [String: Bool]?
-    public var dates: [String: Double]?
+    public var dates: [String: Int]?
     public var booleans: [String: Bool]?
     public var arraysOfBooleans: [String: [Bool]]?
     public var numbers: [String: Double]?
     public var arraysOfNumbers: [String: [Double]]?
-    public var tallies: [String: [String: Float]]?
+    public var tallies: [String: [String: Double]]?
     public var strings: [String: String]?
     public var arraysOfStrings: [String: [String]]?
     public var setsOfStrings: [String: Set<String>]?
-    public var currentVisit: CurrentVisitProfile?
+    public var currentVisit: TealiumCurrentVisitProfile?
 
     enum CodingKeys: String, CodingKey {
         case audiences, badges, dates,
         booleans = "flags",
         arraysOfBooleans = "flag_lists",
         numbers = "metrics",
-        arraysOfNumbers =  "metric_lists",
+        arraysOfNumbers = "metric_lists",
         tallies = "metric_sets",
         strings = "properties",
         arraysOfStrings = "property_lists",
@@ -39,16 +39,16 @@ public struct TealiumVisitorProfile: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         audiences = try values.decodeIfPresent([String: String].self, forKey: .audiences)
         badges = try values.decodeIfPresent([String: Bool].self, forKey: .badges)
-        dates = try values.decodeIfPresent([String: Double].self, forKey: .dates)
+        dates = try values.decodeIfPresent([String: Int].self, forKey: .dates)
         booleans = try values.decodeIfPresent([String: Bool].self, forKey: .booleans)
         arraysOfBooleans = try values.decodeIfPresent([String: [Bool]].self, forKey: .arraysOfBooleans)
         numbers = try values.decodeIfPresent([String: Double].self, forKey: .numbers)
         arraysOfNumbers = try values.decodeIfPresent([String: [Double]].self, forKey: .arraysOfNumbers)
-        tallies = try values.decodeIfPresent([String: [String: Float]].self, forKey: .tallies)
+        tallies = try values.decodeIfPresent([String: [String: Double]].self, forKey: .tallies)
         strings = try values.decodeIfPresent([String: String].self, forKey: .strings)
         arraysOfStrings = try values.decodeIfPresent([String: [String]].self, forKey: .arraysOfStrings)
         setsOfStrings = try values.decodeIfPresent([String: Set<String>].self, forKey: .setsOfStrings)
-        currentVisit = try values.decodeIfPresent(CurrentVisitProfile.self, forKey: .currentVisit)
+        currentVisit = try values.decodeIfPresent(TealiumCurrentVisitProfile.self, forKey: .currentVisit)
     }
 
     public var isEmpty: Bool {
@@ -68,13 +68,13 @@ public struct TealiumVisitorProfile: Codable {
 
 }
 
-public struct CurrentVisitProfile: Codable {
-    public var dates: [String: Double]?
+public struct TealiumCurrentVisitProfile: Codable {
+    public var dates: [String: Int]?
     public var booleans: [String: Bool]?
     public var arraysOfBooleans: [String: [Bool]]?
     public var numbers: [String: Double]?
     public var arraysOfNumbers: [String: [Double]]?
-    public var tallies: [String: [String: Float]]?
+    public var tallies: [String: [String: Double]]?
     public var strings: [String: String]?
     public var arraysOfStrings: [String: [String]]?
     public var setsOfStrings: [String: Set<String>]?
@@ -83,7 +83,7 @@ public struct CurrentVisitProfile: Codable {
         case dates, booleans = "flags",
         arraysOfBooleans = "flag_lists",
         numbers = "metrics",
-        arraysOfNumbers =  "metric_lists",
+        arraysOfNumbers = "metric_lists",
         tallies = "metric_sets",
         strings = "properties",
         arraysOfStrings = "property_lists",
@@ -92,12 +92,12 @@ public struct CurrentVisitProfile: Codable {
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        dates = try values.decodeIfPresent([String: Double].self, forKey: .dates)
+        dates = try values.decodeIfPresent([String: Int].self, forKey: .dates)
         booleans = try values.decodeIfPresent([String: Bool].self, forKey: .booleans)
         arraysOfBooleans = try values.decodeIfPresent([String: [Bool]].self, forKey: .arraysOfBooleans)
         numbers = try values.decodeIfPresent([String: Double].self, forKey: .numbers)
         arraysOfNumbers = try values.decodeIfPresent([String: [Double]].self, forKey: .arraysOfNumbers)
-        tallies = try values.decodeIfPresent([String: [String: Float]].self, forKey: .tallies)
+        tallies = try values.decodeIfPresent([String: [String: Double]].self, forKey: .tallies)
         strings = try values.decodeIfPresent([String: String].self, forKey: .strings)
         arraysOfStrings = try values.decodeIfPresent([String: [String]].self, forKey: .arraysOfStrings)
         setsOfStrings = try values.decodeIfPresent([String: Set<String>].self, forKey: .setsOfStrings)
