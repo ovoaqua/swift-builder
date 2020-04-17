@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "tealium-swift"
   s.module_name  = "TealiumSwift"
-  s.version      = "1.9.4"
+  s.version      = "1.9.5"
   s.summary      = "Tealium Swift Integration Library"
 
   # This description is used to generate tags and improve search results.
@@ -92,12 +92,12 @@ Pod::Spec.new do |s|
   s.default_subspec = "TealiumFull"
 
   s.subspec "TealiumFull" do |full|
-    full.source_files  = "tealium/appdata/*","tealium/core/**/*","tealium/attribution/*","tealium/autotracking/*","tealium/collect/*","tealium/connectivity/*","tealium/consentmanager/*","tealium/persistentdata/*","tealium/delegate/*","tealium/devicedata/*.swift","tealium/dispatchqueue/*","tealium/lifecycle/*","tealium/remotecommands/*","tealium/tagmanagement/*","tealium/volatiledata/*","tealium/crash/*","tealium/logger/*","tealium/visitorservice/*","tealium/location/*"
+    full.source_files  = "tealium/appdata/*","tealium/core/**/*","tealium/attribution/*","tealium/autotracking/*","tealium/collect/*","tealium/connectivity/*","tealium/consentmanager/*","tealium/persistentdata/*","tealium/delegate/*","tealium/devicedata/*.swift","tealium/dispatchqueue/*","tealium/lifecycle/*","tealium/remotecommands/*","tealium/tagmanagement/*","tealium/volatiledata/*","tealium/crash/*","tealium/logger/*","tealium/visitorservice/*","tealium/location/*","tealium/newmodule/*" 
     full.ios.exclude_files = "tealium/scripts/*"
     full.ios.dependency "TealiumCrashReporter"
-    full.tvos.exclude_files = "tealium/tagmanagement/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*"
+    full.tvos.exclude_files = "tealium/tagmanagement/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*","tealium/newmodule/*" 
     full.watchos.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/connectivity/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*"
-    full.osx.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*"
+    full.osx.exclude_files = "tealium/tagmanagement/*","tealium/autotracking/*","tealium/remotecommands/*","tealium/attribution/*","tealium/crash/*","tealium/scripts/*","tealium/location/*","tealium/newmodule/*" 
     full.resources = "tealium/devicedata/device-names.json"
   end
 
@@ -211,6 +211,13 @@ Pod::Spec.new do |s|
     crash.tvos.exclude_files = "tealium/crash/*"
     crash.watchos.exclude_files = "tealium/crash/*"
     crash.osx.exclude_files = "tealium/crash/*"
+  end
+
+  s.subspec "TealiumNewModule" do |newmodule|
+    newmodule.ios.deployment_target = "9.0"
+    newmodule.watchos.deployment_target = "3.0"
+    newmodule.source_files = "tealium/newmodule/*"
+    newmodule.dependency "tealium-swift/Core"
   end
 
 end

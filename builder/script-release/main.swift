@@ -37,12 +37,28 @@ var greeting: String {
 func getRepoPaths() {
     print("What is the full path to your builder repo?")
     while let path = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        builderRepoPath = path
+        var mutablePath = path
+        mutablePath.removeAll(where: { [""].contains($0) })
+        mutablePath.append("/")
+        result = cleanctx.run(bash: "cd \(mutablePath)")
+        guard result.stderror == "" else {
+            print("Please enter a valid path")
+            exit(1)
+        }
+        builderRepoPath = mutablePath
         break
     }
     print("What is the full path to your public repo?")
     while let path = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        publicRepoPath = path
+        var mutablePath = path
+        mutablePath.removeAll(where: { [""].contains($0) })
+        mutablePath.append("/")
+        result = cleanctx.run(bash: "cd \(mutablePath)")
+        guard result.stderror == "" else {
+            print("Please enter a valid path")
+            exit(1)
+        }
+        publicRepoPath = mutablePath
         break
     }
 }
@@ -57,6 +73,10 @@ func greetAndSetDirectories() {
 func checkVersion() {
     print("Please provide a version number to release: ")
     while let input = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
+        guard input.split(separator: ".").map({ Int($0) }).count == 3 else {
+            print("Format of version must be X.X.X i.e. 1.9.5 or 2.4.1 etc")
+            exit(1)
+        }
         result = cleanctx.run(bash: "git branch")
         version = input
         if result.stdout.contains(input) {
@@ -74,18 +94,33 @@ func checkForNewModules(_ version: String) {
     cleanctx.currentdirectory = builderRepoPath ?? ""
     print("Do you need to add any new modules in this version? y/n")
     while let input = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        if input.lowercased() == "y" {
+        if input.lowercased() == "y" || input.lowercased() == "yes" {
             print("Please enter the module name (format = TealiumNewModule): ")
-            newModuleName = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters)
-
+            while let newModule = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
+                guard newModule.hasPrefix("Tealium") else {
+                    print("The module name must be prefixed with `Tealium`")
+                    exit(1)
+                }
+                newModuleName = newModule
+                
+                break
+            }
             let shortModuleName = newModuleName?.replacingOccurrences(of: "Tealium", with: "").lowercased()
             print("Do you want to exclude any platforms from this module? y/n")
             while let shouldExclude = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-                if shouldExclude == "y" {
+                if shouldExclude == "y" || input.lowercased() == "yes" {
                     cleanctx.run(bash: "chmod +x new-module.py")
                     print("List your excluded platforms in a comma separated string e.g. tvos,osx")
                     while let excluded = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-                        cleanctx.run(bash: "python3 ./new-module.py -v \(version) -f \(newModuleName!) -s \(shortModuleName!) -e \(excluded)")
+                        guard excluded.split(separator: ",")
+                            .filter({ $0 != "tvos" && $0 != "osx" && $0 != "ios" && $0 != "watchos" }).count == 0 else {
+                            print("""
+                                The excluded platforms must be either of the following: tvos, ios, osx or watchos.
+                                Separated by a comma with no whitespace.
+                                """)
+                            exit(1)
+                        }
+                        cleanctx.run(bash: "python3 ./new-module.py -v \(version) -f \(newModuleName!) -s \(shortModuleName!) -e \(excluded.lowercased())")
                         break
                     }
                 } else {
@@ -104,7 +139,7 @@ func checkForChanges() {
     cleanctx.currentdirectory = publicRepoPath ?? ""
     cleanctx.run(bash: "git fetch")
     result = cleanctx.run(bash: "git status")
-    if !result.stdout.contains("nothing to commit") {
+    if !result.stdout.contains("nothing to commit")  {
         print("There are unstaged changes, please commit or stash")
         // provide options - 1 to stash 2
         print("1 - stash changes")
@@ -169,7 +204,6 @@ func runTests() {
     cleanctx.currentdirectory = "\(builderRepoPath ?? "")/builder"
     cleanctx.run(bash: "chmod +x unit-tests.sh")
     let tests = cleanctx.runAsync(bash: "./unit-tests.sh > ~/Desktop/testoutput.txt").onCompletion { command in
-        print("🤯complete")
         if let readfile = try? open("~/Desktop/testoutput.txt") {
             let contents = readfile.read()
             let numberOfFailures = contents.components(separatedBy: "failed")
@@ -250,7 +284,8 @@ guard let _ = builderRepoPath,
 }
 greetAndSetDirectories()
 checkVersion()
-checkForChanges()
+// TODO: fix if possible
+// checkForChanges()
 guard let version = version else {
     print("You must enter a versoin number. Try again, please.")
     exit(1)
