@@ -12,7 +12,7 @@ import TealiumCore
 #endif
 
 public protocol TealiumVisitorServiceDelegate: class {
-    func didUpdate(visitor profile: TealiumVisitorProfile)
+    func didUpdate(visitorProfile: TealiumVisitorProfile)
 }
 
 enum VisitorServiceStatus: Int {
@@ -53,7 +53,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
         guard let profile = diskStorage.retrieve(as: TealiumVisitorProfile.self) else {
                 return
         }
-        self.didUpdate(visitor: profile)
+        self.didUpdate(visitorProfile: profile)
     }
 
     /// - Returns: `TealiumVisitorProfile?` - the currrent cached profile from persistent storage.
@@ -90,7 +90,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
             }
             self.releaseState()
             self.diskStorage.save(profile, completion: nil)
-            self.didUpdate(visitor: profile)
+            self.didUpdate(visitorProfile: profile)
         }
     }
 
@@ -142,7 +142,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
                 self.timer?.suspend()
                 self.releaseState()
                 self.diskStorage.save(profile, completion: nil)
-                self.didUpdate(visitor: profile)
+                self.didUpdate(visitorProfile: profile)
             }
         }
         self.timer?.resume()
@@ -194,8 +194,8 @@ public extension TealiumVisitorServiceManager {
     /// Called when the visitor profile has been updated
     ///
     /// - Parameter profile: `TealiumVisitorProfile` - Updated visitor profile accessible through helper methods
-    func didUpdate(visitor profile: TealiumVisitorProfile) {
-        delegate?.didUpdate(visitor: profile)
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        delegate?.didUpdate(visitorProfile: visitorProfile)
     }
 
 }

@@ -11,7 +11,7 @@ import Foundation
 public struct TealiumVisitorProfile: Codable {
     public var audiences: [String: String]?
     public var badges: [String: Bool]?
-    public var dates: [String: Int]?
+    public var dates: [String: Double]?
     public var booleans: [String: Bool]?
     public var arraysOfBooleans: [String: [Bool]]?
     public var numbers: [String: Double]?
@@ -39,7 +39,7 @@ public struct TealiumVisitorProfile: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         audiences = try values.decodeIfPresent([String: String].self, forKey: .audiences)
         badges = try values.decodeIfPresent([String: Bool].self, forKey: .badges)
-        dates = try values.decodeIfPresent([String: Int].self, forKey: .dates)
+        dates = try values.decodeIfPresent([String: Double].self, forKey: .dates)
         booleans = try values.decodeIfPresent([String: Bool].self, forKey: .booleans)
         arraysOfBooleans = try values.decodeIfPresent([String: [Bool]].self, forKey: .arraysOfBooleans)
         numbers = try values.decodeIfPresent([String: Double].self, forKey: .numbers)
@@ -69,7 +69,7 @@ public struct TealiumVisitorProfile: Codable {
 }
 
 public struct TealiumCurrentVisitProfile: Codable {
-    public var dates: [String: Int]?
+    public var dates: [String: Double]?
     public var booleans: [String: Bool]?
     public var arraysOfBooleans: [String: [Bool]]?
     public var numbers: [String: Double]?
@@ -92,7 +92,7 @@ public struct TealiumCurrentVisitProfile: Codable {
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        dates = try values.decodeIfPresent([String: Int].self, forKey: .dates)
+        dates = try values.decodeIfPresent([String: Double].self, forKey: .dates)
         booleans = try values.decodeIfPresent([String: Bool].self, forKey: .booleans)
         arraysOfBooleans = try values.decodeIfPresent([String: [Bool]].self, forKey: .arraysOfBooleans)
         numbers = try values.decodeIfPresent([String: Double].self, forKey: .numbers)

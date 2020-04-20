@@ -140,8 +140,8 @@ extension TealiumWatchHelper: TealiumDelegate {
 
 extension TealiumWatchHelper: TealiumVisitorServiceDelegate {
     
-    func didUpdate(visitor profile: TealiumVisitorProfile) {
-        if let json = try? JSONEncoder().encode(profile), let string = String(data: json, encoding: .utf8) {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             print(string)
         }
     }

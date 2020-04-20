@@ -104,7 +104,7 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
 
 extension TealiumVisitorServiceManagerTests: TealiumVisitorServiceDelegate {
 
-    func didUpdate(visitor profile: TealiumVisitorProfile) {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
             self.getExpectation(forDescription: "testDelegateDidUpdateViaRequestVisitorProfile")?.fulfill()
 //        }
