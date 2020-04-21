@@ -33,7 +33,7 @@ public class Tealium {
         self.config = config
         self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
-        modulesManager = TealiumModulesManager()
+        modulesManager = TealiumModulesManager(config)
         if config.shouldUseRemotePublishSettings {
             self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
             if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {

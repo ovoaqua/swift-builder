@@ -20,7 +20,13 @@ open class TealiumModulesManager: NSObject {
     public var timeoutMillisecondMax = 10_000
     weak var tealiumInstance: Tealium?
     var config: TealiumConfig?
-
+    var newModulesManager: NewModulesManager
+    
+    init (_ config: TealiumConfig) {
+        self.config = config
+        newModulesManager = NewModulesManager(config)
+    }
+    
     /// Sets up active modules from config￼.
     ///
     /// - Parameter config: `TealiumConfig` instance
@@ -190,8 +196,12 @@ open class TealiumModulesManager: NSObject {
         }
 
         self.timeoutMillisecondCurrent = 0  // reset
-
-        firstModule.handle(track)
+        if let track = track as? TealiumTrackRequest {
+            let track = TealiumTrackRequest(data: newModulesManager.gatherTrackData(for: track.trackDictionary), completion: track.completion)
+            firstModule.handle(track)
+        } else {
+            firstModule.handle(track)
+        }
     }
 
     /// Reports to listening modules when a request has been processed by all modules￼.
