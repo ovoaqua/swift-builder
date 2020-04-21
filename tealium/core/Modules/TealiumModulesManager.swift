@@ -19,6 +19,7 @@ open class TealiumModulesManager: NSObject {
     public var timeoutMillisecondCurrent = 0
     public var timeoutMillisecondMax = 10_000
     weak var tealiumInstance: Tealium?
+    var config: TealiumConfig?
 
     /// Sets up active modules from config￼.
     ///
@@ -93,6 +94,7 @@ open class TealiumModulesManager: NSObject {
     public func enable(config: TealiumConfig,
                        enableCompletion: TealiumEnableCompletion?,
                        tealiumInstance: Tealium? = nil) {
+        self.config = config
         self.setupModulesFrom(config: config)
         self.tealiumInstance = tealiumInstance
         self.queue = TealiumQueues.backgroundConcurrentQueue
@@ -125,10 +127,7 @@ open class TealiumModulesManager: NSObject {
         guard let modules = self.modules else {
             return false
         }
-        for module in modules where module.isEnabled == false {
-            return false
-        }
-        return true
+        return modulesNotReady(modules).count == 0
     }
 
     /// Returns list of modules not currently ready to process events￼.
@@ -138,6 +137,11 @@ open class TealiumModulesManager: NSObject {
     public func modulesNotReady(_ modules: [TealiumModule]) -> [TealiumModule] {
         var result = [TealiumModule]()
         for module in modules where module.isEnabled == false {
+            // skip for bundled modules that add extra default data if shouldCollectTealiumData is false; these modules should not be enabled
+            if type(of: module).moduleConfig().addsTealiumData == true,
+                self.config?.shouldCollectTealiumData == false {
+                continue
+            }
             result.append(module)
         }
         return result

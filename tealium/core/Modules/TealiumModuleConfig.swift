@@ -15,6 +15,7 @@ open class TealiumModuleConfig: CustomStringConvertible {
     public let priority: UInt
     public let build: UInt
     public var enabled: Bool
+    public var addsTealiumData: Bool
     public var description: String {
         return "\(name).moduleConfig.priority:\(priority).enabled:\(enabled)))"
     }
@@ -22,12 +23,14 @@ open class TealiumModuleConfig: CustomStringConvertible {
     public init(name: String,
                 priority: UInt,
                 build: UInt,
-                enabled: Bool) {
+                enabled: Bool,
+                addsTealiumData: Bool = false) {
 
         self.name = name
         self.priority = priority
         self.build = build
         self.enabled = enabled
+        self.addsTealiumData = addsTealiumData
     }
 
 }

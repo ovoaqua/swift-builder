@@ -28,7 +28,8 @@ class TealiumAppDataModule: TealiumModule {
         return TealiumModuleConfig(name: TealiumAppDataKey.moduleName,
                                    priority: 500,
                                    build: 3,
-                                   enabled: true)
+                                   enabled: true,
+                                   addsTealiumData: true)
     }
 
     /// Enable function required by TealiumModule.
@@ -43,6 +44,11 @@ class TealiumAppDataModule: TealiumModule {
     ///     - diskStorage: `TealiumDiskStorageProtocol` instance to allow overriding for unit testing
     func enable(_ request: TealiumEnableRequest,
                 diskStorage: TealiumDiskStorageProtocol? = nil) {
+        guard request.config.shouldCollectTealiumData else {
+            isEnabled = false
+            didFinishWithNoResponse(request)
+            return
+        }
         // allows overriding for unit tests, indepdendently of enable call
         self.config = request.config.copy
         if self.diskStorage == nil {

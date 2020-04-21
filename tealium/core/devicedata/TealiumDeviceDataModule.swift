@@ -42,7 +42,8 @@ class TealiumDeviceDataModule: TealiumModule {
         return TealiumModuleConfig(name: TealiumDeviceDataModuleKey.moduleName,
                                    priority: 525,
                                    build: 1,
-                                   enabled: true)
+                                   enabled: true,
+                                   addsTealiumData: true)
     }
 
     override func handle(_ request: TealiumRequest) {
@@ -59,6 +60,11 @@ class TealiumDeviceDataModule: TealiumModule {
     }
 
     override func enable(_ request: TealiumEnableRequest) {
+        guard request.config.shouldCollectTealiumData else {
+            isEnabled = false
+            didFinishWithNoResponse(request)
+            return
+        }
         isEnabled = true
         data = enableTimeData()
         self.config = request.config
@@ -81,6 +87,7 @@ class TealiumDeviceDataModule: TealiumModule {
 
     override func track(_ request: TealiumTrackRequest) {
         guard isEnabled else {
+            didFinishWithNoResponse(request)
             return
         }
         let request = addModuleName(to: request)

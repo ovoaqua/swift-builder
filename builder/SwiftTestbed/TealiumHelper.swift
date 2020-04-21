@@ -49,7 +49,7 @@ class TealiumHelper: NSObject {
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
         config.shouldAddCookieObserver = false
-        config.shouldUseRemotePublishSettings = true
+        config.shouldUseRemotePublishSettings = false
         config.batchSize = 5
         config.dispatchAfter = 5
 //        config.dispatchQueueLimit = 200
@@ -66,12 +66,13 @@ class TealiumHelper: NSObject {
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: ["autotracking"])
+                                      moduleNames: [.autotracking])
         config.modulesList = list
         config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
         config.remoteAPIEnabled = true
         config.logLevel = .verbose
+        config.shouldCollectTealiumData = false
         config.batterySaverEnabled = true
         config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         #endif

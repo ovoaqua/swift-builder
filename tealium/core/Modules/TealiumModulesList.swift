@@ -27,7 +27,7 @@ public struct TealiumModulesList: Equatable {
         }
     }
 
-    enum TealiumModuleNames: String, CaseIterable {
+    public enum TealiumModuleNames: String, CaseIterable {
         case autotracking
         case appdata
         case attribution
@@ -54,5 +54,10 @@ public struct TealiumModulesList: Equatable {
         self.moduleNames = Set(moduleNames.map {
             $0.lowercased()
         })
+    }
+    
+    public init(isWhitelist: Bool,
+                moduleNames: Set<TealiumModuleNames>) {
+        self.init(isWhitelist: isWhitelist, moduleNames: Set(moduleNames.map { $0.rawValue }))
     }
 }

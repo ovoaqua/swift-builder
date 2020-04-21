@@ -39,6 +39,7 @@ open class TealiumModule: TealiumModuleProtocol {
     public weak var delegate: TealiumModuleDelegate?
     public var isEnabled: Bool = false
     open var config: TealiumConfig?
+    
     /// Constructor.￼
     ///
     /// - Parameter delegate: Delegate for module, usually the ModulesManager.

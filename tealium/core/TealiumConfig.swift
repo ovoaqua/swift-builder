@@ -17,7 +17,7 @@ open class TealiumConfig {
     public let datasource: String?
     public lazy var optionalData = [String: Any]()
     // Set to false to avoid collecting optional default data
-    var shouldCollectTealiumData = true
+    public var shouldCollectTealiumData = true
 
     public var copy: TealiumConfig {
             return TealiumConfig(account: self.account,
