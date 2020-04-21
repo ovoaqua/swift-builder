@@ -10,7 +10,7 @@ import Foundation
 
 public class NewModulesManager {
     
-    var knownCollectors: [Collector.Type] = [AppDataModule.self]
+    var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var collectors = [Collector]()
     
     init (_ config: TealiumConfig) {

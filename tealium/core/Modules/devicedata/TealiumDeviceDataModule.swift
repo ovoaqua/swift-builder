@@ -22,89 +22,31 @@ import WatchKit
 
 import Darwin
 
-class TealiumDeviceDataModule: TealiumModule {
-
-    var data = [String: Any]()
+class DeviceDataModule: Collector {
+    var data: [String : Any]? {
+        get {
+            guard config.shouldCollectTealiumData else {
+                return nil
+            }
+            cachedData += trackTimeData()
+            return cachedData
+        }
+    }
+    
+    var collectorId = "DeviceData"
+    
     var isMemoryEnabled = false
     var deviceDataCollection: TealiumDeviceDataCollection
-
-    required public init(delegate: TealiumModuleDelegate?) {
+    var cachedData = [String: Any]()
+    var config: TealiumConfig
+    
+    required init(config: TealiumConfig, completion: () -> Void) {
+        self.config = config
         self.deviceDataCollection = TealiumDeviceData()
-        super.init(delegate: delegate)
-    }
-
-    init(delegate: TealiumModuleDelegate?, deviceDataCollection: TealiumDeviceDataCollection) {
-        self.deviceDataCollection = deviceDataCollection
-        super.init(delegate: delegate)
-    }
-
-    override class func moduleConfig() -> TealiumModuleConfig {
-        return TealiumModuleConfig(name: TealiumDeviceDataModuleKey.moduleName,
-                                   priority: 525,
-                                   build: 1,
-                                   enabled: true,
-                                   addsTealiumData: true)
-    }
-
-    override func handle(_ request: TealiumRequest) {
-        switch request {
-        case let request as TealiumEnableRequest:
-            enable(request)
-        case let request as TealiumTrackRequest:
-            track(request)
-        case let request as TealiumUpdateConfigRequest:
-            updateConfig(request)
-        default:
-            didFinishWithNoResponse(request)
+        self.cachedData = enableTimeData()
+        defer {
+            completion()
         }
-    }
-
-    override func enable(_ request: TealiumEnableRequest) {
-        guard request.config.shouldCollectTealiumData else {
-            isEnabled = false
-            didFinishWithNoResponse(request)
-            return
-        }
-        isEnabled = true
-        data = enableTimeData()
-        self.config = request.config
-        isMemoryEnabled = request.config.memoryReportingEnabled
-        if !request.bypassDidFinish {
-            didFinish(request)
-        }
-    }
-
-    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
-        let newConfig = request.config.copy
-        if newConfig != self.config {
-            self.config = newConfig
-            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
-            enableRequest.bypassDidFinish = true
-            enable(enableRequest)
-        }
-        didFinish(request)
-    }
-
-    override func track(_ request: TealiumTrackRequest) {
-        guard isEnabled else {
-            didFinishWithNoResponse(request)
-            return
-        }
-        let request = addModuleName(to: request)
-        // do not add data to queued hits
-        guard request.trackDictionary[TealiumKey.wasQueued] as? String == nil else {
-            didFinishWithNoResponse(request)
-            return
-        }
-
-        // Add device data to the data stream.
-        var newData = request.trackDictionary
-        newData += data
-        newData += trackTimeData()
-        let newTrack = TealiumTrackRequest(data: newData,
-                                           completion: request.completion)
-
-        didFinish(newTrack)
     }
 
     /// Data that only needs to be retrieved once for the lifetime of the host app.
