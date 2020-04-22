@@ -17,7 +17,6 @@ public class NewModulesManager {
         self.setupCollectors(config: config)
     }
     
-    
     func setupCollectors(config: TealiumConfig) {
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {

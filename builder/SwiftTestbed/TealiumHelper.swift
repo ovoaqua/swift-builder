@@ -66,7 +66,7 @@ class TealiumHelper: NSObject {
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: [.autotracking])
+                                      moduleNames: ["autotracking", "tagmanagement"])
         config.modulesList = list
         config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
@@ -97,7 +97,7 @@ class TealiumHelper: NSObject {
         // Optionally, join a trace. Trace ID must be generated server-side in UDH.
 //        self.tealium?.leaveTrace(killVisitorSession: true)
         self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
-            
+
         self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
             
                             self?.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])

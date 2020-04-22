@@ -9,7 +9,7 @@
 import Foundation
 
 /// Module for adding session long (from wake until terminate) data varables to all track calls.
-class TealiumVolatileDataModule: TealiumModule {
+class VolatileDataModule: TealiumModule {
 
     var volatileData = TealiumVolatileData()
 

@@ -21,9 +21,11 @@ open class TealiumModulesManager: NSObject {
     weak var tealiumInstance: Tealium?
     var config: TealiumConfig?
     var newModulesManager: NewModulesManager
+    var delegate: TealiumDelegate?
     
     init (_ config: TealiumConfig) {
         self.config = config
+        self.delegate = config.delegate
         newModulesManager = NewModulesManager(config)
     }
     
