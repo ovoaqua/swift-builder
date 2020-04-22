@@ -22,6 +22,7 @@ public class Tealium {
     public static var numberOfTrackRequests = AtomicInteger()
     public static var lifecycleListeners = TealiumLifecycleListeners()
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
+    public var eventDataManager: EventDataManager
     // MARK: PUBLIC
 
     /// Initializer.
@@ -34,6 +35,7 @@ public class Tealium {
         self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
         modulesManager = TealiumModulesManager(config)
+        self.eventDataManager = EventDataManager(config: config)
         if config.shouldUseRemotePublishSettings {
             self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
             if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
@@ -119,8 +121,9 @@ public class Tealium {
             if self.config.shouldUseRemotePublishSettings {
                 self.remotePublishSettingsRetriever?.refresh()
             }
-            let trackData = Tealium.trackDataFor(title: title,
+            var trackData = Tealium.trackDataFor(title: title,
                                                  optionalData: data)
+            trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
             self.modulesManager.track(track)

@@ -11,7 +11,7 @@ import Foundation
 /// Module for adding session long (from wake until terminate) data varables to all track calls.
 class TealiumVolatileDataModule: TealiumModule {
 
-    var volatileData = TealiumVolatileData()
+    var volatileData: TealiumVolatileData?
 
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumVolatileDataKey.moduleName,
@@ -46,20 +46,20 @@ class TealiumVolatileDataModule: TealiumModule {
     override func enable(_ request: TealiumEnableRequest) {
         isEnabled = true
         let config = request.config
-
+        volatileData = TealiumVolatileData(config: config)
         var currentStaticData = [TealiumKey.account: config.account,
                                                 TealiumKey.profile: config.profile,
                                                 TealiumKey.environment: config.environment,
                                                 TealiumKey.libraryName: TealiumValue.libraryName,
-                                                TealiumKey.libraryVersion: TealiumValue.libraryVersion,
-                                                TealiumKey.sessionId: TealiumVolatileData.newSessionId(),
+                                                TealiumKey.libraryVersion: TealiumValue.libraryVersion//,
+//                                                TealiumKey.sessionId: TealiumVolatileData.newSessionId(),
         ]
 
         if let dataSource = config.datasource {
             currentStaticData[TealiumKey.dataSource] = dataSource
         }
 
-        volatileData.add(data: currentStaticData)
+        volatileData?.add(data: currentStaticData)
 
         if !request.bypassDidFinish {
             didFinishWithNoResponse(request)
@@ -82,7 +82,7 @@ class TealiumVolatileDataModule: TealiumModule {
     /// - Parameter request: `TealiumDisableRequest`
     override func disable(_ request: TealiumDisableRequest) {
         isEnabled = false
-        volatileData.deleteAllData()
+        volatileData?.deleteAllData()
         didFinish(request)
     }
 
@@ -95,23 +95,25 @@ class TealiumVolatileDataModule: TealiumModule {
 
         newData += track.trackDictionary
 
-        if volatileData.shouldRefreshSessionIdentifier() {
-            volatileData.setSessionId(sessionId: TealiumVolatileData.newSessionId())
+//        if volatileData.shouldRefreshSessionIdentifier() {
+//            volatileData.setSessionId(sessionId: TealiumVolatileData.newSessionId())
+//        }
+
+        if let volatileData = volatileData {
+            newData += volatileData.getData()
         }
-
-        newData += volatileData.getData(currentData: newData)
-
+        
         let newTrack = TealiumTrackRequest(data: newData,
                                            completion: track.completion)
         didFinishWithNoResponse(newTrack)
-        volatileData.lastTrackEvent = Date()
+        volatileData?.lastTrackEvent = Date()
     }
 
     /// Adds Trace ID to all outgoing track requests.
     ///￼
     /// - Parameter request: `TealiumJoinTraceRequest`
     func joinTrace(_ request: TealiumJoinTraceRequest) {
-        self.volatileData.add(data: [TealiumKey.traceId: request.traceId])
+        self.volatileData?.add(data: [TealiumKey.traceId: request.traceId])
         didFinish(request)
     }
 
@@ -119,7 +121,7 @@ class TealiumVolatileDataModule: TealiumModule {
     ///￼
     /// - Parameter request: `TealiumLeaveTraceRequest`
     func leaveTrace(_ request: TealiumLeaveTraceRequest) {
-        self.volatileData.deleteData(forKeys: [TealiumKey.traceId])
+        self.volatileData?.deleteData(forKeys: [TealiumKey.traceId])
         didFinish(request)
     }
 }

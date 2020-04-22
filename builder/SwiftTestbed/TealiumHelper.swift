@@ -98,10 +98,19 @@ class TealiumHelper: NSObject {
 //        self.tealium?.leaveTrace(killVisitorSession: true)
         self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
             
-        self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
+            self?.tealium?.persistentData()?.add(data: ["some_key":"some_val"], expiration: .session)
             
-                            self?.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
-                            self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
+           self?.tealium?.persistentData()?.add(data: ["some_key":"some_val"], expiration: .untilRestart)
+            
+            self?.tealium?.persistentData()?.deleteData(forKeys: ["testPersistentKey"])
+            
+            self?.tealium?.volatileData()?.add(data: ["hello": "world"])
+            
+            self?.tealium?.volatileData()?.add(value: 123, forKey: "test")
+            
+            self?.tealium?.volatileData()?.deleteData(forKeys: ["hello"])
+            
+            print("Volatile Data: \(String(describing: self?.tealium?.volatileData()?.dictionary))")
             
             print("Persistent Data: \(String(describing: self?.tealium?.persistentData()?.dictionary))")
             

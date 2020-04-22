@@ -40,7 +40,7 @@ class TealiumPersistentDataModule: TealiumModule {
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumPersistentKey.moduleName, isCritical: true)
         }
-        self.persistentData = TealiumPersistentData(diskStorage: self.diskStorage)
+        self.persistentData = TealiumPersistentData(config: request.config)
         if !request.bypassDidFinish {
             didFinish(request)
         }
@@ -63,7 +63,7 @@ class TealiumPersistentDataModule: TealiumModule {
     /// - Parameter request: `TealiumDisableRequest`
     override func disable(_ request: TealiumDisableRequest) {
         isEnabled = false
-        persistentData?.deleteAllData()
+        //persistentData?.deleteAllData()
         persistentData = nil
         didFinish(request)
     }
@@ -83,20 +83,20 @@ class TealiumPersistentDataModule: TealiumModule {
             return
         }
 
-        guard persistentData.persistentDataCache.isEmpty == false else {
+       // guard persistentData.persistentDataCache.isEmpty == false else {
             // No custom persistent data to load
-            didFinish(track)
-            return
-        }
+            //didFinish(track)
+            //return
+        //}
 
-        guard let data = persistentData.persistentDataCache.values() else {
-            didFinish(track)
-            return
-        }
+        //guard let data = persistentData.persistentDataCache.values() else {
+           // didFinish(track)
+            //return
+        //}
 
         var dataDictionary = [String: Any]()
 
-        dataDictionary += data
+        dataDictionary += persistentData.eventDataManager.allEventData
         dataDictionary += track.trackDictionary
         let newTrack = TealiumTrackRequest(data: dataDictionary,
                                            completion: track.completion)
