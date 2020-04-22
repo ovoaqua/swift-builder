@@ -22,13 +22,13 @@ open class TealiumModulesManager: NSObject {
     var config: TealiumConfig?
     var newModulesManager: NewModulesManager
     var delegate: TealiumDelegate?
-    
+
     init (_ config: TealiumConfig) {
         self.config = config
         self.delegate = config.delegate
         newModulesManager = NewModulesManager(config)
     }
-    
+
     /// Sets up active modules from config￼.
     ///
     /// - Parameter config: `TealiumConfig` instance
@@ -53,21 +53,21 @@ open class TealiumModulesManager: NSObject {
     public func update(config: TealiumConfig,
                        oldConfig: TealiumConfig?,
                        enableCompletion: TealiumEnableCompletion?) {
-        
+
         guard config.isEnabled == true else {
             self.disable()
             return
         }
-        
+
         if oldConfig?.isEnabled == false, config.isEnabled == true {
             self.enable(config: config, enableCompletion: enableCompletion)
             return
         }
-        
+
         let currentModulesList: [String]? = modules?.map {
             return $0.description.replacingOccurrences(of: ".module", with: "")
         }
-        
+
         var modulesToInit = [String]()
 
         if let newModulesList = config.modulesList?.filtered {
@@ -76,14 +76,14 @@ open class TealiumModulesManager: NSObject {
                     modulesToInit.append(module)
                 }
             }
-            
+
             self.modules = self.modules?.filter {
                 newModulesList.contains($0.description.replacingOccurrences(of: ".module", with: "")) == true
             }
         }
 
         let newModules = TealiumModules.initializeModules(modulesList: TealiumModulesList(isWhitelist: true, moduleNames: Set(modulesToInit)), delegate: self)
-        
+
         newModules.forEach {
             self.modules?.append($0)
             self.modules = self.modules?.prioritized()
@@ -221,11 +221,10 @@ open class TealiumModulesManager: NSObject {
             module.handleReport(request)
         }
     }
-    
-    
+
     deinit {
         self.modules = nil
-        self.isEnabled = false   
+        self.isEnabled = false
     }
 }
 
@@ -319,7 +318,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
         // Pass request to other modules - Regular behavior
         modules?.first?.handle(process)
     }
-    
+
 }
 
 // MARK: MODULEMANAGER EXTENSIONS

@@ -2997,17 +2997,11 @@
 			isa = PBXGroup;
 			children = (
 				4B7444E52007CAF100616F95 /* scripts */,
-				71F085BD1DDE154C008850C8 /* attribution */,
-				71D2B34C1E2FE3670049BCF3 /* autotracking */,
-				71F085C01DDE154C008850C8 /* collect */,
-				D79A2D9A20880438001C1F80 /* consentmanager */,
 				71F085C41DDE154C008850C8 /* core */,
-				4B7F6FA0202CEB6900630388 /* crash */,
-				712184711E536099000DCE07 /* lifecycle */,
-				CFF242BF23CE77F10091B7BF /* location */,
-				71F63A441E799C0D006A723F /* remotecommands */,
-				7166E7EF1E60079F00FCA9EE /* tagmanagement */,
-				D780586F233A68E900DAD90E /* visitorservice */,
+				D70FC7AE24508177004AD838 /* Utility */,
+				D70FC7AD24508146004AD838 /* Collectors */,
+				D70FC7AF245081CC004AD838 /* Controllers */,
+				D70FC7AC24508124004AD838 /* Dispatchers */,
 			);
 			name = tealium;
 			path = ../tealium;
@@ -3207,6 +3201,44 @@
 				D70FC7A6244F2C3D004AD838 /* AppDataModule.swift */,
 			);
 			path = appdata;
+			sourceTree = "<group>";
+		};
+		D70FC7AC24508124004AD838 /* Dispatchers */ = {
+			isa = PBXGroup;
+			children = (
+				71F63A441E799C0D006A723F /* remotecommands */,
+				71F085C01DDE154C008850C8 /* collect */,
+				7166E7EF1E60079F00FCA9EE /* tagmanagement */,
+			);
+			path = Dispatchers;
+			sourceTree = "<group>";
+		};
+		D70FC7AD24508146004AD838 /* Collectors */ = {
+			isa = PBXGroup;
+			children = (
+				4B7F6FA0202CEB6900630388 /* crash */,
+				71F085BD1DDE154C008850C8 /* attribution */,
+				71D2B34C1E2FE3670049BCF3 /* autotracking */,
+				712184711E536099000DCE07 /* lifecycle */,
+			);
+			path = Collectors;
+			sourceTree = "<group>";
+		};
+		D70FC7AE24508177004AD838 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				CFF242BF23CE77F10091B7BF /* location */,
+				D780586F233A68E900DAD90E /* visitorservice */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		D70FC7AF245081CC004AD838 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D79A2D9A20880438001C1F80 /* consentmanager */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		D7113B911FC2F781001FC2B6 /* OSXTestHost */ = {
@@ -5872,7 +5904,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D736D6CD2195D31F00B3BDEE /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5887,7 +5919,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D755DD0921945E41003C6BA1 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5902,7 +5934,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D755DD8221945F99003C6BA1 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5917,7 +5949,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D762FC3D232F97EF00CBC4D0 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5947,7 +5979,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../../../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D7805832233A65FB00DAD90E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5964,7 +5996,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D7805845233A672800DAD90E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5996,7 +6028,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D788A3EA231841F200BC6D60 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6620,7 +6652,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D7B04DA12199E0D400C87E22 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6635,7 +6667,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D7CED26121932DD500ACD291 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6650,7 +6682,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "# $SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D7F2DEDE233279A1000D0E0F /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;

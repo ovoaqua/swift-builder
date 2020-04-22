@@ -7,8 +7,8 @@
 //  Copyright © 2019 Harry Cassell. All rights reserved.
 //
 #if os(iOS)
-import Foundation
 import CoreLocation
+import Foundation
 #if location
     import TealiumCore
 #endif
@@ -36,7 +36,6 @@ public struct Geofence: Codable {
         region.notifyOnExit = triggerOnExit
         return region
     }
-
 
 }
 

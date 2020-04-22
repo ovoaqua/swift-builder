@@ -11,14 +11,14 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumTagManagementModule: TealiumModule {
+class TealiumTagManagementModule: TealiumModule {
     var tagManagement: TealiumTagManagementProtocol?
     var remoteCommandResponseObserver: NSObjectProtocol?
     var errorState = AtomicInteger()
     var webViewState: Atomic<TealiumWebViewState>?
     var pendingTrackRequests = [TealiumRequest]()
 
-    override public class func moduleConfig() -> TealiumModuleConfig {
+    override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumTagManagementKey.moduleName,
                                    priority: 1100,
                                    build: 3,
@@ -29,7 +29,7 @@ public class TealiumTagManagementModule: TealiumModule {
     #if TEST
     #else
 
-    override public func handle(_ request: TealiumRequest) {
+    override func handle(_ request: TealiumRequest) {
         switch request {
         case let request as TealiumEnableRequest:
             enable(request)
@@ -51,7 +51,7 @@ public class TealiumTagManagementModule: TealiumModule {
     /// Enables the module and sets up the webview instance.
     ///￼
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
-    override public func enable(_ request: TealiumEnableRequest) {
+    override func enable(_ request: TealiumEnableRequest) {
         self.tagManagement = TealiumTagManagementWKWebView()
 
         let config = request.config
@@ -88,7 +88,7 @@ public class TealiumTagManagementModule: TealiumModule {
         }
     }
 
-    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+    override func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
         if newConfig != self.config {
             // block new requests
@@ -319,7 +319,7 @@ public class TealiumTagManagementModule: TealiumModule {
     /// Disables the Tag Management module.
     ///￼
     /// - Parameter request: `TealiumDisableRequest` indicating that the module should be disabled
-    override public func disable(_ request: TealiumDisableRequest) {
+    override func disable(_ request: TealiumDisableRequest) {
         isEnabled = false
         self.remoteCommandResponseObserver = nil
         self.pendingTrackRequests = [TealiumRequest]()

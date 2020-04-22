@@ -45,13 +45,13 @@ enum TealiumTagManagementNotificationKey {
     static let jsCommand = "js"
 }
 
-public enum TealiumWebviewError: Error {
+enum TealiumWebviewError: Error {
     case webviewURLMissing
     case invalidURL
     case webviewNotInitialized
 }
 
-public enum TealiumWebViewState {
+enum TealiumWebViewState {
     case loadSuccess
     case loadFailure
 }

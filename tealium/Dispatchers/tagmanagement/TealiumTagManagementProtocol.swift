@@ -13,7 +13,7 @@ import WebKit
 import TealiumCore
 #endif
 
-public protocol TealiumTagManagementProtocol {
+protocol TealiumTagManagementProtocol {
 
     /// Enables the webview. Called by the webview module at init time.
     ///

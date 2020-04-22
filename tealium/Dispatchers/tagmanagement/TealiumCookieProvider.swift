@@ -9,18 +9,18 @@
 import Foundation
 
 /// allows overriding default cookie store for unit testing
-public protocol TealiumCookieProvider {
+protocol TealiumCookieProvider {
     static var shared: TealiumCookieProvider { get }
     var cookies: [HTTPCookie]? { get }
 }
 
 /// allows overriding default cookie store for unit testing
-public class TealiumHTTPCookieStorage: TealiumCookieProvider {
-    public static var shared: TealiumCookieProvider = TealiumHTTPCookieStorage()
+class TealiumHTTPCookieStorage: TealiumCookieProvider {
+    static var shared: TealiumCookieProvider = TealiumHTTPCookieStorage()
 
     private var httpCookieStorage = HTTPCookieStorage.shared
 
-    public var cookies: [HTTPCookie]? {
+    var cookies: [HTTPCookie]? {
         return httpCookieStorage.cookies
     }
 

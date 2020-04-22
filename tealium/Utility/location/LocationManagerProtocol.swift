@@ -6,16 +6,16 @@
 //  Copyright © 2019 Harry Cassell. All rights reserved.
 //
 #if os(iOS)
-import Foundation
 import CoreLocation
+import Foundation
 
 public protocol LocationManager {
     static func locationServicesEnabled() -> Bool
     static func authorizationStatus() -> CLAuthorizationStatus
-    var distanceFilter: Double {get set}
-    var desiredAccuracy: CLLocationAccuracy {get set}
-    var delegate: CLLocationManagerDelegate? {get set}
-    var monitoredRegions: Set<CLRegion> {get}
+    var distanceFilter: Double { get set }
+    var desiredAccuracy: CLLocationAccuracy { get set }
+    var delegate: CLLocationManagerDelegate? { get set }
+    var monitoredRegions: Set<CLRegion> { get }
     func requestAlwaysAuthorization()
     func requestWhenInUseAuthorization()
     func startUpdatingLocation()
@@ -24,7 +24,6 @@ public protocol LocationManager {
     func stopMonitoring(for region: CLRegion)
     func startMonitoring(for region: CLRegion)
 }
-
 
 extension CLLocationManager: LocationManager { }
 #endif

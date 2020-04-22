@@ -21,13 +21,13 @@ public extension TealiumConfig {
     func getMinimumFreeDiskSpace() -> Int32? {
         minimumFreeDiskSpace
     }
-    
+
     /// Sets the minimum free disk space in Megabytes  for Disk Storage to be enabled
     var minimumFreeDiskSpace: Int32? {
         get {
             optionalData[TealiumKey.minimumFreeDiskSpace] as? Int32
         }
-        
+
         set {
             guard let newValue = newValue else {
                 optionalData[TealiumKey.minimumFreeDiskSpace] = nil
@@ -53,35 +53,35 @@ public extension TealiumConfig {
     func isDiskStorageEnabled() -> Bool {
         diskStorageEnabled
     }
-    
+
     /// Enables (default) or disables disk storage.
     /// If disabled, only critical data will be saved, and UserDefaults will be used in place of disk storage￼.
     var diskStorageEnabled: Bool {
         get {
             optionalData[TealiumKey.diskStorageEnabled] as? Bool ?? true
         }
-        
+
         set {
             optionalData[TealiumKey.diskStorageEnabled] = newValue
         }
     }
-    
+
     @available(*, deprecated, message: "Please switch to config.diskStorageDirectory")
     func setOverrideDiskStorageDirectory(_ directory: Disk.Directory) {
         diskStorageDirectory = directory
     }
-    
+
     @available(*, deprecated, message: "Please switch to config.diskStorageDirectory")
     func getOverrideDiskStorageDirectory() -> Disk.Directory? {
         diskStorageDirectory
     }
-    
+
     /// Sets the directory to be used for disk storage. Default `.caches`.
     var diskStorageDirectory: Disk.Directory? {
         get {
             optionalData[TealiumKey.diskStorageDirectory] as? Disk.Directory
         }
-        
+
         set {
             optionalData[TealiumKey.diskStorageDirectory] = newValue
         }

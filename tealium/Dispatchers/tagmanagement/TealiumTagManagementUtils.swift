@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public extension Dictionary where Key == String, Value == Any {
+extension Dictionary where Key == String, Value == Any {
 
     /// Generates a formatted utag.track call for the Tealium iQ webview
     ///

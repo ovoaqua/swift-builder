@@ -96,16 +96,16 @@ class TealiumHelper: NSObject {
         // Optional processing post init.
         // Optionally, join a trace. Trace ID must be generated server-side in UDH.
 //        self.tealium?.leaveTrace(killVisitorSession: true)
-        self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
-
-        self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
-            
-                            self?.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
-                            self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
-            
-            print("Persistent Data: \(String(describing: self?.tealium?.persistentData()?.dictionary))")
-            
-            print("Lifecycle Data: \(String(describing: self?.tealium?.lifecycle()?.dictionary))")
+//        self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
+//            self?.tealium?.tagManagement().
+//        self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
+//            
+//                            self?.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
+//                            self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
+//            
+//            print("Persistent Data: \(String(describing: self?.tealium?.persistentData()?.dictionary))")
+//            
+//            print("Lifecycle Data: \(String(describing: self?.tealium?.lifecycle()?.dictionary))")
         }
     }
 

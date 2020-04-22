@@ -65,10 +65,10 @@ enum TealiumLifecycleCodingKey {
     static let totalSecondsAwake = "totalSecondsAwake"
 }
 
-public enum TealiumLifecycleType {
+public enum TealiumLifecycleType: CustomStringConvertible {
     case launch, sleep, wake
 
-    var description: String {
+    public var description: String {
         switch self {
         case .launch:
             return "launch"

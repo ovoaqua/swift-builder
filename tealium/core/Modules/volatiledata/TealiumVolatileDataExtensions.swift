@@ -10,11 +10,11 @@ import Foundation
 
 public extension Tealium {
 
-    func volatileData() -> TealiumVolatileData? {
-        guard let module = modulesManager.getModule(forName: TealiumVolatileDataKey.moduleName) as? TealiumVolatileDataModule else {
-            return nil
-        }
-
-        return module.volatileData
-    }
+//    func volatileData() -> TealiumVolatileData? {
+//        guard let module = modulesManager.getModule(forName: TealiumVolatileDataKey.moduleName) as? TealiumVolatileDataModule else {
+//            return nil
+//        }
+//
+//        return module.volatileData
+//    }
 }

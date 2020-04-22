@@ -12,5 +12,6 @@ public protocol Collector {
     var data: [String: Any]? { get }
     var collectorId: String { get }
     init(config: TealiumConfig,
-         completion: ()-> Void)
+         diskStorage: TealiumDiskStorage?,
+         completion: () -> Void)
 }

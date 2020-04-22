@@ -15,7 +15,7 @@ import TealiumCore
 extension TealiumTagManagementWKWebView: WKNavigationDelegate {
 
     /// Called when the WebView has finished loading a resource (DOM Complete)
-    public func webView(_ webView: WKWebView,
+    func webView(_ webView: WKWebView,
                         didFinish navigation: WKNavigation!) {
         if let url = webView.url,
             url == self.url {
@@ -31,7 +31,7 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
     }
 
     /// Inform webview of load failure. Forward to any listening delegates.
-    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         self.webviewStateDidChange(.loadFailure, withError: error)
         delegates?.invoke {
             $0.webView?(webView, didFail: navigation, withError: error)
@@ -39,7 +39,7 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
     }
 
     /// Fix for server-side cookies not being set properly
-    public func webView(_ webView: WKWebView,
+    func webView(_ webView: WKWebView,
                         decidePolicyFor navigationResponse: WKNavigationResponse,
                         decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         guard let response = navigationResponse.response as? HTTPURLResponse,
@@ -64,7 +64,7 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
 
     /// Decides whether or not a resource should load.
     /// Remote Commands are intercepted here, and do not need to load requests in the WebView.
-    public func webView(_ webView: WKWebView,
+    func webView(_ webView: WKWebView,
                         decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let urlRequest = navigationAction.request
@@ -102,20 +102,20 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
     }
 
     /// Not used by Tealium. Forward to any listening delegates
-    public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         delegates?.invoke {
             $0.webViewWebContentProcessDidTerminate?(webView)
         }
     }
 
     /// Not used by Tealium. Forward to any listening delegates
-    public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         delegates?.invoke {
             $0.webView?(webView, didCommit: navigation)
         }
     }
 
-    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         if self.currentState.value == WebViewState.didFailToLoad.rawValue {
             return
         }

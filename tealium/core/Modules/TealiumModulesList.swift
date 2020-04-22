@@ -55,7 +55,7 @@ public struct TealiumModulesList: Equatable {
             $0.lowercased()
         })
     }
-    
+
     public init(isWhitelist: Bool,
                 moduleNames: Set<TealiumModuleNames>) {
         self.init(isWhitelist: isWhitelist, moduleNames: Set(moduleNames.map { $0.rawValue }))

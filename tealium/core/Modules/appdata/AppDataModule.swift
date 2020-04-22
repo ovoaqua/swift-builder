@@ -9,17 +9,14 @@
 import Foundation
 
 public class AppDataModule: Collector, TealiumAppDataCollection {
-    public var data: [String : Any]? {
-        get {
-            if self.config.shouldCollectTealiumData {
-                return appData.dictionary
-            } else {
-                return appData.persistentData?.dictionary
-            }
-            
+    public var data: [String: Any]? {
+        if self.config.shouldCollectTealiumData {
+            return appData.dictionary
+        } else {
+            return appData.persistentData?.dictionary
         }
     }
-    
+
     private(set) var uuid: String?
     private var diskStorage: TealiumDiskStorageProtocol!
     private var bundle: Bundle
@@ -28,20 +25,22 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
 //    var logger: TealiumLoggerProtocol?
     public let collectorId = "AppData"
     var config: TealiumConfig
-    
+
     required public init(config: TealiumConfig,
+                         diskStorage: TealiumDiskStorage?,
                          completion: () -> Void) {
+        defer {
+            completion()
+        }
         self.config = config
         self.bundle = Bundle.main
-        self.diskStorage = TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
         self.existingVisitorId = config.existingVisitorId
 //        self.logger = config._internal.logger
         setExistingAppData()
 //        let logRequest = TealiumLogRequest(title: "AppData Initialized", messages: ["Success"], info: nil, logLevel: .info)
 //        self.logger?.log(logRequest)
-        defer {
-            completion()
-        }
+
     }
 
     /// Retrieves existing data from persistent storage and stores in volatile memory.

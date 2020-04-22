@@ -19,7 +19,7 @@ public class ReadWrite {
     private var isAlreadyInQueue: Bool {
         return DispatchQueue.getSpecific(key: queueSpecificKey) == specificValue
     }
-    
+
     private var isAlreadyBarriered: Bool {
         return DispatchQueue.getSpecific(key: barrierSpecificKey) == true
     }
@@ -62,7 +62,7 @@ public class ReadWrite {
     public func write(after delay: DispatchTime, _ work: @escaping () -> Void) {
         queue.asyncAfter(deadline: delay, flags: .barrier, execute: barrieredWork(work))
     }
-    
+
     /// Executes the closure while also setting the barrier flag up for other future, nested, barriered work
     ///
     /// This method's returned block should be passed inside every barriered execution on the queue.
