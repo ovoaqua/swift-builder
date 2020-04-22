@@ -67,7 +67,7 @@ public class EventDataManager {
 
     private var persistentDataStorage: EventData? {
         get {
-            return self.diskStorage.retrieve(as: EventData.self)?.removeExpired()
+            return self.diskStorage.retrieve(as: EventData.self)
         }
 
         set {
@@ -98,11 +98,9 @@ public class EventDataManager {
     public init(config: TealiumConfig,
         diskStorage: TealiumDiskStorageProtocol? = nil) {
         self.diskStorage = TealiumDiskStorage(config: config, forModule: "eventdata")
-        guard let eventData = diskStorage?.retrieve(as: EventData.self) else {
-            self.persistentDataStorage = EventData()
-            return
-        }
-        self.persistentDataStorage = eventData
+        print("Data: \(self.diskStorage.retrieve(as: EventData.self)?.allData)")
+//        let eventData = diskStorage?.retrieve(as: EventData.self)
+//        self.persistentDataStorage = eventData
     }
 
     public func add(key: String,

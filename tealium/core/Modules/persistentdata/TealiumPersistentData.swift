@@ -27,8 +27,8 @@ public class TealiumPersistentData {
 //
 //    }
     
-    init(config: TealiumConfig) {
-        eventDataManager = EventDataManager(config: config)
+    init(eventDataManager: EventDataManager) {
+        self.eventDataManager = eventDataManager
     }
 
     public var dictionary: [String: Any]? {

@@ -489,7 +489,6 @@
 		D798C4832342585700EE665E /* MockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585B233A68DD00DAD90E /* MockDiskStorage.swift */; };
 		D798C4842342585800EE665E /* MockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585B233A68DD00DAD90E /* MockDiskStorage.swift */; };
 		D798C4852342585900EE665E /* MockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585B233A68DD00DAD90E /* MockDiskStorage.swift */; };
-		D79A1C86244A0F0000BBA8B3 /* TealiumPersistentDataModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F0867C1DDF574A008850C8 /* TealiumPersistentDataModule.swift */; };
 		D79A1C87244A0F0500BBA8B3 /* TealiumPersistentDataConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AA27F122D7385500254ADB /* TealiumPersistentDataConstants.swift */; };
 		D79A1C88244A0F0D00BBA8B3 /* TealiumPersistentDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AA27F322D73A3D00254ADB /* TealiumPersistentDataExtensions.swift */; };
 		D79A1C89244A0F1400BBA8B3 /* TealiumPersistentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AA27F522D747FA00254ADB /* TealiumPersistentData.swift */; };
@@ -6838,7 +6837,6 @@
 				D719955522B7F190005BE543 /* Disk+UIImage.swift in Sources */,
 				D719955622B7F190005BE543 /* Disk+InternalHelpers.swift in Sources */,
 				D79A1C99244A0F8300BBA8B3 /* TealiumPersistentDispatchQueue.swift in Sources */,
-				D79A1C86244A0F0000BBA8B3 /* TealiumPersistentDataModule.swift in Sources */,
 				D719955722B7F190005BE543 /* Disk+VolumeInformation.swift in Sources */,
 				D719955822B7F190005BE543 /* Disk.swift in Sources */,
 				D7AA280122D77BE000254ADB /* TealiumLoggerConstants.swift in Sources */,

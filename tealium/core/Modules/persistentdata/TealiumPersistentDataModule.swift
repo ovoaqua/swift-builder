@@ -40,7 +40,7 @@ class TealiumPersistentDataModule: TealiumModule {
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumPersistentKey.moduleName, isCritical: true)
         }
-        self.persistentData = TealiumPersistentData(config: request.config)
+//        self.persistentData = TealiumPersistentData(config: request.config)
         if !request.bypassDidFinish {
             didFinish(request)
         }
