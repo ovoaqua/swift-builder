@@ -18,7 +18,7 @@ public extension Dictionary where Key == String, Value == Any {
     /// - Returns:`String?` representing a utag.track call to be sent to the Tealium iQ webview
     var tealiumJavaScriptTrackCall: String? {
         guard let encodedPayload = jsonString(from: self) else {
-                        return nil
+            return nil
         }
         let trackType = self.legacyType
         return "utag.track(\'\(trackType)\',\(encodedPayload))"

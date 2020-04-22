@@ -47,12 +47,12 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
             diskStorage.save(self.persistentAttributionData, completion: nil)
         } else {
             guard let data = diskStorage.retrieve(as: PersistentAttributionData.self) else {
-                    self.appleSearchAdsData { data in
-                        self.persistentAttributionData = data
-                        self.diskStorage.save(self.persistentAttributionData, completion: nil)
-                    }
-                    return
+                self.appleSearchAdsData { data in
+                    self.persistentAttributionData = data
+                    self.diskStorage.save(self.persistentAttributionData, completion: nil)
                 }
+                return
+            }
             self.persistentAttributionData = data
         }
     }
@@ -92,7 +92,7 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
     }()
 
     /// Requests Apple Search Ads data from AdClient API￼.
-    /// 
+    ///
     /// - Parameter completion: Completion block to be executed asynchronously when Search Ads data is returned
     // swiftlint:disable cyclomatic_complexity
     public func appleSearchAdsData(_ completion: @escaping (PersistentAttributionData) -> Void) {
@@ -128,7 +128,7 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
                     appleAttributionDetails.campaignName = campaignName
                 }
                 if let adGroupId = detailsDict[AppleInternalKeys.adGroupId] as? String {
-                   appleAttributionDetails.adGroupId = adGroupId
+                    appleAttributionDetails.adGroupId = adGroupId
                 }
                 if let adGroupName = detailsDict[AppleInternalKeys.adGroupName] as? String {
                     appleAttributionDetails.adGroupName = adGroupName

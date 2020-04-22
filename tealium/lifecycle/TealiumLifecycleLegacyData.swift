@@ -88,45 +88,45 @@ public class TealiumLifecycleLegacy: NSObject, NSCoding, Encodable {
 // Represents a serializable block of time between a given wake and a sleep
 public class TealiumLifecycleLegacySession: NSObject, NSCoding, Encodable {
 
-        var appVersion: String = TealiumLifecycleSession.getCurrentAppVersion()
-        var wakeDate: Date?
-        var sleepDate: Date? {
-            didSet {
-                guard let wake = wakeDate else {
-                    return
-                }
-                guard let sleep = sleepDate else {
-                    return
-                }
-                let milliseconds = sleep.timeIntervalSince(wake)
-                secondsElapsed = Int(milliseconds)
+    var appVersion: String = TealiumLifecycleSession.getCurrentAppVersion()
+    var wakeDate: Date?
+    var sleepDate: Date? {
+        didSet {
+            guard let wake = wakeDate else {
+                return
             }
+            guard let sleep = sleepDate else {
+                return
+            }
+            let milliseconds = sleep.timeIntervalSince(wake)
+            secondsElapsed = Int(milliseconds)
         }
-        var secondsElapsed: Int = 0
-        var wasLaunch = false
+    }
+    var secondsElapsed: Int = 0
+    var wasLaunch = false
 
-        init(withLaunchDate: Date) {
-            self.wakeDate = withLaunchDate
-            self.wasLaunch = true
-            super.init()
-        }
+    init(withLaunchDate: Date) {
+        self.wakeDate = withLaunchDate
+        self.wasLaunch = true
+        super.init()
+    }
 
-        init(withWakeDate: Date) {
-            self.wakeDate = withWakeDate
-            super.init()
-        }
+    init(withWakeDate: Date) {
+        self.wakeDate = withWakeDate
+        super.init()
+    }
 
-        public required init?(coder aDecoder: NSCoder) {
-            self.wakeDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.wakeDate) as? Date
-            self.sleepDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.sleepDate) as? Date
-            self.secondsElapsed = aDecoder.decodeInteger(forKey: TealiumLifecycleSessionKey.secondsElapsed) as Int
-            self.wasLaunch = aDecoder.decodeBool(forKey: TealiumLifecycleSessionKey.wasLaunch) as Bool
-        }
+    public required init?(coder aDecoder: NSCoder) {
+        self.wakeDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.wakeDate) as? Date
+        self.sleepDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.sleepDate) as? Date
+        self.secondsElapsed = aDecoder.decodeInteger(forKey: TealiumLifecycleSessionKey.secondsElapsed) as Int
+        self.wasLaunch = aDecoder.decodeBool(forKey: TealiumLifecycleSessionKey.wasLaunch) as Bool
+    }
 
-        public func encode(with aCoder: NSCoder) {
-            aCoder.encode(self.wakeDate, forKey: TealiumLifecycleSessionKey.wakeDate)
-            aCoder.encode(self.sleepDate, forKey: TealiumLifecycleSessionKey.sleepDate)
-            aCoder.encode(self.secondsElapsed, forKey: TealiumLifecycleSessionKey.secondsElapsed)
-            aCoder.encode(self.wasLaunch, forKey: TealiumLifecycleSessionKey.wasLaunch)
-        }
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.wakeDate, forKey: TealiumLifecycleSessionKey.wakeDate)
+        aCoder.encode(self.sleepDate, forKey: TealiumLifecycleSessionKey.sleepDate)
+        aCoder.encode(self.secondsElapsed, forKey: TealiumLifecycleSessionKey.secondsElapsed)
+        aCoder.encode(self.wasLaunch, forKey: TealiumLifecycleSessionKey.wasLaunch)
+    }
 }

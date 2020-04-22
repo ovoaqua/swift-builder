@@ -77,7 +77,7 @@ open class TealiumLifecyclePersistentData {
         return true
     }
 
-     func load() -> TealiumLifecycle? {
+    func load() -> TealiumLifecycle? {
         return diskStorage.retrieve(as: TealiumLifecycle.self)
     }
 

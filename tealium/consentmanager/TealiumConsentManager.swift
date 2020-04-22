@@ -65,7 +65,7 @@ public class TealiumConsentManager {
     func updateConsentPreferencesFromConfig(_ config: TealiumConfig?) {
         if let config = config {
             let status = config.initialUserConsentStatus,
-                    categories = config.initialUserConsentCategories
+            categories = config.initialUserConsentCategories
             if let stat = status, let cat = categories {
                 setUserConsentStatusWithCategories(status: stat, categories: cat)
             } else if let stat = status {

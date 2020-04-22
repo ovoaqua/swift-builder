@@ -72,7 +72,7 @@ public class TealiumVisitorProfileRetriever {
                 return
             }
             if let status = response as? HTTPURLResponse {
-                 if let _ = status.allHeaderFields[TealiumKey.errorHeaderKey] as? String {
+                if let _ = status.allHeaderFields[TealiumKey.errorHeaderKey] as? String {
                     completion(.failure(.xErrorDetected))
                 } else if status.statusCode != 200 {
                     completion(.failure(.non200Response))

@@ -11,21 +11,21 @@ import Foundation
 public struct PersistentAttributionData: Codable {
 
     var clickedWithin30D: String?,
-         clickedDate: String?,
-         conversionDate: String?,
-         conversionType: String?,
-         purchaseDate: String?,
-         orgName: String?,
-         orgId: String?,
-         campaignId: String?,
-         campaignName: String?,
-         adGroupId: String?,
-         adGroupName: String?,
-         adKeyword: String?,
-         adKeywordMatchType: String?,
-         creativeSetName: String?,
-         creativeSetId: String?,
-         region: String?
+    clickedDate: String?,
+    conversionDate: String?,
+    conversionType: String?,
+    purchaseDate: String?,
+    orgName: String?,
+    orgId: String?,
+    campaignId: String?,
+    campaignName: String?,
+    adGroupId: String?,
+    adGroupName: String?,
+    adKeyword: String?,
+    adKeywordMatchType: String?,
+    creativeSetName: String?,
+    creativeSetId: String?,
+    region: String?
 
     public subscript(_ key: String) -> String? {
         return self.toDictionary()[key]
@@ -70,26 +70,26 @@ public struct PersistentAttributionData: Codable {
     public func toDictionary() -> [String: String] {
         // note: compiler cannot type-check in reasonable time, so assignment and return split up into separate statements
         let attributionData: [String: String] = [TealiumAttributionKey.clickedWithin30D: clickedWithin30D ?? "",
-                TealiumAttributionKey.clickedDate: clickedDate ?? "",
-                TealiumAttributionKey.conversionDate: conversionDate ?? "",
-                TealiumAttributionKey.conversionType: conversionType ?? "",
-                TealiumAttributionKey.purchaseDate: purchaseDate ?? "",
-                TealiumAttributionKey.orgName: orgName ?? "",
-                TealiumAttributionKey.orgId: orgId ?? "",
-                TealiumAttributionKey.campaignId: campaignId ?? "",
-                TealiumAttributionKey.campaignName: campaignName ?? "",
-                TealiumAttributionKey.adGroupId: adGroupId ?? "",
-                TealiumAttributionKey.adGroupName: adGroupName ?? "",
-                TealiumAttributionKey.adKeyword: adKeyword ?? "",
-                TealiumAttributionKey.adKeywordMatchType: adKeywordMatchType ?? "",
-                TealiumAttributionKey.creativeSetName: creativeSetName ?? "",
-                TealiumAttributionKey.creativeSetId: creativeSetId ?? "",
-                TealiumAttributionKey.region: region ?? "",
-            ]
+                                                 TealiumAttributionKey.clickedDate: clickedDate ?? "",
+                                                 TealiumAttributionKey.conversionDate: conversionDate ?? "",
+                                                 TealiumAttributionKey.conversionType: conversionType ?? "",
+                                                 TealiumAttributionKey.purchaseDate: purchaseDate ?? "",
+                                                 TealiumAttributionKey.orgName: orgName ?? "",
+                                                 TealiumAttributionKey.orgId: orgId ?? "",
+                                                 TealiumAttributionKey.campaignId: campaignId ?? "",
+                                                 TealiumAttributionKey.campaignName: campaignName ?? "",
+                                                 TealiumAttributionKey.adGroupId: adGroupId ?? "",
+                                                 TealiumAttributionKey.adGroupName: adGroupName ?? "",
+                                                 TealiumAttributionKey.adKeyword: adKeyword ?? "",
+                                                 TealiumAttributionKey.adKeywordMatchType: adKeywordMatchType ?? "",
+                                                 TealiumAttributionKey.creativeSetName: creativeSetName ?? "",
+                                                 TealiumAttributionKey.creativeSetId: creativeSetId ?? "",
+                                                 TealiumAttributionKey.region: region ?? "",
+        ]
 
-            return attributionData.filter {
-                $0.value != ""
-            }
+        return attributionData.filter {
+            $0.value != ""
+        }
     }
 
 }

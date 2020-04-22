@@ -23,13 +23,13 @@ public enum Expiration {
         case .after(let date):
             return date
         case .forever:
-         components.setValue(100, for: .year)
-         return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
-     case .afterCustom((let unit, let value)):
-        components.setValue(value, for: map(unit))
-        return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
-    default:
-        return Date()
+            components.setValue(100, for: .year)
+            return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
+        case .afterCustom((let unit, let value)):
+            components.setValue(value, for: map(unit))
+            return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
+        default:
+            return Date()
         }
     }
 
@@ -64,7 +64,7 @@ public class EventDataManager {
     var sessionData = [String: Any]()
     var untilRestartData = [String: Any]()
     var data = Set<EventDataItem>()
-    
+
     private var persistentDataStorage: EventData? {
         get {
             return self.diskStorage.retrieve(as: EventData.self)?.removeExpired()
@@ -96,7 +96,7 @@ public class EventDataManager {
     }
 
     public init(config: TealiumConfig,
-                diskStorage: TealiumDiskStorageProtocol? = nil) {
+        diskStorage: TealiumDiskStorageProtocol? = nil) {
         self.diskStorage = TealiumDiskStorage(config: config, forModule: "eventdata")
         guard let eventData = diskStorage?.retrieve(as: EventData.self) else {
             self.persistentDataStorage = EventData()
@@ -143,11 +143,11 @@ public class EventDataManager {
         }
         print("⏰should we wait on this until session mgr in Android is finished? it is done in swift - should we merge into this branch?")
     }
-    
+
     func delete(forKey key: String) {
         self.persistentDataStorage?.remove(key: key)
     }
-    
+
     func deleteAll() {
         self.persistentDataStorage?.removeAll()
     }

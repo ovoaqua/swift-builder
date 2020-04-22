@@ -7,12 +7,12 @@
 //
 
 #if TEST
-    import Foundation
+import Foundation
 #else
-    #if os(macOS)
-    #else
-        import UIKit
-    #endif
+#if os(macOS)
+#else
+import UIKit
+#endif
 #endif
 
 #if autotracking
@@ -174,7 +174,7 @@ class TealiumAutotrackingModule: TealiumModule {
         let title = String(describing: type(of: object))
 
         var data: [String: Any] = [TealiumKey.event: title ,
-                                    TealiumAutotrackingKey.autotracked: "true"]
+                                   TealiumAutotrackingKey.autotracked: "true"]
 
         if let customData = TealiumAutotracking.customData(forObject: object) {
             data += customData
@@ -197,8 +197,8 @@ class TealiumAutotrackingModule: TealiumModule {
 
         let title = viewController.title ?? String(describing: type(of: viewController))
         var data: [String: Any] = [TealiumKey.event: title ,
-                                    TealiumAutotrackingKey.autotracked: "true"
-                                    ]
+                                   TealiumAutotrackingKey.autotracked: "true"
+        ]
 
         if let customData = TealiumAutotracking.customData(forObject: viewController) {
             data += customData

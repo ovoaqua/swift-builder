@@ -23,11 +23,11 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     public var description: String {
         return """
         <TealiumRemoteCommandResponse: config:\(config()),
-                                       status:\(status),
-                                       payload:\(payload()),
-                                       response: \(String(describing: urlResponse)),
-                                       data:\(String(describing: data))
-                                       error:\(String(describing: error))>
+        status:\(status),
+        payload:\(payload()),
+        response: \(String(describing: urlResponse)),
+        data:\(String(describing: data))
+        error:\(String(describing: error))>
         """
     }
 
