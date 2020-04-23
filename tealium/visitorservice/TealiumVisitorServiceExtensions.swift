@@ -1,5 +1,5 @@
 //
-//  TealiumVisitorProfileConfigExtensions.swift
+//  TealiumVisitorProfileExtensions.swift
 //  tealium-swift
 //
 //  Created by Christina Sund on 5/16/19.
@@ -10,6 +10,26 @@ import Foundation
 #if visitorservice
 import TealiumCore
 #endif
+
+extension Int64 {
+
+    /// Converts minutes to milliseconds
+    var milliseconds: Int64 {
+        return self * 60 * 1000
+    }
+}
+
+public extension Tealium {
+
+    /// - Returns: `VisitorServoceManager` instance
+    func visitorService() -> TealiumVisitorServiceManager? {
+        guard let module = modulesManager.getModule(forName: TealiumVisitorServiceConstants.moduleName) as? TealiumVisitorServiceModule else {
+            return nil
+        }
+
+        return module.visitorServiceManager as? TealiumVisitorServiceManager
+    }
+}
 
 public extension TealiumConfig {
 
@@ -25,38 +45,23 @@ public extension TealiumConfig {
     /// Set to `0` if the profile should always be fetched following a track request.
     var visitorServiceRefreshInterval: Int64? {
         get {
-            optionalData[TealiumVisitorProfileConstants.refreshInterval] as? Int64
+            optionalData[TealiumVisitorServiceConstants.refreshInterval] as? Int64
         }
 
         set {
-            optionalData[TealiumVisitorProfileConstants.refreshInterval] = newValue
+            optionalData[TealiumVisitorServiceConstants.refreshInterval] = newValue
         }
-    }
-
-    /// Adds a new visitor service delegate to be notified of any changes to the visitor profile.
-    /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
-    /// - Parameter delegate: class conforming to `TealiumVisitorServiceDelegate`
-    func addVisitorServiceDelegate(_ delegate: TealiumVisitorServiceDelegate) {
-        var delegates = visitorServiceDelegates ?? [TealiumVisitorServiceDelegate]()
-        delegates.append(delegate)
-        visitorServiceDelegates = delegates
-    }
-
-    /// - Returns:`[TealiumVisitorServiceDelegate]?`
-    @available(*, deprecated, message: "Please switch to config.visitorServiceDelegates")
-    func getVisitorServiceDelegates() -> [TealiumVisitorServiceDelegate]? {
-        visitorServiceDelegates
     }
 
     /// Visitor service delegates to be notified of any changes to the visitor profile.
     /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
-    var visitorServiceDelegates: [TealiumVisitorServiceDelegate]? {
+    var visitorServiceDelegate: TealiumVisitorServiceDelegate? {
         get {
-            optionalData[TealiumVisitorProfileConstants.visitorProfileDelegate] as? [TealiumVisitorServiceDelegate]
+            optionalData[TealiumVisitorServiceConstants.visitorServiceDelegate] as? TealiumVisitorServiceDelegate
         }
 
         set {
-            optionalData[TealiumVisitorProfileConstants.visitorProfileDelegate] = newValue
+            optionalData[TealiumVisitorServiceConstants.visitorServiceDelegate] = newValue
         }
     }
 
@@ -78,11 +83,11 @@ public extension TealiumConfig {
     /// Format: https://overridden-subdomain.yourdomain.com/
     var visitorServiceOverrideURL: String? {
         get {
-            optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideURL] as? String
+            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideURL] as? String
         }
 
         set {
-            optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideURL] = newValue
+            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideURL] = newValue
         }
     }
 
@@ -102,11 +107,11 @@ public extension TealiumConfig {
     /// Sets a specific overridden profile from which to fetch the visitor profile.
     var visitorServiceOverrideProfile: String? {
         get {
-            optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideProfile] as? String
+            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] as? String
         }
 
         set {
-            optionalData[TealiumVisitorProfileConstants.visitorServiceOverrideProfile] = newValue
+            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] = newValue
         }
     }
 }

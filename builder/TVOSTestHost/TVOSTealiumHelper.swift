@@ -138,11 +138,8 @@ extension TVOSTealiumHelper: TealiumDelegate {
 }
 
 extension TVOSTealiumHelper: TealiumVisitorServiceDelegate {
-    func profileDidUpdate(profile: TealiumVisitorProfile?) {
-        guard let profile = profile else {
-            return
-        }
-        if let json = try? JSONEncoder().encode(profile), let string = String(data: json, encoding: .utf8) {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             if self.enableHelperLogs {
                 print(string)
             }

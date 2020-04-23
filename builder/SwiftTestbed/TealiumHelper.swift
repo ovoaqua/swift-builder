@@ -69,7 +69,7 @@ class TealiumHelper: NSObject {
                                       moduleNames: [.autotracking])
         config.modulesList = list
         config.diskStorageEnabled = true
-        config.addVisitorServiceDelegate(self)
+        config.visitorServiceDelegate = self
         config.remoteAPIEnabled = true
         config.logLevel = .verbose
         config.shouldCollectTealiumData = false
@@ -90,7 +90,7 @@ class TealiumHelper: NSObject {
         }
         config.addRemoteCommand(remoteCommand)
         #endif
-
+        
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self, let teal = self.tealium else { return }
@@ -172,11 +172,8 @@ extension TealiumHelper: TealiumDelegate {
 }
 
 extension TealiumHelper: TealiumVisitorServiceDelegate {
-    func profileDidUpdate(profile: TealiumVisitorProfile?) {
-        guard let profile = profile else {
-            return
-        }
-        if let json = try? JSONEncoder().encode(profile), let string = String(data: json, encoding: .utf8) {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             if self.enableHelperLogs {
                 print(string)
             }
