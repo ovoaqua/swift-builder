@@ -15,7 +15,7 @@ public protocol TealiumVisitorServiceDelegate: class {
     func didUpdate(visitorProfile: TealiumVisitorProfile)
 }
 
-enum VisitorServiceStatus: Int {
+public enum VisitorServiceStatus: Int {
     case ready = 0
     case blocked = 1
 }
@@ -27,7 +27,6 @@ public protocol TealiumVisitorServiceManagerProtocol {
 
 public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol {
 
-    // private var visitorServiceDelegates = TealiumMulticastDelegate<TealiumVisitorServiceDelegate>()
     weak var delegate: TealiumVisitorServiceDelegate?
     var visitorServiceRetriever: TealiumVisitorServiceRetriever?
     var diskStorage: TealiumDiskStorageProtocol
@@ -45,9 +44,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
          diskStorage: TealiumDiskStorageProtocol) {
         tealiumConfig = config
         if let delegate = delegate {
-            //for delegate in delegates {
-                self.delegate = delegate
-            //}
+            self.delegate = delegate
         }
         self.diskStorage = diskStorage
         guard let profile = diskStorage.retrieve(as: TealiumVisitorProfile.self) else {

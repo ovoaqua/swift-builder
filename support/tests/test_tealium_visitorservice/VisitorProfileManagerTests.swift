@@ -61,12 +61,12 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
 
     func testBlockState() {
         visitorServiceManager?.blockState()
-        XCTAssertEqual(1, visitorServiceManager?.currentState.value)
+        XCTAssertEqual(visitorServiceManager?.currentState.value, VisitorServiceStatus.blocked.rawValue)
     }
 
     func testReleaseState() {
         visitorServiceManager?.releaseState()
-        XCTAssertEqual(0, visitorServiceManager?.currentState.value)
+        XCTAssertEqual(visitorServiceManager?.currentState.value, VisitorServiceStatus.ready.rawValue)
     }
 
     func testLifetimeEventCountHasBeenUpdated() {
