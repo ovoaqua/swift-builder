@@ -43,9 +43,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
          delegate: TealiumVisitorServiceDelegate?,
          diskStorage: TealiumDiskStorageProtocol) {
         tealiumConfig = config
-        if let delegate = delegate {
-            self.delegate = delegate
-        }
+        self.delegate = delegate
         self.diskStorage = diskStorage
         guard let profile = diskStorage.retrieve(as: TealiumVisitorProfile.self) else {
                 return

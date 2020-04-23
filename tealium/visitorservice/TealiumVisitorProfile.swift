@@ -23,16 +23,18 @@ public struct TealiumVisitorProfile: Codable {
     public var currentVisit: TealiumCurrentVisitProfile?
 
     enum CodingKeys: String, CodingKey {
-        case audiences, badges, dates,
-        booleans = "flags",
-        arraysOfBooleans = "flag_lists",
-        numbers = "metrics",
-        arraysOfNumbers = "metric_lists",
-        tallies = "metric_sets",
-        strings = "properties",
-        arraysOfStrings = "property_lists",
-        setsOfStrings = "property_sets",
-        currentVisit = "current_visit"
+        case audiences
+        case badges
+        case dates
+        case booleans = "flags"
+        case arraysOfBooleans = "flag_lists"
+        case numbers = "metrics"
+        case arraysOfNumbers = "metric_lists"
+        case tallies = "metric_sets"
+        case strings = "properties"
+        case arraysOfStrings = "property_lists"
+        case setsOfStrings = "property_sets"
+        case currentVisit = "current_visit"
     }
 
     public init(from decoder: Decoder) throws {
@@ -80,14 +82,15 @@ public struct TealiumCurrentVisitProfile: Codable {
     public var setsOfStrings: [String: Set<String>]?
 
     enum CodingKeys: String, CodingKey {
-        case dates, booleans = "flags",
-        arraysOfBooleans = "flag_lists",
-        numbers = "metrics",
-        arraysOfNumbers = "metric_lists",
-        tallies = "metric_sets",
-        strings = "properties",
-        arraysOfStrings = "property_lists",
-        setsOfStrings = "property_sets"
+        case dates
+        case booleans = "flags"
+        case arraysOfBooleans = "flag_lists"
+        case numbers = "metrics"
+        case arraysOfNumbers = "metric_lists"
+        case tallies = "metric_sets"
+        case strings = "properties"
+        case arraysOfStrings = "property_lists"
+        case setsOfStrings = "property_sets"
     }
 
     public init(from decoder: Decoder) throws {
