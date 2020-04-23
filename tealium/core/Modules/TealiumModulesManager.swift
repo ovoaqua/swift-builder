@@ -21,12 +21,15 @@ open class TealiumModulesManager: NSObject {
     weak var tealiumInstance: Tealium?
     var config: TealiumConfig?
     var newModulesManager: NewModulesManager
-    
-    init (_ config: TealiumConfig) {
+    var eventDataManager: EventDataManagerProtocol?
+
+    init(_ config: TealiumConfig,
+        eventDataManager: EventDataManagerProtocol? = nil) {
         self.config = config
+        self.eventDataManager = eventDataManager
         newModulesManager = NewModulesManager(config)
     }
-    
+
     /// Sets up active modules from config￼.
     ///
     /// - Parameter config: `TealiumConfig` instance
@@ -40,7 +43,7 @@ open class TealiumModulesManager: NSObject {
     ///
     /// - Parameter config: `TealiumConfig` instance
     public func update(config: TealiumConfig,
-                       oldConfig: TealiumConfig?) {
+        oldConfig: TealiumConfig?) {
         update(config: config, oldConfig: oldConfig, enableCompletion: nil)
     }
 
@@ -49,23 +52,23 @@ open class TealiumModulesManager: NSObject {
     /// - Parameter config: `TealiumConfig` instance￼
     /// - Parameter completion: `TealiumEnableCompletion?` to be called when modules have been initialized
     public func update(config: TealiumConfig,
-                       oldConfig: TealiumConfig?,
-                       enableCompletion: TealiumEnableCompletion?) {
-        
+        oldConfig: TealiumConfig?,
+        enableCompletion: TealiumEnableCompletion?) {
+
         guard config.isEnabled == true else {
             self.disable()
             return
         }
-        
+
         if oldConfig?.isEnabled == false, config.isEnabled == true {
             self.enable(config: config, enableCompletion: enableCompletion)
             return
         }
-        
+
         let currentModulesList: [String]? = modules?.map {
             return $0.description.replacingOccurrences(of: ".module", with: "")
         }
-        
+
         var modulesToInit = [String]()
 
         if let newModulesList = config.modulesList?.filtered {
@@ -74,18 +77,20 @@ open class TealiumModulesManager: NSObject {
                     modulesToInit.append(module)
                 }
             }
-            
+
             self.modules = self.modules?.filter {
                 newModulesList.contains($0.description.replacingOccurrences(of: ".module", with: "")) == true
             }
         }
 
         let newModules = TealiumModules.initializeModules(modulesList: TealiumModulesList(isWhitelist: true, moduleNames: Set(modulesToInit)), delegate: self)
-        
+
         newModules.forEach {
             self.modules?.append($0)
             self.modules = self.modules?.prioritized()
-            var enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
+            var enableRequest = TealiumEnableRequest(config: config,
+                                                     eventDataManager: eventDataManager,
+                                                     enableCompletion: nil)
             enableRequest.bypassDidFinish = true
             $0.enable(enableRequest)
         }
@@ -98,13 +103,14 @@ open class TealiumModulesManager: NSObject {
     ///     - completion: `TealiumEnableCompletion?` to be called when modules have been initialized￼
     ///     - tealiumInstance: `Tealium?` instance used to determine if Tealium is currently active
     public func enable(config: TealiumConfig,
-                       enableCompletion: TealiumEnableCompletion?,
-                       tealiumInstance: Tealium? = nil) {
+        enableCompletion: TealiumEnableCompletion?,
+        tealiumInstance: Tealium? = nil) {
         self.config = config
         self.setupModulesFrom(config: config)
         self.tealiumInstance = tealiumInstance
         self.queue = TealiumQueues.backgroundConcurrentQueue
         let request = TealiumEnableRequest(config: config,
+                                           eventDataManager: eventDataManager,
                                            enableCompletion: enableCompletion)
         self.modules?.first?.handle(request)
     }
@@ -195,7 +201,7 @@ open class TealiumModulesManager: NSObject {
             return
         }
 
-        self.timeoutMillisecondCurrent = 0  // reset
+        self.timeoutMillisecondCurrent = 0 // reset
         if let track = track as? TealiumTrackRequest {
             let track = TealiumTrackRequest(data: newModulesManager.gatherTrackData(for: track.trackDictionary), completion: track.completion)
             firstModule.handle(track)
@@ -210,7 +216,7 @@ open class TealiumModulesManager: NSObject {
     ///     - modules: `[Weak<TealiumModule>]` to receive report
     ///     - request: `TealiumRequest` that has been processed
     public func reportToModules(_ modules: [Weak<TealiumModule>],
-                                request: TealiumRequest) {
+        request: TealiumRequest) {
         for moduleRef in modules {
             guard let module = moduleRef.value else {
                 // Module has been dereferenced
@@ -219,11 +225,11 @@ open class TealiumModulesManager: NSObject {
             module.handleReport(request)
         }
     }
-    
-    
+
+
     deinit {
         self.modules = nil
-        self.isEnabled = false   
+        self.isEnabled = false
     }
 }
 
@@ -236,7 +242,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
     ///     - module: `TealiumModule` that has finished processing the request￼
     ///     - process: `TealiumRequest` that has been processed
     public func tealiumModuleFinished(module: TealiumModule,
-                                      process: TealiumRequest) {
+        process: TealiumRequest) {
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
                 return
@@ -253,7 +259,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
                 }
                 // Last module has finished processing
                 self.reportToModules(self.modulesRequestingReport,
-                                     request: process)
+                    request: process)
 
                 return
             }
@@ -268,7 +274,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
     ///     - module: `TealiumModule?` requesting the operation￼
     ///     - process: `TealiumRequest` to be processed
     public func tealiumModuleRequests(module: TealiumModule?,
-                                      process: TealiumRequest) {
+        process: TealiumRequest) {
         // Module wants to be notified when last module has finished processing
         //  any requests.
         if process as? TealiumReportNotificationsRequest != nil {
@@ -285,7 +291,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
         // Module wants to notify any listening modules of status.
         if let process = process as? TealiumReportRequest {
             reportToModules(modulesRequestingReport,
-                            request: process)
+                request: process)
             return
         }
 
@@ -301,7 +307,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
 
         if let enable = process as? TealiumEnableRequest {
             self.enable(config: enable.config,
-                        enableCompletion: enable.enableCompletion)
+                enableCompletion: enable.enableCompletion)
             return
         }
 
@@ -317,7 +323,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
         // Pass request to other modules - Regular behavior
         modules?.first?.handle(process)
     }
-    
+
 }
 
 // MARK: MODULEMANAGER EXTENSIONS
@@ -334,7 +340,7 @@ extension Array where Element: TealiumModule {
     }
 
     /// Get all existing module names, in current order.
-    /// 
+    ///
     /// - Returns: Array of module names.
     func moduleNames() -> [String] {
         return self.map { type(of: $0).moduleConfig().name }

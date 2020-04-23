@@ -62,9 +62,13 @@ public struct TealiumEnableRequest: TealiumRequest {
     public var enableCompletion: TealiumEnableCompletion?
     public let config: TealiumConfig
     public var bypassDidFinish = false
+    public var eventDataManager: EventDataManagerProtocol?
 
-    public init(config: TealiumConfig, enableCompletion: TealiumEnableCompletion?) {
+    public init(config: TealiumConfig,
+                eventDataManager: EventDataManagerProtocol? = nil,
+                enableCompletion: TealiumEnableCompletion?) {
         self.config = config
+        self.eventDataManager = eventDataManager
         self.enableCompletion = enableCompletion
     }
 

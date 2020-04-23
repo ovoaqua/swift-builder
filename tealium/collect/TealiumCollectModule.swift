@@ -15,6 +15,8 @@ import TealiumCore
 class TealiumCollectModule: TealiumModule {
 
     var collect: TealiumCollectProtocol?
+    var eventDataManager: EventDataManagerProtocol?
+
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumCollectKey.moduleName,
                                    priority: 1050,
@@ -42,6 +44,7 @@ class TealiumCollectModule: TealiumModule {
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
     override func enable(_ request: TealiumEnableRequest) {
         isEnabled = true
+        eventDataManager = request.eventDataManager
         config = request.config
         if self.collect == nil,
             let config = config {
@@ -122,11 +125,21 @@ class TealiumCollectModule: TealiumModule {
             newTrack[TealiumKey.profile] = config?.profile
         }
 
+        if eventDataManager?.sessionId == nil {
+            eventDataManager?.sessionId = EventDataManager.newSessionId
+            // eventDataManager?.lastTrackEvent = Date()
+        }
+
+        if let eventDataManager = self.eventDataManager {
+            newTrack += eventDataManager.allEventData
+        }
+
         if let profileOverride = config?.optionalData[TealiumCollectKey.overrideCollectProfile] as? String {
             newTrack[TealiumKey.profile] = profileOverride
         }
 
         newTrack[TealiumKey.dispatchService] = TealiumCollectKey.moduleName
+        eventDataManager?.lastTrackEvent = Date()
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 

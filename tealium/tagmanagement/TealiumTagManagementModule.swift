@@ -17,6 +17,7 @@ public class TealiumTagManagementModule: TealiumModule {
     var errorState = AtomicInteger()
     var webViewState: Atomic<TealiumWebViewState>?
     var pendingTrackRequests = [TealiumRequest]()
+    var eventDataManager: EventDataManagerProtocol?
 
     override public class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumTagManagementKey.moduleName,
@@ -53,7 +54,7 @@ public class TealiumTagManagementModule: TealiumModule {
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
     override public func enable(_ request: TealiumEnableRequest) {
         self.tagManagement = TealiumTagManagementWKWebView()
-
+        eventDataManager = request.eventDataManager
         let config = request.config
         enableNotifications()
 
@@ -61,6 +62,7 @@ public class TealiumTagManagementModule: TealiumModule {
             guard let self = self else {
                 return
             }
+
             TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
                 guard let self = self else {
                     return
@@ -77,6 +79,7 @@ public class TealiumTagManagementModule: TealiumModule {
                 }
             }
         }
+
         self.isEnabled = true
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
@@ -122,8 +125,19 @@ public class TealiumTagManagementModule: TealiumModule {
         let request = addModuleName(to: request)
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
+
+        if eventDataManager?.sessionId == nil {
+            eventDataManager?.sessionId = EventDataManager.newSessionId
+            // eventDataManager?.lastTrackEvent = Date()
+        }
+
+        if let eventDataManager = self.eventDataManager {
+            newTrack += eventDataManager.allEventData
+        }
+
         var newRequest = TealiumTrackRequest(data: newTrack, completion: request.completion)
         newRequest.moduleResponses = request.moduleResponses
+        eventDataManager?.lastTrackEvent = Date()
         return newRequest
     }
 

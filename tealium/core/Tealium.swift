@@ -22,7 +22,7 @@ public class Tealium {
     public static var numberOfTrackRequests = AtomicInteger()
     public static var lifecycleListeners = TealiumLifecycleListeners()
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
-    public var eventDataManager: EventDataManager
+    public var eventDataManager: EventDataManagerProtocol
     // MARK: PUBLIC
 
     /// Initializer.
@@ -30,12 +30,13 @@ public class Tealium {
     /// - Parameter config: `TealiumConfig` Object created with Tealium account, profile, environment, optional loglevel)
     /// - Parameter enableCompletion: `TealiumEnableCompletion` block to be called when library has finished initializing
     public init(config: TealiumConfig,
+                eventDataManager: EventDataManagerProtocol? = nil,
                 enableCompletion: TealiumEnableCompletion?) {
         self.config = config
         self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
-        modulesManager = TealiumModulesManager(config)
-        self.eventDataManager = EventDataManager(config: config)
+        self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
+        modulesManager = TealiumModulesManager(config, eventDataManager: self.eventDataManager)
         if config.shouldUseRemotePublishSettings {
             self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
             if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
@@ -123,9 +124,14 @@ public class Tealium {
             }
             var trackData = Tealium.trackDataFor(title: title,
                                                  optionalData: data)
+
+            if self.eventDataManager.sessionExpired {
+                self.eventDataManager.expireSessionData()
+            }
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
+            self.eventDataManager.lastTrackEvent = Date()
             self.modulesManager.track(track)
         }
     }

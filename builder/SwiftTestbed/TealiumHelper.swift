@@ -93,33 +93,31 @@ class TealiumHelper: NSObject {
 
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
-        // Optional processing post init.
-        // Optionally, join a trace. Trace ID must be generated server-side in UDH.
-//        self.tealium?.leaveTrace(killVisitorSession: true)
+            guard let self = self, let teal = self.tealium else { return }
+            let persitence = teal.persistentData()
+            let sessionPersistence = teal.volatileData()
+            let dataManager = teal.eventDataManager
+                
+            dataManager.add(key: "myvar", value: 123456, expiration: .forever)
             
-//                        self?.tealium?.eventDataManager.add(key: "myvar", value: 123456, expiration: .forever)
-//        self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
+            persitence.add(data: ["testPersistentKey": "testPersistentValue"])
             
-//            self?.tealium?.persistentData()?.add(data: ["some_key":"some_val"], expiration: .session)
-//
-           self?.tealium?.persistentData().add(data: ["some_key":"some_val"])
-            self?.tealium?.enable(tealiumInstance: <#T##Tealium?#>)
-//
+            persitence.add(data: ["some_key1":"some_val"], expiration: .session)
             
-//            self?.tealium?.persistentData()?.deleteData(forKeys: ["testPersistentKey"])
+            persitence.add(data: ["some_key":"some_val"])
+   
+            persitence.deleteData(forKeys: ["testPersistentKey"])
             
-//            self?.tealium?.volatileData()?.add(data: ["hello": "world"])
-//
-//            self?.tealium?.volatileData()?.add(value: 123, forKey: "test")
-//
-//            self?.tealium?.volatileData()?.deleteData(forKeys: ["hello"])
+            sessionPersistence.add(data: ["hello": "world"])
 
+            sessionPersistence.add(value: 123, forKey: "test")
+
+            sessionPersistence.deleteData(forKeys: ["hello"])
             
-//            print("Volatile Data: \(String(describing: self?.tealium?.volatileData()?.dictionary))")
-//
-//            print("Persistent Data: \(String(describing: self?.tealium?.persistentData()?.dictionary))")
-//
-//            print("Lifecycle Data: \(String(describing: self?.tealium?.lifecycle()?.dictionary))")
+           print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
+
+           print("Persistent Data: \(String(describing: persitence.dictionary))")
+
         }
     }
 
