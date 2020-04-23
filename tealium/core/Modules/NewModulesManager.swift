@@ -12,7 +12,10 @@ public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule"]
+    var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
     var collectors = [Collector]()
+    var dispatchValidators = [DispatchValidator]()
+    var dispatchers = [Dispatcher]()
 
     init (_ config: TealiumConfig) {
         self.setupCollectors(config: config)
@@ -69,5 +72,69 @@ public class NewModulesManager {
         }
         return allData.value
     }
+    
+    func sendTrack(request: TealiumCore.TealiumTrackRequest) {
+        let requestData = gatherTrackData(for: request.trackDictionary)
+        var newRequest = TealiumCore.TealiumTrackRequest(data: requestData, completion: request.completion)
+        
+        if checkShouldQueue(request: &newRequest) {
+            return
+        }
+        
+        if checkShouldDrop(request: newRequest) {
+            return
+        }
+        
+        if checkShouldPurge(request: newRequest) {
+            return
+        }
+        
+        runDispatchers(for: newRequest)
+    }
+    
+    func checkShouldQueue(request: inout TealiumTrackRequest) -> Bool {
+        dispatchValidators.filter {
+            let response = $0.shouldQueue(request: request)
+            if response.0 == true, let data = response.1?.encodable {
+                request.data = data
+            }
+            return response.0
+        }.count > 0
+    }
+    
+    func checkShouldDrop(request: TealiumTrackRequest) -> Bool {
+        dispatchValidators.filter {
+            $0.shouldDrop(request: request)
+        }.count > 0
+    }
+    
+    func checkShouldPurge(request: TealiumTrackRequest) -> Bool {
+        dispatchValidators.filter {
+            $0.shouldPurge(request: request)
+        }.count > 0
+    }
+    
+    func runDispatchers (for request: TealiumRequest) {
+        dispatchers.forEach {
+            $0.track(request: request)
+        }
+    }
 
+}
+
+
+extension NewModulesManager: TealiumModuleDelegate {
+    public func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
+        
+    }
+    
+    public func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
+        // todo - will batch track ever be requested?
+        guard let request = process as? TealiumTrackRequest else {
+            return
+        }
+        sendTrack(request: request)
+    }
+    
+    
 }

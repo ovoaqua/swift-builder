@@ -16,6 +16,8 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
             return appData.persistentData?.dictionary
         }
     }
+    
+    public static var moduleId: String = "appdata"
 
     private(set) var uuid: String?
     private var diskStorage: TealiumDiskStorageProtocol!
@@ -23,7 +25,7 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
     var appData = AppData()
     var existingVisitorId: String?
 //    var logger: TealiumLoggerProtocol?
-    public let collectorId = "AppData"
+    
     var config: TealiumConfig
 
     required public init(config: TealiumConfig,

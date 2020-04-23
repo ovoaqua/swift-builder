@@ -9,25 +9,6 @@
 
 import Foundation
 
-public protocol TealiumModuleDelegate: class {
-
-    /// Called by modules after they've completed a requested command or encountered an error.￼
-    ///
-    /// - Parameters:
-    ///     - module: Module that finished processing.￼
-    ///     - process: The TealiumRequest completed.
-    func tealiumModuleFinished(module: TealiumModule,
-                               process: TealiumRequest)
-
-    /// Called by module requesting an library operation.￼
-    ///
-    /// - Parameter module: Module making request.￼
-    /// - Parameter process: TealiumModuleProcessType requested.
-    func tealiumModuleRequests(module: TealiumModule?,
-                               process: TealiumRequest)
-
-}
-
 /// Function(s) required by every subclass of the TealiumModule
 public protocol TealiumModuleProtocol {
     func handle(_ request: TealiumRequest)

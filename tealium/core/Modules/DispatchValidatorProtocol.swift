@@ -9,6 +9,7 @@
 import Foundation
 
 public protocol DispatchValidator {
-    func shouldQueue(request: TealiumRequest)
-    func shouldDrop(request: TealiumRequest)
+    func shouldQueue(request: TealiumRequest) -> (Bool, [String: Any]?)
+    func shouldDrop(request: TealiumRequest) -> Bool
+    func shouldPurge(request: TealiumRequest) -> Bool
 }

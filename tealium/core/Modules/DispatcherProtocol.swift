@@ -8,11 +8,9 @@
 
 import Foundation
 
-public protocol Dispatcher {
-//    var dispatcherId: String { get }
-//    var delegate: TealiumDelegate? { get set }
-//    init(config: TealiumConfig,
-//         delegate: TealiumDelegate?,
-//         completion: ()-> Void)
-//    func track(dataLayer: [String: Any])
+public protocol Dispatcher: Module {
+    var delegate: TealiumDelegate? { get }
+    init(config: TealiumConfig,
+         delegate: TealiumModuleDelegate?)
+    func track(request: TealiumRequest)
 }
