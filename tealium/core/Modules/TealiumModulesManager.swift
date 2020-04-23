@@ -219,6 +219,12 @@ open class TealiumModulesManager: NSObject {
                 continue
             }
             module.handleReport(request)
+            if let request = request as? TealiumTrackRequest {
+                let success = (request.moduleResponses.filter { !$0.success }.count > 0) ? false : true
+                var responses = [[String: Any]()]
+                request.moduleResponses.forEach { if let info = $0.info { responses.append(info)}}
+                delegate?.tealiumTrackCompleted(success: success, info: ["messages": responses], error: nil)
+            }
         }
     }
 
@@ -252,6 +258,7 @@ extension TealiumModulesManager: TealiumModuleDelegate {
                         process.enableCompletion?(process.moduleResponses)
                     }
                 }
+                
                 // Last module has finished processing
                 self.reportToModules(self.modulesRequestingReport,
                                      request: process)

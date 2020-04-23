@@ -12,7 +12,7 @@ import TealiumCore
 #endif
 
 /// Dispatch Service Module for sending track data to the Tealium Collect or custom endpoint.
-class TealiumCollectModule: TealiumModule {
+class TealiumCollectModule: TealiumModule, Dispatcher {
 
     var collect: TealiumCollectProtocol?
     override class func moduleConfig() -> TealiumModuleConfig {
