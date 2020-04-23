@@ -75,7 +75,7 @@ class TealiumHelper: NSObject {
                                       moduleNames: ["autotracking"])
         config.modulesList = list
         config.diskStorageEnabled = true
-        config.addVisitorServiceDelegate(self)
+        config.visitorServiceDelegate = self
         config.remoteAPIEnabled = true
         config.logLevel = .verbose
         config.batterySaverEnabled = true
@@ -95,12 +95,13 @@ class TealiumHelper: NSObject {
         }
         config.addRemoteCommand(remoteCommand)
         #endif
-
+        
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
         // Optional processing post init.
         // Optionally, join a trace. Trace ID must be generated server-side in UDH.
 //        self.tealium?.leaveTrace(killVisitorSession: true)
+            
         self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
             
         self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])

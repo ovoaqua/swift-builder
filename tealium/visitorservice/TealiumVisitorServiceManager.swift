@@ -27,7 +27,7 @@ public protocol TealiumVisitorServiceManagerProtocol {
 
 public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol {
 
-    weak var delegate: TealiumVisitorServiceDelegate?
+    weak public var delegate: TealiumVisitorServiceDelegate?
     var visitorServiceRetriever: TealiumVisitorServiceRetriever?
     var diskStorage: TealiumDiskStorageProtocol
     var timer: TealiumRepeatingTimer?
