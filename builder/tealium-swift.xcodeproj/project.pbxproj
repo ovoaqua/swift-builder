@@ -3131,8 +3131,8 @@
 			isa = PBXGroup;
 			children = (
 				CFB1ED84244F79B8005CC6F1 /* EventDataManager.swift */,
-				CFB1ED86244F905C005CC6F1 /* EventData.swift */,
 				CFB1ED8D2450A6D1005CC6F1 /* EventDataExtensions.swift */,
+				CFB1ED86244F905C005CC6F1 /* EventData.swift */,
 				CFB1ED902450E1D9005CC6F1 /* Expiration.swift */,
 			);
 			path = eventmanager;
