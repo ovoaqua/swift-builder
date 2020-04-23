@@ -25,8 +25,8 @@ public protocol EventDataManagerProtocol {
 public class EventDataManager: EventDataManagerProtocol {
 
     // need to check for existing session data in storage first
-    var sessionExpiration = [String: Any]()
-    var restartExpiration = [String: Any]()
+    var sessionData = [String: Any]()
+    var restartData = [String: Any]()
     var data = Set<EventDataItem>()
     public var minutesBetweenSessionIdentifier: TimeInterval = 30.0
     public var lastTrackEvent: Date?
@@ -53,7 +53,7 @@ public class EventDataManager: EventDataManagerProtocol {
             if let persistentData = self.persistentDataStorage {
                 allData += persistentData.allData
             }
-            allData += self.restartExpiration
+            allData += self.restartData
             allData += self.allSessionData
             return allData
         }
@@ -73,22 +73,11 @@ public class EventDataManager: EventDataManagerProtocol {
                 }
                 allSessionData[TealiumKey.timestampOffset] = timezoneOffset
             }
-            allSessionData += sessionExpiration
+            allSessionData += sessionData
             return allSessionData
         }
         set {
             self.add(data: newValue, expiration: .session)
-        }
-    }
-    
-    public var allRestartData: [String: Any] {
-        get {
-            var allRestartData = [String: Any]()
-            allRestartData += restartExpiration
-            return allRestartData
-        }
-        set {
-            self.add(data: newValue, expiration: .untilRestart)
         }
     }
 
@@ -178,13 +167,13 @@ public class EventDataManager: EventDataManagerProtocol {
         switch expiration {
         case .session:
 //            print("⏰adding session data")
-            self.sessionExpiration += data
-//            sessionExpiration.forEach {
+            self.sessionData += data
+//            sessionData.forEach {
 //                print("key=\($0.key), value=\($0.value)")
 //            }
         case .untilRestart:
             //print("♻️adding restart data")
-            self.restartExpiration += data
+            self.restartData += data
 //            restartExpiration.forEach {
 //                print("key=\($0.key), value=\($0.value)")
 //            }
