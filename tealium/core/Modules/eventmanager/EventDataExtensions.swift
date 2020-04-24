@@ -34,7 +34,7 @@ extension TealiumKey {
     static let lastSession = "last_session_date"
     static let lastSessionId = "stored_session_id"
     static let lastEvent = "last_track_event"
-    static let defaultMinutesBetweenSession = 1
+    static let defaultMinutesBetweenSession = 2
     static let defaultsSecondsBetweenTrackEvents = 30.0
 }
 

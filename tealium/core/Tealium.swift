@@ -69,12 +69,13 @@ public class Tealium {
         }
 
         if eventDataManager.sessionExpired {
+            print("⏰Tealium.swift sessionUpdate - sessionExpired - generatingSessionID")
             eventDataManager.generateSessionId()
-
         }
         eventDataManager.lastTrackEvent = current
+        print("⏰Tealium.swift sessionUpdate - saving sessionid: \(eventDataManager.sessionId ?? "") and lastTrackEvent: \(eventDataManager.lastTrackEvent!)")
         eventDataManager.sessionData.merge([TealiumKey.sessionId: eventDataManager.sessionId ?? "",
-                                            TealiumKey.lastEvent: eventDataManager.lastTrackEvent!]) { _, new in new }
+                                            TealiumKey.lastEvent: eventDataManager.lastTrackEvent!.extendedIso8601String]) { _, new in new }
         eventDataManager.add(data: eventDataManager.sessionData, expiration: .session)
     }
 

@@ -47,6 +47,7 @@ public class EventDataManager: EventDataManagerProtocol {
 
         set {
             if let newData = newValue?.removeExpired() {
+                print("⏰saving value to disk: \(newData)")
                 self.diskStorage.save(newData, completion: nil)
             }
         }
@@ -228,18 +229,18 @@ public class EventDataManager: EventDataManagerProtocol {
                 print("⏰key=\($0.key), value=\($0.value)")
             }
         case .untilRestart:
-            print("♻️adding restart data")
+            // print("♻️adding restart data")
             self.restartData += data
             self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
-            restartData.forEach {
-                print("♻️key=\($0.key), value=\($0.value)")
-            }
+//            restartData.forEach {
+//                print("♻️key=\($0.key), value=\($0.value)")
+//            }
         default:
-            print("🙃adding default w exp date: \(expiration.date)")
+            // print("🙃adding default w exp date: \(expiration.date)")
             self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
-            data.forEach {
-                print("🙃key=\($0.key), value=\($0.value)")
-            }
+//            data.forEach {
+//                print("🙃key=\($0.key), value=\($0.value)")
+//            }
         }
     }
 
