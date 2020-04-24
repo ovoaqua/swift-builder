@@ -60,6 +60,24 @@ public class Tealium {
         self.init(config: config, enableCompletion: nil)
     }
 
+    private func sessionUpdate() {
+        let current = Date()
+        if let lastEventDate = eventDataManager.lastTrackEvent,
+            let date = lastEventDate.addSeconds(eventDataManager
+                .secondsBetweenTrackEvents) {
+            eventDataManager.qualifiedByMultipleTracks = Date() < date
+        }
+
+        if eventDataManager.sessionExpired {
+            eventDataManager.generateSessionId()
+
+        }
+        eventDataManager.lastTrackEvent = current
+        eventDataManager.sessionData.merge([TealiumKey.sessionId: eventDataManager.sessionId ?? "",
+                                            TealiumKey.lastEvent: eventDataManager.lastTrackEvent!]) { _, new in new }
+        eventDataManager.add(data: eventDataManager.sessionData, expiration: .session)
+    }
+
     /// Enable call used after disable() to re-enable library activites. Unnecessary to call after
     /// initial init. Does NOT override individual module enabled flags.
     public func enable(tealiumInstance: Tealium? = nil) {
@@ -128,6 +146,7 @@ public class Tealium {
             if self.eventDataManager.sessionExpired {
                 self.eventDataManager.expireSessionData()
             }
+            self.sessionUpdate()
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)

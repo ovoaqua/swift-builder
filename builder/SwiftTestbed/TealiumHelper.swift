@@ -102,7 +102,7 @@ class TealiumHelper: NSObject {
             
             persitence.add(data: ["testPersistentKey": "testPersistentValue"])
             
-            persitence.add(data: ["some_key1":"some_val"], expiration: .session)
+            persitence.add(data: ["some_key1123":"some_val123"], expiration: .session)
             
             persitence.add(data: ["some_key":"some_val"])
    
@@ -114,9 +114,9 @@ class TealiumHelper: NSObject {
 
             sessionPersistence.deleteData(forKeys: ["hello"])
             
-           print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
+            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
 
-           print("Persistent Data: \(String(describing: persitence.dictionary))")
+            print("Persistent Data: \(String(describing: persitence.dictionary))")
 
         }
     }

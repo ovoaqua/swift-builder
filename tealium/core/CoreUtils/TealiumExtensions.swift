@@ -44,6 +44,13 @@ extension Date {
             formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
             return formatter
         }()
+        static let extendedIso8601: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(abbreviation: "GMT")
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+            return formatter
+        }()
         static let MMDDYYYY: DateFormatter = {
             let formatter = DateFormatter()
             formatter.calendar = Calendar(identifier: .iso8601)
@@ -65,6 +72,10 @@ extension Date {
 
     public var iso8601String: String {
         return Formatter.iso8601.string(from: self)
+    }
+    
+    public var extendedIso8601String: String {
+        return Formatter.extendedIso8601.string(from: self).appending("Z")
     }
 
     public var iso8601LocalString: String {

@@ -125,8 +125,8 @@ class TealiumCollectModule: TealiumModule {
             newTrack[TealiumKey.profile] = config?.profile
         }
 
-        if eventDataManager?.sessionId == nil {
-            eventDataManager?.sessionId = EventDataManager.newSessionId
+        if eventDataManager?.sessionId == "" {
+            eventDataManager?.generateSessionId()
             // eventDataManager?.lastTrackEvent = Date()
         }
 

@@ -17,6 +17,12 @@ public class TealiumVolatileData {
     }
     
     /// `[String: Any]` containing all active session data.
+    @available(*, deprecated, message: "Please use volatileData().dictionary")
+    public func getData() -> [String: Any] {
+        dictionary
+    }
+    
+    /// `[String: Any]` containing all active session data.
     public var dictionary: [String: Any] {
         eventDataManager.allSessionData
     }
@@ -46,8 +52,8 @@ public class TealiumVolatileData {
     public func deleteData(forKeys keys: [String]) {
         TealiumQueues.backgroundConcurrentQueue.write {
             keys.forEach {
-                if self.eventDataManager.allSessionData[$0] != nil {
-                    self.eventDataManager.allSessionData[$0] = nil
+                if self.eventDataManager.sessionData[$0] != nil {
+                    self.eventDataManager.sessionData[$0] = nil
                 }
             }
         }
@@ -57,8 +63,8 @@ public class TealiumVolatileData {
     /// - Parameter key: `String` to remove a specific value from the internal session data store.
     public func delete(for key: String) {
         TealiumQueues.backgroundConcurrentQueue.write {
-            if self.eventDataManager.allSessionData[key] != nil {
-                self.eventDataManager.allSessionData[key] = nil
+            if self.eventDataManager.sessionData[key] != nil {
+                self.eventDataManager.sessionData[key] = nil
             }
         }
     }
@@ -66,7 +72,7 @@ public class TealiumVolatileData {
     /// Deletes all session data.
     public func deleteAllData() {
         TealiumQueues.backgroundConcurrentQueue.write {
-            self.eventDataManager.allSessionData = [String: Any]()
+            self.eventDataManager.sessionData = [String: Any]()
         }
     }
 

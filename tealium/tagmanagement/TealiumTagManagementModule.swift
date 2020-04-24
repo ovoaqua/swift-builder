@@ -127,7 +127,7 @@ public class TealiumTagManagementModule: TealiumModule {
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
 
         if eventDataManager?.sessionId == nil {
-            eventDataManager?.sessionId = EventDataManager.newSessionId
+            eventDataManager?.generateSessionId()
             // eventDataManager?.lastTrackEvent = Date()
         }
 

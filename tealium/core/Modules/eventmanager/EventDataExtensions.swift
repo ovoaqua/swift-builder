@@ -31,6 +31,11 @@ extension TealiumKey {
     static let timestamp = "timestamp"
     static let timestampLocal = "timestamp_local"
     static let timestampOffset = "timestamp_offset"
+    static let lastSession = "last_session_date"
+    static let lastSessionId = "stored_session_id"
+    static let lastEvent = "last_track_event"
+    static let defaultMinutesBetweenSession = 1
+    static let defaultsSecondsBetweenTrackEvents = 30.0
 }
 
 
@@ -43,4 +48,25 @@ extension Date {
         let timestamp = self.unixTimeMilliseconds
         return timestamp
     }
+    
+    func addSeconds(_ seconds: Double?) -> Date? {
+        guard let seconds = seconds else {
+            return nil
+        }
+        guard let timeInterval = TimeInterval(exactly: seconds) else {
+            return nil
+        }
+        return addingTimeInterval(timeInterval)
+    }
 }
+
+public extension String {
+    var dateFromISOString: Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return dateFormatter.date(from: self)
+    }
+}
+

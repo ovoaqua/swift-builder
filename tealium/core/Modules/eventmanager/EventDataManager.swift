@@ -10,9 +10,13 @@ import Foundation
 
 public protocol EventDataManagerProtocol {
     var allEventData: [String: Any] { get set }
-    var allSessionData: [String: Any] { get set }
+    var allSessionData: [String: Any] { get }
     var lastTrackEvent: Date? { get set }
+    var lastSession: Date? { get set }
+    var qualifiedByMultipleTracks: Bool { get set }
+    var secondsBetweenTrackEvents: TimeInterval { get set }
     var sessionId: String? { get set }
+    var sessionData: [String: Any] { get set }
     var sessionExpired: Bool { get }
     func add(data: [String: Any], expiration: Expiration)
     func add(key: String, value: Any, expiration: Expiration)
@@ -20,19 +24,21 @@ public protocol EventDataManagerProtocol {
     func delete(forKey key: String)
     func deleteAll()
     func expireSessionData()
+    func generateSessionId()
 }
 
 public class EventDataManager: EventDataManagerProtocol {
 
-    // need to check for existing session data in storage first
-    var sessionData = [String: Any]()
-    var restartData = [String: Any]()
     var data = Set<EventDataItem>()
-    public var minutesBetweenSessionIdentifier: TimeInterval = 30.0
-    public var lastTrackEvent: Date?
     var diskStorage: TealiumDiskStorageProtocol
-    // var isLoaded: Atomic<Bool> = Atomic(value: false)
-
+    var restartData = [String: Any]()
+    public var lastTrackEvent: Date?
+    public var lastSession: Date?
+    public var minutesBetweenSessionIdentifier: TimeInterval
+    public var qualifiedByMultipleTracks: Bool = false
+    public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
+    public var sessionData = [String: Any]()
+    
     /// - Returns: `EventData` containing all stored event data
     private var persistentDataStorage: EventData? {
         get {
@@ -66,18 +72,17 @@ public class EventDataManager: EventDataManagerProtocol {
     public var allSessionData: [String: Any] {
         get {
             var allSessionData = [String: Any]()
+            if let persistentData = self.persistentDataStorage {
+                allSessionData += persistentData.allData
+            }
+            
             allSessionData[TealiumKey.random] = "\(Int.random(in: 1...16))"
-            if !dispatchHasExistingTimestamps(allSessionData) {
-                allSessionData.merge(currentTimeStamps) { _, new -> Any in
-                    new
-                }
+            if !currentTimestampsExist(allSessionData) {
+                allSessionData.merge(currentTimeStamps) { _ , new in new }
                 allSessionData[TealiumKey.timestampOffset] = timezoneOffset
             }
             allSessionData += sessionData
             return allSessionData
-        }
-        set {
-            self.add(data: newValue, expiration: .session)
         }
     }
 
@@ -92,21 +97,16 @@ public class EventDataManager: EventDataManagerProtocol {
             TealiumKey.timestampUnix: date.unixTimeSeconds
         ]
     }
-
-    /// - Returns: `String` containing a new session ID
-    public static var newSessionId: String {
-        Date().timestampInMilliseconds
-    }
     
     /// - Returns: `String` session id for the active session
     public var sessionId: String? {
         get {
-            return allSessionData[TealiumKey.sessionId] as? String
+            persistentDataStorage?.allData[TealiumKey.sessionId] as? String
         }
         set {
-            allSessionData[TealiumKey.sessionId] = newValue
-            add(data: [TealiumKey.sessionId: newValue as Any],
-                expiration: .session)
+            if let newValue = newValue {
+                add(data: [TealiumKey.sessionId: newValue], expiration: .session)
+            }
         }
     }
 
@@ -124,6 +124,33 @@ public class EventDataManager: EventDataManagerProtocol {
 
         return false
     }
+    
+    /// Retrieves the stored lastEvent
+    /// - Returns: `Date?` lastEvent date
+    public var storedLastEvent: Date? {
+        guard let lastEvent = allEventData[TealiumKey.lastEvent] as? String else {
+            return nil
+        }
+        return lastEvent.dateFromISOString
+    }
+    
+    /// Retrieves the stored lastSession
+    /// - Returns: `Date?` lastSession date
+    public var storedLastSession: Date? {
+        guard let lastSession = allEventData[TealiumKey.lastSession] as? String else {
+            return nil
+        }
+        return lastSession.dateFromISOString
+    }
+
+    /// Retrieves the stored sessionId
+    /// - Returns: `String?`
+    public var storedSessionId: String? {
+        guard let sessionId = allEventData[TealiumKey.lastSessionId] as? String else {
+            return nil
+        }
+        return sessionId
+    }
 
     /// - Returns: `String` containing the offset from UTC in hours
     var timezoneOffset: String {
@@ -136,15 +163,43 @@ public class EventDataManager: EventDataManagerProtocol {
     public init(config: TealiumConfig,
         diskStorage: TealiumDiskStorageProtocol? = nil) {
         self.diskStorage = TealiumDiskStorage(config: config, forModule: "eventdata")
+        self.minutesBetweenSessionIdentifier = TimeInterval(TealiumKey.defaultMinutesBetweenSession)
         var currentStaticData = [TealiumKey.account: config.account,
             TealiumKey.profile: config.profile,
             TealiumKey.environment: config.environment,
             TealiumKey.libraryName: TealiumValue.libraryName,
             TealiumKey.libraryVersion: TealiumValue.libraryVersion]
+       
         if let dataSource = config.datasource {
             currentStaticData[TealiumKey.dataSource] = dataSource
         }
+        
         add(data: currentStaticData, expiration: .untilRestart)
+        
+        guard let lastEventDate = storedLastEvent else {
+            generateSessionId()
+            lastTrackEvent = Date()
+            sessionData.merge([TealiumKey.sessionId: sessionId ?? "",
+                               TealiumKey.lastEvent: lastTrackEvent!.extendedIso8601String]) { _, new in new }
+            add(data: sessionData, expiration: .session)
+            return
+        }
+        
+        lastTrackEvent = lastEventDate
+
+        guard sessionExpired else {
+            sessionId = storedSessionId
+            sessionData.merge([TealiumKey.sessionId: sessionId ?? "",
+                               TealiumKey.lastEvent: lastTrackEvent!.extendedIso8601String]) { _, new in new }
+            add(data: sessionData, expiration: .session)
+            return
+        }
+
+        generateSessionId()
+        lastTrackEvent = Date()
+        sessionData.merge([TealiumKey.sessionId: sessionId ?? "",
+                           TealiumKey.lastEvent: lastTrackEvent!.extendedIso8601String]) { _, new in new }
+        add(data: sessionData, expiration: .session)
     }
 
     /// Adds data to be stored based on the `Expiraton`
@@ -166,37 +221,39 @@ public class EventDataManager: EventDataManagerProtocol {
         expiration: Expiration) {
         switch expiration {
         case .session:
-//            print("⏰adding session data")
+            print("⏰adding session data")
             self.sessionData += data
-//            sessionData.forEach {
-//                print("key=\($0.key), value=\($0.value)")
-//            }
-        case .untilRestart:
-            //print("♻️adding restart data")
-            self.restartData += data
-//            restartExpiration.forEach {
-//                print("key=\($0.key), value=\($0.value)")
-//            }
-        default:
-//            print("🙃adding default w exp date: \(expiration.date)")
-//            data.forEach {
-//                print("key=\($0.key), value=\($0.value)")
-//            }
             self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
+            sessionData.forEach {
+                print("⏰key=\($0.key), value=\($0.value)")
+            }
+        case .untilRestart:
+            print("♻️adding restart data")
+            self.restartData += data
+            self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
+            restartData.forEach {
+                print("♻️key=\($0.key), value=\($0.value)")
+            }
+        default:
+            print("🙃adding default w exp date: \(expiration.date)")
+            self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
+            data.forEach {
+                print("🙃key=\($0.key), value=\($0.value)")
+            }
         }
     }
 
-    /// Removes session data and resets sessionId
+    /// Removes session data and resets session
     public func expireSessionData() {
-        allSessionData = [String: Any]()
-        allSessionData[TealiumKey.sessionId] = EventDataManager.newSessionId
+        sessionData = [String: Any]()
+        generateSessionId()
     }
-
-    /// Checks that the dispatch contains all expected timestamps.
+    
+    /// Checks that the active session data contains all expected timestamps.
     ///
-    /// - Parameter currentData: `[String: Any]` containing existing volatile data
-    /// - Returns: `Bool` `true` if dispatch contains existing timestamps
-    func dispatchHasExistingTimestamps(_ currentData: [String: Any]) -> Bool {
+    /// - Parameter currentData: `[String: Any]` containing existing session data
+    /// - Returns: `Bool` `true` if current timestamps exist in active session data
+    func currentTimestampsExist(_ currentData: [String: Any]) -> Bool {
         TealiumQueues.backgroundConcurrentQueue.read {
             currentData[TealiumKey.timestampEpoch] != nil &&
                 currentData[TealiumKey.timestamp] != nil &&
@@ -204,6 +261,11 @@ public class EventDataManager: EventDataManagerProtocol {
                 currentData[TealiumKey.timestampOffset] != nil &&
                 currentData[TealiumKey.timestampUnix] != nil
         }
+    }
+    
+    /// Generates a new sessionId
+    public func generateSessionId() {
+        sessionId = Date().unixTimeMilliseconds
     }
 
     /// Adds traceId to the payload for debugging server side integrations
