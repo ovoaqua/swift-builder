@@ -98,25 +98,27 @@ class TealiumHelper: NSObject {
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
                 
-//            dataManager.add(key: "myvar", value: 123456, expiration: .forever)
-//            
-//            persitence.add(data: ["testPersistentKey": "testPersistentValue"])
-//            
-//            persitence.add(data: ["some_key1123":"some_val123"], expiration: .session)
-//            
-//            persitence.add(data: ["some_key":"some_val"])
-//   
-//            persitence.deleteData(forKeys: ["testPersistentKey"])
-//            
-//            sessionPersistence.add(data: ["hello": "world"])
-//
-//            sessionPersistence.add(value: 123, forKey: "test")
-//
-//            sessionPersistence.deleteData(forKeys: ["hello"])
-//            
-//            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
-//
-//            print("Persistent Data: \(String(describing: persitence.dictionary))")
+            //dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
+                        
+            //persitence.add(data: ["some_key1": "some_val1"], expiration: .session)
+            
+            //persitence.add(data: ["some_key_forever":"some_val_forever"]) // forever
+            
+            // persitence.add(data: ["until": "restart"], expiration: .untilRestart)
+            
+            //persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
+   
+            //persitence.deleteData(forKeys: ["myvarforever"])
+            
+//            sessionPersistence.add(data: ["hello": "world"]) // session
+
+//            sessionPersistence.add(value: 123, forKey: "test") // session
+
+            //sessionPersistence.deleteData(forKeys: ["hello", "test"])
+            
+            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
+
+            print("Persistent Data: \(String(describing: persitence.dictionary))")
 
         }
     }

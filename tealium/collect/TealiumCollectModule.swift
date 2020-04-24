@@ -139,7 +139,7 @@ class TealiumCollectModule: TealiumModule {
         }
 
         newTrack[TealiumKey.dispatchService] = TealiumCollectKey.moduleName
-        eventDataManager?.lastTrackEvent = Date()
+        eventDataManager?.lastSessionIdRefresh = Date()
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 

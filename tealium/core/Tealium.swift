@@ -62,20 +62,20 @@ public class Tealium {
 
     private func sessionUpdate() {
         let current = Date()
-        if let lastEventDate = eventDataManager.lastTrackEvent,
+        if let lastEventDate = eventDataManager.lastSessionIdRefresh,
             let date = lastEventDate.addSeconds(eventDataManager
                 .secondsBetweenTrackEvents) {
             eventDataManager.qualifiedByMultipleTracks = Date() < date
         }
 
         if eventDataManager.sessionExpired {
-            print("⏰Tealium.swift sessionUpdate - sessionExpired - generatingSessionID")
+            //print("⏰Tealium.swift sessionUpdate - sessionExpired - generatingSessionID")
             eventDataManager.generateSessionId()
         }
-        eventDataManager.lastTrackEvent = current
-        print("⏰Tealium.swift sessionUpdate - saving sessionid: \(eventDataManager.sessionId ?? "") and lastTrackEvent: \(eventDataManager.lastTrackEvent!)")
+        eventDataManager.lastSessionIdRefresh = current
+        //        print("⏰Tealium.swift sessionUpdate - saving sessionid: \(eventDataManager.sessionId ?? "") and lastTrackEvent: \(eventDataManager.lastTrackEvent!)")
         eventDataManager.sessionData.merge([TealiumKey.sessionId: eventDataManager.sessionId ?? "",
-                                            TealiumKey.lastEvent: eventDataManager.lastTrackEvent!.extendedIso8601String]) { _, new in new }
+                                            TealiumKey.lastSessionIdRefresh: eventDataManager.lastSessionIdRefresh!.extendedIso8601String]) { _, new in new }
         eventDataManager.add(data: eventDataManager.sessionData, expiration: .session)
     }
 
@@ -145,13 +145,13 @@ public class Tealium {
                                                  optionalData: data)
 
             if self.eventDataManager.sessionExpired {
-                self.eventDataManager.expireSessionData()
+                self.eventDataManager.refreshSessionData()
             }
             self.sessionUpdate()
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
-            self.eventDataManager.lastTrackEvent = Date()
+            self.eventDataManager.lastSessionIdRefresh = Date()
             self.modulesManager.track(track)
         }
     }

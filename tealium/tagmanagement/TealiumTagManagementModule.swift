@@ -137,7 +137,7 @@ public class TealiumTagManagementModule: TealiumModule {
 
         var newRequest = TealiumTrackRequest(data: newTrack, completion: request.completion)
         newRequest.moduleResponses = request.moduleResponses
-        eventDataManager?.lastTrackEvent = Date()
+        eventDataManager?.lastSessionIdRefresh = Date()
         return newRequest
     }
 
