@@ -9,8 +9,8 @@
 import Foundation
 
 public protocol Dispatcher: Module {
-    var delegate: TealiumDelegate? { get }
+    var delegate: TealiumModuleDelegate { get }
     init(config: TealiumConfig,
-         delegate: TealiumModuleDelegate?)
-    func track(request: TealiumRequest)
+         delegate: TealiumModuleDelegate)
+    func dynamicTrack(_ request: TealiumRequest)
 }

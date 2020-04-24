@@ -64,14 +64,14 @@ public extension TealiumConfig {
     }
 }
 
-public extension Tealium {
-
-    /// - Returns: An instance of a `TealiumCollectProtocol`
-    func collect() -> TealiumCollectProtocol? {
-        guard let collectModule = modulesManager.getModule(forName: TealiumCollectKey.moduleName) as? TealiumCollectModule else {
-            return nil
-        }
-
-        return collectModule.collect
-    }
-}
+//public extension Tealium {
+//
+//    /// - Returns: An instance of a `TealiumCollectProtocol`
+//    func collect() -> TealiumCollectProtocol? {
+//        guard let collectModule = modulesManager.getModule(forName: TealiumCollectKey.moduleName) as? TealiumCollectModule else {
+//            return nil
+//        }
+//
+//        return collectModule.collect
+//    }
+//}

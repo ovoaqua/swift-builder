@@ -12,6 +12,8 @@ import TealiumCore
 #endif
 
 class TealiumAttributionModule: Collector {
+    static var moduleId: String = "attribution"
+    
     var data: [String: Any]? {
         self.attributionData.allAttributionData
     }

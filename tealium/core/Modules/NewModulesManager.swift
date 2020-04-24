@@ -12,13 +12,20 @@ public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule"]
-    var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
+    var knownDispatchers: [String] = ["TealiumCollect.CollectModule"
+//        , "TealiumTagManagement.TealiumTagManagementModule"
+    ]
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
+    var dispatchManager: DispatchManager?
+    var knownDispatchValidators = [DispatchManager.self]
     var dispatchers = [Dispatcher]()
 
     init (_ config: TealiumConfig) {
         self.setupCollectors(config: config)
+        self.setupDispatchers(config: config)
+        self.setupDispatchValidators(config: config)
+        self.dispatchManager = dispatchValidators.filter { $0 as? DispatchManager != nil }.first as? DispatchManager
     }
 
     func setupCollectors(config: TealiumConfig) {
@@ -57,6 +64,34 @@ public class NewModulesManager {
 
         }
     }
+    
+    func setupDispatchValidators(config: TealiumConfig) {
+        knownDispatchValidators.forEach { dispatchValidator in
+            let validator = dispatchValidator.init(config: config, delegate: self)
+            guard self.dispatchValidators.contains(where: {
+                type(of: $0) == dispatchValidator
+            }) == false else {
+                return
+            }
+            self.dispatchValidators.append(validator)
+        }
+    }
+    
+    func setupDispatchers(config: TealiumConfig) {
+        self.knownDispatchers.forEach { knownDispatcher in
+            guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
+                return
+            }
+
+            let dispatcher = moduleRef.init(config: config, delegate: self)
+            guard self.dispatchers.contains(where: {
+                type(of: $0) == moduleRef
+            }) == false else {
+                return
+            }
+            self.dispatchers.append(dispatcher)
+        }
+    }
 
     func gatherTrackData(for data: [String: Any]?) -> [String: Any] {
         let allData = Atomic(value: [String: Any]())
@@ -73,11 +108,13 @@ public class NewModulesManager {
         return allData.value
     }
     
-    func sendTrack(request: TealiumCore.TealiumTrackRequest) {
+    func sendTrack(request: TealiumTrackRequest) {
         let requestData = gatherTrackData(for: request.trackDictionary)
         var newRequest = TealiumCore.TealiumTrackRequest(data: requestData, completion: request.completion)
         
         if checkShouldQueue(request: &newRequest) {
+            let enqueueRequest = TealiumEnqueueRequest(data: request, completion: nil)
+            dispatchManager?.queue(enqueueRequest)
             return
         }
         
@@ -86,10 +123,23 @@ public class NewModulesManager {
         }
         
         if checkShouldPurge(request: newRequest) {
+            dispatchManager?.clearQueue()
             return
         }
         
         runDispatchers(for: newRequest)
+    }
+    
+    func sendBatch(request: TealiumBatchTrackRequest) {
+        if checkShouldPurge(request: request) {
+            return
+        }
+        
+        if checkShouldDrop(request: request) {
+            return
+        }
+        
+        runDispatchers(for: request)
     }
     
     func checkShouldQueue(request: inout TealiumTrackRequest) -> Bool {
@@ -102,13 +152,13 @@ public class NewModulesManager {
         }.count > 0
     }
     
-    func checkShouldDrop(request: TealiumTrackRequest) -> Bool {
+    func checkShouldDrop(request: TealiumRequest) -> Bool {
         dispatchValidators.filter {
             $0.shouldDrop(request: request)
         }.count > 0
     }
     
-    func checkShouldPurge(request: TealiumTrackRequest) -> Bool {
+    func checkShouldPurge(request: TealiumRequest) -> Bool {
         dispatchValidators.filter {
             $0.shouldPurge(request: request)
         }.count > 0
@@ -116,7 +166,7 @@ public class NewModulesManager {
     
     func runDispatchers (for request: TealiumRequest) {
         dispatchers.forEach {
-            $0.track(request: request)
+            $0.dynamicTrack(request)
         }
     }
 
@@ -129,11 +179,14 @@ extension NewModulesManager: TealiumModuleDelegate {
     }
     
     public func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        // todo - will batch track ever be requested?
-        guard let request = process as? TealiumTrackRequest else {
+        switch process {
+        case let request as TealiumBatchTrackRequest:
+            sendBatch(request: request)
+        case let request as TealiumTrackRequest:
+            sendTrack(request: request)
+        default:
             return
         }
-        sendTrack(request: request)
     }
     
     

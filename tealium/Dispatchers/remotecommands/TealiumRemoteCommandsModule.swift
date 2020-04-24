@@ -12,7 +12,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumRemoteCommandsModule: TealiumModule, Dispatcher {
+public class TealiumRemoteCommandsModule: TealiumModule {
 
     public var remoteCommands: TealiumRemoteCommands?
     var observer: NSObjectProtocol?
