@@ -8,9 +8,9 @@
 
 import Foundation
 #if !COCOAPODS
-import TealiumAppData
+//import TealiumAppData
 import TealiumCore
-import TealiumDeviceData
+//import TealiumDeviceData
 #endif
 import TealiumCrashReporteriOS
 
@@ -148,8 +148,8 @@ public class TealiumPLCrash: TealiumAppDataCollection {
             }
             threadDictionary[TealiumCrashThreadKey.registers] = registerDictionary
             threadDictionary[TealiumCrashThreadKey.crashed] = thread.crashed
-            threadDictionary[TealiumCrashThreadKey.threadId] = NSNull()  // NR: null
-            threadDictionary[TealiumCrashThreadKey.priority] = NSNull()  // NR: null
+            threadDictionary[TealiumCrashThreadKey.threadId] = NSNull() // NR: null
+            threadDictionary[TealiumCrashThreadKey.priority] = NSNull() // NR: null
 
             var stackArray = [[String: Any]]()
             var stackDictionary = [String: Any]()
@@ -224,7 +224,7 @@ public class TealiumPLCrash: TealiumAppDataCollection {
                 TealiumCrashKey.deviceMemoryAvailableLegacy: deviceMemoryAvailable,
                 TealiumCrashKey.deviceMemoryAvailable: deviceMemoryAvailable,
                 TealiumCrashKey.deviceOsBuild: osBuild,
-                TealiumAppDataKey.build: appBuild(),
+                TealiumKey.appBuild: appBuild(),
                 TealiumCrashKey.processId: processIdentifier ?? TealiumPLCrash.CrashDataUnknown,
                 TealiumCrashKey.processPath: processPath ?? TealiumPLCrash.CrashDataUnknown,
                 TealiumCrashKey.parentProcess: parentProcessName ?? TealiumPLCrash.CrashDataUnknown,

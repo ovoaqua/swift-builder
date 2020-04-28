@@ -17,13 +17,13 @@ public struct SessionStarter: SessionStarterProtocol {
 
     var config: TealiumConfig
     var urlSession: URLSessionProtocol
-    var logger: TealiumLogger
+    //var logger: TealiumLogger
 
     public init(config: TealiumConfig,
         urlSession: URLSessionProtocol = URLSession.shared) {
         self.config = config
         self.urlSession = urlSession
-        self.logger = TealiumLogger(loggerId: "SessionStarter", logLevel: config.logLevel ?? defaultTealiumLogLevel)
+        //self.logger = TealiumLogger(loggerId: "SessionStarter", logLevel: config.logLevel ?? defaultTealiumLogLevel)
     }
 
     /// Sets the session URL
@@ -37,18 +37,18 @@ public struct SessionStarter: SessionStarterProtocol {
     /// - Parameter completion: `Result<HTTPURLResponse, Error>` Optional completion handling if needed, otherwise log output can be monitored.
     public func sessionRequest(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void = { _ in }) {
         guard let url = URL(string: sessionURL) else {
-            self.log(error: SessionError.invalidURL.description)
+            //self.log(error: SessionError.invalidURL.description)
             return
         }
         urlSession.tealiumDataTask(with: url) { _, response, error in
             if error != nil {
-                self.log(error: "\(SessionError.errorInRequest.description)\(String(describing: error?.localizedDescription))")
+                //self.log(error: "\(SessionError.errorInRequest.description)\(String(describing: error?.localizedDescription))")
                 completion(.failure(SessionError.errorInRequest))
                 return
             }
             guard let response = response as? HTTPURLResponse,
                 HttpStatusCodes(rawValue: response.statusCode) == .ok else {
-                    self.log(error: SessionError.invalidResponse.description)
+                    //self.log(error: SessionError.invalidResponse.description)
                     completion(.failure(SessionError.invalidResponse))
                     return
             }
@@ -58,7 +58,7 @@ public struct SessionStarter: SessionStarterProtocol {
 
     /// - Parameter error: `String`
     func log(error: String) {
-        logger.log(message: error, logLevel: .warnings)
+        //logger.log(message: error, logLevel: .warnings)
     }
 
 }

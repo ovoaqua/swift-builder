@@ -6,13 +6,13 @@
 //  Copyright © 2016 Tealium, Inc. All rights reserved.
 //
 
-@testable import TealiumAppData
+//@testable import TealiumAppData
 @testable import TealiumCollect
 @testable import TealiumConsentManager
 @testable import TealiumCore
-@testable import TealiumDelegate
-@testable import TealiumDeviceData
-@testable import TealiumLogger
+//@testable import TealiumDelegate
+//@testable import TealiumDeviceData
+//@testable import TealiumLogger
 @testable import TealiumVisitorService
 import XCTest
 #if os(iOS)
@@ -52,7 +52,7 @@ class TealiumModulesManagerTests: XCTestCase {
 
         let enableExpectation = self.expectation(description: "testEnable")
 
-        modulesManager = TealiumModulesManager()
+        modulesManager = TealiumModulesManager(testTealiumConfig)
         testTealiumConfig.initialUserConsentStatus = .consented
         // tag management cannot work properly in tests due to UIKit dependency
         let list = TealiumModulesList(isWhitelist: false, moduleNames: ["tagmanagement"])
@@ -103,7 +103,7 @@ class TealiumModulesManagerTests: XCTestCase {
 
             for _ in 0..<iterations {
 
-                let modulesManager = TealiumModulesManager()
+                let modulesManager = TealiumModulesManager(defaultTealiumConfig)
                 modulesManager.enable(config: defaultTealiumConfig, enableCompletion: nil)
             }
         }
@@ -117,7 +117,7 @@ class TealiumModulesManagerTests: XCTestCase {
                                       moduleNames: Set<String>())
         config.modulesList = list
 
-        let manager = TealiumModulesManager()
+        let manager = TealiumModulesManager(defaultTealiumConfig)
         manager.enable(config: config, enableCompletion: nil)
 
         let expectation = self.expectation(description: "testPublicTrack")
@@ -147,7 +147,7 @@ class TealiumModulesManagerTests: XCTestCase {
                                       moduleNames: Set(TestTealiumHelper.allTealiumModuleNames()))
         config.modulesList = list
 
-        let manager = TealiumModulesManager()
+        let manager = TealiumModulesManager(config)
         manager.enable(config: config, enableCompletion: nil)
 
         XCTAssert(manager.modules!.count == 0, "Unexpected number of modules initialized: \(manager.modules!)")
@@ -199,7 +199,7 @@ class TealiumModulesManagerTests: XCTestCase {
                                    profile: "test",
                                    environment: "test")
 
-        let manager = TealiumModulesManager()
+        let manager = TealiumModulesManager(config)
         manager.setupModulesFrom(config: config)
 
         let module = manager.getModule(forName: "logger")
@@ -208,7 +208,7 @@ class TealiumModulesManagerTests: XCTestCase {
     }
 
     func testTrackWhenDisabled() {
-        let modulesManager = TealiumModulesManager()
+        let modulesManager = TealiumModulesManager(testTealiumConfig)
         modulesManager.enable(config: testTealiumConfig, enableCompletion: nil)
         modulesManager.disable()
         let trackExpectation = self.expectation(description: "track")
@@ -232,7 +232,7 @@ class TealiumModulesManagerTests: XCTestCase {
         moduleA.isEnabled = true
         let moduleB = TealiumModule(delegate: nil)
         moduleB.isEnabled = true
-        let manager = TealiumModulesManager()
+        let manager = TealiumModulesManager(testTealiumConfig)
         manager.modules = [moduleA, moduleB]
 
         // Act
@@ -248,7 +248,7 @@ class TealiumModulesManagerTests: XCTestCase {
         moduleA.isEnabled = true
         let moduleB = TealiumModule(delegate: nil)
         moduleB.isEnabled = false
-        let manager = TealiumModulesManager()
+        let manager = TealiumModulesManager(testTealiumConfig)
         manager.modules = [moduleA, moduleB]
 
         // Act
