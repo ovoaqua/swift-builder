@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let cookieStore = HTTPCookieStorage.shared
             cookieStore.cookieAcceptPolicy = .always
         TealiumHelper.shared.start()
+        TealiumHelper.shared.track(title: "start", data: ["test123": "value123"])
         return true
     }
 

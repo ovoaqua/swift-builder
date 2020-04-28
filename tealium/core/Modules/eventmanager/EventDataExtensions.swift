@@ -26,11 +26,17 @@ public extension Tealium {
 
 }
 
-extension TealiumKey {
+public extension TealiumKey {
     static let timestampEpoch = "tealium_timestamp_epoch"
     static let timestamp = "timestamp"
     static let timestampLocal = "timestamp_local"
     static let timestampOffset = "timestamp_offset"
+    static let lastSessionRequest = "last_session_date"
+    static let lastSessionId = "stored_session_id"
+    static let lastSessionIdRefresh = "last_track_event"
+    static let defaultMinutesBetweenSession = 2
+    static let defaultsSecondsBetweenTrackEvents = 30.0
+    static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
 }
 
 
@@ -42,5 +48,44 @@ extension Date {
     var timestampInMilliseconds: String {
         let timestamp = self.unixTimeMilliseconds
         return timestamp
+    }
+    
+    func addSeconds(_ seconds: Double?) -> Date? {
+        guard let seconds = seconds else {
+            return nil
+        }
+        guard let timeInterval = TimeInterval(exactly: seconds) else {
+            return nil
+        }
+        return addingTimeInterval(timeInterval)
+    }
+}
+
+public extension String {
+    var dateFromISOString: Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return dateFormatter.date(from: self)
+    }
+}
+
+public enum SessionError: Error {
+    case errorInRequest
+    case invalidResponse
+    case invalidURL
+}
+
+extension SessionError: LocalizedError {
+    public var description: String {
+        switch self {
+        case .errorInRequest:
+            return NSLocalizedString("Error when requesting a new session: ", comment: "errorInRequest")
+        case .invalidResponse:
+            return NSLocalizedString("Invalid response when requesting a new session.", comment: "invalidResponse")
+        case .invalidURL:
+            return NSLocalizedString("The url is invalid.", comment: "invalidURL")
+        }
     }
 }

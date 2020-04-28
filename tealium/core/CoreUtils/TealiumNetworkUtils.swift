@@ -117,3 +117,14 @@ public extension Dictionary {
         return nil
     }
 }
+
+public enum NetworkError: Error {
+    case couldNotCreateSession
+    case unknownResponseType
+    case noInternet
+    case xErrorDetected
+    case non200Response
+    case noDataToTrack
+    case unknownIssueWithSend
+    case invalidURL
+}

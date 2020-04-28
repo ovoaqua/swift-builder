@@ -103,13 +103,14 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
                       withSpecificView specificView: UIView?) {
         TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
-               return
+                return
             }
             // required to force cookies to sync
             if #available(iOS 11, *), shouldAddCookieObserver {
                 WKWebsiteDataStore.default().httpCookieStore.add(self)
             }
-            let config = WKWebViewConfiguration()
+            var config = WKWebViewConfiguration()
+            self.insertNoSessionString(config: &config)
             self.webview = WKWebView(frame: .zero, configuration: config)
             self.webview?.navigationDelegate = self
             guard let webview = self.webview else {
@@ -133,6 +134,22 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
         }
     }
 
+    /// Adds the no_session override to the WebView
+    /// - Parameter config: `inout WKWebViewConfiguration`
+    private func insertNoSessionString(config: inout WKWebViewConfiguration) {
+        let jsString = """
+                      window.utag_cfg_ovrd = window.utag_cfg_ovrd || {};
+                      window.utag_cfg_ovrd.no_session_count = true;
+                      window.utag_cfg_ovrd.noview = true;
+                      """
+
+        let userScript = WKUserScript(source: jsString,
+                                      injectionTime: .atDocumentStart,
+                                      forMainFrameOnly: true)
+
+        config.userContentController.addUserScript(userScript)
+    }
+
     /// Reloads the webview.
     ///
     /// - Parameter completion: Completion block to be run when the webview has finished reloading
@@ -144,7 +161,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
         let request = URLRequest(url: url)
         TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
-               return
+                return
             }
             self.currentState = AtomicInteger(value: WebViewState.isLoading.rawValue)
             self.webview?.load(request)
@@ -228,7 +245,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
         // webview js evaluation must be on main thread
         TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
-               return
+                return
             }
             if self.webview?.superview == nil {
                 self.attachToUIView(specificView: nil) { _ in }
@@ -297,18 +314,18 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
                 // if this isn't run, the webview will remain attached in a kind of zombie state
                 self.webview?.removeFromSuperview()
                 self.webview?.stopLoading()
-              }
-          } else {
-              self.webview?.navigationDelegate = nil
-              // if this isn't run, the webview will remain attached in a kind of zombie state
-              self.webview?.removeFromSuperview()
-              self.webview?.stopLoading()
-          }
-          self.webview = nil
-      }
+            }
+        } else {
+            self.webview?.navigationDelegate = nil
+            // if this isn't run, the webview will remain attached in a kind of zombie state
+            self.webview?.removeFromSuperview()
+            self.webview?.stopLoading()
+        }
+        self.webview = nil
+    }
 
-      deinit {
-          self.disable()
-      }
+    deinit {
+        self.disable()
+    }
 }
 #endif

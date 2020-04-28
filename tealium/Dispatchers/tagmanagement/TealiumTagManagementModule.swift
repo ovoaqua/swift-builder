@@ -17,6 +17,7 @@ class TealiumTagManagementModule: TealiumModule {
     var errorState = AtomicInteger()
     var webViewState: Atomic<TealiumWebViewState>?
     var pendingTrackRequests = [TealiumRequest]()
+    var eventDataManager: EventDataManagerProtocol?
 
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumTagManagementKey.moduleName,
@@ -53,7 +54,7 @@ class TealiumTagManagementModule: TealiumModule {
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
     override func enable(_ request: TealiumEnableRequest) {
         self.tagManagement = TealiumTagManagementWKWebView()
-
+        eventDataManager = request.eventDataManager
         let config = request.config
         enableNotifications()
 
@@ -61,6 +62,7 @@ class TealiumTagManagementModule: TealiumModule {
             guard let self = self else {
                 return
             }
+
             TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
                 guard let self = self else {
                     return
@@ -77,6 +79,7 @@ class TealiumTagManagementModule: TealiumModule {
                 }
             }
         }
+
         self.isEnabled = true
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
@@ -92,7 +95,7 @@ class TealiumTagManagementModule: TealiumModule {
         let newConfig = request.config.copy
         if newConfig != self.config {
             // block new requests
-//            self.errorState.incrementAndGet()
+            //            self.errorState.incrementAndGet()
             self.config = newConfig
             var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
             enableRequest.bypassDidFinish = true
@@ -122,8 +125,21 @@ class TealiumTagManagementModule: TealiumModule {
         let request = addModuleName(to: request)
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
+
+        if var eventDataManager = eventDataManager {
+            if eventDataManager.sessionId == "" {
+                eventDataManager.generateSessionId()
+                eventDataManager.lastSessionIdRefresh = Date()
+                eventDataManager.add(data: [TealiumKey.sessionId: eventDataManager.sessionId ?? "",
+                                            TealiumKey.lastSessionIdRefresh: eventDataManager.lastSessionIdRefresh!],
+                                     expiration: .session)
+            }
+            newTrack += eventDataManager.allEventData
+        }
+
         var newRequest = TealiumTrackRequest(data: newTrack, completion: request.completion)
         newRequest.moduleResponses = request.moduleResponses
+        eventDataManager?.lastSessionIdRefresh = Date()
         return newRequest
     }
 
@@ -223,45 +239,45 @@ class TealiumTagManagementModule: TealiumModule {
     func dispatchTrack(_ request: TealiumRequest) {
         switch request {
         case let track as TealiumBatchTrackRequest:
-                let allTrackData = track.trackRequests.map {
-                    $0.trackDictionary
-                }
+            let allTrackData = track.trackRequests.map {
+                $0.trackDictionary
+            }
 
-                #if TEST
-                #else
-                self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                        guard let self = self else {
-                            return
-                        }
-                        track.completion?(success, info, error)
-                        guard error == nil else {
-                            self.didFailToFinish(track, info: info, error: error!)
-                            return
-                        }
-                        self.didFinish(track,
-                                       info: info)
+            #if TEST
+            #else
+            self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
+                TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                    guard let self = self else {
+                        return
                     }
+                    track.completion?(success, info, error)
+                    guard error == nil else {
+                        self.didFailToFinish(track, info: info, error: error!)
+                        return
+                    }
+                    self.didFinish(track,
+                                   info: info)
                 }
-                #endif
+            }
+            #endif
         case let track as TealiumTrackRequest:
-                #if TEST
-                #else
-                self.tagManagement?.track(track.trackDictionary) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                        guard let self = self else {
-                            return
-                        }
-                        track.completion?(success, info, error)
-                        guard error == nil else {
-                            self.didFailToFinish(track, info: info, error: error!)
-                            return
-                        }
-                        self.didFinish(track,
-                                       info: info)
+            #if TEST
+            #else
+            self.tagManagement?.track(track.trackDictionary) { success, info, error in
+                TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+                    guard let self = self else {
+                        return
                     }
+                    track.completion?(success, info, error)
+                    guard error == nil else {
+                        self.didFailToFinish(track, info: info, error: error!)
+                        return
+                    }
+                    self.didFinish(track,
+                                   info: info)
                 }
-                #endif
+            }
+            #endif
         default:
             let reportRequest = TealiumReportRequest(message: "Unexpected request type received. Will not process.")
             self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)

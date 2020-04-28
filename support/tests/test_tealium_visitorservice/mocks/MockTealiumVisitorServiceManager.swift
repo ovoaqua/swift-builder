@@ -1,5 +1,5 @@
 //
-//  MockTealiumVisitorProfileManager.swift
+//  MockTealiumVisitorServiceManager.swift
 //  TestHost
 //
 //  Created by Christina Sund on 10/1/19.
@@ -9,7 +9,7 @@
 import Foundation
 @testable import TealiumVisitorService
 
-public class MockTealiumVisitorProfileManager: TealiumVisitorProfileManagerProtocol {
+public class MockTealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol {
     
     var startProfileUpdatesCount = 0
     var requestVisitorProfileCount = 0

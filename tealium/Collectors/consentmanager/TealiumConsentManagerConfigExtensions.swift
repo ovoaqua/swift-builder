@@ -103,7 +103,7 @@ public extension TealiumConfig {
     }
 
     /// Gets the initial consent status to be used before the user has selected an option.
-    /// 
+    ///
     /// - Returns: `[TealiumConsentCategories]?`
     @available(*, deprecated, message: "Please switch to config.initialUserConsentCategories")
     func getInitialUserConsentCategories() -> [TealiumConsentCategories]? {

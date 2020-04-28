@@ -22,14 +22,17 @@ public enum Expiration {
         switch self {
         case .after(let date):
             return date
+        case .session:
+            components.setValue(TealiumKey.defaultMinutesBetweenSession, for: .minute)
+            return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
+        case .untilRestart:
+            return currentDate
         case .forever:
             components.setValue(100, for: .year)
             return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
         case .afterCustom((let unit, let value)):
             components.setValue(value, for: map(unit))
             return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
-        default:
-            return Date()
         }
     }
 

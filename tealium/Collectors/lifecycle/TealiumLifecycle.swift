@@ -30,7 +30,7 @@ public struct TealiumLifecycle: Codable {
             // Limit size of sessions records
             while sessions.count > sessionsSize &&
                 sessionsSize > 1 {
-                sessions.remove(at: 1)
+                    sessions.remove(at: 1)
             }
         }
     }
@@ -165,7 +165,7 @@ public struct TealiumLifecycle: Codable {
     ///     - type: `String` containing the lifecycle type to be tracked
     ///     - date: `Date` for the lifecycle event
     public func asDictionary(type: String?,
-                      for date: Date) -> [String: Any] {
+                             for date: Date) -> [String: Any] {
         var dict = [String: Any]()
 
         let firstSession = sessions.first

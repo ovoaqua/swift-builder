@@ -27,7 +27,7 @@ extension Dictionary where Key == String, Value == Any {
 }
 
 /// Allows use of plus operator for array reduction calls.
-private func +<Key, Value> (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
+func +<Key, Value> (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
     var result = lhs
     rhs.forEach { result[$0] = $1 }
     return result
@@ -42,6 +42,13 @@ extension Date {
             formatter.locale = Locale(identifier: "en_US_POSIX")
             formatter.timeZone = TimeZone(secondsFromGMT: 0)
             formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+            return formatter
+        }()
+        static let extendedIso8601: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(abbreviation: "GMT")
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
             return formatter
         }()
         static let MMDDYYYY: DateFormatter = {
@@ -65,6 +72,10 @@ extension Date {
 
     public var iso8601String: String {
         return Formatter.iso8601.string(from: self)
+    }
+    
+    public var extendedIso8601String: String {
+        return Formatter.extendedIso8601.string(from: self).appending("Z")
     }
 
     public var iso8601LocalString: String {

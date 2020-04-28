@@ -84,7 +84,7 @@ public class TealiumVisitorServiceRetriever {
     }
 
     /// Generates the visitor service url
-    var visitorProfileURL: String {
+    var visitorServiceURL: String {
         var url = TealiumVisitorServiceConstants.defaultVisitorServiceDomain
         if let overrideURL = tealiumConfig.visitorServiceOverrideURL, URL(string: overrideURL) != nil {
             url = overrideURL
@@ -143,7 +143,7 @@ public class TealiumVisitorServiceRetriever {
             completion(.success(nil))
             return
         }
-        let request = URLRequest(url: URL(string: visitorProfileURL)!)
+        let request = URLRequest(url: URL(string: visitorServiceURL)!)
         sendURLRequest(request) { [weak self] result in
             switch result {
             case .success(let data):

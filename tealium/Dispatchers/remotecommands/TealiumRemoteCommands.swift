@@ -140,7 +140,7 @@ extension TealiumRemoteCommands: TealiumRemoteCommandDelegate {
             command.remoteCommandCompletion(response)
             // this will send the completion notification, if it wasn't explictly handled by the command
             if !response.hasCustomCompletionHandler {
-             TealiumRemoteCommand.sendCompletionNotification(for: command.commandId, response: response)
+                TealiumRemoteCommand.sendCompletionNotification(for: command.commandId, response: response)
             }
         }
     }

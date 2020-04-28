@@ -124,14 +124,11 @@ public class Tealium {
             }
             var trackData = Tealium.trackDataFor(title: title,
                                                  optionalData: data)
-
-            if self.eventDataManager.sessionExpired {
-                self.eventDataManager.expireSessionData()
-            }
+            self.eventDataManager.sessionUpdate()
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
-            self.eventDataManager.lastTrackEvent = Date()
+            self.eventDataManager.lastSessionIdRefresh = Date()
             self.modulesManager.track(track)
         }
     }

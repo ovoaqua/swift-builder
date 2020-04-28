@@ -15,6 +15,8 @@ import TealiumCore
 class TealiumCollectModule: TealiumModule, Dispatcher {
 
     var collect: TealiumCollectProtocol?
+    var eventDataManager: EventDataManagerProtocol?
+
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: TealiumCollectKey.moduleName,
                                    priority: 1050,
@@ -42,6 +44,7 @@ class TealiumCollectModule: TealiumModule, Dispatcher {
     /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
     override func enable(_ request: TealiumEnableRequest) {
         isEnabled = true
+        eventDataManager = request.eventDataManager
         config = request.config
         if self.collect == nil,
             let config = config {
@@ -58,7 +61,7 @@ class TealiumCollectModule: TealiumModule, Dispatcher {
     override func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
         if newConfig != self.config,
-        (newConfig.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) != (config?.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) {
+            (newConfig.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) != (config?.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) {
             updateCollectDispatcher(config: newConfig, completion: nil)
             self.config = newConfig
             self.didFinish(request)
@@ -122,11 +125,23 @@ class TealiumCollectModule: TealiumModule, Dispatcher {
             newTrack[TealiumKey.profile] = config?.profile
         }
 
+        if var eventDataManager = eventDataManager {
+            if eventDataManager.sessionId == "" {
+                eventDataManager.generateSessionId()
+                eventDataManager.lastSessionIdRefresh = Date()
+                eventDataManager.add(data: [TealiumKey.sessionId: eventDataManager.sessionId ?? "",
+                                            TealiumKey.lastSessionIdRefresh: eventDataManager.lastSessionIdRefresh!.extendedIso8601String],
+                                     expiration: .session)
+            }
+            newTrack += eventDataManager.allEventData
+        }
+
         if let profileOverride = config?.optionalData[TealiumCollectKey.overrideCollectProfile] as? String {
             newTrack[TealiumKey.profile] = profileOverride
         }
 
         newTrack[TealiumKey.dispatchService] = TealiumCollectKey.moduleName
+
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 
@@ -228,7 +243,7 @@ class TealiumCollectModule: TealiumModule, Dispatcher {
                                              success: false,
                                              error: error)
         if let error = error as? URLError,
-        error.code == URLError.notConnectedToInternet || error.code == URLError.networkConnectionLost || error.code == URLError.timedOut {
+            error.code == URLError.notConnectedToInternet || error.code == URLError.networkConnectionLost || error.code == URLError.timedOut {
 
             switch request {
             case let request as TealiumTrackRequest:

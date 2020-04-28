@@ -63,7 +63,7 @@ open class TealiumRemoteCommand {
         TealiumRemoteCommands.pendingResponses.value[responseId] = nil
         guard let notification = TealiumRemoteCommand.completionNotification(for: commandId,
                                                                              response: response) else {
-                                                                                        return
+                                                                                return
         }
         NotificationCenter.default.post(notification)
     }
