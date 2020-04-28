@@ -12,7 +12,6 @@
 		43DE581BA7E8319E29DC12FE /* TealiumTagManagementWKWebViewCookieStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE5739C747453CF3D01031 /* TealiumTagManagementWKWebViewCookieStoreObserver.swift */; };
 		43DE590D11729BCF1EF22124 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE5BC83CC9D5129E140244 /* AnyCodable.swift */; };
 		43DE5BE711663A261B99A277 /* TealiumTagManagementProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE549AF5DBD85CE1E176A2 /* TealiumTagManagementProtocol.swift */; };
-		43DE5DAAFEFD8AF73BAB5135 /* TealiumTagManagementUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE545893778B07FAB56AB9 /* TealiumTagManagementUtils.swift */; };
 		4B8DC80B2084F4EB000B99A9 /* TealiumCrashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F70792032162500630388 /* TealiumCrashTests.swift */; };
 		4B8DC80C2084F4F0000B99A9 /* TealiumCrashModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F7093203229EE00630388 /* TealiumCrashModuleTests.swift */; };
 		CF8FF2C4244634240081C1A9 /* TealiumVisitorProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8FF2C2244634010081C1A9 /* TealiumVisitorProfile.swift */; };
@@ -40,6 +39,7 @@
 		CFA19E4924589BFC00C455EA /* TealiumVisitorServiceRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E4524589BFC00C455EA /* TealiumVisitorServiceRetriever.swift */; };
 		CFA19E4A24589BFC00C455EA /* TealiumVisitorServiceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E4624589BFC00C455EA /* TealiumVisitorServiceConstants.swift */; };
 		CFA19E4B24589BFD00C455EA /* TealiumVisitorServiceExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E4724589BFC00C455EA /* TealiumVisitorServiceExtensions.swift */; };
+		CFA19E4D2458AF8000C455EA /* TealiumTagManagementUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE545893778B07FAB56AB9 /* TealiumTagManagementUtils.swift */; };
 		CFB1ED88244F9088005CC6F1 /* EventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED86244F905C005CC6F1 /* EventData.swift */; };
 		CFB1ED89244F908D005CC6F1 /* EventDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED84244F79B8005CC6F1 /* EventDataManager.swift */; };
 		CFB1ED8F2450A6E0005CC6F1 /* EventDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED8D2450A6D1005CC6F1 /* EventDataExtensions.swift */; };
@@ -611,7 +611,6 @@
 		D7E4185E22831F7100BD8EB9 /* TealiumTagManagementWKWebView.swift in Headers */ = {isa = PBXBuildFile; fileRef = D7C4FB8A21B9C4E6006E3CD8 /* TealiumTagManagementWKWebView.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4185F22831F7100BD8EB9 /* TealiumTagManagementWKNavigationDelegate.swift in Headers */ = {isa = PBXBuildFile; fileRef = D7C4FB9621BA948D006E3CD8 /* TealiumTagManagementWKNavigationDelegate.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4186022831F7100BD8EB9 /* TealiumTagManagementWKWebViewCookieStoreObserver.swift in Headers */ = {isa = PBXBuildFile; fileRef = 43DE5739C747453CF3D01031 /* TealiumTagManagementWKWebViewCookieStoreObserver.swift */; settings = {ATTRIBUTES = (Public, ); }; };
-		D7E4186122831F7100BD8EB9 /* TealiumTagManagementUtils.swift in Headers */ = {isa = PBXBuildFile; fileRef = 43DE545893778B07FAB56AB9 /* TealiumTagManagementUtils.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4186222831F7100BD8EB9 /* TealiumTagManagementProtocol.swift in Headers */ = {isa = PBXBuildFile; fileRef = 43DE549AF5DBD85CE1E176A2 /* TealiumTagManagementProtocol.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4186322831F7100BD8EB9 /* TealiumCookieProvider.swift in Headers */ = {isa = PBXBuildFile; fileRef = D730B6132209C63300B2BD24 /* TealiumCookieProvider.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4186422831F7100BD8EB9 /* TealiumTagManagementConstants.swift in Headers */ = {isa = PBXBuildFile; fileRef = D724D85F2231207700883C1E /* TealiumTagManagementConstants.swift */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -3697,7 +3696,6 @@
 				D7E4185E22831F7100BD8EB9 /* TealiumTagManagementWKWebView.swift in Headers */,
 				D7E4185F22831F7100BD8EB9 /* TealiumTagManagementWKNavigationDelegate.swift in Headers */,
 				D7E4186022831F7100BD8EB9 /* TealiumTagManagementWKWebViewCookieStoreObserver.swift in Headers */,
-				D7E4186122831F7100BD8EB9 /* TealiumTagManagementUtils.swift in Headers */,
 				D7E4186222831F7100BD8EB9 /* TealiumTagManagementProtocol.swift in Headers */,
 				D7E4186322831F7100BD8EB9 /* TealiumCookieProvider.swift in Headers */,
 				D7E4186422831F7100BD8EB9 /* TealiumTagManagementConstants.swift in Headers */,
@@ -6951,11 +6949,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFA19E4D2458AF8000C455EA /* TealiumTagManagementUtils.swift in Sources */,
 				D7C4FB9921BA948D006E3CD8 /* TealiumTagManagementWKNavigationDelegate.swift in Sources */,
 				D755DD4221945F99003C6BA1 /* TealiumTagManagementModule.swift in Sources */,
 				D7C4FB8D21B9C4E6006E3CD8 /* TealiumTagManagementWKWebView.swift in Sources */,
 				D724D8652231224B00883C1E /* TealiumTagManagementConstants.swift in Sources */,
-				43DE5DAAFEFD8AF73BAB5135 /* TealiumTagManagementUtils.swift in Sources */,
 				43DE581BA7E8319E29DC12FE /* TealiumTagManagementWKWebViewCookieStoreObserver.swift in Sources */,
 				D724D86822313D0E00883C1E /* TealiumTagManagementWKWebViewCookieMigrator.swift in Sources */,
 				43DE5BE711663A261B99A277 /* TealiumTagManagementProtocol.swift in Sources */,

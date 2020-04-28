@@ -40,7 +40,7 @@ class TealiumModulesTest: XCTestCase {
 
     func testBlacklistSingleModule() {
         let modulesList = TealiumModulesList(isWhitelist: false,
-                                             moduleNames: ["LoGGer"])
+                                             moduleNames: ["visitorService"])
 
         let config = TealiumConfig(account: "test",
                                    profile: "test",
@@ -54,13 +54,13 @@ class TealiumModulesTest: XCTestCase {
         XCTAssert(modules.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
 
         for module in modules {
-            XCTAssert(!(module is TealiumLoggerModule), "Logger module was found when shouldn't have been present.")
+           XCTAssert(!(module is TealiumVisitorServiceModule), "Visitor service module was found when shouldn't have been present.")
         }
     }
 
     func testBlacklistMultipleModules() {
         let modulesList = TealiumModulesList(isWhitelist: false,
-                                             moduleNames: ["consentmanger", "LoGGer"])
+                                             moduleNames: ["consentmanger", "visitorSerVice"])
 
         let config = TealiumConfig(account: "test",
                                    profile: "test",
@@ -74,7 +74,7 @@ class TealiumModulesTest: XCTestCase {
         XCTAssert(modules.count == (numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
 
         for module in modules {
-            if module is TealiumLoggerModule {
+            if module is TealiumVisitorServiceModule {
                 XCTFail("Logger module was found when shouldn't have been present.")
             }
             if module is TealiumConsentManagerModule {
@@ -91,7 +91,7 @@ class TealiumModulesTest: XCTestCase {
                                    optionalData: nil)
 
         let modulesList = TealiumModulesList(isWhitelist: true,
-                                             moduleNames: ["Logger"])
+                                             moduleNames: ["VisitorSerVice"])
 
         config.modulesList = modulesList
 
@@ -102,7 +102,7 @@ class TealiumModulesTest: XCTestCase {
 
         let module = modules[0]
 
-        if module is TealiumLoggerModule {
+        if module is TealiumVisitorServiceModule {
             // How in the world do we do a 'is not' in Swift?
         } else {
             XCTFail("Incorrect module loaded: \(module)")
@@ -263,7 +263,7 @@ class TealiumModulesTest: XCTestCase {
 
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
-                                                moduleNames: ["logger", "volatileData"])
+                                                moduleNames: ["visitorservice", "volatileData"])
 
         let newConfig = TealiumConfig(account: "test",
                                       profile: "test",
@@ -277,10 +277,10 @@ class TealiumModulesTest: XCTestCase {
 
         for module in modulesManager.modules! {
             if module is TealiumDelegateModule {
-                XCTFail("Logger module was found when shouldn't have been present.")
+                XCTFail("delegate module was found when shouldn't have been present.")
             }
-            if module is TealiumLoggerModule {
-                XCTFail("logger module was found when shouldn't have been present.")
+            if module is TealiumVisitorServiceModule {
+                XCTFail("visitorservice module was found when shouldn't have been present.")
             }
 
         }

@@ -8,9 +8,6 @@
 
 import Foundation
 
-// TODO: need to figure out how to split restart and session data from forever data
-// when user queries for it
-
 public class EventDataManager: EventDataManagerProtocol {
     
     var data = Set<EventDataItem>()

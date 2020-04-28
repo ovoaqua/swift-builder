@@ -31,7 +31,7 @@ class TealiumUtilsTests: XCTestCase {
                           "tealium_profile": "tester",
         ]
 
-        XCTAssertTrue(testJSONString == jsonString(from: dictionary))
+        XCTAssertTrue(testJSONString == jsonToString(from: dictionary))
     }
 
     func testURLRequest() {

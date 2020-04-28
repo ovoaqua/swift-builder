@@ -12,7 +12,7 @@
 @testable import TealiumCore
 //@testable import TealiumDelegate
 //@testable import TealiumDeviceData
-//@testable import TealiumLogger
+@testable import TealiumAttribution
 @testable import TealiumVisitorService
 import XCTest
 #if os(iOS)
@@ -202,9 +202,9 @@ class TealiumModulesManagerTests: XCTestCase {
         let manager = TealiumModulesManager(config)
         manager.setupModulesFrom(config: config)
 
-        let module = manager.getModule(forName: "logger")
+        let module = manager.getModule(forName: "attribution")
 
-        XCTAssert((module is TealiumLoggerModule), "Incorrect module received: \(String(describing: module))")
+        XCTAssert((module is TealiumAttributionModule), "Incorrect module received: \(String(describing: module))")
     }
 
     func testTrackWhenDisabled() {

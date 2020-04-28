@@ -119,7 +119,7 @@ extension EventDataManager {
     /// Retrieves the stored session id.
     /// - Returns: `String?` session id.
     public var storedSessionId: String? {
-        guard let sessionId = allEventData[TealiumKey.lastSessionId] as? String else {
+        guard let sessionId = allEventData[TealiumKey.sessionId] as? String else {
             return nil
         }
         return sessionId

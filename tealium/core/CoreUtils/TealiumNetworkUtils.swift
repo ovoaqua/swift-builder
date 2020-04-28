@@ -12,7 +12,7 @@ import Foundation
 ///
 /// - Parameter dictionary: `[String: Any]`
 /// - Returns: `String?`
-public func jsonString(from dictionary: [String: Any]) -> String? {
+public func jsonToString(from dictionary: [String: Any]) -> String? {
     return TealiumQueues.backgroundConcurrentQueue.read { () -> String? in
         var writingOptions: JSONEncoder.OutputFormatting
 
@@ -34,7 +34,7 @@ public func jsonString(from dictionary: [String: Any]) -> String? {
 }
 
 public extension Dictionary {
-    var jsonString: String? {
+    var toJSONString: String? {
         get {
             TealiumQueues.backgroundConcurrentQueue.read {
                 var writingOptions: JSONSerialization.WritingOptions
@@ -57,7 +57,7 @@ public extension Dictionary {
 ///
 /// - Parameter array: `[[String: Any]]`
 /// - Returns: `String?`
-public func jsonString(from array: [[String: Any]]) -> String? {
+public func jsonToString(from array: [[String: Any]]) -> String? {
     return TealiumQueues.backgroundConcurrentQueue.read { () -> String? in
         var writingOptions: JSONEncoder.OutputFormatting
 
@@ -100,22 +100,6 @@ public func urlPOSTRequestWithJSONString(_ jsonString: String,
         }
         return nil
    }
-}
-
-public extension Dictionary {
-    func toJSONString() -> String? {
-        var writingOptions: JSONSerialization.WritingOptions
-        if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, OSX 10.13, *) {
-            writingOptions = [.prettyPrinted, .sortedKeys]
-        } else {
-            writingOptions = [.prettyPrinted]
-        }
-
-        if let jsonData = try? JSONSerialization.data(withJSONObject: self, options: writingOptions) {
-            return String(data: jsonData, encoding: .utf8)
-        }
-        return nil
-    }
 }
 
 public enum NetworkError: Error {

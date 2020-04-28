@@ -54,7 +54,7 @@ public struct TealiumLogRequest: LogRequest {
                 }
             }
             
-            if let info = info?.jsonString {
+            if let info = info?.toJSONString {
                 message += "\nAdditional Info:\n"
                 message += "\(info)\n"
             }

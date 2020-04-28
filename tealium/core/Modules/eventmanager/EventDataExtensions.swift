@@ -32,7 +32,6 @@ public extension TealiumKey {
     static let timestampLocal = "timestamp_local"
     static let timestampOffset = "timestamp_offset"
     static let lastSessionRequest = "last_session_date"
-    static let lastSessionId = "stored_session_id"
     static let lastSessionIdRefresh = "last_track_event"
     static let defaultMinutesBetweenSession = 2
     static let defaultsSecondsBetweenTrackEvents = 30.0

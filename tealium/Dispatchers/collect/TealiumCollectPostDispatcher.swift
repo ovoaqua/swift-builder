@@ -91,7 +91,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     func dispatch(data: [String: Any],
                   url: String? = nil,
                   completion: TealiumCompletion?) {
-        if let jsonString = jsonString(from: data),
+        if let jsonString = jsonToString(from: data),
             let url = url ?? singleEventDispatchURL,
             let urlRequest = urlPOSTRequestWithJSONString(jsonString, dispatchURL: url) {
             sendURLRequest(urlRequest, completion)
