@@ -18,6 +18,7 @@ class DispatchManager: DispatchValidator {
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
+    var logger: TealiumLoggerProtocol?
     let id = "Dispatch Manager"
     // when to start trimming the queue (default 20) - e.g. if offline
     var maxQueueSize: Int {
@@ -75,6 +76,7 @@ class DispatchManager: DispatchValidator {
     required init (config: TealiumConfig,
           delegate: TealiumModuleDelegate) {
         self.config = config.copy
+        self.logger = config.logger
         self.delegate = delegate
         // allows overriding for unit tests, independently of enable call
         if self.diskStorage == nil {
@@ -111,6 +113,7 @@ class DispatchManager: DispatchValidator {
             let newTrack = TealiumTrackRequest(data: newData,
                                                completion: $0.completion)
             persistentQueue.appendDispatch(newTrack)
+            logQueue(request: newTrack)
         }
     }
     
@@ -170,12 +173,12 @@ class DispatchManager: DispatchValidator {
     
     func logQueue(request: TealiumTrackRequest) {
         let message = """
-        \n=====================================
         ⏳ Event: \(request.trackDictionary[TealiumKey.event] as? String ?? "") queued for batch dispatch
-        =====================================\n
         """
-        let report = TealiumReportRequest(message: message)
-        delegate.tealiumModuleRequests(module: nil, process: report)
+        
+        let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: message, info: nil, logLevel: .info, category: .track)
+        
+        logger?.log(logRequest)
     }
     
 }
