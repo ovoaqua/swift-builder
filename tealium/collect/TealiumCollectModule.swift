@@ -125,12 +125,14 @@ class TealiumCollectModule: TealiumModule {
             newTrack[TealiumKey.profile] = config?.profile
         }
 
-        if eventDataManager?.sessionId == "" {
-            eventDataManager?.generateSessionId()
-            // eventDataManager?.lastTrackEvent = Date()
-        }
-
-        if let eventDataManager = self.eventDataManager {
+        if var eventDataManager = eventDataManager {
+            if eventDataManager.sessionId == "" {
+                eventDataManager.generateSessionId()
+                eventDataManager.lastSessionIdRefresh = Date()
+                eventDataManager.add(data: [TealiumKey.sessionId: eventDataManager.sessionId ?? "",
+                                            TealiumKey.lastSessionIdRefresh: eventDataManager.lastSessionIdRefresh!.extendedIso8601String],
+                                     expiration: .session)
+            }
             newTrack += eventDataManager.allEventData
         }
 
@@ -139,7 +141,7 @@ class TealiumCollectModule: TealiumModule {
         }
 
         newTrack[TealiumKey.dispatchService] = TealiumCollectKey.moduleName
-        eventDataManager?.lastSessionIdRefresh = Date()
+
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 

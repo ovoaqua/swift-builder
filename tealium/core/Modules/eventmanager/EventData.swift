@@ -67,15 +67,6 @@ extension EventData {
         }
         return returnData
     }
-    
-    public var sessionData: [String: Any] {
-        var returnData = [String: Any]()
-        self.filter { $0.key == "session" }
-            .forEach { sessionItem in 
-            returnData[sessionItem.key] = sessionItem.value
-        }
-        return returnData
-    }
 
 }
 

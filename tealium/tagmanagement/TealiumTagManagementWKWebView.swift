@@ -109,7 +109,8 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
             if #available(iOS 11, *), shouldAddCookieObserver {
                 WKWebsiteDataStore.default().httpCookieStore.add(self)
             }
-            let config = WKWebViewConfiguration()
+            var config = WKWebViewConfiguration()
+            self.insertNoSessionString(config: &config)
             self.webview = WKWebView(frame: .zero, configuration: config)
             self.webview?.navigationDelegate = self
             guard let webview = self.webview else {
@@ -131,6 +132,22 @@ public class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtoc
                 }
             }
         }
+    }
+
+    /// Adds the no_session override to the WebView
+    /// - Parameter config: `inout WKWebViewConfiguration`
+    private func insertNoSessionString(config: inout WKWebViewConfiguration) {
+        let jsString = """
+                      window.utag_cfg_ovrd = window.utag_cfg_ovrd || {};
+                      window.utag_cfg_ovrd.no_session_count = true;
+                      window.utag_cfg_ovrd.noview = true;
+                      """
+
+        let userScript = WKUserScript(source: jsString,
+                                      injectionTime: .atDocumentStart,
+                                      forMainFrameOnly: true)
+
+        config.userContentController.addUserScript(userScript)
     }
 
     /// Reloads the webview.

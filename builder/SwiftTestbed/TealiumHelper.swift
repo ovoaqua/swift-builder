@@ -9,13 +9,14 @@
 import Foundation
 import TealiumCore
 import TealiumCollect
-import TealiumAttribution
-import TealiumConsentManager
-import TealiumRemoteCommands
+//import TealiumAttribution
+//import TealiumConsentManager
+//import TealiumRemoteCommands
 import TealiumTagManagement
-import TealiumVisitorService
-import TealiumLocation
-import TealiumLifecycle
+//import TealiumVisitorService
+//import TealiumLocation
+//import TealiumLifecycle
+
 
 extension String: Error {}
 
@@ -39,23 +40,22 @@ class TealiumHelper: NSObject {
         // REQUIRED Config object for lib
         let config = TealiumConfig(account: "tealiummobile",
                                    profile: "demo",
-                                   environment: "qa",
+                                   environment: "dev",
                                    datasource: "test12",
                                    optionalData: nil)
 
-        config.connectivityRefreshInterval = 5
+        // config.connectivityRefreshInterval = 5
         config.logLevel = .verbose
-        config.consentLoggingEnabled = true
-        config.searchAdsEnabled = true
-        config.initialUserConsentStatus = .consented
-        config.shouldAddCookieObserver = false
+        // config.consentLoggingEnabled = true
+        // config.searchAdsEnabled = true
+        // config.initialUserConsentStatus = .consented
         config.shouldUseRemotePublishSettings = false
-        config.batchSize = 5
-        config.dispatchAfter = 5
-//        config.dispatchQueueLimit = 200
-        config.batchingEnabled = true
-        config.visitorServiceRefreshInterval = 0
-        config.visitorServiceOverrideProfile = "main"
+        // config.batchSize = 5
+        // config.dispatchAfter = 5
+        // config.dispatchQueueLimit = 200
+        // config.batchingEnabled = true
+        // config.visitorServiceRefreshInterval = 0
+        // config.visitorServiceOverrideProfile = "main"
         // OPTIONALLY add an external delegate
         config.addDelegate(self)
         config.memoryReportingEnabled = true
@@ -66,30 +66,30 @@ class TealiumHelper: NSObject {
         // OPTIONALLY disable a particular module by name
         
         let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: [.autotracking])
+                                      moduleNames: [.autotracking, .consentmanager])
         config.modulesList = list
         config.diskStorageEnabled = true
-        config.visitorServiceDelegate = self
+        //config.visitorServiceDelegate = self
         config.remoteAPIEnabled = true
         config.logLevel = .verbose
         config.shouldCollectTealiumData = false
         config.batterySaverEnabled = true
-        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+        //config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         #endif
-        #if os(iOS)
-        
-        let remoteCommand = TealiumRemoteCommand(commandId: "hello",
-                                                 description: "test") { response in
-                                                    if TealiumHelper.shared.enableHelperLogs {
-//                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
-                                                    }
-                                                    let dict = ["hello":"from helper"]
-                                                    // set some JSON response data to be passed back to the webview
-                                                    let myJson = try? JSONSerialization.data(withJSONObject: dict, options: [])
-                                                    response.data = myJson
-        }
-        config.addRemoteCommand(remoteCommand)
-        #endif
+//        #if os(iOS)
+//
+//        let remoteCommand = TealiumRemoteCommand(commandId: "hello",
+//                                                 description: "test") { response in
+//                                                    if TealiumHelper.shared.enableHelperLogs {
+////                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
+//                                                    }
+//                                                    let dict = ["hello":"from helper"]
+//                                                    // set some JSON response data to be passed back to the webview
+//                                                    let myJson = try? JSONSerialization.data(withJSONObject: dict, options: [])
+//                                                    response.data = myJson
+//        }
+//        config.addRemoteCommand(remoteCommand)
+//        #endif
         
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
@@ -173,13 +173,13 @@ extension TealiumHelper: TealiumDelegate {
     }
 }
 
-extension TealiumHelper: TealiumVisitorServiceDelegate {
-    func didUpdate(visitorProfile: TealiumVisitorProfile) {
-        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
-            if self.enableHelperLogs {
-                print(string)
-            }
-        }
-    }
-    
-}
+//extension TealiumHelper: TealiumVisitorServiceDelegate {
+//    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+//        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
+//            if self.enableHelperLogs {
+//                print(string)
+//            }
+//        }
+//    }
+//
+//}

@@ -126,12 +126,14 @@ public class TealiumTagManagementModule: TealiumModule {
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
 
-        if eventDataManager?.sessionId == nil {
-            eventDataManager?.generateSessionId()
-            // eventDataManager?.lastTrackEvent = Date()
-        }
-
-        if let eventDataManager = self.eventDataManager {
+        if var eventDataManager = eventDataManager {
+            if eventDataManager.sessionId == "" {
+                eventDataManager.generateSessionId()
+                eventDataManager.lastSessionIdRefresh = Date()
+                eventDataManager.add(data: [TealiumKey.sessionId: eventDataManager.sessionId ?? "",
+                                            TealiumKey.lastSessionIdRefresh: eventDataManager.lastSessionIdRefresh!],
+                                     expiration: .session)
+            }
             newTrack += eventDataManager.allEventData
         }
 

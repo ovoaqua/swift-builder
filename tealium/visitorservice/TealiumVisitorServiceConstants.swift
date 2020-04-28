@@ -25,13 +25,3 @@ public enum AttributeScope {
     case visitor
     case visit
 }
-
-public enum NetworkError: Error {
-    case couldNotCreateSession
-    case unknownResponseType
-    case noInternet
-    case xErrorDetected
-    case non200Response
-    case noDataToTrack
-    case unknownIssueWithSend
-}
