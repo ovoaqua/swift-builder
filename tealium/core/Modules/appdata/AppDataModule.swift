@@ -17,7 +17,7 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
         }
     }
     
-    public static var moduleId: String = "appdata"
+    public static var moduleId: String = "App Data"
 
     private(set) var uuid: String?
     private var diskStorage: TealiumDiskStorageProtocol!
@@ -25,15 +25,18 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
     var appData = AppData()
     var existingVisitorId: String?
     var logger: TealiumLoggerProtocol?
+    var delegate: TealiumModuleDelegate
     
     var config: TealiumConfig
 
     required public init(config: TealiumConfig,
+                         delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorage?,
                          completion: () -> Void) {
         defer {
             completion()
         }
+        self.delegate = delegate
         self.config = config
         self.bundle = Bundle.main
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)

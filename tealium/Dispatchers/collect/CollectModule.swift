@@ -12,7 +12,7 @@ import TealiumCore
 /// Dispatch Service Module for sending track data to the Tealium Collect or custom endpoint.
 public class CollectModule: Dispatcher {
     
-    public static var moduleId: String = "collect"
+    public static var moduleId: String = "Collect"
     var collect: TealiumCollectProtocol?
     public var delegate: TealiumModuleDelegate
     var config: TealiumConfig

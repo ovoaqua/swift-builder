@@ -40,7 +40,7 @@ public class NewModulesManager {
 
     func setupCollectors(config: TealiumConfig) {
         knownCollectors.forEach { knownCollector in
-            let collector = knownCollector.init(config: config, diskStorage: nil) {
+            let collector = knownCollector.init(config: config, delegate: self, diskStorage: nil) {
 
             }
             guard collectors.contains(where: {
@@ -56,7 +56,7 @@ public class NewModulesManager {
                 return
             }
 
-            let collector = moduleRef.init(config: config, diskStorage: nil) {
+            let collector = moduleRef.init(config: config, delegate: self, diskStorage: nil) {
 
             }
             guard self.collectors.contains(where: {
