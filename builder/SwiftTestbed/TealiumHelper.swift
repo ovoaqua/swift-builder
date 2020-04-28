@@ -9,20 +9,10 @@
 import Foundation
 import TealiumCore
 import TealiumCollect
-//import TealiumAttribution
-//import TealiumConsentManager
-//import TealiumRemoteCommands
 import TealiumTagManagement
-//import TealiumVisitorService
-//import TealiumLocation
-//import TealiumLifecycle
-
 import TealiumAttribution
-//import TealiumConsentManager
 import TealiumRemoteCommands
-//import TealiumTagManagement
 import TealiumVisitorService
-//import TealiumLocation
 import TealiumLifecycle
 
 extension String: Error {}
@@ -38,6 +28,7 @@ class TealiumHelper: NSObject {
     var tealium: Tealium?
     var enableHelperLogs = false
     var traceId = "04136"
+    var logger: TealiumLoggerProtocol?
 
     override private init () {
 
@@ -83,6 +74,7 @@ class TealiumHelper: NSObject {
 //        config.logLevel = .verbose
         config.shouldCollectTealiumData = true
         config.batterySaverEnabled = true
+        logger = config.logger
         //config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         #endif
 //        #if os(iOS)
@@ -103,6 +95,7 @@ class TealiumHelper: NSObject {
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self, let teal = self.tealium else { return }
+            self.track(title: "init", data: nil)
             let persitence = teal.persistentData()
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
@@ -140,6 +133,8 @@ class TealiumHelper: NSObject {
                         if self.enableHelperLogs == false {
                             return
                         }
+                        
+                        
         })
     }
 
@@ -171,6 +166,8 @@ class TealiumHelper: NSObject {
 extension TealiumHelper: TealiumDelegate {
 
     func tealiumShouldTrack(data: [String: Any]) -> Bool {
+        let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
+        self.logger?.log(logRequest)
         return true
     }
 
