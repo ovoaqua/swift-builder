@@ -52,11 +52,11 @@ struct RemotePublishSettings: Codable {
 
             switch logLevel {
             case "dev":
-                self.overrideLog = .verbose
+                self.overrideLog = .info
             case "qa":
-                self.overrideLog = .warnings
+                self.overrideLog = .debug
             case "prod":
-                self.overrideLog = .errors
+                self.overrideLog = .error
             default:
                 self.overrideLog = .none
             }
@@ -75,7 +75,7 @@ struct RemotePublishSettings: Codable {
             self.dispatchQueueLimit = try values.decode(Int.self, forKey: .offline_dispatch_limit)
             let logLevel = try values.decode(String.self, forKey: .override_log)
 
-            self.overrideLog = TealiumLogLevel.fromString(logLevel)
+            self.overrideLog = TealiumLogLevel(from: logLevel)
 
             self.wifiOnlySending = try values.decode(Bool.self, forKey: .wifi_only_sending)
             self.isEnabled = try values.decode(Bool.self, forKey: ._is_enabled)

@@ -18,6 +18,7 @@ class DispatchManager: DispatchValidator {
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
+    let id = "Dispatch Manager"
     // when to start trimming the queue (default 20) - e.g. if offline
     var maxQueueSize: Int {
         if let maxQueueSize = config.dispatchQueueLimit, maxQueueSize >= 0 {

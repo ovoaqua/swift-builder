@@ -20,48 +20,51 @@ public class NewModulesManager {
     var dispatchManager: DispatchManager?
     var knownDispatchValidators = [DispatchManager.self]
     var dispatchers = [Dispatcher]()
-
+    var logger: TealiumLoggerProtocol?
+    
     init (_ config: TealiumConfig) {
-        self.setupCollectors(config: config)
-        self.setupDispatchers(config: config)
-        self.setupDispatchValidators(config: config)
-        self.dispatchManager = dispatchValidators.filter { $0 as? DispatchManager != nil }.first as? DispatchManager
+        TealiumQueues.backgroundConcurrentQueue.write {
+            self.logger = config.logger
+            self.setupCollectors(config: config)
+            self.setupDispatchers(config: config)
+            self.setupDispatchValidators(config: config)
+            self.dispatchManager = self.dispatchValidators.filter { $0 as? DispatchManager != nil }.first as? DispatchManager
+            let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
+                ["Collectors Initialized: \(self.collectors.map { type(of: $0).moduleId })",
+                "Dispatch Validators Initialized: \(self.dispatchValidators.map { $0.id })",
+                "Dispatchers Initialized: \(self.dispatchers.map { type(of: $0).moduleId })"
+            ], info: nil, logLevel: .info, category: .`init`)
+            self.logger?.log(logRequest)
+        }
     }
 
     func setupCollectors(config: TealiumConfig) {
-        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-            guard let self = self else {
+        knownCollectors.forEach { knownCollector in
+            let collector = knownCollector.init(config: config, diskStorage: nil) {
+
+            }
+            guard collectors.contains(where: {
+                type(of: $0) == knownCollector
+            }) == false else {
+                return
+            }
+            collectors.append(collector)
+        }
+
+        optionalCollectors.forEach { optionalCollector in
+            guard let moduleRef = objc_getClass(optionalCollector) as? Collector.Type else {
                 return
             }
 
-            self.knownCollectors.forEach { knownCollector in
-                let collector = knownCollector.init(config: config, diskStorage: nil) {
+            let collector = moduleRef.init(config: config, diskStorage: nil) {
 
-                }
-                guard self.collectors.contains(where: {
-                    type(of: $0) == knownCollector
-                }) == false else {
-                    return
-                }
-                self.collectors.append(collector)
             }
-
-            self.optionalCollectors.forEach { optionalCollector in
-                guard let moduleRef = objc_getClass(optionalCollector) as? Collector.Type else {
-                    return
-                }
-
-                let collector = moduleRef.init(config: config, diskStorage: nil) {
-
-                }
-                guard self.collectors.contains(where: {
-                    type(of: $0) == moduleRef
-                }) == false else {
-                    return
-                }
-                self.collectors.append(collector)
+            guard self.collectors.contains(where: {
+                type(of: $0) == moduleRef
+            }) == false else {
+                return
             }
-
+            collectors.append(collector)
         }
     }
     
@@ -78,7 +81,7 @@ public class NewModulesManager {
     }
     
     func setupDispatchers(config: TealiumConfig) {
-        self.knownDispatchers.forEach { knownDispatcher in
+        knownDispatchers.forEach { knownDispatcher in
             guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
                 return
             }
@@ -89,7 +92,7 @@ public class NewModulesManager {
             }) == false else {
                 return
             }
-            self.dispatchers.append(dispatcher)
+            dispatchers.append(dispatcher)
         }
     }
 
@@ -165,6 +168,7 @@ public class NewModulesManager {
     }
     
     func runDispatchers (for request: TealiumRequest) {
+        // TODO: Have dispatchers return Result type and log after all dispatchers finished.
         dispatchers.forEach {
             $0.dynamicTrack(request)
         }
@@ -182,8 +186,12 @@ extension NewModulesManager: TealiumModuleDelegate {
         switch process {
         case let request as TealiumBatchTrackRequest:
             sendBatch(request: request)
+            let logRequest = TealiumLogRequest(title: "Module Delegate", message: "Sending Batch Track Request", info: request.compressed(), logLevel: .info, category: .track)
+            self.logger?.log(logRequest)
         case let request as TealiumTrackRequest:
             sendTrack(request: request)
+            let logRequest = TealiumLogRequest(title: "Module Delegate", message: "Sending Batch Track Request", info: request.trackDictionary, logLevel: .info, category: .track)
+            self.logger?.log(logRequest)
         default:
             return
         }

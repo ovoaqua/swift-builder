@@ -17,7 +17,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     var defaultsStorage: UserDefaults?
     let isCritical: Bool
     let isDiskStorageEnabled: Bool
-    var logger: TealiumLogger
+    var logger: TealiumLoggerProtocol?
     lazy var filePath: String = {
         return "\(filePrefix)\(module)/"
     }()
@@ -36,7 +36,8 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     public init(config: TealiumConfig,
                 forModule module: String,
                 isCritical: Bool = false) {
-        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.logLevel ?? defaultTealiumLogLevel)
+//        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.logLevel ?? defaultTealiumLogLevel)
+        self.logger = config.logger
         // The subdirectory to use for this data
         filePrefix = "\(config.account).\(config.profile)/"
         minimumDiskSpace = config.minimumFreeDiskSpace ?? TealiumValue.defaultMinimumDiskSpace
@@ -447,7 +448,9 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
 
     /// - Parameter error: `String`
     func log(error: String) {
-        logger.log(message: error, logLevel: .warnings)
+//        logger.log(message: error, logLevel: .warnings)
+        let logRequest = TealiumLogRequest(title: "DiskStorage", message: error, info: nil, logLevel: .error)
+        logger?.log(logRequest)
     }
 
 }

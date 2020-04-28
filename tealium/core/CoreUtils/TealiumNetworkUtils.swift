@@ -32,6 +32,27 @@ public func jsonString(from dictionary: [String: Any]) -> String? {
         }
     }
 }
+
+public extension Dictionary {
+    var jsonString: String? {
+        get {
+            TealiumQueues.backgroundConcurrentQueue.read {
+                var writingOptions: JSONSerialization.WritingOptions
+                if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, OSX 10.13, *) {
+                    writingOptions = [.prettyPrinted, .sortedKeys]
+                } else {
+                    writingOptions = [.prettyPrinted]
+                }
+
+                if let jsonData = try? JSONSerialization.data(withJSONObject: self, options: writingOptions) {
+                    return String(data: jsonData, encoding: .utf8)
+                }
+                return nil
+            }
+        }
+    }
+}
+
 /// Returns a JSON string from an array of dictionaries.
 ///
 /// - Parameter array: `[[String: Any]]`

@@ -24,15 +24,6 @@ public class CollectModule: Dispatcher {
         updateCollectDispatcher(config: config, completion: nil)
     }
 
-    func updateConfig(_ request: TealiumUpdateConfigRequest) {
-        let newConfig = request.config.copy
-        if newConfig != self.config,
-        (newConfig.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) != (config.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL) {
-            updateCollectDispatcher(config: newConfig, completion: nil)
-            self.config = newConfig
-        }
-    }
-
     func updateCollectDispatcher(config: TealiumConfig,
                                  completion: ((_ success: Bool, _ error: TealiumCollectError) -> Void)?) {
         let urlString = config.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL

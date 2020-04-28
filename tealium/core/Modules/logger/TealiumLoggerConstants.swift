@@ -8,60 +8,82 @@
 
 import Foundation
 
-public enum TealiumLogLevelValue {
-    static let errors = "errors"
-    static let none = "none"
-    static let verbose = "verbose"
-    static let warnings = "warnings"
+public extension TealiumConstants {
+    static let defaultLogLevel = TealiumLogLevel.error
 }
 
-public let defaultTealiumLogLevel: TealiumLogLevel = .errors
-
-public enum TealiumLogLevel: Int, Comparable {
-    case none = 0
-    case errors = 1
-    case warnings = 2
-    case verbose = 3
-
-    var description: String {
-        switch self {
-        case .errors:
-            return TealiumLogLevelValue.errors
-        case .warnings:
-            return TealiumLogLevelValue.warnings
-        case .verbose:
-            return TealiumLogLevelValue.verbose
+public enum TealiumLogLevel: Int, Comparable, CustomStringConvertible {
+    
+    case info = 0
+    case debug = 100
+    case error = 200
+    case fault = 300
+    case none = -9999
+    
+    public init(from string: String) {
+        switch string {
+        case "info":
+            self = .info
+        case "debug":
+            self = .debug
+        case "error":
+            self = .error
+        case "fault":
+            self = .fault
+        case "none":
+            self = .none
         default:
-            return TealiumLogLevelValue.none
+            self = .none
         }
     }
-
-    static func fromString(_ string: String) -> TealiumLogLevel {
-        switch string.lowercased() {
-        case TealiumLogLevelValue.errors:
-            return .errors
-        case TealiumLogLevelValue.warnings:
-            return .warnings
-        case TealiumLogLevelValue.verbose:
-            return .verbose
-        default:
-            return .none
+    
+    public var description: String {
+        get {
+            switch self {
+            case .info:
+                return "Info"
+            case .debug:
+                return "Debug"
+            case .error:
+                return "Error"
+            case .fault:
+                return "Fault"
+            case .none:
+                return "None"
+            }
         }
     }
-
+    
     public static func < (lhs: TealiumLogLevel, rhs: TealiumLogLevel) -> Bool {
-        return lhs.rawValue < rhs.rawValue
+        lhs.rawValue < rhs.rawValue
     }
+}
 
-    public static func > (lhs: TealiumLogLevel, rhs: TealiumLogLevel) -> Bool {
-        return lhs.rawValue > rhs.rawValue
-    }
+public enum TealiumLoggerType {
+    case print
+    case os
+    case custom(TealiumLoggerProtocol)
+}
 
-    public static func <= (lhs: TealiumLogLevel, rhs: TealiumLogLevel) -> Bool {
-        return lhs.rawValue <= rhs.rawValue
+public extension TealiumConfig {
+    var loggerType: TealiumLoggerType {
+        get {
+            optionalData[TealiumKey.loggerType] as? TealiumLoggerType ?? TealiumConstants.defaultLoggerType
+        }
+        
+        set {
+            optionalData[TealiumKey.loggerType] = newValue
+        }
     }
-
-    public static func >= (lhs: TealiumLogLevel, rhs: TealiumLogLevel) -> Bool {
-        return lhs.rawValue >= rhs.rawValue
+    
+    var logLevel: TealiumLogLevel? {
+        get {
+            optionalData[TealiumKey.logLevel] as? TealiumLogLevel
+        }
+        
+        set {
+            optionalData[TealiumKey.logLevel] = newValue
+        }
     }
+    
 }

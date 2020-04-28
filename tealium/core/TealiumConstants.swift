@@ -98,6 +98,8 @@ public enum TealiumKey {
     public static let minutesBetweenRefresh = "minutes_between_refresh"
     public static let collectModuleName = "collect"
     public static let tagManagementModuleName = "tagmanagement"
+    public static let loggerType = "logger_type"
+    public static let logLevel = "log_level"
 }
 
 public enum TealiumModulesManagerError: Error {
@@ -132,3 +134,11 @@ public enum TealiumTrackType {
 }
 
 public typealias TealiumCompletion = ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)
+
+public struct TealiumConstants {
+    private init() {}
+    static let libraryVersion = "2.0.0"
+    static let defaultBatchSize = 10
+    static let defaultLoggerType: TealiumLoggerType = .os
+    static let defaultMinimumDiskSpace: Int32 = 20_000_000
+}

@@ -12,9 +12,9 @@ import TealiumCollect
 import TealiumAttribution
 //import TealiumConsentManager
 import TealiumRemoteCommands
-import TealiumTagManagement
+//import TealiumTagManagement
 import TealiumVisitorService
-import TealiumLocation
+//import TealiumLocation
 import TealiumLifecycle
 
 extension String: Error {}
@@ -44,11 +44,12 @@ class TealiumHelper: NSObject {
                                    optionalData: nil)
 
         config.connectivityRefreshInterval = 5
-        config.logLevel = .verbose
+        config.loggerType = .os
+        config.logLevel = .info
 //        config.consentLoggingEnabled = true
         config.searchAdsEnabled = true
 //        config.initialUserConsentStatus = .consented
-        config.shouldAddCookieObserver = false
+//        config.shouldAddCookieObserver = false
         config.shouldUseRemotePublishSettings = false
         config.batchSize = 5
         config.dispatchAfter = 5
@@ -71,10 +72,10 @@ class TealiumHelper: NSObject {
         config.diskStorageEnabled = true
         config.addVisitorServiceDelegate(self)
         config.remoteAPIEnabled = true
-        config.logLevel = .verbose
+//        config.logLevel = .verbose
         config.shouldCollectTealiumData = true
         config.batterySaverEnabled = true
-        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+//        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         #endif
         #if os(iOS)
         
