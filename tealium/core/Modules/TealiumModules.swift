@@ -54,7 +54,7 @@ class TealiumModules {
             }
 
             var shouldInit = false
-            
+
             if let modulesList = modulesList {
                 if modulesList.isWhitelist {
                     shouldInit = modulesList.moduleNames.contains(moduleConfig.name)
@@ -64,7 +64,7 @@ class TealiumModules {
             } else {
                 shouldInit = true
             }
-            
+
             if shouldInit {
                 let module = type.init(delegate: delegate)
                 modules.insert(module)

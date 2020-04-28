@@ -23,7 +23,9 @@ import WatchKit
 import Darwin
 
 class DeviceDataModule: Collector {
-    var data: [String : Any]? {
+    static var moduleId: String = "Device Data"
+    
+    var data: [String: Any]? {
         get {
             guard config.shouldCollectTealiumData else {
                 return nil
@@ -32,15 +34,18 @@ class DeviceDataModule: Collector {
             return cachedData
         }
     }
-    
-    var collectorId = "DeviceData"
-    
+
     var isMemoryEnabled = false
     var deviceDataCollection: TealiumDeviceDataCollection
     var cachedData = [String: Any]()
     var config: TealiumConfig
-    
-    required init(config: TealiumConfig, completion: () -> Void) {
+    var delegate: TealiumModuleDelegate
+
+    required init(config: TealiumConfig,
+                  delegate: TealiumModuleDelegate,
+                  diskStorage: TealiumDiskStorage?,
+                  completion: () -> Void) {
+        self.delegate = delegate
         self.config = config
         self.deviceDataCollection = TealiumDeviceData()
         self.cachedData = enableTimeData()

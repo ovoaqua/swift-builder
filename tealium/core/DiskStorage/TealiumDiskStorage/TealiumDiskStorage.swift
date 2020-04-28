@@ -17,7 +17,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     var defaultsStorage: UserDefaults?
     let isCritical: Bool
     let isDiskStorageEnabled: Bool
-    var logger: TealiumLogger
+    var logger: TealiumLoggerProtocol?
     lazy var filePath: String = {
         return "\(filePrefix)\(module)/"
     }()
@@ -36,7 +36,8 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     public init(config: TealiumConfig,
                 forModule module: String,
                 isCritical: Bool = false) {
-        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.logLevel ?? defaultTealiumLogLevel)
+//        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.logLevel ?? defaultTealiumLogLevel)
+        self.logger = config.logger
         // The subdirectory to use for this data
         filePrefix = "\(config.account).\(config.profile)/"
         minimumDiskSpace = config.minimumFreeDiskSpace ?? TealiumValue.defaultMinimumDiskSpace
@@ -322,7 +323,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
             guard self.isDiskStorageEnabled else {
                 let decoder = JSONDecoder()
                 if let data = self.getFromDefaults(key: self.filePath(fileName)) as? Data,
-                    let decoded = ((try? decoder.decode(AnyCodable.self, from: data).value as? [String: Any]) as [String : Any]??) {
+                    let decoded = ((try? decoder.decode(AnyCodable.self, from: data).value as? [String: Any]) as [String: Any]??) {
                     completion(true, decoded, nil)
                 } else {
                     log(error: DiskStorageErrors.couldNotDecode.rawValue)
@@ -378,7 +379,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
         let data = retrieve(module, as: type.self)
         let encoder = JSONEncoder()
         guard let encoded = try? encoder.encode(data),
-            let dictionary = ((try? JSONSerialization.jsonObject(with: encoded, options: .allowFragments) as? [String: Any]) as [String : Any]??),
+            let dictionary = ((try? JSONSerialization.jsonObject(with: encoded, options: .allowFragments) as? [String: Any]) as [String: Any]??),
             var dict = dictionary else {
             return
         }
@@ -447,7 +448,9 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
 
     /// - Parameter error: `String`
     func log(error: String) {
-        logger.log(message: error, logLevel: .warnings)
+//        logger.log(message: error, logLevel: .warnings)
+        let logRequest = TealiumLogRequest(title: "DiskStorage", message: error, info: nil, logLevel: .error)
+        logger?.log(logRequest)
     }
 
 }

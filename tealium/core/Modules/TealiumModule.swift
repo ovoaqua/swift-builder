@@ -9,25 +9,6 @@
 
 import Foundation
 
-public protocol TealiumModuleDelegate: class {
-
-    /// Called by modules after they've completed a requested command or encountered an error.￼
-    ///
-    /// - Parameters:
-    ///     - module: Module that finished processing.￼
-    ///     - process: The TealiumRequest completed.
-    func tealiumModuleFinished(module: TealiumModule,
-                               process: TealiumRequest)
-
-    /// Called by module requesting an library operation.￼
-    ///
-    /// - Parameter module: Module making request.￼
-    /// - Parameter process: TealiumModuleProcessType requested.
-    func tealiumModuleRequests(module: TealiumModule?,
-                               process: TealiumRequest)
-
-}
-
 /// Function(s) required by every subclass of the TealiumModule
 public protocol TealiumModuleProtocol {
     func handle(_ request: TealiumRequest)
@@ -39,7 +20,7 @@ open class TealiumModule: TealiumModuleProtocol {
     public weak var delegate: TealiumModuleDelegate?
     public var isEnabled: Bool = false
     open var config: TealiumConfig?
-    
+
     /// Constructor.￼
     ///
     /// - Parameter delegate: Delegate for module, usually the ModulesManager.
@@ -111,7 +92,7 @@ open class TealiumModule: TealiumModuleProtocol {
         didFinish(request)
 
     }
-    
+
     /// Updates the config of this module (if applicable)
     ///
     /// - Parameter request: `TealiumUpdateConfigRequest`.
@@ -198,13 +179,13 @@ open class TealiumModule: TealiumModuleProtocol {
         let newRequest = addModuleName(to: request)
         didFinishWithNoResponse(newRequest)
     }
-    
+
     open func addModuleName(to request: TealiumTrackRequest) -> TealiumTrackRequest {
         var requestData = request.trackDictionary
         var modulesList = requestData[TealiumKey.enabledModules] as? [String] ?? [String]()
         modulesList.append(description.replacingOccurrences(of: ".module", with: ""))
         requestData[TealiumKey.enabledModules] = Array(Set(modulesList)).sorted()
-        var newRequest =  TealiumTrackRequest(data: requestData, completion: request.completion)
+        var newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
         newRequest.moduleResponses = request.moduleResponses
         return newRequest
     }

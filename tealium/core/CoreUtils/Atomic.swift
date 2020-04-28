@@ -11,7 +11,7 @@ import Foundation
 public final class Atomic<T> {
     private let lock = DispatchSemaphore(value: 1)
     private var _value: T
-    
+
     public var value: T {
         get {
             lock.wait()
@@ -24,11 +24,11 @@ public final class Atomic<T> {
             _value = newValue
         }
     }
-    
+
     public init(value initialValue: T) {
         _value = initialValue
     }
-    
+
     @discardableResult
     public func setAndGet(to value: T) -> T {
         lock.wait()

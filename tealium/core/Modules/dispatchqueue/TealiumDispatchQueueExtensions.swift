@@ -153,13 +153,13 @@ public extension TealiumConfig {
     #endif
 }
 
-extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
+extension DispatchManager: TealiumLifecycleEvents {
     func sleep() {
         #if os(iOS)
         var backgroundTaskId: UIBackgroundTaskIdentifier?
-            backgroundTaskId = TealiumDispatchQueueModule.sharedApplication?.beginBackgroundTask {
+            backgroundTaskId = DispatchManager.sharedApplication?.beginBackgroundTask {
                 if let taskId = backgroundTaskId {
-                    TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
+                    DispatchManager.sharedApplication?.endBackgroundTask(taskId)
                     backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
                 }
             }
@@ -169,7 +169,7 @@ extension TealiumDispatchQueueModule: TealiumLifecycleEvents {
         }
         if let taskId = backgroundTaskId {
             TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-                TealiumDispatchQueueModule.sharedApplication?.endBackgroundTask(taskId)
+                DispatchManager.sharedApplication?.endBackgroundTask(taskId)
                 backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
             }
         }
@@ -207,7 +207,7 @@ private func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIden
 }
 #endif
 // Power state notifications
-extension TealiumDispatchQueueModule {
+extension DispatchManager {
 
     func registerForPowerNotifications() {
         #if os(macOS)

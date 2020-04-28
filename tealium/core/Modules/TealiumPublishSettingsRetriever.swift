@@ -34,12 +34,12 @@ public enum HttpStatusCodes: Int {
 }
 
 protocol TealiumPublishSettingsDelegate: class {
-    
+
     func didUpdate(_ publishSettings: RemotePublishSettings)
 }
 
 class TealiumPublishSettingsRetriever {
-    
+
     var diskStorage: TealiumDiskStorageProtocol
     var urlSession: URLSessionProtocol?
     weak var delegate: TealiumPublishSettingsDelegate?
@@ -57,7 +57,7 @@ class TealiumPublishSettingsRetriever {
             return URL(string: "\(TealiumValue.tiqBaseURL)\(config.account)/\(config.profile)/\(config.environment)/\(TealiumValue.tiqURLSuffix)")
         }
     }
-    
+
     init(config: TealiumConfig,
          diskStorage: TealiumDiskStorageProtocol? = nil,
          urlSession: URLSessionProtocol? = URLSession(configuration: .ephemeral),
@@ -69,32 +69,32 @@ class TealiumPublishSettingsRetriever {
         self.delegate = delegate
         refresh()
     }
-    
+
     func refresh() {
         // always request on launch
         if !hasFetched || cachedSettings == nil {
             getAndSave()
             return
         }
-        
+
         guard let date = cachedSettings?.lastFetch.addMinutes(cachedSettings?.minutesBetweenRefresh), Date() > date else {
             return
         }
         getAndSave()
     }
-    
+
     func getCachedSettings() -> RemotePublishSettings? {
         let settings = diskStorage.retrieve(as: RemotePublishSettings.self)
         return settings
     }
-    
+
     func getAndSave() {
         hasFetched = true
 
         guard let mobileHTML = publishSettingsURL else {
             return
         }
-        
+
         getRemoteSettings(url: mobileHTML,
                                lastFetch: cachedSettings?.lastFetch) { settings in
             if let settings = settings {
@@ -108,32 +108,32 @@ class TealiumPublishSettingsRetriever {
         }
 
     }
-    
+
     func getRemoteSettings(url: URL,
                            lastFetch: Date?,
-                           completion: @escaping (RemotePublishSettings?)-> Void) {
-        
+                           completion: @escaping (RemotePublishSettings?) -> Void) {
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if let lastFetch = lastFetch {
             request.setValue(lastFetch.httpIfModifiedHeader, forHTTPHeaderField: "If-Modified-Since")
             request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         }
-        
-        urlSession?.tealiumDataTask(with: request) { data, response, error in
-            
+
+        urlSession?.tealiumDataTask(with: request) { data, response, _ in
+
             guard let response = response as? HTTPURLResponse else {
                 completion(nil)
                 return
             }
-            
+
             switch HttpStatusCodes(rawValue: response.statusCode) {
                 case .ok:
                 guard let publishSettings = self.getPublishSettings(from: data!) else {
                     completion(nil)
                     return
                 }
-                
+
                 completion(publishSettings)
                 default:
                     completion(nil)
@@ -141,22 +141,21 @@ class TealiumPublishSettingsRetriever {
             }
         }.resume()
     }
-    
-    
+
     func getPublishSettings(from data: Data) -> RemotePublishSettings? {
         guard let dataString = String(data: data, encoding: .utf8),
             let startScript = dataString.range(of: "var mps = "),
             let endScript = dataString.range(of: "</script>") else {
             return nil
         }
-        
+
         let string = dataString[..<endScript.lowerBound]
         let newSubString = string[startScript.upperBound...]
 
         guard let data = newSubString.data(using: .utf8) else {
             return nil
         }
-        
+
         return try? JSONDecoder().decode(RemotePublishSettings.self, from: data)
 
     }

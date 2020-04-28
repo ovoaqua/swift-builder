@@ -21,7 +21,7 @@ struct RemotePublishSettings: Codable {
     var wifiOnlySending: Bool
     var isEnabled: Bool
     var lastFetch: Date
-    
+
     enum CodingKeys: String, CodingKey {
         case v5 = "5"
         case battery_saver
@@ -36,8 +36,7 @@ struct RemotePublishSettings: Codable {
         case _is_enabled
         case lastFetch
     }
-    
-    
+
     public init(from decoder: Decoder) throws {
         do {
             let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -50,18 +49,18 @@ struct RemotePublishSettings: Codable {
             self.minutesBetweenRefresh = Double(try v5.decode(String.self, forKey: .minutes_between_refresh)) ?? 15.0
             self.dispatchQueueLimit = Int(try v5.decode(String.self, forKey: .offline_dispatch_limit), radix: 10) ?? TealiumValue.defaultMaxQueueSize
             let logLevel = try v5.decode(String.self, forKey: .override_log)
-            
+
             switch logLevel {
             case "dev":
-                self.overrideLog = .verbose
+                self.overrideLog = .info
             case "qa":
-                self.overrideLog = .warnings
+                self.overrideLog = .debug
             case "prod":
-                self.overrideLog = .errors
+                self.overrideLog = .error
             default:
                 self.overrideLog = .none
             }
-            
+
             self.wifiOnlySending = try v5.decode(String.self, forKey: .wifi_only_sending) == "true" ? true : false
             self.isEnabled = try v5.decode(String.self, forKey: ._is_enabled) == "true" ? true : false
             self.lastFetch = Date()
@@ -75,15 +74,15 @@ struct RemotePublishSettings: Codable {
             self.minutesBetweenRefresh = try values.decode(Double.self, forKey: .minutes_between_refresh)
             self.dispatchQueueLimit = try values.decode(Int.self, forKey: .offline_dispatch_limit)
             let logLevel = try values.decode(String.self, forKey: .override_log)
-            
-            self.overrideLog = TealiumLogLevel.fromString(logLevel)
-            
+
+            self.overrideLog = TealiumLogLevel(from: logLevel)
+
             self.wifiOnlySending = try values.decode(Bool.self, forKey: .wifi_only_sending)
             self.isEnabled = try values.decode(Bool.self, forKey: ._is_enabled)
             self.lastFetch = (try? values.decode(Date.self, forKey: .lastFetch)) ?? Date()
         }
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(batterySaver, forKey: .battery_saver)
@@ -98,7 +97,7 @@ struct RemotePublishSettings: Codable {
         try container.encode(isEnabled, forKey: ._is_enabled)
         try container.encode(lastFetch, forKey: .lastFetch)
     }
-    
+
     public func newConfig(with config: TealiumConfig) -> TealiumConfig {
         let config = config.copy
         config.batterySaverEnabled = batterySaver
@@ -111,11 +110,10 @@ struct RemotePublishSettings: Codable {
         config.isEnabled = config.isEnabled ?? isEnabled
 
         if let existingModulesList = config.modulesList {
-         
+
             let isWhiteList = existingModulesList.isWhitelist,
             moduleNames = existingModulesList.moduleNames
-            
-            
+
             var newModuleNames = moduleNames
             if isWhiteList {
                 if moduleNames.contains(TealiumKey.tagManagementModuleName), !self.tagManagementEnabled {
@@ -142,25 +140,24 @@ struct RemotePublishSettings: Codable {
             }
 
             config.modulesList = TealiumModulesList(isWhitelist: isWhiteList, moduleNames: newModuleNames)
-            
+
         } else {
             var newModuleNames = Set<String>()
-            
+
             if !self.tagManagementEnabled {
                 newModuleNames.insert(TealiumKey.tagManagementModuleName)
             }
-           
+
             if !self.collectEnabled {
                newModuleNames.insert(TealiumKey.collectModuleName)
             }
-            
+
             config.modulesList = TealiumModulesList(isWhitelist: false, moduleNames: newModuleNames)
         }
-        
+
         let overrideLog = config.logLevel
         config.logLevel = (overrideLog ?? self.overrideLog)
 
         return config
     }
 }
-

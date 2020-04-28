@@ -18,6 +18,8 @@ open class TealiumConfig {
     public lazy var optionalData = [String: Any]()
     // Set to false to avoid collecting optional default data
     public var shouldCollectTealiumData = true
+    public var delegate: TealiumDelegate?
+    public var logger: TealiumLoggerProtocol?
 
     public var copy: TealiumConfig {
         return TealiumConfig(account: self.account,
@@ -80,6 +82,16 @@ open class TealiumConfig {
         if let optionalData = optionalData {
             self.optionalData = optionalData
         }
+        self.logger = getLogger()
+    }
+    
+    func getLogger() -> TealiumLoggerProtocol {
+        switch loggerType {
+        case .custom(let logger):
+            return logger
+        default:
+            return TealiumLogger(config: self)
+        }
     }
 
 }
@@ -138,31 +150,31 @@ public extension TealiumConfig {
 // MARK: Logger
 public extension TealiumConfig {
 
-    /// - Returns: `TealiumLogLevel` (default is `.errors`)
-    @available(*, deprecated, message: "Please switch to config.logLevel")
-    func getLogLevel() -> TealiumLogLevel? {
-        logLevel
-    }
-
-    /// Sets the log level to be used by the library
-    ///
-    /// - Parameter logLevel: `TealiumLogLevel`
-    @available(*, deprecated, message: "Please switch to config.logLevel")
-    func setLogLevel(_ logLevel: TealiumLogLevel) {
-        self.logLevel = logLevel
-    }
-
-    /// Sets a known visitor ID. Must be unique (i.e. UUID).
-    /// Should only be used in cases where the user has an existing visitor ID
-    var logLevel: TealiumLogLevel? {
-        get {
-            optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
-        }
-
-        set {
-            optionalData[TealiumKey.logLevelConfig] = newValue
-        }
-    }
+//    /// - Returns: `TealiumLogLevel` (default is `.errors`)
+//    @available(*, deprecated, message: "Please switch to config.logLevel")
+//    func getLogLevel() -> TealiumLogLevel? {
+//       logLevel
+//    }
+//
+//    /// Sets the log level to be used by the library
+//    ///
+//    /// - Parameter logLevel: `TealiumLogLevel`
+//    @available(*, deprecated, message: "Please switch to config.logLevel")
+//    func setLogLevel(_ logLevel: TealiumLogLevel) {
+//        self.logLevel = logLevel
+//    }
+//
+//    /// Sets a known visitor ID. Must be unique (i.e. UUID).
+//    /// Should only be used in cases where the user has an existing visitor ID
+//    var logLevel: TealiumLogLevel? {
+//        get {
+//            optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
+//        }
+//
+//        set {
+//            optionalData[TealiumKey.logLevelConfig] = newValue
+//        }
+//    }
 }
 
 public extension TealiumConfig {

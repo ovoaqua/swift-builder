@@ -9,39 +9,41 @@
 import Foundation
 
 public class AppDataModule: Collector, TealiumAppDataCollection {
-    public var data: [String : Any]? {
-        get {
-            if self.config.shouldCollectTealiumData {
-                return appData.dictionary
-            } else {
-                return appData.persistentData?.dictionary
-            }
-            
+    public var data: [String: Any]? {
+        if self.config.shouldCollectTealiumData {
+            return appData.dictionary
+        } else {
+            return appData.persistentData?.dictionary
         }
     }
     
+    public static var moduleId: String = "App Data"
+
     private(set) var uuid: String?
     private var diskStorage: TealiumDiskStorageProtocol!
     private var bundle: Bundle
     var appData = AppData()
     var existingVisitorId: String?
-//    var logger: TealiumLoggerProtocol?
-    public let collectorId = "AppData"
-    var config: TealiumConfig
+    var logger: TealiumLoggerProtocol?
+    var delegate: TealiumModuleDelegate
     
+    var config: TealiumConfig
+
     required public init(config: TealiumConfig,
+                         delegate: TealiumModuleDelegate,
+                         diskStorage: TealiumDiskStorage?,
                          completion: () -> Void) {
-        self.config = config
-        self.bundle = Bundle.main
-        self.diskStorage = TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
-        self.existingVisitorId = config.existingVisitorId
-//        self.logger = config._internal.logger
-        setExistingAppData()
-//        let logRequest = TealiumLogRequest(title: "AppData Initialized", messages: ["Success"], info: nil, logLevel: .info)
-//        self.logger?.log(logRequest)
         defer {
             completion()
         }
+        self.delegate = delegate
+        self.config = config
+        self.bundle = Bundle.main
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
+        self.existingVisitorId = config.existingVisitorId
+//        self.logger = config._internal.logger
+        self.logger = config.logger
+        setExistingAppData()
     }
 
     /// Retrieves existing data from persistent storage and stores in volatile memory.

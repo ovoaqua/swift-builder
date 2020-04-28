@@ -128,6 +128,7 @@ public class Tealium {
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
+            self.eventDataManager.lastTrackEvent = Date()
             self.modulesManager.track(track)
         }
     }

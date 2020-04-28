@@ -130,22 +130,6 @@ class TealiumDispatchQueueModule: TealiumModule {
         }
     }
 
-    func queue(_ request: TealiumEnqueueRequest) {
-        guard isEnabled else {
-            return
-        }
-        removeOldDispatches()
-        let allTrackRequests = request.data
-
-        allTrackRequests.forEach {
-            var newData = $0.trackDictionary
-            newData[TealiumKey.wasQueued] = "true"
-            let newTrack = TealiumTrackRequest(data: newData,
-                                               completion: $0.completion)
-            persistentQueue.appendDispatch(newTrack)
-        }
-    }
-
     func removeOldDispatches() {
         guard isEnabled else {
             return
@@ -295,6 +279,22 @@ class TealiumDispatchQueueModule: TealiumModule {
         return true
     }
 
+    func queue(_ request: TealiumEnqueueRequest) {
+        guard isEnabled else {
+            return
+        }
+        removeOldDispatches()
+        let allTrackRequests = request.data
+
+        allTrackRequests.forEach {
+            var newData = $0.trackDictionary
+            newData[TealiumKey.wasQueued] = "true"
+            let newTrack = TealiumTrackRequest(data: newData,
+                                               completion: $0.completion)
+            persistentQueue.appendDispatch(newTrack)
+        }
+    }
+    
     func enqueue(_ request: TealiumTrackRequest,
                  reason: String?) {
         // no conditions preventing queueing, so queue request

@@ -21,7 +21,7 @@ extension Int64 {
 
 public extension Tealium {
 
-    /// - Returns: `VisitorServoceManager` instance
+    /// - Returns: `VisitorServiceManager` instance
     func visitorService() -> TealiumVisitorServiceManager? {
         guard let module = modulesManager.getModule(forName: TealiumVisitorServiceConstants.moduleName) as? TealiumVisitorServiceModule else {
             return nil

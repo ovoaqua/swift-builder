@@ -13,7 +13,6 @@ public struct PersistentAppData: Codable {
     public let visitorId: String
     public let uuid: String
 
-    
     public var dictionary: [String: Any] {
         get {
             [TealiumKey.uuid: uuid,

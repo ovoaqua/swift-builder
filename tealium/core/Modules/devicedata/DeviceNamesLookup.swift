@@ -128,6 +128,10 @@ struct DeviceNamesLookup {
                 "model_name": "iPhone 11 Pro Max",
                 "model_variant": ""
             ],
+            "iPhone12,8": [
+                "model_name": "iPhone SE 2nd Generation",
+                "model_variant": ""
+            ],
             "iPod5,1": [
                 "model_name": "iPod Touch 5th Generation",
                 "model_variant": ""

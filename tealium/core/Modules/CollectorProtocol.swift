@@ -8,9 +8,10 @@
 
 import Foundation
 
-public protocol Collector {
+public protocol Collector: Module {
     var data: [String: Any]? { get }
-    var collectorId: String { get }
     init(config: TealiumConfig,
-         completion: ()-> Void)
+         delegate: TealiumModuleDelegate,
+         diskStorage: TealiumDiskStorage?,
+         completion: () -> Void)
 }
