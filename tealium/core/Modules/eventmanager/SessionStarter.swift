@@ -8,35 +8,34 @@
 
 import Foundation
 
-
 public protocol SessionStarterProtocol {
     var sessionURL: String { get }
     func sessionRequest(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void)
-    //func sessionRequest(_ completion: @escaping ((HTTPURLResponse?, String?) -> Void))
 }
 
 public struct SessionStarter: SessionStarterProtocol {
-    
+
     var config: TealiumConfig
     var urlSession: URLSessionProtocol
     var logger: TealiumLogger
-    
+
     public init(config: TealiumConfig,
-                urlSession: URLSessionProtocol = URLSession.shared) {
+        urlSession: URLSessionProtocol = URLSession.shared) {
         self.config = config
         self.urlSession = urlSession
         self.logger = TealiumLogger(loggerId: "SessionStarter", logLevel: config.logLevel ?? defaultTealiumLogLevel)
     }
-    
+
     /// Sets the session URL
+    /// - Returns: `String` The session url.
     public var sessionURL: String {
         let timestamp = Date().unixTimeMilliseconds
         return "\(TealiumKey.sessionBaseURL)\(config.account)/\(config.profile)/\(timestamp)&cb=\(timestamp)"
     }
     
-    /// Requests a new session via utag.v.js
+    /// Makes a request to the Tealium CDN session registry.
+    /// - Parameter completion: `Result<HTTPURLResponse, Error>` Optional completion handling if needed, otherwise log output can be monitored.
     public func sessionRequest(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void = { _ in }) {
-        print("requesting new session...")
         guard let url = URL(string: sessionURL) else {
             self.log(error: SessionError.invalidURL.description)
             return
@@ -51,17 +50,17 @@ public struct SessionStarter: SessionStarterProtocol {
                 HttpStatusCodes(rawValue: response.statusCode) == .ok else {
                     self.log(error: SessionError.invalidResponse.description)
                     completion(.failure(SessionError.invalidResponse))
-                return
+                    return
             }
             completion(.success(response))
         }.resume()
     }
-    
+
     /// - Parameter error: `String`
     func log(error: String) {
         logger.log(message: error, logLevel: .warnings)
     }
-    
+
 }
 
 

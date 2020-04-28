@@ -131,6 +131,7 @@ extension EventDataManager {
     }
 
     /// Removes session data and resets session.
+    /// - Parameter initial: `Bool` If the current event is the initial launch.
     public func refreshSessionData(initial: Bool) {
         sessionData = [String: Any]()
         if !initial {

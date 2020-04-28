@@ -45,7 +45,6 @@ public class EventDataManager: EventDataManagerProtocol {
         sessionInit()
     }
     
-    
     /// - Returns: `[String: Any]` containing all stored event data.
     public var allEventData: [String: Any] {
         get {

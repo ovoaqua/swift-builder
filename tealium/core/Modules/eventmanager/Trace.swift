@@ -16,7 +16,7 @@ extension EventDataManager {
         add(key: TealiumKey.traceId, value: id, expiration: .session)
     }
     
-    /// Ends the trace current session.
+    /// Ends the trace for the current session.
     public func leaveTrace() {
         delete(forKey: TealiumKey.traceId)
     }
