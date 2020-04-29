@@ -17,11 +17,15 @@ public class EventDataManager: EventDataManagerProtocol {
     public var lastSessionIdRefresh: Date?
     public var lastSessionRequest: Date?
     public var minutesBetweenSessionIdentifier: TimeInterval
-    public var qualifiedByMultipleTracks = false
+    //public var qualifiedByMultipleTracks = false
     public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
     public var sessionData = [String: Any]()
     public var sessionStarter: SessionStarterProtocol
     public var tagManagementIsEnabled = false
+    
+    public var shouldTriggerSessionRequest = false
+    public var numberOfTracksBacking = 0
+    public var lastTrackDate: Date?
     
     public init(config: TealiumConfig,
         diskStorage: TealiumDiskStorageProtocol? = nil,

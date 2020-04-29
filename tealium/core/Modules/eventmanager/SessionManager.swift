@@ -10,6 +10,37 @@ import Foundation
 
 
 extension EventDataManager {
+    
+    public var numberOfTracks: Int {
+        get {
+            numberOfTracksBacking
+        }
+        set {
+            if let lastTrackDate = lastTrackDate {
+                let current = Date()
+                if let lastEventDate = lastTrackDate,
+                    let date = lastEventDate.addSeconds(secondsBetweenTrackEvents) {
+                    let tracks = numberOfTracksBacking += 1
+                    if tracks == 2 {
+                        triggerSessionRequest()
+                        numberOfTracksBacking = 0
+                        lastTrackDate = nil
+                    }
+                } else {
+                    lastTrackDate = Date()
+                    numberOfTracksBacking = 0
+                }
+            } else {
+                numberOfTracksBacking += 1
+            }
+        }
+    }
+    
+    func triggerSessionRequest() {
+        if tagManagementIsEnabled, shouldTriggerSessionRequest {
+            startNewSession(with: sessionStarter)
+        }
+    }
 
     /// - Returns: `String` session id for the active session.
     public var sessionId: String? {
@@ -25,19 +56,13 @@ extension EventDataManager {
 
     /// - Returns: `Bool` `true` if the session ID should be updated
     /// and all other session data should be removed.
-    public var sessionExpired: Bool {
-        guard qualifiedByMultipleTracks else {
-            return false
+    
+    // If valid session, refresh the last refresh date
+    public var validSession: (returned: Bool, id: String?) {
+        guard let sessionId = persistentDataStorage?.removeExpired().allData[TealiumKey.sessionId] else {
+            return (false, nil)
         }
-        guard let lastSessionDate = storedSessionRequest else {
-            return true
-        }
-
-        if abs(lastSessionDate.timeIntervalSinceNow) > minutesBetweenSessionIdentifier * 60 {
-            return true
-        }
-
-        return false
+        return (true, sessionId)
     }
     
     /// Upon launch, the active session is either continued from the previous session
@@ -45,18 +70,22 @@ extension EventDataManager {
     /// the last time the session was requested (and was there sufficient user activity since)
     /// and the date the session was last refreshed.
     public func sessionInit() {
-        guard let lastSessionIdRefreshDate = storedSessionIdRefresh else {
+        guard let validSession = validSession, validSession.returned else {
             generateSessionId()
-            lastSessionIdRefresh = Date()
             add(data: [TealiumKey.sessionId: sessionId ?? "",
                        TealiumKey.lastSessionIdRefresh: lastSessionIdRefresh!.extendedIso8601String],
                 expiration: .session)
             return
         }
         
-        lastSessionIdRefresh = lastSessionIdRefreshDate
+        if validSession.returned {
+            sessionId = validSession.id
+            add(key: TealiumKey.sessionId, value: sessionId!, expiration: .session)
+        }
+            
+        add(key: TealiumKey.sessionId, value: sessionId!, expiration: .session)
 
-        guard sessionExpired else {
+        guard validSessionId else {
             sessionId = storedSessionId
             add(data: [TealiumKey.sessionId: sessionId ?? "",
                        TealiumKey.lastSessionIdRefresh: lastSessionIdRefresh!.extendedIso8601String],
@@ -70,10 +99,10 @@ extension EventDataManager {
                    TealiumKey.lastSessionIdRefresh: lastSessionIdRefresh!.extendedIso8601String],
             expiration: .session)
         
-        if let lastEventDate = lastSessionIdRefresh,
-            let date = lastEventDate.addSeconds(secondsBetweenTrackEvents) {
-            qualifiedByMultipleTracks = Date() < date
-        }
+//        if let lastEventDate = lastSessionIdRefresh,
+//            let date = lastEventDate.addSeconds(secondsBetweenTrackEvents) {
+//            qualifiedByMultipleTracks = Date() < date
+//        }
         
         startNewSession(with: self.sessionStarter)
     }
@@ -82,17 +111,17 @@ extension EventDataManager {
     /// was qualified by the seconds between track events interval (default is 30 seconds). If
     /// qualified, and the previous session has expired, a new session is generated
     public func sessionUpdate() {
-        let current = Date()
-        if let lastEventDate = lastSessionIdRefresh,
-            let date = lastEventDate.addSeconds(secondsBetweenTrackEvents) {
-            qualifiedByMultipleTracks = Date() < date
-        }
+//        let current = Date()
+//        if let lastEventDate = lastSessionIdRefresh,
+//            let date = lastEventDate.addSeconds(secondsBetweenTrackEvents) {
+//            qualifiedByMultipleTracks = Date() < date
+//        }
 
-        if sessionExpired {
+        if validSessionId {
             refreshSessionData(initial: initialLaunch)
             startNewSession(with: sessionStarter)
         }
-        lastSessionIdRefresh = current
+        lastSessionIdRefresh = Date()
         add(data: [TealiumKey.sessionId: sessionId ?? "",
             TealiumKey.lastSessionIdRefresh: lastSessionIdRefresh!.extendedIso8601String],
             expiration: .session)
@@ -143,12 +172,12 @@ extension EventDataManager {
     /// - Parameter sessionStarter: `SessionStarterProtocol`
     public func startNewSession(with sessionStarter: SessionStarterProtocol) {
         initialLaunch = false
-        guard tagManagementIsEnabled else {
-            return
-        }
-        lastSessionRequest = Date()
-        add(data: [TealiumKey.lastSessionRequest: lastSessionRequest!.extendedIso8601String],
-            expiration: .forever)
+//        guard tagManagementIsEnabled else {
+//            return
+//        }
+//        lastSessionRequest = Date()
+//        add(data: [TealiumKey.lastSessionRequest: lastSessionRequest!.extendedIso8601String],
+//            expiration: .forever)
         sessionStarter.sessionRequest { _ in }
     }
 

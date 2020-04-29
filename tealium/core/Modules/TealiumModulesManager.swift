@@ -114,7 +114,7 @@ open class TealiumModulesManager: NSObject {
                    var eventDataManager = eventDataManager {
                    let sessionStarter = eventDataManager.sessionStarter
                    eventDataManager.tagManagementIsEnabled = true
-                   if eventDataManager.sessionExpired {
+                   if eventDataManager.sessionValid {
                       eventDataManager.startNewSession(with: sessionStarter)
                    }
                }
