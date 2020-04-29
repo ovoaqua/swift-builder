@@ -21,6 +21,9 @@ var version: String? = nil
 var newModuleName: String? = nil
 var versionExists = false
 var cleanctx = CustomContext(main)
+let cleanenvvars = ["TERM_PROGRAM", "SHELL", "TERM", "TMPDIR", "Apple_PubSub_Socket_Render", "TERM_PROGRAM_VERSION", "TERM_SESSION_ID", "USER", "SSH_AUTH_SOCK", "__CF_USER_TEXT_ENCODING", "XPC_FLAGS", "XPC_SERVICE_NAME", "SHLVL", "HOME", "LOGNAME", "LC_CTYPE", "_"]
+cleanctx.env = cleanctx.env.filterToDictionary(keys: cleanenvvars)
+cleanctx.env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 var result = cleanctx.run(bash: "brew install xcodegen")
 var publicRepoPath: String?
 var builderRepoPath: String?
@@ -37,19 +40,35 @@ var greeting: String {
 func getRepoPaths() {
     print("What is the full path to your builder repo?")
     while let path = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        builderRepoPath = path
+        var mutablePath = path
+        mutablePath.removeAll(where: { [""].contains($0) })
+        mutablePath.append("/")
+        result = cleanctx.run(bash: "cd \(mutablePath)")
+        guard result.stderror == "" else {
+            print("Please enter a valid path")
+            exit(1)
+        }
+        builderRepoPath = mutablePath
+        publicRepoPath = builderRepoPath?.replacingOccurrences(of: "-builder", with: "")
         break
     }
-    print("What is the full path to your public repo?")
-    while let path = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        publicRepoPath = path
-        break
-    }
+//    print("What is the full path to your public repo?")
+//    while let path = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
+//        var mutablePath = path
+//        mutablePath.removeAll(where: { [""].contains($0) })
+//        mutablePath.append("/")
+//        result = cleanctx.run(bash: "cd \(mutablePath)")
+//        guard result.stderror == "" else {
+//            print("Please enter a valid path")
+//            exit(1)
+//        }
+//        publicRepoPath = mutablePath
+//        break
+//    }
 }
 
 func greetAndSetDirectories() {
     print(greeting)
-    cleanctx.env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     cleanctx.currentdirectory = publicRepoPath ?? ""
 }
 
@@ -57,6 +76,10 @@ func greetAndSetDirectories() {
 func checkVersion() {
     print("Please provide a version number to release: ")
     while let input = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
+        guard input.split(separator: ".").map({ Int($0) }).count == 3 else {
+            print("Format of version must be X.X.X i.e. 1.9.5 or 2.4.1 etc")
+            exit(1)
+        }
         result = cleanctx.run(bash: "git branch")
         version = input
         if result.stdout.contains(input) {
@@ -74,18 +97,33 @@ func checkForNewModules(_ version: String) {
     cleanctx.currentdirectory = builderRepoPath ?? ""
     print("Do you need to add any new modules in this version? y/n")
     while let input = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-        if input.lowercased() == "y" {
+        if input.lowercased() == "y" || input.lowercased() == "yes" {
             print("Please enter the module name (format = TealiumNewModule): ")
-            newModuleName = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters)
+            while let newModule = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
+                guard newModule.hasPrefix("Tealium") else {
+                    print("The module name must be prefixed with `Tealium`")
+                    exit(1)
+                }
+                newModuleName = newModule
 
+                break
+            }
             let shortModuleName = newModuleName?.replacingOccurrences(of: "Tealium", with: "").lowercased()
             print("Do you want to exclude any platforms from this module? y/n")
             while let shouldExclude = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-                if shouldExclude == "y" {
+                if shouldExclude == "y" || input.lowercased() == "yes" {
                     cleanctx.run(bash: "chmod +x new-module.py")
                     print("List your excluded platforms in a comma separated string e.g. tvos,osx")
                     while let excluded = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-                        cleanctx.run(bash: "python3 ./new-module.py -v \(version) -f \(newModuleName!) -s \(shortModuleName!) -e \(excluded)")
+                        guard excluded.split(separator: ",")
+                            .filter({ $0 != "tvos" && $0 != "osx" && $0 != "ios" && $0 != "watchos" }).count == 0 else {
+                                print("""
+                                The excluded platforms must be either of the following: tvos, ios, osx or watchos.
+                                Separated by a comma with no whitespace.
+                                """)
+                                exit(1)
+                        }
+                        cleanctx.run(bash: "python3 ./new-module.py -v \(version) -f \(newModuleName!) -s \(shortModuleName!) -e \(excluded.lowercased())")
                         break
                     }
                 } else {
@@ -156,7 +194,7 @@ func copySourceFiles() {
     cleanctx.currentdirectory = publicRepoPath ?? ""
     cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/tealium ./")
     print("Tealium folder copied")
-    
+
     // Copy unit tests folder over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
     cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/support ./")
@@ -169,7 +207,6 @@ func runTests() {
     cleanctx.currentdirectory = "\(builderRepoPath ?? "")/builder"
     cleanctx.run(bash: "chmod +x unit-tests.sh")
     let tests = cleanctx.runAsync(bash: "./unit-tests.sh > ~/Desktop/testoutput.txt").onCompletion { command in
-        print("🤯complete")
         if let readfile = try? open("~/Desktop/testoutput.txt") {
             let contents = readfile.read()
             let numberOfFailures = contents.components(separatedBy: "failed")
@@ -229,7 +266,7 @@ func commitAndPush(_ version: String) {
             4. Update documentation/release notes
             5. Announce the new release in #support_mobile (slack)
           """)
-    
+
     // Remind them to publish release/tag on github <--script using github api // https://github.community/t5/How-to-use-Git-and-GitHub/How-to-create-full-release-from-command-line-not-just-a-tag/td-p/6895
     // look in .ssh config for .pub (prompt for name)
 
@@ -237,7 +274,7 @@ func commitAndPush(_ version: String) {
 
 // TODO:
 func createPR() {
-    
+
 }
 
 // TODO:
@@ -245,12 +282,12 @@ func createPR() {
 getRepoPaths()
 guard let _ = builderRepoPath,
     let _ = publicRepoPath else {
-    print("You must enter the full paths to both the public and builder repos. Try again, please.")
-    exit(1)
+        print("You must enter the full paths to both the public and builder repos. Try again, please.")
+        exit(1)
 }
 greetAndSetDirectories()
 checkVersion()
-checkForChanges()
+// checkForChanges() // TODO: fix?
 guard let version = version else {
     print("You must enter a versoin number. Try again, please.")
     exit(1)
@@ -266,3 +303,13 @@ removeUneccessaryFiles()
 commitAndPush(version)
 
 RunLoop.main.run()
+
+extension Dictionary where Key:Hashable {
+    public func filterToDictionary <C: Collection> (keys: C) -> [Key:Value]
+        where C.Iterator.Element == Key, C.IndexDistance == Int {
+
+        var result = [Key:Value](minimumCapacity: keys.count)
+        for key in keys { result[key] = self[key] }
+        return result
+    }
+}

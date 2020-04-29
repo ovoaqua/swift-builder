@@ -15,11 +15,11 @@
 		43DE5DAAFEFD8AF73BAB5135 /* TealiumTagManagementUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE545893778B07FAB56AB9 /* TealiumTagManagementUtils.swift */; };
 		4B8DC80B2084F4EB000B99A9 /* TealiumCrashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F70792032162500630388 /* TealiumCrashTests.swift */; };
 		4B8DC80C2084F4F0000B99A9 /* TealiumCrashModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F7093203229EE00630388 /* TealiumCrashModuleTests.swift */; };
+		CF729B21244A5E7300713196 /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = CF729B20244A5E7300713196 /* SwiftShell */; };
 		CF7AC0CD23CE853100B0B9BD /* TealiumLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFF242A123CE774C0091B7BF /* TealiumLocation.framework */; };
 		CF7AC0CE23CE853100B0B9BD /* TealiumLocation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CFF242A123CE774C0091B7BF /* TealiumLocation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF7AF2CE2437DE6F00D9294C /* TealiumTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D798C4692342416600EE665E /* TealiumTests-Info.plist */; };
 		CF7AF2D62437ED5500D9294C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7AF2D52437ED5500D9294C /* main.swift */; };
-		CF7AF334243BF87C00D9294C /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = CF7AF333243BF87C00D9294C /* SwiftShell */; };
 		CFB78AE52343BED100FADBC4 /* MockTealiumVisitorProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB78AE32343BE8200FADBC4 /* MockTealiumVisitorProfileManager.swift */; };
 		CFB78AE62343BED200FADBC4 /* MockTealiumVisitorProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB78AE32343BE8200FADBC4 /* MockTealiumVisitorProfileManager.swift */; };
 		CFB78AE72343BED200FADBC4 /* MockTealiumVisitorProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB78AE32343BE8200FADBC4 /* MockTealiumVisitorProfileManager.swift */; };
@@ -2886,7 +2886,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF7AF334243BF87C00D9294C /* SwiftShell in Frameworks */,
+				CF729B21244A5E7300713196 /* SwiftShell in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4859,7 +4859,7 @@
 			);
 			name = "script-release";
 			packageProductDependencies = (
-				CF7AF333243BF87C00D9294C /* SwiftShell */,
+				CF729B20244A5E7300713196 /* SwiftShell */,
 			);
 			productName = "script-release";
 			productReference = CF7AF2D32437ED5500D9294C /* script-release */;
@@ -5264,6 +5264,8 @@
 				CFF242A723CE774C0091B7BF /* PBXTargetDependency */,
 			);
 			name = TestHost;
+			packageProductDependencies = (
+			);
 			productName = TestHost;
 			productReference = D777EDA41FB0B87300181B11 /* TestHost.app */;
 			productType = "com.apple.product-type.application";
@@ -6643,7 +6645,7 @@
 			);
 			mainGroup = 7182DD001D77492D0001A95B;
 			packageReferences = (
-				CF7AF332243BF87C00D9294C /* XCRemoteSwiftPackageReference "SwiftShell" */,
+				CF729B1F244A5E7300713196 /* XCRemoteSwiftPackageReference "swiftshell" */,
 			);
 			productRefGroup = 7182DD0A1D77492D0001A95B /* Products */;
 			projectDirPath = "";
@@ -16615,20 +16617,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CF7AF332243BF87C00D9294C /* XCRemoteSwiftPackageReference "SwiftShell" */ = {
+		CF729B1F244A5E7300713196 /* XCRemoteSwiftPackageReference "swiftshell" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:kareman/SwiftShell.git";
+			repositoryURL = "https://github.com/kareman/swiftshell";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CF7AF333243BF87C00D9294C /* SwiftShell */ = {
+		CF729B20244A5E7300713196 /* SwiftShell */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CF7AF332243BF87C00D9294C /* XCRemoteSwiftPackageReference "SwiftShell" */;
+			package = CF729B1F244A5E7300713196 /* XCRemoteSwiftPackageReference "swiftshell" */;
 			productName = SwiftShell;
 		};
 /* End XCSwiftPackageProductDependency section */
