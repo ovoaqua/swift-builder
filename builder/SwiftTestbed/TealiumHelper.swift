@@ -9,7 +9,7 @@
 import Foundation
 import TealiumCore
 import TealiumCollect
-import TealiumTagManagement
+//import TealiumTagManagement
 import TealiumAttribution
 import TealiumRemoteCommands
 import TealiumVisitorService
