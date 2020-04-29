@@ -54,32 +54,32 @@ public struct GeofenceData: Codable {
     var geofences: Geofences?
 
     init?(file: String, bundle: Bundle) {
-        let logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: .errors)
+        //let logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: .errors)
         guard let path = bundle.path(forResource: file.replacingOccurrences(of: ".json", with: ""),
                                      ofType: "json") else {
-                                        logger.log(message: TealiumLocationErrors.noFile.rawValue, logLevel: .errors)
+                                        //logger.log(message: TealiumLocationErrors.noFile.rawValue, logLevel: .errors)
                                         return nil
         }
         guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) else {
-            logger.log(message: TealiumLocationErrors.couldNotRetrieve.rawValue, logLevel: .errors)
+            //logger.log(message: TealiumLocationErrors.couldNotRetrieve.rawValue, logLevel: .errors)
             return nil
         }
         guard let geofenceData = try? JSONDecoder().decode(Geofences.self, from: jsonData) else {
-            logger.log(message: TealiumLocationErrors.couldNotDecode.rawValue, logLevel: .errors)
+            //logger.log(message: TealiumLocationErrors.couldNotDecode.rawValue, logLevel: .errors)
             return nil
         }
         geofences = filter(geofences: geofenceData)
-        logger.log(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎", logLevel: .verbose)
+        //logger.log(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎", logLevel: .verbose)
     }
 
     init?(url: String) {
-        let logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: .errors)
+        //let logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: .errors)
         guard !url.isEmpty else {
-            logger.log(message: TealiumLocationErrors.noUrl.rawValue, logLevel: .errors)
+            //logger.log(message: TealiumLocationErrors.noUrl.rawValue, logLevel: .errors)
             return
         }
         guard let geofenceUrl = URL(string: url) else {
-            logger.log(message: TealiumLocationErrors.invalidUrl.rawValue, logLevel: .errors)
+           // logger.log(message: TealiumLocationErrors.invalidUrl.rawValue, logLevel: .errors)
             return
         }
         do {
@@ -89,25 +89,25 @@ public struct GeofenceData: Codable {
                     return
             }
             geofences = filter(geofences: geofenceData)
-            logger.log(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎", logLevel: .verbose)
+            //logger.log(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎", logLevel: .verbose)
         } catch let error {
-            logger.log(message: "Error \(error.localizedDescription)", logLevel: .errors)
+            //logger.log(message: "Error \(error.localizedDescription)", logLevel: .errors)
         }
     }
 
     init?(json: String) {
-        let logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: .errors)
+        //let logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: .errors)
         guard !json.isEmpty else {
-            logger.log(message: TealiumLocationErrors.noJson.rawValue, logLevel: .errors)
+            //logger.log(message: TealiumLocationErrors.noJson.rawValue, logLevel: .errors)
             return
         }
         guard let data = json.data(using: .utf8),
             let geofenceData = try? JSONDecoder().decode(Geofences.self, from: data) else {
-                logger.log(message: TealiumLocationErrors.couldNotDecode.rawValue, logLevel: .errors)
+                //logger.log(message: TealiumLocationErrors.couldNotDecode.rawValue, logLevel: .errors)
                 return
         }
         geofences = filter(geofences: geofenceData)
-        logger.log(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎", logLevel: .verbose)
+        //logger.log(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎", logLevel: .verbose)
     }
 
     func filter(geofences: Geofences) -> Geofences {

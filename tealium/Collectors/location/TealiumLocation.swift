@@ -32,8 +32,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         self.locationManager = locationManager
 
         if let logLevel = config.logLevel {
-            self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: logLevel)
-
+            //self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: logLevel)
         }
 
         super.init()
@@ -148,7 +147,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = error as? CLError,
             error.code == .denied {
-            logger?.log(message: "🌎🌎 An error has occured: \(String(describing: error.localizedDescription)) 🌎🌎", logLevel: .errors)
+            //logger?.log(message: "🌎🌎 An error has occured: \(String(describing: error.localizedDescription)) 🌎🌎", logLevel: .errors)
             locationManager.stopUpdatingLocation()
         }
     }
@@ -299,7 +298,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     /// Logs verbose information about events occuring in the `TealiumLocation` module
     /// - Parameter message: `String` message to log to the console
     func logInfo(message: String) {
-        logger?.log(message: message, logLevel: .verbose)
+       // logger?.log(message: message, logLevel: .verbose)
     }
 
 }

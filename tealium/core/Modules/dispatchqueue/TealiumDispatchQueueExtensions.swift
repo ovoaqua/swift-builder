@@ -163,7 +163,6 @@ extension DispatchManager: TealiumLifecycleEvents {
                     backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
                 }
             }
-        }
 
         TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
             self.releaseQueue()
