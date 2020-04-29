@@ -89,7 +89,14 @@ public class NewModulesManager {
             if knownDispatcher.contains("TagManagement") {
                 self.eventDataManager?.tagManagementIsEnabled = true
             }
-            let dispatcher = moduleRef.init(config: config, delegate: self, eventDataManager: eventDataManager)
+            let dispatcher = moduleRef.init(config: config, delegate: self, eventDataManager: eventDataManager) { result in
+                switch result {
+                case .failure(let error):
+                    print("log error")
+                default:
+                    break
+                }
+            }
             guard self.dispatchers.contains(where: {
                 type(of: $0) == moduleRef
             }) == false else {

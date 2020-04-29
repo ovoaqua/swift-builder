@@ -20,11 +20,15 @@ public class CollectModule: Dispatcher {
     
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
-                         eventDataManager: EventDataManagerProtocol?) {
+                         eventDataManager: EventDataManagerProtocol?,
+                         completion: @escaping (Result<Bool, Error>) -> Void) {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
         updateCollectDispatcher(config: config, completion: nil)
+        defer {
+            completion(.success(true))
+        }
     }
 
     func updateCollectDispatcher(config: TealiumConfig,

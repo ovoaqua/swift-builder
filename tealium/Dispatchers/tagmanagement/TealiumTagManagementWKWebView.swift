@@ -117,7 +117,6 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
                 self.enableCompletion?(false, TealiumWebviewError.webviewNotInitialized)
                 return
             }
-
             // attach the webview to the view before continuing
             self.attachToUIView(specificView: specificView) { _ in
                 self.migrateCookies(forWebView: webview) {
@@ -142,11 +141,9 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
                       window.utag_cfg_ovrd.no_session_count = true;
                       window.utag_cfg_ovrd.noview = true;
                       """
-
         let userScript = WKUserScript(source: jsString,
                                       injectionTime: .atDocumentStart,
                                       forMainFrameOnly: true)
-
         config.userContentController.addUserScript(userScript)
     }
 
@@ -217,9 +214,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     ///     - completion: Optional completion handler to call when call completes.
     func trackMultiple(_ data: [[String: Any]],
                               completion: ((Bool, [String: Any], Error?) -> Void)?) {
-
         let totalSuccesses = AtomicInteger(value: 0)
-
         data.forEach {
             self.track($0) { success, _, _ in
                 if success {
@@ -229,11 +224,8 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
                 }
             }
         }
-
         let allCallsSuccessful = totalSuccesses.value == data.count
-
         completion?(allCallsSuccessful, ["": ""], nil)
-
     }
 
     /// Handles JavaScript evaluation on the WKWebView instance.

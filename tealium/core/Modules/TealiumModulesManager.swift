@@ -110,14 +110,6 @@ open class TealiumModulesManager: NSObject {
         self.setupModulesFrom(config: config)
         self.tealiumInstance = tealiumInstance
         self.queue = TealiumQueues.backgroundConcurrentQueue
-//        if let modules = modules, modules.description.contains("tagmanagement"),
-//                   var eventDataManager = eventDataManager {
-//                   let sessionStarter = eventDataManager.sessionStarter
-//                   eventDataManager.tagManagementIsEnabled = true
-//                   if eventDataManager.sessionValid {
-//                      eventDataManager.startNewSession(with: sessionStarter)
-//                   }
-//               }
         let request = TealiumEnableRequest(config: config,
                                            eventDataManager: eventDataManager,
                                            enableCompletion: enableCompletion)
