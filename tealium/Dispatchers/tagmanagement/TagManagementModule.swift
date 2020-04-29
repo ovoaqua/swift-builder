@@ -7,7 +7,7 @@
 //
 
 import Foundation
-//import TealiumCore
+import TealiumCore
 
 
 /// Dispatch Service Module for sending track data to the Tealium Webview.

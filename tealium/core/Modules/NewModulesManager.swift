@@ -12,7 +12,7 @@ public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule"]
-    var knownDispatchers: [String] = ["TealiumCollect.CollectModule"]//, "TealiumTagManagement.TagManagementModule"]
+    var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
    // var knownDispatchers: [Dispatcher.Type] = [TagManagementModule.self]
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
