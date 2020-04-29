@@ -94,7 +94,7 @@ public class EventDataManager: EventDataManagerProtocol {
             guard let storedData = self.diskStorage.retrieve(as: EventData.self) else {
                 return EventData()
             }
-            print("😀persistent storage: \(storedData)")
+            //print("😀persistent storage: \(storedData)")
             return storedData
         }
         set {

@@ -29,6 +29,7 @@ public class TagManagementModule: Dispatcher {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
+        self.eventDataManager?.tagManagementIsEnabled = true
         self.tagManagement = TealiumTagManagementWKWebView()
         enableNotifications()
         self.tagManagement?.enable(webviewURL: config.webviewURL, shouldMigrateCookies: true, delegates: config.webViewDelegates, shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.rootView) { [weak self] _, error in
