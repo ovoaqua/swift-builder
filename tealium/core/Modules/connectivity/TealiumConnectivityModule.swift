@@ -89,7 +89,7 @@ class TealiumConnectivityModule: TealiumModule {
         if newData[TealiumKey.wasQueued] as? String == nil {
             if let connectionType = TealiumConnectivity.connectionType {
                 newData += [TealiumConnectivityKey.connectionType: connectionType,
-                            TealiumConnectivityKey.connectionTypeLegacy: connectionType,
+                            TealiumConnectivityKey.connectionTypeLegacy: connectionType
                 ]
             }
         }
@@ -121,7 +121,7 @@ class TealiumConnectivityModule: TealiumModule {
         }
 
         if TealiumConnectivity.isConnectedToNetwork() == false || (config?.wifiOnlySending == true &&
-        TealiumConnectivity.currentConnectionType() != TealiumConnectivityKey.connectionTypeWifi) {
+            TealiumConnectivity.currentConnectionType() != TealiumConnectivityKey.connectionTypeWifi) {
             self.refreshConnectivityStatus()
             // Save in cache
             enqueue(request)

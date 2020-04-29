@@ -10,7 +10,7 @@
 import CoreLocation
 import Foundation
 #if location
-    import TealiumCore
+import TealiumCore
 #endif
 
 public struct Geofence: Codable {
@@ -56,9 +56,9 @@ public struct GeofenceData: Codable {
     init?(file: String, bundle: Bundle) {
         let logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: .errors)
         guard let path = bundle.path(forResource: file.replacingOccurrences(of: ".json", with: ""),
-            ofType: "json") else {
-            logger.log(message: TealiumLocationErrors.noFile.rawValue, logLevel: .errors)
-            return nil
+                                     ofType: "json") else {
+                                        logger.log(message: TealiumLocationErrors.noFile.rawValue, logLevel: .errors)
+                                        return nil
         }
         guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) else {
             logger.log(message: TealiumLocationErrors.couldNotRetrieve.rawValue, logLevel: .errors)

@@ -62,9 +62,9 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
         //  url = tealium://test?1=2&3=4
 
         let expectedHeaderFields: [String: String] = ["Authorization": "Basic dGVzdFVzZXJuYW1lOnRlc3RQYXNzd29yZA==",
-                                    "Content-Type": "application/json; charset=utf-8",
-                                    "a": "b",
-                                    "c": "d"]
+                                                      "Content-Type": "application/json; charset=utf-8",
+                                                      "a": "b",
+                                                      "c": "d"]
         let returnedHeaderFields = request.allHTTPHeaderFields!
 
         XCTAssertTrue(expectedHeaderFields == returnedHeaderFields, "Unexpected result from returned header fields: \(returnedHeaderFields)")
@@ -84,9 +84,9 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
 
     func testParamItemsFromDictionary() {
         let params: [String: Any] = ["1": 2,
-                                    "a": "b",
-                                    "array": ["x", "y", "z"]
-                                    ]
+                                     "a": "b",
+                                     "array": ["x", "y", "z"]
+        ]
 
         let queryItems = TealiumRemoteHTTPCommand.paramItemsFrom(dictionary: params)
 

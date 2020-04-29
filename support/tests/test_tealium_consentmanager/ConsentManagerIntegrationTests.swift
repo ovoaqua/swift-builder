@@ -193,18 +193,18 @@ class ConsentManagerTests: XCTestCase {
         currentTest = "testStoreUserConsentPreferences"
         runMultiple {
             let config = tealHelper.getConfig()
-                consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
-                    let preferences = TealiumConsentUserPreferences(consentStatus: .consented, consentCategories: [.cdp, .analytics])
-                    self.consentManager?.setConsentUserPreferences(preferences)
-                    self.consentManager?.storeConsentUserPreferences()
-                    let savedPreferences = self.consentManager?.getSavedPreferences()
-                    if let categories = savedPreferences?.consentCategories, let status = savedPreferences?.consentStatus {
-                        XCTAssertTrue(categories == [.cdp, .analytics], "Consent Manager Test: \(#function) -Incorrect array members found for categories")
-                        XCTAssertTrue(status == .consented, "Consent Manager Test: \(#function) -Incorrect consent status found")
-                    } else {
-                        XCTFail("Saved consent preferences was nil")
-                    }
+            consentManager?.start(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
+                let preferences = TealiumConsentUserPreferences(consentStatus: .consented, consentCategories: [.cdp, .analytics])
+                self.consentManager?.setConsentUserPreferences(preferences)
+                self.consentManager?.storeConsentUserPreferences()
+                let savedPreferences = self.consentManager?.getSavedPreferences()
+                if let categories = savedPreferences?.consentCategories, let status = savedPreferences?.consentStatus {
+                    XCTAssertTrue(categories == [.cdp, .analytics], "Consent Manager Test: \(#function) -Incorrect array members found for categories")
+                    XCTAssertTrue(status == .consented, "Consent Manager Test: \(#function) -Incorrect consent status found")
+                } else {
+                    XCTFail("Saved consent preferences was nil")
                 }
+            }
         }
     }
 

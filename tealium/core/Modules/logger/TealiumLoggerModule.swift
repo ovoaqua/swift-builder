@@ -79,7 +79,7 @@ class TealiumLoggerModule: TealiumModule {
             requests.enumerated().forEach {
                 logTrack(request: $0.element, responses: moduleResponses,
                          index: (x: $0.offset, n: requests.count)
-                         )
+                )
 
             }
         default:
@@ -189,7 +189,7 @@ class TealiumLoggerModule: TealiumModule {
     func logTrack(request: TealiumTrackRequest,
                   responses: [TealiumModuleResponse],
                   index: (x: Int, n: Int)? = nil
-                  ) {
+    ) {
         let trackNumber = Tealium.numberOfTrackRequests.incrementAndGet()
         var message = """
         \n=====================================
@@ -215,7 +215,7 @@ class TealiumLoggerModule: TealiumModule {
             let successMessage = response.success == true ? "SUCCESSFUL TRACK ✅" : "FAILED TO TRACK ⚠️"
             var trackMessage = "\(index). \(response.moduleName): \(successMessage)"
             if !response.success, let error = response.error {
-             trackMessage += "\n🔺 \(error.localizedDescription)"
+                trackMessage += "\n🔺 \(error.localizedDescription)"
             }
             message = "\(message)\(trackMessage)\n"
         }

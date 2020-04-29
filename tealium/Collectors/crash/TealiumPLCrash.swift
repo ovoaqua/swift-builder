@@ -235,7 +235,7 @@ public class TealiumPLCrash: TealiumAppDataCollection {
                 TealiumCrashKey.signalName: signalName ?? TealiumPLCrash.CrashDataUnknown,
                 TealiumCrashKey.signalAddress: signalAddress ?? TealiumPLCrash.CrashDataUnknown,
                 TealiumCrashKey.libraries: libraries(truncate: truncateLibraries),
-                TealiumCrashKey.threads: threads(truncate: truncateThreads),
+                TealiumCrashKey.threads: threads(truncate: truncateThreads)
         ]
     }
 

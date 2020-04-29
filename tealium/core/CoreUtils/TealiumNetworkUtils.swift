@@ -85,7 +85,7 @@ public func jsonToString(from array: [[String: Any]]) -> String? {
 ///     - dispatchURL: `String` containing a URL for the URLRequest
 public func urlPOSTRequestWithJSONString(_ jsonString: String,
                                          dispatchURL: String) -> URLRequest? {
-   return TealiumQueues.backgroundConcurrentQueue.read { () -> URLRequest? in
+    return TealiumQueues.backgroundConcurrentQueue.read { () -> URLRequest? in
         if let dispatchURL = URL(string: dispatchURL) {
             var request = URLRequest(url: dispatchURL)
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")

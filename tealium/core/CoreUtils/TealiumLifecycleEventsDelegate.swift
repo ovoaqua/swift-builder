@@ -17,7 +17,7 @@ public protocol TealiumLifecycleEvents {
     func wake()
 
     /// Notifies listeners of a launch event￼.
-    /// 
+    ///
     /// - Parameter date: `Date` the launch occurred
     func launch(at date: Date)
 

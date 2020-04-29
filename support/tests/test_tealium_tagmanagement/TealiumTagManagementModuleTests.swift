@@ -38,7 +38,7 @@ class TealiumTagManagementModuleTests: XCTestCase {
 
         }
 
-        self.waitForExpectations(timeout: 5.0, handler: nil)
+        self.waitForExpectations(timeout: 10.0, handler: nil)
     }
 
 }

@@ -62,21 +62,21 @@ class LifecycleMockDiskStorage: TealiumDiskStorageProtocol {
     func append<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
     }
 
-//    func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
-//        guard T.self == TealiumLifecycle.self,
-//            let completion = completion as? (Bool, TealiumLifecycle?, Error?) -> Void
-//            else {
-//                return
-//        }
-//        if let lifecycleData = self.lifecycleData {
-//            completion(true, lifecycleData, nil)
-//        } else {
-//            completion(false, nil, nil)
-//        }
-//    }
+    //    func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+    //        guard T.self == TealiumLifecycle.self,
+    //            let completion = completion as? (Bool, TealiumLifecycle?, Error?) -> Void
+    //            else {
+    //                return
+    //        }
+    //        if let lifecycleData = self.lifecycleData {
+    //            completion(true, lifecycleData, nil)
+    //        } else {
+    //            completion(false, nil, nil)
+    //        }
+    //    }
 
-//    func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
-//    }
+    //    func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+    //    }
 
     func retrieve(fileName: String, completion: (Bool, [String: Any]?, Error?) -> Void) {
 

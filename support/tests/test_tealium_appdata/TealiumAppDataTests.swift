@@ -17,8 +17,8 @@ class TealiumAppDataTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        appData = TealiumAppData(diskStorage: MockDiskStorage())
         bundle = Bundle(for: TealiumAppData.self)
+        appData = TealiumAppData(diskStorage: MockDiskStorage(), bundle: bundle!)
     }
 
     override func tearDown() {
@@ -44,6 +44,7 @@ class TealiumAppDataTests: XCTestCase {
         appData?.setLoadedAppData(data: PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID))
         XCTAssertEqual(6, appData?.count, "tealiumAppData counts do not match")
         appData?.deleteAllData()
+
         XCTAssertEqual(0, appData?.count, "tealiumAppData did not deleteAllData")
     }
 
@@ -74,7 +75,7 @@ class TealiumAppDataTests: XCTestCase {
 
         let checkData = [
             "app_uuid": testUuid as AnyObject,
-            "tealium_visitor_id": manualVid as AnyObject,
+            "tealium_visitor_id": manualVid as AnyObject
         ]
 
         XCTAssertTrue(checkData == newData, "Mismatch between newPersistentData:\n\(newData) \nAnd manualCheckData:\n\(checkData)")
@@ -100,7 +101,7 @@ class TealiumAppDataTests: XCTestCase {
                             "app_rdns",
                             "app_version",
                             "app_uuid",
-                            "tealium_visitor_id",
+                            "tealium_visitor_id"
         ]
 
         let result = appData.getData()
@@ -117,7 +118,7 @@ class TealiumAppDataTests: XCTestCase {
 
         appData.newVolatileData()
 
-       let appDataVolatile = appData.appData
+        let appDataVolatile = appData.appData
         XCTAssertNotNil(appDataVolatile.name)
         XCTAssertNotNil(appDataVolatile.rdns)
         XCTAssertNotNil(appDataVolatile.version)
@@ -170,7 +171,7 @@ class TealiumAppDataTests: XCTestCase {
         }
         XCTAssertEqual(6, appData.count)
         appData.setLoadedAppData(data: PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID))
-            let result = appData.getData()
+        let result = appData.getData()
         XCTAssertNotNil(result[TealiumAppDataKey.name] as? String)
 
         XCTAssertEqual(TealiumTestValue.visitorID, result[TealiumKey.visitorId] as? String)
@@ -225,8 +226,8 @@ class MockDiskStorage: TealiumDiskStorageProtocol {
     func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
         guard T.self == PersistentAppData.self,
             let completion = completion as? (Bool, PersistentAppData?, Error?) -> Void
-        else {
-            return
+            else {
+                return
         }
         completion(true, PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID), nil)
     }

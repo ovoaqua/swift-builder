@@ -178,8 +178,8 @@ class TealiumVolatileDataTests: XCTestCase {
         // TODO: test arrays and other value types
         let testData = [
             "a": "1",
-            "b": "2",
-        ] as [String: Any]
+            "b": "2"
+            ] as [String: Any]
 
         guard let volatileData = self.volatileData else {
             XCTFail("TealiumVolatileData did not spin up expectedly.")
@@ -220,8 +220,8 @@ class TealiumVolatileDataTests: XCTestCase {
         // TODO: test arrays and other value types
         let testData = [
             "a": "1",
-            "b": "2",
-        ] as [String: Any]
+            "b": "2"
+            ] as [String: Any]
 
         guard let volatileData = self.volatileData else {
             XCTFail("TealiumVolatileData did not spin up expectedly.")

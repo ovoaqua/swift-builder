@@ -17,7 +17,7 @@ public class MockTealiumVisitorServiceManager: TealiumVisitorServiceManagerProto
     public func startProfileUpdates(visitorId: String) {
         startProfileUpdatesCount += 1
     }
-    
+
     public func requestVisitorProfile() {
         requestVisitorProfileCount += 1
     }

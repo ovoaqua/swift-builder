@@ -77,7 +77,7 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
         return [
             TealiumAttributionKey.idfa: idfa,
             TealiumAttributionKey.idfv: idfv,
-            TealiumAttributionKey.isTrackingAllowed: isAdvertisingTrackingEnabled,
+            TealiumAttributionKey.isTrackingAllowed: isAdvertisingTrackingEnabled
         ]
     }()
 

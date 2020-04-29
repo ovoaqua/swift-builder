@@ -32,7 +32,7 @@ class TealiumLifecycleTests: XCTestCase {
         _ = lifecycle!.newLaunch(at: Date(),
                                  overrideSession: nil)
         let data = lifecycle.asDictionary(type: "launch",
-                                                 for: Date())
+                                          for: Date())
 
         let expectedKeys = ["lifecycle_dayofweek_local",
                             "lifecycle_dayssincelaunch",
@@ -50,8 +50,8 @@ class TealiumLifecycleTests: XCTestCase {
                             "lifecycle_totalsleepcount",
                             "lifecycle_totalwakecount",
                             "lifecycle_type",
-                            "lifecycle_wakecount",
-                            ]
+                            "lifecycle_wakecount"
+        ]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: data, keys: expectedKeys)
 
@@ -79,7 +79,7 @@ class TealiumLifecycleTests: XCTestCase {
                             "lifecycle_totalsleepcount",
                             "lifecycle_totalwakecount",
                             "lifecycle_type",
-                            "lifecycle_wakecount",
+                            "lifecycle_wakecount"
         ]
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: data, keys: expectedKeys)
@@ -93,7 +93,7 @@ class TealiumLifecycleTests: XCTestCase {
         if tz.identifier.contains("London") {
             // in 1970, the UK observed Daylight Savings (British Summer Time) for the whole year, hence local time at UTC 00:00:00 was 01:00:00
             expectedDay = "5"
-        } else if tz.identifier.contains("Los_Angeles") {
+        } else if tz.identifier.contains("Los_Angeles") || tz.identifier.contains("Phoenix") {
             expectedDay = "4"
         } else if tz.identifier.contains("Berlin") {
             expectedDay = "5"
@@ -145,6 +145,8 @@ class TealiumLifecycleTests: XCTestCase {
             expectedHour = "1"
         } else if tz.identifier.contains("Los_Angeles") {
             expectedHour = "16"
+        } else if tz.identifier.contains("Phoenix") {
+            expectedHour = "17"
         } else if tz.identifier.contains("Berlin") {
             expectedHour = "1"
         }

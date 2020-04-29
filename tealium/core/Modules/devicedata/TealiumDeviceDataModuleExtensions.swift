@@ -11,7 +11,7 @@ import Foundation
 public extension TealiumConfig {
 
     /// Determines whether memory reporting is currently enabled.
-    /// 
+    ///
     /// - Returns: `Bool` `true` if enabled, else `false` (default)
     @available(*, deprecated, message: "Please switch to config.memoryReportingEnabled")
     func isMemoryReportingEnabled() -> Bool {

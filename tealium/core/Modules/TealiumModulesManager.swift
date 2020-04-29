@@ -86,9 +86,6 @@ open class TealiumModulesManager: NSObject {
 
         let newModules = TealiumModules.initializeModules(modulesList: TealiumModulesList(isWhitelist: true, moduleNames: Set(modulesToInit)), delegate: self)
 
-        
-        eventDataManager?.tagManagementIsEnabled = newModules.description.contains("tagmanagement")
-
         newModules.forEach {
             self.modules?.append($0)
             self.modules = self.modules?.prioritized()
@@ -238,7 +235,6 @@ open class TealiumModulesManager: NSObject {
             module.handleReport(request)
         }
     }
-
 
     deinit {
         self.modules = nil

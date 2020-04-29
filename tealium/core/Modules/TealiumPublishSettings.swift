@@ -149,7 +149,7 @@ struct RemotePublishSettings: Codable {
             }
 
             if !self.collectEnabled {
-               newModuleNames.insert(TealiumKey.collectModuleName)
+                newModuleNames.insert(TealiumKey.collectModuleName)
             }
 
             config.modulesList = TealiumModulesList(isWhitelist: false, moduleNames: newModuleNames)

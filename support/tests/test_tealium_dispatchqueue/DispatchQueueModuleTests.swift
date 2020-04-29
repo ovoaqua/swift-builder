@@ -18,7 +18,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     static var expiredDispatches: XCTestExpectation?
     var diskStorage = DispatchQueueMockDiskStorage()
     var persistentQueue: PersistentQueue!
-    var delegate: TealiumModuleDelegate?
+    weak var delegate: TealiumModuleDelegate?
     override func setUp() {
         super.setUp()
         self.persistentQueue = PersistentQueue(diskStorage: diskStorage)

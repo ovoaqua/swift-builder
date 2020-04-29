@@ -12,8 +12,8 @@ import XCTest
 
 class PublishSettingsTests: XCTestCase {
     static var delegateExpectationSuccess: XCTestExpectation?
-//    var delegateExpectationFail: XCTestExpectation?
-//    var process: TealiumRequest?
+    //    var delegateExpectationFail: XCTestExpectation?
+    //    var process: TealiumRequest?
 
     override func setUp() {
         super.setUp()

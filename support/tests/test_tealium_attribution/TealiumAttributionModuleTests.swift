@@ -53,7 +53,7 @@ class TealiumAttributionModuleTests: XCTestCase {
         testTealiumConfig.searchAdsEnabled = true
 
         let attributionData = TealiumAttributionData(diskStorage: AttributionMockDiskStorage(), isSearchAdsEnabled: true, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
-//        module?.enable(TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil), diskStorage: AttributionMockDiskStorage())
+        //        module?.enable(TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil), diskStorage: AttributionMockDiskStorage())
         module?.attributionData = attributionData
         module?.isEnabled = true
         let testTrack = TealiumTrackRequest(data: [String: AnyObject](),
@@ -91,11 +91,11 @@ class TealiumAttributionModuleTests: XCTestCase {
                                                 let expectedKeys = [
                                                     TealiumAttributionKey.idfv,
                                                     TealiumAttributionKey.idfa,
-                                                    TealiumAttributionKey.isTrackingAllowed,
+                                                    TealiumAttributionKey.isTrackingAllowed
                                                 ]
 
                                                 for key in expectedKeys where trackData[key] == nil {
-                                                        XCTFail("Missing expected key: \(key)")
+                                                    XCTFail("Missing expected key: \(key)")
                                                 }
                                                 guard let idfa = trackData[TealiumAttributionKey.idfa] as? String else {
                                                     XCTFail("IDFA missing from track call")

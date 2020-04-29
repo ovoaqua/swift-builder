@@ -73,17 +73,17 @@ class TealiumModuleTests: XCTestCase {
         self.waitForExpectations(timeout: 1.0, handler: nil)
     }
 
-//    func testAutoProcessDisable() {
-//        
-//        expectationSuccess = self.expectation(description: "testSuccess")
-//
-//        let processSuccess = TealiumDisableRequest()
-//        processSuccess.successful = true
-//        
-//        defaultModule?.auto(processSuccess)
-//        
-//        self.waitForExpectations(timeout: 1.0, handler: nil)
-//    }
+    //    func testAutoProcessDisable() {
+    //
+    //        expectationSuccess = self.expectation(description: "testSuccess")
+    //
+    //        let processSuccess = TealiumDisableRequest()
+    //        processSuccess.successful = true
+    //
+    //        defaultModule?.auto(processSuccess)
+    //
+    //        self.waitForExpectations(timeout: 1.0, handler: nil)
+    //    }
 
     func testAutoProcessTrackSucceed() {
         expectationSuccess = self.expectation(description: "testSuccess")
@@ -101,19 +101,19 @@ class TealiumModuleTests: XCTestCase {
     }
 
     // Nil data not accepted by system.
-//    func testAutoProcessTrackFail() {
-//        
-//        expectationFailure = self.expectation(description: "testFail")
-//        
-//        // No track data!
-//        let processSuccess = TealiumTrackRequest(data: [String:Any](),
-//                                                 completion: nil)
-//        processSuccess.successful = false
-//        
-//        defaultModule?.auto(processSuccess)
-//        
-//        self.waitForExpectations(timeout: 1.0, handler: nil)
-//    }
+    //    func testAutoProcessTrackFail() {
+    //
+    //        expectationFailure = self.expectation(description: "testFail")
+    //
+    //        // No track data!
+    //        let processSuccess = TealiumTrackRequest(data: [String:Any](),
+    //                                                 completion: nil)
+    //        processSuccess.successful = false
+    //
+    //        defaultModule?.auto(processSuccess)
+    //
+    //        self.waitForExpectations(timeout: 1.0, handler: nil)
+    //    }
 
 }
 

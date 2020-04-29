@@ -33,7 +33,7 @@ extension TealiumDeviceData {
             TealiumDeviceDataKey.carrierMNCLegacy: "00",
             TealiumDeviceDataKey.carrierMCCLegacy: "000",
             TealiumDeviceDataKey.carrierISOLegacy: "us",
-            TealiumDeviceDataKey.carrierLegacy: "simulator",
+            TealiumDeviceDataKey.carrierLegacy: "simulator"
         ]
         #elseif targetEnvironment(macCatalyst)
         carrierInfo = [
@@ -44,7 +44,7 @@ extension TealiumDeviceData {
             TealiumDeviceDataKey.carrierMNCLegacy: "00",
             TealiumDeviceDataKey.carrierMCCLegacy: "000",
             TealiumDeviceDataKey.carrierISOLegacy: "us",
-            TealiumDeviceDataKey.carrierLegacy: "macCatalyst",
+            TealiumDeviceDataKey.carrierLegacy: "macCatalyst"
         ]
         #else
         let networkInfo = CTTelephonyNetworkInfo()
@@ -68,7 +68,7 @@ extension TealiumDeviceData {
             TealiumDeviceDataKey.carrierISOLegacy: carrier?.isoCountryCode ?? "",
             TealiumDeviceDataKey.carrierISO: carrier?.isoCountryCode ?? "",
             TealiumDeviceDataKey.carrierLegacy: carrier?.carrierName ?? "",
-            TealiumDeviceDataKey.carrier: carrier?.carrierName ?? "",
+            TealiumDeviceDataKey.carrier: carrier?.carrierName ?? ""
         ]
         #endif
         #endif

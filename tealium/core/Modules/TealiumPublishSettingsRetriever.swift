@@ -96,15 +96,15 @@ class TealiumPublishSettingsRetriever {
         }
 
         getRemoteSettings(url: mobileHTML,
-                               lastFetch: cachedSettings?.lastFetch) { settings in
-            if let settings = settings {
-                self.cachedSettings = settings
-                self.diskStorage.save(settings, completion: nil)
-                self.delegate?.didUpdate(settings)
-            } else {
-                self.cachedSettings?.lastFetch = Date()
-                self.diskStorage.save(settings, completion: nil)
-            }
+                          lastFetch: cachedSettings?.lastFetch) { settings in
+                            if let settings = settings {
+                                self.cachedSettings = settings
+                                self.diskStorage.save(settings, completion: nil)
+                                self.delegate?.didUpdate(settings)
+                            } else {
+                                self.cachedSettings?.lastFetch = Date()
+                                self.diskStorage.save(settings, completion: nil)
+                            }
         }
 
     }
@@ -128,15 +128,15 @@ class TealiumPublishSettingsRetriever {
             }
 
             switch HttpStatusCodes(rawValue: response.statusCode) {
-                case .ok:
+            case .ok:
                 guard let publishSettings = self.getPublishSettings(from: data!) else {
                     completion(nil)
                     return
                 }
 
                 completion(publishSettings)
-                default:
-                    completion(nil)
+            default:
+                completion(nil)
                 return
             }
         }.resume()
@@ -146,7 +146,7 @@ class TealiumPublishSettingsRetriever {
         guard let dataString = String(data: data, encoding: .utf8),
             let startScript = dataString.range(of: "var mps = "),
             let endScript = dataString.range(of: "</script>") else {
-            return nil
+                return nil
         }
 
         let string = dataString[..<endScript.lowerBound]
