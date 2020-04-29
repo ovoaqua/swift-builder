@@ -167,7 +167,7 @@ extension TealiumHelper: TealiumDelegate {
 
     func tealiumShouldTrack(data: [String: Any]) -> Bool {
         let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
-        self.logger?.log(logRequest)
+        logger?.log(logRequest)
         return true
     }
 

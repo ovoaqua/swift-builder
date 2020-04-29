@@ -225,7 +225,6 @@ public class TagManagementModule: Dispatcher {
 
         var newRequest = TealiumTrackRequest(data: newTrack, completion: request.completion)
         newRequest.moduleResponses = request.moduleResponses
-        eventDataManager?.lastSessionIdRefresh = Date()
         return newRequest
     }
 
