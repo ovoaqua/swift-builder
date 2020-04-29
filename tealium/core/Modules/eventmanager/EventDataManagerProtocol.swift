@@ -24,10 +24,12 @@ public protocol EventDataManagerProtocol {
     var tagManagementIsEnabled: Bool { get set }
     func add(data: [String: Any], expiration: Expiration)
     func add(key: String, value: Any, expiration: Expiration)
+    func addTrace(id: String)
     func delete(forKeys: [String])
     func delete(forKey key: String)
     func deleteAll()
     func generateSessionId()
+    func leaveTrace()
     func refreshSessionData(initial: Bool)
     func sessionUpdate()
     func startNewSession(with sessionStarter: SessionStarterProtocol)

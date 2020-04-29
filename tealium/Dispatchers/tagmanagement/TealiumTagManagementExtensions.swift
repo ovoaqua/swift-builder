@@ -113,23 +113,23 @@ public extension TealiumConfig {
 
 #if TEST
 #else
-extension Tealium {
-
-    /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
-    func tagManagement() -> TealiumTagManagementProtocol? {
-        guard let module = modulesManager.getModule(forName: TealiumTagManagementKey.moduleName) as? TealiumTagManagementModule else {
-            return nil
-        }
-
-        return module.tagManagement
-    }
-
-    /// Sets a new root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
-    ///￼
-    /// - Parameter view: `UIView` instance for `WKWebView` to be attached to
-    public func updateRootView(_ view: UIView) {
-        self.tagManagement()?.setRootView(view, completion: nil)
-    }
-}
+//extension Tealium {
+//
+//    /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
+//    func tagManagement() -> TealiumTagManagementProtocol? {
+//        guard let module = modulesManager.getModule(forName: TealiumTagManagementKey.moduleName) as? TagManagementModule else {
+//            return nil
+//        }
+//
+//        return module.tagManagement
+//    }
+//
+//    /// Sets a new root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
+//    ///￼
+//    /// - Parameter view: `UIView` instance for `WKWebView` to be attached to
+//    public func updateRootView(_ view: UIView) {
+//        self.tagManagement()?.setRootView(view, completion: nil)
+//    }
+//}
 #endif
 #endif

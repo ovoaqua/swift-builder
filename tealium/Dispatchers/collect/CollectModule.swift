@@ -15,12 +15,15 @@ public class CollectModule: Dispatcher {
     public static var moduleId: String = "Collect"
     var collect: TealiumCollectProtocol?
     public var delegate: TealiumModuleDelegate
+    var eventDataManager: EventDataManagerProtocol? // TODO:
     var config: TealiumConfig
     
     required public init(config: TealiumConfig,
-         delegate: TealiumModuleDelegate) {
+                         delegate: TealiumModuleDelegate,
+                         eventDataManager: EventDataManagerProtocol?) {
         self.config = config
         self.delegate = delegate
+        self.eventDataManager = eventDataManager
         updateCollectDispatcher(config: config, completion: nil)
     }
 

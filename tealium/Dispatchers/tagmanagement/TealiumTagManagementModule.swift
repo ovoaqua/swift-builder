@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-class TealiumTagManagementModule: TealiumModule {
+class TealiumTagManagementModule: TealiumModule, Dispatcher {
     var tagManagement: TealiumTagManagementProtocol?
     var remoteCommandResponseObserver: NSObjectProtocol?
     var errorState = AtomicInteger()

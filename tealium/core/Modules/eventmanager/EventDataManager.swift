@@ -94,6 +94,7 @@ public class EventDataManager: EventDataManagerProtocol {
             guard let storedData = self.diskStorage.retrieve(as: EventData.self) else {
                 return EventData()
             }
+            print("😀persistent storage: \(storedData)")
             return storedData
         }
         set {
@@ -131,12 +132,15 @@ public class EventDataManager: EventDataManagerProtocol {
         switch expiration {
         case .session:
             self.sessionData += data
+            self.persistentDataStorage?.insertNew(from: self.sessionData, expires: expiration.date)
         case .untilRestart:
             self.restartData += data
+            self.persistentDataStorage?.insertNew(from: self.restartData, expires: expiration.date)
         default:
+            self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
             break
         }
-        self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
+        
     }
     
     /// Checks that the active session data contains all expected timestamps.

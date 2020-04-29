@@ -12,19 +12,21 @@ public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule"]
-    var knownDispatchers: [String] = ["TealiumCollect.CollectModule"
-//        , "TealiumTagManagement.TealiumTagManagementModule"
-    ]
+    var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
+   // var knownDispatchers: [Dispatcher.Type] = [TagManagementModule.self]
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
     var dispatchManager: DispatchManager?
     var knownDispatchValidators = [DispatchManager.self]
     var dispatchers = [Dispatcher]()
+    var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
     
-    init (_ config: TealiumConfig) {
+    init (_ config: TealiumConfig,
+          eventDataManager: EventDataManagerProtocol?) {
         TealiumQueues.backgroundConcurrentQueue.write {
             self.logger = config.logger
+            self.eventDataManager = eventDataManager
             self.setupCollectors(config: config)
             self.setupDispatchers(config: config)
             self.setupDispatchValidators(config: config)
@@ -82,12 +84,17 @@ public class NewModulesManager {
     
     func setupDispatchers(config: TealiumConfig) {
         knownDispatchers.forEach { knownDispatcher in
+            // "TealiumTagManagement.TagManagementModule" returned nil (all the tag management files returned nil)
             guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
                 return
             }
 
-            let dispatcher = moduleRef.init(config: config, delegate: self)
+//            let dispatcher = knownDispatcher.init(config: config,
+//                                                  delegate: self,
+//                                                  eventDataManager: eventDataManager)
+            let dispatcher = moduleRef.init(config: config, delegate: self, eventDataManager: eventDataManager)
             guard self.dispatchers.contains(where: {
+                //type(of: $0) == knownDispatcher
                 type(of: $0) == moduleRef
             }) == false else {
                 return
