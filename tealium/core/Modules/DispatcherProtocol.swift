@@ -11,6 +11,7 @@ import Foundation
 public protocol Dispatcher: Module {
     var delegate: TealiumModuleDelegate { get }
     init(config: TealiumConfig,
-         delegate: TealiumModuleDelegate)
+         delegate: TealiumModuleDelegate,
+         eventDataManager: EventDataManagerProtocol?)
     func dynamicTrack(_ request: TealiumRequest)
 }

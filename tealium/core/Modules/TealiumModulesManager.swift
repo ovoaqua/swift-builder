@@ -27,7 +27,8 @@ open class TealiumModulesManager: NSObject {
         eventDataManager: EventDataManagerProtocol? = nil) {
         self.config = config
         self.eventDataManager = eventDataManager
-        newModulesManager = NewModulesManager(config)
+        newModulesManager = NewModulesManager(config,
+                                              eventDataManager: self.eventDataManager)
     }
 
     /// Sets up active modules from config￼.
