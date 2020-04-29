@@ -38,7 +38,7 @@ var greeting: String {
 }
 
 func getRepoPaths() {
-    print("What is the full path to your builder repo?")
+    print("What is the full path to your builder repo? Please include trailing slash e.g. /Users/<username>/enter/full/path/tealium-swift-builder/")
     while let path = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
         var mutablePath = path
         mutablePath.removeAll(where: { [""].contains($0) })
@@ -52,19 +52,6 @@ func getRepoPaths() {
         publicRepoPath = builderRepoPath?.replacingOccurrences(of: "-builder", with: "")
         break
     }
-//    print("What is the full path to your public repo?")
-//    while let path = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
-//        var mutablePath = path
-//        mutablePath.removeAll(where: { [""].contains($0) })
-//        mutablePath.append("/")
-//        result = cleanctx.run(bash: "cd \(mutablePath)")
-//        guard result.stderror == "" else {
-//            print("Please enter a valid path")
-//            exit(1)
-//        }
-//        publicRepoPath = mutablePath
-//        break
-//    }
 }
 
 func greetAndSetDirectories() {
