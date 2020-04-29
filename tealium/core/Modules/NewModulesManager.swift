@@ -86,7 +86,9 @@ public class NewModulesManager {
             guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
                 return
             }
-            
+            if knownDispatcher.contains("TagManagement") {
+                self.eventDataManager?.tagManagementIsEnabled = true
+            }
             let dispatcher = moduleRef.init(config: config, delegate: self, eventDataManager: eventDataManager)
             guard self.dispatchers.contains(where: {
                 type(of: $0) == moduleRef

@@ -9,23 +9,18 @@
 import Foundation
 
 public class EventDataManager: EventDataManagerProtocol {
-    
+ 
     var data = Set<EventDataItem>()
     var diskStorage: TealiumDiskStorageProtocol
     var restartData = [String: Any]()
-    public var initialLaunch: Bool = true
-    public var lastSessionIdRefresh: Date?
-    public var lastSessionRequest: Date?
+    public var lastTrackDate: Date?
     public var minutesBetweenSessionIdentifier: TimeInterval
-    //public var qualifiedByMultipleTracks = false
+    public var numberOfTracksBacking = 0
     public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
     public var sessionData = [String: Any]()
     public var sessionStarter: SessionStarterProtocol
-    public var tagManagementIsEnabled = false
-    
     public var shouldTriggerSessionRequest = false
-    public var numberOfTracksBacking = 0
-    public var lastTrackDate: Date?
+    public var tagManagementIsEnabled = false
     
     public init(config: TealiumConfig,
         diskStorage: TealiumDiskStorageProtocol? = nil,
@@ -43,7 +38,7 @@ public class EventDataManager: EventDataManagerProtocol {
             currentStaticData[TealiumKey.dataSource] = dataSource
         }
         add(data: currentStaticData, expiration: .untilRestart)
-        sessionInit()
+        sessionRefresh()
     }
     
     /// - Returns: `[String: Any]` containing all stored event data.
@@ -98,7 +93,6 @@ public class EventDataManager: EventDataManagerProtocol {
             guard let storedData = self.diskStorage.retrieve(as: EventData.self) else {
                 return EventData()
             }
-            //print("😀persistent storage: \(storedData)")
             return storedData
         }
         set {

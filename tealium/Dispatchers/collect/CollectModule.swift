@@ -73,6 +73,11 @@ public class CollectModule: Dispatcher {
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
 //        let request = addModuleName(to: request)
         var newTrack = request.trackDictionary
+        
+        if let eventDataManager = eventDataManager {
+            newTrack += eventDataManager.allEventData
+        }
+        
         if newTrack[TealiumKey.account] == nil,
             newTrack[TealiumKey.profile] == nil {
             newTrack[TealiumKey.account] = config.account

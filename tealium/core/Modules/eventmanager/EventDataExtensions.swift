@@ -31,13 +31,10 @@ public extension TealiumKey {
     static let timestamp = "timestamp"
     static let timestampLocal = "timestamp_local"
     static let timestampOffset = "timestamp_offset"
-    static let lastSessionRequest = "last_session_date"
-    static let lastSessionIdRefresh = "last_track_event"
     static let defaultMinutesBetweenSession = 2
     static let defaultsSecondsBetweenTrackEvents = 30.0
     static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
 }
-
 
 extension Date {
     var timestampInSeconds: String {

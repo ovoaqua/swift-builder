@@ -11,15 +11,10 @@ import Foundation
 public protocol EventDataManagerProtocol {
     var allEventData: [String: Any] { get set }
     var allSessionData: [String: Any] { get }
-    var initialLaunch: Bool { get set }
-    var lastSessionIdRefresh: Date? { get set }
-    var lastSessionRequest: Date? { get set }
     var minutesBetweenSessionIdentifier: TimeInterval { get set }
-    var qualifiedByMultipleTracks: Bool { get set }
     var secondsBetweenTrackEvents: TimeInterval { get set }
     var sessionId: String? { get set }
     var sessionData: [String: Any] { get set }
-    var sessionValid: Bool { get }
     var sessionStarter: SessionStarterProtocol { get set }
     var tagManagementIsEnabled: Bool { get set }
     func add(data: [String: Any], expiration: Expiration)
@@ -28,9 +23,8 @@ public protocol EventDataManagerProtocol {
     func delete(forKeys: [String])
     func delete(forKey key: String)
     func deleteAll()
-    func generateSessionId()
     func leaveTrace()
-    func refreshSessionData(initial: Bool)
-    func sessionUpdate()
+    func refreshSessionData()
+    func sessionRefresh()
     func startNewSession(with sessionStarter: SessionStarterProtocol)
 }

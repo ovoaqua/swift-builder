@@ -29,7 +29,6 @@ public class TagManagementModule: Dispatcher {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
-        self.eventDataManager?.tagManagementIsEnabled = true
         self.tagManagement = TealiumTagManagementWKWebView()
         enableNotifications()
         self.tagManagement?.enable(webviewURL: config.webviewURL, shouldMigrateCookies: true, delegates: config.webViewDelegates, shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.rootView) { [weak self] _, error in
@@ -213,14 +212,7 @@ public class TagManagementModule: Dispatcher {
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
 
-        if var eventDataManager = eventDataManager {
-            if eventDataManager.sessionId == "" {
-                eventDataManager.generateSessionId()
-                eventDataManager.lastSessionIdRefresh = Date()
-                eventDataManager.add(data: [TealiumKey.sessionId: eventDataManager.sessionId ?? "",
-                                            TealiumKey.lastSessionIdRefresh: eventDataManager.lastSessionIdRefresh!],
-                                     expiration: .session)
-            }
+        if let eventDataManager = eventDataManager {
             newTrack += eventDataManager.allEventData
         }
 
