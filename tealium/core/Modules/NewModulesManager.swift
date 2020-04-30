@@ -57,7 +57,7 @@ public class NewModulesManager {
             guard let moduleRef = objc_getClass(optionalCollector) as? Collector.Type else {
                 return
             }
-
+            
             let collector = moduleRef.init(config: config, delegate: self, diskStorage: nil) {
 
             }
@@ -88,7 +88,9 @@ public class NewModulesManager {
             guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
                 return
             }
-
+            if knownDispatcher.contains("TagManagement") {
+                self.eventDataManager?.tagManagementIsEnabled = true
+            }
 //            let dispatcher = knownDispatcher.init(config: config,
 //                                                  delegate: self,
 //                                                  eventDataManager: eventDataManager)
@@ -176,11 +178,63 @@ public class NewModulesManager {
     
     func runDispatchers (for request: TealiumRequest) {
         // TODO: Have dispatchers return Result type and log after all dispatchers finished.
-        dispatchers.forEach {
-            $0.dynamicTrack(request)
+        var errorResponses = [(module: String, error: Error)]()
+        var successResponses = [String]()
+        let dispatchersResponded = Atomic(value: 0)
+        dispatchers.forEach { module in
+            let moduleId = type(of: module).moduleId
+            module.dynamicTrack(request) { result in
+                dispatchersResponded.value += 1
+                switch result {
+                case .failure(let error):
+                    errorResponses.append((module: moduleId, error: error))
+                case .success:
+                    successResponses.append(moduleId)
+                }
+                if dispatchersResponded.value == self.dispatchers.count {
+                    if successResponses.count > 0 {
+                        self.logTrackSuccess(successResponses, request: request)
+                    }
+                    if errorResponses.count > 0 {
+                        self.logTrackFailure(errorResponses, request: request)
+                    }
+                }
+            }
         }
+//        logTrackSuccess(successResponses, request: request)
+        
+    }
+    
+    func logTrackSuccess(_ success: [String],
+                         request: TealiumRequest) {
+        var logInfo: [String: Any]? = [String: Any]()
+        switch request {
+        case let request as TealiumTrackRequest:
+            logInfo = request.trackDictionary
+        case let request as TealiumBatchTrackRequest:
+            logInfo = request.compressed()
+        default:
+            return
+        }
+        let logRequest = TealiumLogRequest(title: "Successful Track", messages: success.map { "\($0) Successful Track"}, info: logInfo, logLevel: .info, category: .track)
+        logger?.log(logRequest)
     }
 
+    func logTrackFailure(_ failures: [(module: String, error: Error)],
+                         request: TealiumRequest) {
+        var logInfo: [String: Any]? = [String: Any]()
+        switch request {
+        case let request as TealiumTrackRequest:
+            logInfo = request.trackDictionary
+        case let request as TealiumBatchTrackRequest:
+            logInfo = request.compressed()
+        default:
+            return
+        }
+        let logRequest = TealiumLogRequest(title: "Failed Track", messages: failures.map { "\($0.module) Error -> \($0.error.localizedDescription)"}, info: logInfo, logLevel: .error, category: .track)
+        logger?.log(logRequest)
+    }
+    
 }
 
 
@@ -193,12 +247,12 @@ extension NewModulesManager: TealiumModuleDelegate {
         switch process {
         case let request as TealiumBatchTrackRequest:
             sendBatch(request: request)
-            let logRequest = TealiumLogRequest(title: "Module Delegate", message: "Sending Batch Track Request", info: request.compressed(), logLevel: .info, category: .track)
-            self.logger?.log(logRequest)
+//            let logRequest = TealiumLogRequest(title: "Module Delegate", message: "Sending Batch Track Request", info: request.compressed(), logLevel: .info, category: .track)
+//            self.logger?.log(logRequest)
         case let request as TealiumTrackRequest:
             sendTrack(request: request)
-            let logRequest = TealiumLogRequest(title: "Module Delegate", message: "Sending Batch Track Request", info: request.trackDictionary, logLevel: .info, category: .track)
-            self.logger?.log(logRequest)
+//            let logRequest = TealiumLogRequest(title: "Module Delegate", message: "Sending Batch Track Request", info: request.trackDictionary, logLevel: .info, category: .track)
+//            self.logger?.log(logRequest)
         default:
             return
         }

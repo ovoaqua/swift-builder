@@ -36,7 +36,8 @@ public class CollectModule: Dispatcher {
     /// Detects track type and dispatches appropriately, adding mandatory data (account and profile) to the track if missing.￼
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
-    public func dynamicTrack(_ request: TealiumRequest) {
+    public func dynamicTrack(_ request: TealiumRequest,
+                             completion: ModuleCompletion?) {
         guard collect != nil else {
 //            didFailToFinish(track,
 //                            error: TealiumCollectError.collectNotInitialized)
@@ -49,7 +50,7 @@ public class CollectModule: Dispatcher {
 //                didFinishWithNoResponse(track)
                 return
             }
-            self.track(prepareForDispatch(request))
+            self.track(prepareForDispatch(request), completion: completion)
         case let request as TealiumBatchTrackRequest:
             var requests = request.trackRequests
             requests = requests.filter {
@@ -59,7 +60,7 @@ public class CollectModule: Dispatcher {
             }
             var newRequest = TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion)
             newRequest.moduleResponses = request.moduleResponses
-            self.batchTrack(newRequest)
+            self.batchTrack(newRequest, completion: completion)
         default:
 //            self.didFinishWithNoResponse(track)
             return
@@ -90,7 +91,8 @@ public class CollectModule: Dispatcher {
     /// Adds relevant info to the track request, then passes the request to a dipatcher for processing￼.
     ///
     /// - Parameter track: `TealiumTrackRequest` to be dispatched
-    func track(_ track: TealiumTrackRequest) {
+    func track(_ track: TealiumTrackRequest,
+               completion: ModuleCompletion?) {
         guard let collect = collect else {
 //            didFinishWithNoResponse(track)
             return
@@ -109,6 +111,9 @@ public class CollectModule: Dispatcher {
 //                self.didFailToFinish(track,
 //                                     info: info,
 //                                     error: localError)
+                if let error = error {
+                    completion?(.failure(error))
+                }
                 return
             }
 
@@ -119,13 +124,15 @@ public class CollectModule: Dispatcher {
             //  modified track data.
 //            self.didFinish(track,
 //                           info: trackInfo)
+            completion?(.success(()))
         })
     }
 
     /// Adds relevant info to the track request, then passes the request to a dipatcher for processing￼.
     ///
     /// - Parameter track: `TealiumBatchTrackRequest` to be dispatched
-    func batchTrack(_ request: TealiumBatchTrackRequest) {
+    func batchTrack(_ request: TealiumBatchTrackRequest,
+                    completion: ModuleCompletion?) {
         guard let collect = collect else {
 //            didFinishWithNoResponse(request)
             return
@@ -138,18 +145,14 @@ public class CollectModule: Dispatcher {
         }
 
         collect.dispatchBulk(data: compressed) { success, info, error in
+            
+            guard success else {
+                let localError = error ?? TealiumCollectError.unknownIssueWithSend
+                completion?(.failure(localError))
+                return
+            }
 
-//            guard success else {
-//                let localError = error ?? TealiumCollectError.unknownIssueWithSend
-//                self.didFailToFinish(request,
-//                                     info: info,
-//                                     error: localError)
-//                let logRequest = TealiumReportRequest(message: "Batch track request failed. Error: \(error?.localizedDescription ?? "unknown")")
-//                self.delegate?.tealiumModuleRequests(module: nil, process: logRequest)
-//                return
-//            }
-
-//            self.didFinish(request, info: info)
+            completion?(.success(()))
         }
     }
 

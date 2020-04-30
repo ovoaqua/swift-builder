@@ -77,7 +77,8 @@ class TealiumCollectModule: TealiumModule, Dispatcher {
     /// Detects track type and dispatches appropriately, adding mandatory data (account and profile) to the track if missing.￼
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
-    func dynamicTrack(_ track: TealiumRequest) {
+    func dynamicTrack(_ track: TealiumRequest,
+                      completion: ModuleCompletion?) {
         guard isEnabled else {
             didFinishWithNoResponse(track)
             return

@@ -13,5 +13,6 @@ public protocol Dispatcher: Module {
     init(config: TealiumConfig,
          delegate: TealiumModuleDelegate,
          eventDataManager: EventDataManagerProtocol?)
-    func dynamicTrack(_ request: TealiumRequest)
+    func dynamicTrack(_ request: TealiumRequest,
+                      completion: ModuleCompletion?)
 }

@@ -57,7 +57,8 @@ public class TagManagementModule: Dispatcher {
     /// Sends the track request to the webview.
     ///￼
     /// - Parameter track: `TealiumTrackRequest` to be sent to the webview
-    func dispatchTrack(_ request: TealiumRequest) {
+    func dispatchTrack(_ request: TealiumRequest,
+                       completion: ModuleCompletion?) {
         switch request {
         case let track as TealiumBatchTrackRequest:
             let allTrackData = track.trackRequests.map {
@@ -73,11 +74,14 @@ public class TagManagementModule: Dispatcher {
                     }
                     track.completion?(success, info, error)
                     guard error == nil else {
-//                        self.didFailToFinish(track, info: info, error: error!)
+                        if let error = error {
+                            completion?(.failure(error))
+                        }
                         return
                     }
 //                    self.didFinish(track,
 //                                   info: info)
+                    completion?(.success(()))
                 }
             }
             #endif
@@ -91,11 +95,12 @@ public class TagManagementModule: Dispatcher {
                     }
                     track.completion?(success, info, error)
                     guard error == nil else {
-//                        self.didFailToFinish(track, info: info, error: error!)
+                        if let error = error {
+                            completion?(.failure(error))
+                        }
                         return
                     }
-//                    self.didFinish(track,
-//                                   info: info)
+                    completion?(.success(()))
                 }
             }
             #endif
@@ -109,12 +114,13 @@ public class TagManagementModule: Dispatcher {
     /// Detects track type and dispatches appropriately.
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
-    public func dynamicTrack(_ track: TealiumRequest) {
+    public func dynamicTrack(_ track: TealiumRequest,
+                             completion: ModuleCompletion?) {
         if self.errorState.value > 0 {
             self.tagManagement?.reload { success, _, _ in
                 if success {
                     self.errorState.value = 0
-                    self.dynamicTrack(track)
+                    self.dynamicTrack(track, completion: completion)
                 } else {
                     _ = self.errorState.incrementAndGet()
                     self.enqueue(track)
@@ -135,14 +141,14 @@ public class TagManagementModule: Dispatcher {
 
         switch track {
         case let track as TealiumTrackRequest:
-            self.dispatchTrack(prepareForDispatch(track))
+            self.dispatchTrack(prepareForDispatch(track), completion: completion)
         case let track as TealiumBatchTrackRequest:
             var newRequest = TealiumBatchTrackRequest(trackRequests: track.trackRequests.map { prepareForDispatch($0) },
                                                       completion: track.completion)
             newRequest.moduleResponses = track.moduleResponses
-            self.dispatchTrack(newRequest)
+            self.dispatchTrack(newRequest, completion: completion)
         case let track as TealiumRemoteAPIRequest:
-            self.dispatchTrack(prepareForDispatch(track.trackRequest))
+            self.dispatchTrack(prepareForDispatch(track.trackRequest), completion: completion)
 //            let reportRequest = TealiumReportRequest(message: "Processing remote_api request.")
 //            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
             return
@@ -200,7 +206,7 @@ public class TagManagementModule: Dispatcher {
         let pending = self.pendingTrackRequests
         self.pendingTrackRequests = []
         pending.forEach {
-            self.dynamicTrack($0)
+            self.dynamicTrack($0, completion: nil)
         }
     }
     
