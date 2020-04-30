@@ -124,11 +124,10 @@ public class Tealium {
             }
             var trackData = Tealium.trackDataFor(title: title,
                                                  optionalData: data)
-            self.eventDataManager.sessionUpdate()
+            self.eventDataManager.sessionRefresh()
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
-            self.eventDataManager.lastSessionIdRefresh = Date()
             self.modulesManager.track(track)
         }
     }

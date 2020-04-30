@@ -9,13 +9,13 @@
 import Foundation
 import TealiumCore
 
-
 /// Dispatch Service Module for sending track data to the Tealium Webview.
 public class TagManagementModule: Dispatcher {
     
+    
     var config: TealiumConfig
     var errorState = AtomicInteger()
-    var eventDataManager: EventDataManagerProtocol? // TODO:
+    var eventDataManager: EventDataManagerProtocol?
     var pendingTrackRequests = [TealiumRequest]()
     var remoteCommandResponseObserver: NSObjectProtocol?
     var tagManagement: TealiumTagManagementProtocol?
@@ -25,7 +25,8 @@ public class TagManagementModule: Dispatcher {
     
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
-                         eventDataManager: EventDataManagerProtocol?) {
+                         eventDataManager: EventDataManagerProtocol?,
+                         completion: @escaping (Result<Bool, Error>) -> Void) {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
@@ -35,20 +36,16 @@ public class TagManagementModule: Dispatcher {
             guard let self = self else {
                 return
             }
-
-            TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                if let error = error {
-//                    let logger = TealiumLogger(loggerId: TealiumTagManagementModule.moduleConfig().name, logLevel: request.config.logLevel ?? TealiumLogLevel.errors)
-//                    logger.log(message: (error.localizedDescription), logLevel: .warnings)
+            TealiumQueues.backgroundConcurrentQueue.write {
+                if error != nil {
                     self.errorState.incrementAndGet()
                     self.webViewState?.value = .loadFailure
+                    completion(.failure(TealiumTagManagementError.webViewNotYetReady))
                 } else {
                     self.errorState.resetToZero()
                     self.webViewState = Atomic(value: .loadSuccess)
                     self.flushQueue()
+                    completion(.success(true))
                 }
             }
         }
@@ -64,14 +61,10 @@ public class TagManagementModule: Dispatcher {
             let allTrackData = track.trackRequests.map {
                 $0.trackDictionary
             }
-
             #if TEST
             #else
             self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
-                TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                    guard let self = self else {
-                        return
-                    }
+                TealiumQueues.backgroundConcurrentQueue.write {
                     track.completion?(success, info, error)
                     guard error == nil else {
                         if let error = error {
@@ -89,10 +82,7 @@ public class TagManagementModule: Dispatcher {
             #if TEST
             #else
             self.tagManagement?.track(track.trackDictionary) { success, info, error in
-                TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-                    guard let self = self else {
-                        return
-                    }
+                TealiumQueues.backgroundConcurrentQueue.write {
                     track.completion?(success, info, error)
                     guard error == nil else {
                         if let error = error {
@@ -105,8 +95,6 @@ public class TagManagementModule: Dispatcher {
             }
             #endif
         default:
-//            let reportRequest = TealiumReportRequest(message: "Unexpected request type received. Will not process.")
-//            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
             return
         }
     }
@@ -124,16 +112,11 @@ public class TagManagementModule: Dispatcher {
                 } else {
                     _ = self.errorState.incrementAndGet()
                     self.enqueue(track)
-//                    let reportRequest = TealiumReportRequest(message: "WebView load failed. Will retry.")
-//                    self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
                 }
             }
             return
         } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
             self.enqueue(track)
-//            self.didFailToFinish(track,
-//                                 info: ["error_status": "Will retry when webview ready"],
-//                                 error: TealiumTagManagementError.webViewNotYetReady)
             return
         }
 
@@ -153,7 +136,6 @@ public class TagManagementModule: Dispatcher {
 //            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
             return
         default:
-            //self.didFinishWithNoResponse(track)
             return
         }
     }
@@ -178,7 +160,6 @@ public class TagManagementModule: Dispatcher {
         guard request is TealiumTrackRequest || request is TealiumBatchTrackRequest else {
             return
         }
-
         switch request {
         case let request as TealiumBatchTrackRequest:
             var requests = request.trackRequests
@@ -217,21 +198,10 @@ public class TagManagementModule: Dispatcher {
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
-
-        if var eventDataManager = eventDataManager {
-            if eventDataManager.sessionId == "" {
-                eventDataManager.generateSessionId()
-                eventDataManager.lastSessionIdRefresh = Date()
-                eventDataManager.add(data: [TealiumKey.sessionId: eventDataManager.sessionId ?? "",
-                                            TealiumKey.lastSessionIdRefresh: eventDataManager.lastSessionIdRefresh!],
-                                     expiration: .session)
-            }
+        if let eventDataManager = eventDataManager {
             newTrack += eventDataManager.allEventData
         }
-
-        var newRequest = TealiumTrackRequest(data: newTrack, completion: request.completion)
-        newRequest.moduleResponses = request.moduleResponses
-        return newRequest
+        return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 
 }

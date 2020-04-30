@@ -9,7 +9,7 @@
 #if os(iOS)
 import Foundation
 #if location
-    import TealiumCore
+import TealiumCore
 #endif
 
 /// Module to add app related data to track calls.
@@ -19,9 +19,9 @@ class TealiumLocationModule: TealiumModule {
 
     override class func moduleConfig() -> TealiumModuleConfig {
         return TealiumModuleConfig(name: "location",
-            priority: 500,
-            build: 3,
-            enabled: true)
+                                   priority: 500,
+                                   build: 3,
+                                   enabled: true)
     }
 
     /// Enables the module and loads AppData into memory

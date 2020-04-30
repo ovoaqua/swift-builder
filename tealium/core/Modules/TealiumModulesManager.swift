@@ -86,9 +86,6 @@ open class TealiumModulesManager: NSObject {
 
         let newModules = TealiumModules.initializeModules(modulesList: TealiumModulesList(isWhitelist: true, moduleNames: Set(modulesToInit)), delegate: self)
 
-        
-        eventDataManager?.tagManagementIsEnabled = newModules.description.contains("tagmanagement")
-
         newModules.forEach {
             self.modules?.append($0)
             self.modules = self.modules?.prioritized()
@@ -113,14 +110,6 @@ open class TealiumModulesManager: NSObject {
         self.setupModulesFrom(config: config)
         self.tealiumInstance = tealiumInstance
         self.queue = TealiumQueues.backgroundConcurrentQueue
-        if let modules = modules, modules.description.contains("tagmanagement"),
-                   var eventDataManager = eventDataManager {
-                   let sessionStarter = eventDataManager.sessionStarter
-                   eventDataManager.tagManagementIsEnabled = true
-                   if eventDataManager.sessionExpired {
-                      eventDataManager.startNewSession(with: sessionStarter)
-                   }
-               }
         let request = TealiumEnableRequest(config: config,
                                            eventDataManager: eventDataManager,
                                            enableCompletion: enableCompletion)
@@ -238,7 +227,6 @@ open class TealiumModulesManager: NSObject {
             module.handleReport(request)
         }
     }
-
 
     deinit {
         self.modules = nil

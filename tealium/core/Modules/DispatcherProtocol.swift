@@ -12,7 +12,9 @@ public protocol Dispatcher: Module {
     var delegate: TealiumModuleDelegate { get }
     init(config: TealiumConfig,
          delegate: TealiumModuleDelegate,
-         eventDataManager: EventDataManagerProtocol?)
+         eventDataManager: EventDataManagerProtocol?,
+         completion: @escaping (Result<Bool, Error>) -> Void)
+
     func dynamicTrack(_ request: TealiumRequest,
                       completion: ModuleCompletion?)
 }

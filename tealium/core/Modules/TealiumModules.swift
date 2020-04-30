@@ -26,7 +26,7 @@ class TealiumModules {
     class func initializeModulesFor(_ list: TealiumModulesList?,
                                     assigningDelegate: TealiumModuleDelegate) -> [TealiumModule] {
         return initializeModules(modulesList: list,
-                                        delegate: assigningDelegate)
+                                 delegate: assigningDelegate)
     }
 
     /// Initializes each module for the current platform￼.
@@ -117,7 +117,7 @@ class TealiumModules {
             "TealiumDispatchQueueModule",
             "TealiumDispatchQueue.TealiumDispatchQueueModule",
             "TealiumVisitorServiceModule",
-            "TealiumVisitorService.TealiumVisitorServiceModule",
+            "TealiumVisitorService.TealiumVisitorServiceModule"
         ]
         #else
         let tealiumClasses = [
@@ -148,7 +148,7 @@ class TealiumModules {
             "TealiumDispatchQueueModule",
             "TealiumDispatchQueue.TealiumDispatchQueueModule",
             "TealiumVisitorServiceModule",
-            "TealiumVisitorService.TealiumVisitorServiceModule",
+            "TealiumVisitorService.TealiumVisitorServiceModule"
         ]
         #endif
 

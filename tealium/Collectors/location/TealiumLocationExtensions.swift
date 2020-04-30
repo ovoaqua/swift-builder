@@ -9,7 +9,7 @@
 #if os(iOS)
 import Foundation
 #if location
-    import TealiumCore
+import TealiumCore
 #endif
 
 // MARK: EXTENSIONS

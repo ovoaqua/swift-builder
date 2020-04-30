@@ -84,7 +84,7 @@ class TealiumAutotrackingModuleTests: XCTestCase {
         XCTAssertTrue(requestProcess != nil, "Request process missing.")
 
         let data: [String: Any] = ["tealium_event": "TestObject",
-                                    "autotracked": "true",
+                                   "autotracked": "true"
         ]
 
         guard let process = requestProcess as? TealiumTrackRequest else {
@@ -128,7 +128,7 @@ class TealiumAutotrackingModuleTests: XCTestCase {
         XCTAssertTrue(requestProcess != nil)
 
         let data: [String: Any] = ["tealium_event": "TestObject",
-                                    "autotracked": "true",
+                                   "autotracked": "true"
         ]
 
         guard let request = requestProcess as? TealiumTrackRequest else {

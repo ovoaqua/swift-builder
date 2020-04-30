@@ -63,13 +63,13 @@ class TealiumPersistentQueueTests: XCTestCase {
         let data = persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self)
         XCTAssertEqual(data!.count, 5)
         guard let savedTrackData = persistentQueue?.peek() else {
-                XCTFail()
-                return
+            XCTFail()
+            return
         }
         savedTrackData.forEach {
             let savedData = $0.trackDictionary
             let testData = track.trackDictionary
-                XCTAssertTrue(savedData == testData)
+            XCTAssertTrue(savedData == testData)
         }
     }
 

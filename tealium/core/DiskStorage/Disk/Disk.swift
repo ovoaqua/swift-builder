@@ -25,7 +25,7 @@ import Foundation
 /**
  💾 Disk
  Easily work with the file system without worrying about any of its intricacies!
- 
+
  - Save Codable structs, UIImage, [UIImage], Data, [Data] to Apple recommended locations on the user's disk, without having to worry about serialization.
  - Retrieve an object from disk as the type you specify, without having to worry about deserialization.
  - Remove specific objects from disk, clear entire directories if you need to, check if an object exists on disk, and much more!
@@ -67,12 +67,12 @@ public class Disk {
 
         public var pathDescription: String {
             switch self {
-            #if os(tvOS)
-            #else
+                #if os(tvOS)
+                #else
             case .documents: return "<Application_Home>/Documents"
             case .sharedContainer(let appGroupName): return "\(appGroupName)"
             case .applicationSupport: return "<Application_Home>/Library/Application"
-            #endif
+                #endif
             case .caches: return "<Application_Home>/Library/Caches"
             case .temporary: return "<Application_Home>/tmp"
             }
@@ -80,13 +80,13 @@ public class Disk {
 
         static public func ==(lhs: Directory, rhs: Directory) -> Bool {
             switch (lhs, rhs) {
-            #if os(tvOS)
-            #else
+                #if os(tvOS)
+                #else
             case (.documents, .documents), (.applicationSupport, .applicationSupport):
                 return true
             case (let .sharedContainer(appGroupName: name1), let .sharedContainer(appGroupName: name2)):
                 return name1 == name2
-            #endif
+                #endif
             case (.caches, .caches), (.temporary, .temporary):
                 return true
             default:

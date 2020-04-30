@@ -31,7 +31,7 @@ let keyTranslation = [
     AppleInternalKeys.keywordMatchType: TealiumAttributionKey.adKeywordMatchType,
     AppleInternalKeys.creativeSetId: TealiumAttributionKey.creativeSetId,
     AppleInternalKeys.creativeSetName: TealiumAttributionKey.creativeSetName,
-    AppleInternalKeys.region: TealiumAttributionKey.region,
+    AppleInternalKeys.region: TealiumAttributionKey.region
 ]
 
 class TealiumAttributionDataTests: XCTestCase {
@@ -90,10 +90,10 @@ class TealiumAttributionDataTests: XCTestCase {
 
             attributionValues.forEach { key, mockValue in
                 guard let tealiumKey = keyTranslation[key],
-                      let mockValue = mockValue as? String,
-                      let tealiumValue = appleAttributionDetails[tealiumKey] else {
-                    XCTFail("Key could not be found")
-                    return
+                    let mockValue = mockValue as? String,
+                    let tealiumValue = appleAttributionDetails[tealiumKey] else {
+                        XCTFail("Key could not be found")
+                        return
                 }
                 XCTAssertEqual(tealiumValue, mockValue)
             }

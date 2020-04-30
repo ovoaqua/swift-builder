@@ -70,7 +70,7 @@ public enum TealiumConsentCategories: String, Codable {
             .crm,
             .cdp,
             .cookieMatch,
-            .misc,
+            .misc
         ]
     }
 }

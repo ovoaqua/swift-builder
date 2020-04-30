@@ -55,7 +55,7 @@ class WKWebViewTests: XCTestCase {
         tagManagementWKWebView.track(data) { _, info, error in
             XCTAssertNil(error, "Error returned from track call")
             if let jsFromInfoDictionary = info[TealiumTagManagementKey.jsCommand] as? String,
-            let payload = info[TealiumTagManagementKey.payload] as? [String: Any] {
+                let payload = info[TealiumTagManagementKey.payload] as? [String: Any] {
                 XCTAssertEqual(expectedJS, jsFromInfoDictionary, "Track call contained invalid data")
                 XCTAssertEqual(data.description, payload.description, "Data and Payload should be equal")
                 expectation.fulfill()
@@ -129,12 +129,12 @@ class MyCookieStorage: TealiumCookieProvider {
 
     private init() {
         let cookie = HTTPCookie(properties: [
-        .domain: "https://tags.tiqcdn.com",
-        HTTPCookiePropertyKey.path: "/",
-        HTTPCookiePropertyKey.name: "test",
-        HTTPCookiePropertyKey.value: "test",
-        HTTPCookiePropertyKey.secure: "TRUE",
-        HTTPCookiePropertyKey.expires: NSDate(timeIntervalSinceNow: TimeInterval(60 * 60 * 24 * 365)),
+            .domain: "https://tags.tiqcdn.com",
+            HTTPCookiePropertyKey.path: "/",
+            HTTPCookiePropertyKey.name: "test",
+            HTTPCookiePropertyKey.value: "test",
+            HTTPCookiePropertyKey.secure: "TRUE",
+            HTTPCookiePropertyKey.expires: NSDate(timeIntervalSinceNow: TimeInterval(60 * 60 * 24 * 365))
         ])
         if let cookie = cookie {
             cookies?.append(cookie)

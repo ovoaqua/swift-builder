@@ -125,7 +125,7 @@ public class TealiumLegacyMigrator: TealiumLegacyMigratorProtocol {
     }
 
     /// Attempts to load data for the current module from the specified path￼.
-    /// 
+    ///
     /// - Parameter path: `String` representing the file path
     /// - Returns: `[[String: Any]]?` containing any data found for the module
     func loadArrayData(fromPath path: String) -> [[String: Any]]? {

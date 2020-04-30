@@ -28,7 +28,7 @@ class TealiumRemoteCommandsTests: XCTestCase {
         let command = TealiumRemoteCommand(commandId: commandId,
                                            description: "") { _ in
 
-            testExpectation.fulfill()
+                                            testExpectation.fulfill()
 
         }
 
@@ -52,7 +52,7 @@ class TealiumRemoteCommandsTests: XCTestCase {
         let testExpectation = expectation(description: "addRemove")
         let command = TealiumRemoteCommand(commandId: commandId,
                                            description: "") { _ in
-                    testExpectation.fulfill()
+                                            testExpectation.fulfill()
         }
 
         let remoteCommands = TealiumRemoteCommands()
@@ -77,7 +77,7 @@ class TealiumRemoteCommandsTests: XCTestCase {
         let command = TealiumRemoteCommand(commandId: commandId,
                                            description: "") { _ in
 
-                // Unused
+                                            // Unused
         }
 
         let remoteCommands = TealiumRemoteCommands()
@@ -96,7 +96,7 @@ class TealiumRemoteCommandsTests: XCTestCase {
         let commandId = "test"
         let remoteCommand = TealiumRemoteCommand(commandId: commandId,
                                                  description: "test") { _ in
-                //
+                                                    //
         }
 
         let array = [remoteCommand]

@@ -9,7 +9,7 @@
 import Foundation
 import TealiumCore
 import TealiumCollect
-//import TealiumTagManagement
+import TealiumTagManagement
 import TealiumAttribution
 import TealiumRemoteCommands
 import TealiumVisitorService
@@ -95,7 +95,9 @@ class TealiumHelper: NSObject {
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self, let teal = self.tealium else { return }
+            
             self.track(title: "init", data: nil)
+            
             let persitence = teal.persistentData()
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager

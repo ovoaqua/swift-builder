@@ -195,7 +195,7 @@ public struct TealiumEnqueueRequest: TealiumRequest {
             return TealiumTrackRequest(data: data, completion: $0.completion)
         }
     }
-    
+
     public static func instanceTypeId() -> String {
         return "enqueue"
     }
@@ -203,22 +203,21 @@ public struct TealiumEnqueueRequest: TealiumRequest {
 
 public struct TealiumConnectivityRequest: TealiumRequest {
     public var completion: TealiumCompletion?
-    
-    
+
     public enum TealiumConnectivityStatus {
         case reachable
         case notReachable
     }
-    
+
     public init(status: TealiumConnectivityStatus) {
         self.connectivityStatus = status
     }
-    
+
     public var typeId = TealiumConnectivityRequest.instanceTypeId()
     public var moduleResponses = [TealiumModuleResponse]()
-//    public var completion: TealiumCompletion?
+    //    public var completion: TealiumCompletion?
     public var connectivityStatus: TealiumConnectivityStatus
-    
+
     public static func instanceTypeId() -> String {
         return "connectivity"
     }
@@ -294,11 +293,11 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
         }
         return lhsTimestampInt < rhsTimestampInt
     }
-    
+
     public static func == (lhs: TealiumTrackRequest, rhs: TealiumTrackRequest) -> Bool {
         lhs.trackDictionary == rhs.trackDictionary
     }
-    
+
     public var typeId = TealiumTrackRequest.instanceTypeId()
     public var moduleResponses = [TealiumModuleResponse]()
     public var completion: TealiumCompletion?
@@ -322,7 +321,7 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
         self.data = data.encodable
         self.completion = completion
     }
-    
+
     public init(data: [String: Any]) {
         self.init(data: data, completion: nil)
     }

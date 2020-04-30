@@ -116,7 +116,7 @@ class TealiumCrashTests: XCTestCase {
                                     TealiumCrashKey.signalName,
                                     TealiumCrashKey.signalAddress,
                                     TealiumCrashKey.libraries,
-                                    TealiumCrashKey.threads,
+                                    TealiumCrashKey.threads
                 ]
                 let result = crash.getData()
                 for key in expectedKeys {

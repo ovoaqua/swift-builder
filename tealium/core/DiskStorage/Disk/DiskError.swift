@@ -18,7 +18,7 @@ public struct DiskError: Error {
         case couldNotAccessUserDomainMask
         case couldNotAccessSharedContainer
     }
-    
+
     let kind: ErrorKind
     let errorInfo: [String: Any]
 }

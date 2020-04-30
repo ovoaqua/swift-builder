@@ -31,21 +31,21 @@ import Foundation
  and other collections that require `Encodable` conformance
  by declaring their contained type to be `AnyEncodable`:
 
-     let dictionary: [String: AnyEncodable] = [
-         "boolean": true,
-         "integer": 1,
-         "double": 3.14159265358979323846,
-         "string": "string",
-         "array": [1, 2, 3],
-         "nested": [
-             "a": "alpha",
-             "b": "bravo",
-             "c": "charlie"
-         ]
-     ]
+ let dictionary: [String: AnyEncodable] = [
+ "boolean": true,
+ "integer": 1,
+ "double": 3.14159265358979323846,
+ "string": "string",
+ "array": [1, 2, 3],
+ "nested": [
+ "a": "alpha",
+ "b": "bravo",
+ "c": "charlie"
+ ]
+ ]
 
-     let encoder = JSONEncoder()
-     let json = try! encoder.encode(dictionary)
+ let encoder = JSONEncoder()
+ let json = try! encoder.encode(dictionary)
  */
 
 public struct AnyEncodable: Encodable {
@@ -147,10 +147,10 @@ extension _AnyEncodable {
             try container.encode(nsnumber.floatValue)
         case .doubleType, .float64Type, .cgFloatType:
             try container.encode(nsnumber.doubleValue)
-        #if swift(>=5.0)
+            #if swift(>=5.0)
         @unknown default:
             fatalError("Data type not yet supported. Error in \(#file) at \(#line)")
-        #endif
+            #endif
         }
     }
     #endif

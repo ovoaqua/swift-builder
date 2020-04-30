@@ -52,27 +52,28 @@ class TealiumConnectivityModuleTests: XCTestCase {
     }
 
     // Wifi and Cellular data should be disabled on the device/simulator before running the test or test will fail
-    func testTrackWithNoConnection() {
-        self.delegateExpectation = self.expectation(description: "connectivityTrack queue test")
-        self.delegateExpectation2 = self.expectation(description: "expected 2nd track request")
-        let module = TealiumConnectivityModule(delegate: self)
-        let request = TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil)
-        module.enable(request)
-        module.isEnabled = true
-
-        TealiumConnectivityModule.setConnectionOverride(shouldOverride: false) // allow default state (offline since wifi disabled)
-        let track = TealiumTrackRequest(data: ["test_track": "no connection"], completion: nil)
-
-        module.track(track)
-        // override actual connection status to allow track to complete successfully despite no connection
-        TealiumConnectivityModule.setConnectionOverride(shouldOverride: true)
-        // fire new track to allow the 1st queued track to complete (should flush the queue)
-        let track2 = TealiumTrackRequest(data: [:], completion: nil)
-        module.track(track2)
-
-        self.waitForExpectations(timeout: 15, handler: nil)
-
-    }
+    // UNCOMMENT TO TEST
+    //    func testTrackWithNoConnection() {
+    //        self.delegateExpectation = self.expectation(description: "connectivityTrack queue test")
+    //        self.delegateExpectation2 = self.expectation(description: "expected 2nd track request")
+    //        let module = TealiumConnectivityModule(delegate: self)
+    //        let request = TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil)
+    //        module.enable(request)
+    //        module.isEnabled = true
+    //
+    //        TealiumConnectivityModule.setConnectionOverride(shouldOverride: false) // allow default state (offline since wifi disabled)
+    //        let track = TealiumTrackRequest(data: ["test_track": "no connection"], completion: nil)
+    //
+    //        module.track(track)
+    //        // override actual connection status to allow track to complete successfully despite no connection
+    //        TealiumConnectivityModule.setConnectionOverride(shouldOverride: true)
+    //        // fire new track to allow the 1st queued track to complete (should flush the queue)
+    //        let track2 = TealiumTrackRequest(data: [:], completion: nil)
+    //        module.track(track2)
+    //
+    //        self.waitForExpectations(timeout: 15, handler: nil)
+    //
+    //    }
 
     // this test should be run twice: once with wifi + cellular data disabled, once with it enabled.
     // Both test runs should pass with no errors
@@ -92,7 +93,7 @@ class TealiumConnectivityModuleTests: XCTestCase {
 
             let expectedKeys = [
                 "was_queued",
-                "network_connection_type",
+                "network_connection_type"
             ]
 
             for key in expectedKeys where trackData[key] != nil {
@@ -145,7 +146,7 @@ extension TealiumConnectivityModuleTests: TealiumModuleDelegate {
     }
 
     func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-       // let expectation = self.delegateExpectationSuccess
+        // let expectation = self.delegateExpectationSuccess
         if let req = process as? TealiumReportRequest {
             if req.message.contains("Sending queued track") {
                 print("\n\(req.message)\n")

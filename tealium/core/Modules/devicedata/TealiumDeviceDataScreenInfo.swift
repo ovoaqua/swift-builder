@@ -52,6 +52,9 @@ extension TealiumDeviceData {
             }
         } else {
             appOrientation = TealiumDeviceData.sharedApplication?.statusBarOrientation
+            #if targetEnvironment(simulator)
+            appOrientation = .portrait
+            #endif
         }
 
         let isLandscape = orientation.isLandscape
@@ -66,7 +69,7 @@ extension TealiumDeviceData {
         return fullOrientation
         #else
         return [TealiumDeviceDataKey.orientation: TealiumDeviceDataValue.unknown,
-                TealiumDeviceDataKey.fullOrientation: TealiumDeviceDataValue.unknown,
+                TealiumDeviceDataKey.fullOrientation: TealiumDeviceDataValue.unknown
         ]
         #endif
     }
@@ -111,7 +114,7 @@ extension TealiumDeviceData {
         case .unknown:
             deviceOrientationString = TealiumDeviceDataValue.unknown
         @unknown default:
-           deviceOrientationString = TealiumDeviceDataValue.unknown
+            deviceOrientationString = TealiumDeviceDataValue.unknown
         }
         return deviceOrientationString
     }
