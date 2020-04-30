@@ -26,7 +26,7 @@ public class TagManagementModule: Dispatcher {
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          eventDataManager: EventDataManagerProtocol?,
-                         completion: @escaping (Result<Bool, Error>) -> Void) {
+                         completion: @escaping (DispatcherResult) -> Void) {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
@@ -45,7 +45,7 @@ public class TagManagementModule: Dispatcher {
                     self.errorState.resetToZero()
                     self.webViewState = Atomic(value: .loadSuccess)
                     self.flushQueue()
-                    completion(.success(true))
+                    completion(.success(()))
                 }
             }
         }
