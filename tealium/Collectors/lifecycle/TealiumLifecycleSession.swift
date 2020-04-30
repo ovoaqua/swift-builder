@@ -18,7 +18,7 @@ enum TealiumLifecycleSessionKey {
 // Represents a serializable block of time between a given wake and a sleep
 public struct TealiumLifecycleSession: Codable, Equatable {
 
-    var appVersion: String = TealiumLifecycleSession.getCurrentAppVersion()
+    var appVersion: String = TealiumLifecycleSession.currentAppVersion
     var wakeDate: Date?
     var sleepDate: Date? {
         didSet {
@@ -35,12 +35,12 @@ public struct TealiumLifecycleSession: Codable, Equatable {
     var secondsElapsed: Int = 0
     var wasLaunch = false
 
-    init(withLaunchDate launchDate: Date) {
+    init(launchDate: Date) {
         self.wakeDate = launchDate
         self.wasLaunch = true
     }
 
-    init(withWakeDate wakeDate: Date) {
+    init(wakeDate: Date) {
         self.wakeDate = wakeDate
     }
 
@@ -57,22 +57,13 @@ public struct TealiumLifecycleSession: Codable, Equatable {
         aCoder.encode(self.secondsElapsed, forKey: TealiumLifecycleSessionKey.secondsElapsed)
         aCoder.encode(self.wasLaunch, forKey: TealiumLifecycleSessionKey.wasLaunch)
     }
-
-    static func getCurrentAppVersion() -> String {
-        let bundleInfo = Bundle.main.infoDictionary
-
-        if let shortString = bundleInfo?["CFBundleShortVersionString"] as? String {
-            return shortString
-        }
-
-        if let altString = bundleInfo?["CFBundleVersion"] as? String {
-            return altString
-        }
-
-        return "(unknown)"
+    
+    static var currentAppVersion: String {
+        return Bundle.main.version ?? "(unknown)"
     }
 
-    public static func == (lhs: TealiumLifecycleSession, rhs: TealiumLifecycleSession ) -> Bool {
+    // Is this being used anywhere? Move to unit tests?
+    public static func ==(lhs: TealiumLifecycleSession, rhs: TealiumLifecycleSession ) -> Bool {
 
         if lhs.wakeDate != rhs.wakeDate { return false }
         if lhs.sleepDate != rhs.sleepDate { return false }

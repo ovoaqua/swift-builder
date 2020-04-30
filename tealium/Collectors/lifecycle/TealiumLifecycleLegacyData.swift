@@ -88,7 +88,7 @@ public class TealiumLifecycleLegacy: NSObject, NSCoding, Encodable {
 // Represents a serializable block of time between a given wake and a sleep
 public class TealiumLifecycleLegacySession: NSObject, NSCoding, Encodable {
 
-    var appVersion: String = TealiumLifecycleSession.getCurrentAppVersion()
+    var appVersion: String = TealiumLifecycleSession.currentAppVersion
     var wakeDate: Date?
     var sleepDate: Date? {
         didSet {
