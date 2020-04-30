@@ -7,11 +7,11 @@
 //
 
 import Foundation
-#if !COCOAPODS
+//#if !COCOAPODS
 //import TealiumAppData
 import TealiumCore
 //import TealiumDeviceData
-#endif
+//#endif
 import TealiumCrashReporteriOS
 
 // TealiumAppDataCollection protocol conformance is handled by default implementation in AppData module (TealiumAppDataExtensions.swift)

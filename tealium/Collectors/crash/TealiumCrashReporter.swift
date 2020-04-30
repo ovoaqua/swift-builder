@@ -7,14 +7,14 @@
 //
 
 import Foundation
-#if !COCOAPODS
+//#if !COCOAPODS
 import TealiumCore
 //import TealiumDeviceData
-#endif
+//#endif
 import TealiumCrashReporteriOS
 
-/// Defines the specifications for TealiumCrashReporterType.  Concrete TealiumCrashReporters must implement this protocol.
-public protocol TealiumCrashReporterType: class {
+/// Defines the specifications for CrashReporterProtocol.  Concrete CrashReporters must implement this protocol.
+public protocol CrashReporterProtocol: class {
     @discardableResult
     func enable() -> Bool
 
@@ -27,12 +27,16 @@ public protocol TealiumCrashReporterType: class {
     func getData() -> [String: Any]?
 }
 
-public class TealiumCrashReporter: TealiumCrashReporterType {
+public class TealiumCrashReporter: CrashReporterProtocol {
 
     var crashReporter = TEALPLCrashReporter()
     public var crashData: [String: Any]?
+    
+    public init() {
+        self.enable()
+    }
 
-    /// Enables crashReporter internal type.
+    @discardableResult
     public func enable() -> Bool {
         return crashReporter.enable()
     }
