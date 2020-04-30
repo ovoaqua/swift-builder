@@ -24,7 +24,6 @@
 		CF237C2224593E3F0017ECF8 /* TealiumWKWebViewAttachToView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73B4B9F2239049E0039AEB9 /* TealiumWKWebViewAttachToView.swift */; };
 		CF237C2324593E450017ECF8 /* TagManagementModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E4E2458C9C400C455EA /* TagManagementModule.swift */; };
 		CF237C64245B30580017ECF8 /* LifecycleModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF237C62245B30480017ECF8 /* LifecycleModule.swift */; };
-		CF237C67245B3FE00017ECF8 /* LifecyclePersistentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF237C65245B3FD30017ECF8 /* LifecyclePersistentData.swift */; };
 		CF729B21244A5E7300713196 /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = CF729B20244A5E7300713196 /* SwiftShell */; };
 		CF7AF2CE2437DE6F00D9294C /* TealiumTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D798C4692342416600EE665E /* TealiumTests-Info.plist */; };
 		CF7AF2D62437ED5500D9294C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7AF2D52437ED5500D9294C /* main.swift */; };
@@ -1733,7 +1732,6 @@
 		71F63A571E79B073006A723F /* TealiumRemoteCommandsModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumRemoteCommandsModuleTests.swift; sourceTree = "<group>"; };
 		71F63A591E79B07D006A723F /* TealiumRemoteCommandsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumRemoteCommandsTests.swift; sourceTree = "<group>"; };
 		CF237C62245B30480017ECF8 /* LifecycleModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleModule.swift; sourceTree = "<group>"; };
-		CF237C65245B3FD30017ECF8 /* LifecyclePersistentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecyclePersistentData.swift; sourceTree = "<group>"; };
 		CF7AF2D32437ED5500D9294C /* script-release */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "script-release"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF7AF2D52437ED5500D9294C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF7AF2DF243B94B300D9294C /* TestHost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestHost.entitlements; sourceTree = "<group>"; };
@@ -2725,7 +2723,6 @@
 			isa = PBXGroup;
 			children = (
 				CF237C62245B30480017ECF8 /* LifecycleModule.swift */,
-				CF237C65245B3FD30017ECF8 /* LifecyclePersistentData.swift */,
 				712184731E536099000DCE07 /* TealiumLifecycleModule.swift */,
 				D7AA27E822CF95C800254ADB /* TealiumLifecycle.swift */,
 				D7AA27EB22CF983700254ADB /* TealiumLifecycleSession.swift */,
@@ -7104,7 +7101,6 @@
 				D7B464162316C894006390B8 /* TealiumLifecycleConstants.swift in Sources */,
 				D7AA27EA22CF95C800254ADB /* TealiumLifecycle.swift in Sources */,
 				D7881F0221998E25002CDCC1 /* TealiumLifecyclePersistentData.swift in Sources */,
-				CF237C67245B3FE00017ECF8 /* LifecyclePersistentData.swift in Sources */,
 				D7B4640F2316C85C006390B8 /* TealiumLifecycleExtensions.swift in Sources */,
 				D7AA27ED22CF983700254ADB /* TealiumLifecycleSession.swift in Sources */,
 				CF237C64245B30580017ECF8 /* LifecycleModule.swift in Sources */,

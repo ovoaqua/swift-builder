@@ -21,6 +21,8 @@ import UIKit
 import TealiumCore
 #endif
 
+// Can get rid of this file
+
 public class TealiumLifecycleModule: TealiumModule {
     var enabledPrior = false    // To differentiate between new launches and re-enables.
     public var lifecycle: TealiumLifecycle?
@@ -63,9 +65,9 @@ public class TealiumLifecycleModule: TealiumModule {
         lifecycle = savedOrNewLifeycle()
         save()
         isEnabled = true
-        if config.lifecycleAutoTrackingEnabled {
-            Tealium.lifecycleListeners.addDelegate(delegate: self)
-        }
+//        if config.lifecycleAutoTrackingEnabled {
+//            Tealium.lifecycleListeners.addDelegate(delegate: self)
+//        }
         didFinish(request)
     }
 

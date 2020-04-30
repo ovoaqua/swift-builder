@@ -8,12 +8,12 @@
 
 import Foundation
 
-enum TealiumLifecycleSessionKey {
-    static let wakeDate = "wake"
-    static let sleepDate = "sleep"
-    static let secondsElapsed = "seconds"
-    static let wasLaunch = "wasLaunch"
-}
+//enum TealiumLifecycleSessionKey {
+//    static let wakeDate = "wake"
+//    static let sleepDate = "sleep"
+//    static let secondsElapsed = "seconds"
+//    static let wasLaunch = "wasLaunch"
+//}
 
 // Represents a serializable block of time between a given wake and a sleep
 public struct TealiumLifecycleSession: Codable, Equatable {
@@ -45,17 +45,17 @@ public struct TealiumLifecycleSession: Codable, Equatable {
     }
 
     public init?(coder aDecoder: NSCoder) {
-        self.wakeDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.wakeDate) as? Date
-        self.sleepDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.sleepDate) as? Date
-        self.secondsElapsed = aDecoder.decodeInteger(forKey: TealiumLifecycleSessionKey.secondsElapsed) as Int
-        self.wasLaunch = aDecoder.decodeBool(forKey: TealiumLifecycleSessionKey.wasLaunch) as Bool
+        self.wakeDate = aDecoder.decodeObject(forKey: LifecycleKey.Session.wakeDate) as? Date
+        self.sleepDate = aDecoder.decodeObject(forKey: LifecycleKey.Session.sleepDate) as? Date
+        self.secondsElapsed = aDecoder.decodeInteger(forKey: LifecycleKey.Session.secondsElapsed) as Int
+        self.wasLaunch = aDecoder.decodeBool(forKey: LifecycleKey.Session.wasLaunch) as Bool
     }
 
     public func encode(with aCoder: NSCoder) {
-        aCoder.encode(self.wakeDate, forKey: TealiumLifecycleSessionKey.wakeDate)
-        aCoder.encode(self.sleepDate, forKey: TealiumLifecycleSessionKey.sleepDate)
-        aCoder.encode(self.secondsElapsed, forKey: TealiumLifecycleSessionKey.secondsElapsed)
-        aCoder.encode(self.wasLaunch, forKey: TealiumLifecycleSessionKey.wasLaunch)
+        aCoder.encode(self.wakeDate, forKey: LifecycleKey.Session.wakeDate)
+        aCoder.encode(self.sleepDate, forKey: LifecycleKey.Session.sleepDate)
+        aCoder.encode(self.secondsElapsed, forKey: LifecycleKey.Session.secondsElapsed)
+        aCoder.encode(self.wasLaunch, forKey: LifecycleKey.Session.wasLaunch)
     }
     
     static var currentAppVersion: String {
@@ -64,7 +64,6 @@ public struct TealiumLifecycleSession: Codable, Equatable {
 
     // Is this being used anywhere? Move to unit tests?
     public static func ==(lhs: TealiumLifecycleSession, rhs: TealiumLifecycleSession ) -> Bool {
-
         if lhs.wakeDate != rhs.wakeDate { return false }
         if lhs.sleepDate != rhs.sleepDate { return false }
         if lhs.secondsElapsed != rhs.secondsElapsed { return false }

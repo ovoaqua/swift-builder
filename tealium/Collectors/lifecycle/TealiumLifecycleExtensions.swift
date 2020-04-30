@@ -30,11 +30,11 @@ public extension TealiumConfig {
 
     var lifecycleAutoTrackingEnabled: Bool {
         get {
-            return optionalData[TealiumLifecycleConfigKey.autotrackingEnabled] as? Bool ?? true
+            return optionalData[LifecycleKey.autotrackingEnabled] as? Bool ?? true
         }
 
         set {
-            optionalData[TealiumLifecycleConfigKey.autotrackingEnabled] = newValue
+            optionalData[LifecycleKey.autotrackingEnabled] = newValue
         }
     }
 

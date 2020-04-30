@@ -44,7 +44,7 @@ public struct TealiumLifecycle: Codable {
         countLaunchTotal = 0
         countWakeTotal = 0
         countSleepTotal = 0
-        sessionsSize = TealiumLifecycleValue.defaultSessionsSize
+        sessionsSize = LifecycleKey.defaultSessionsSize
         totalSecondsAwake = 0
     }
 
@@ -60,8 +60,7 @@ public struct TealiumLifecycle: Codable {
         self.dateLastUpdate = try values.decodeIfPresent(Date.self, forKey: .dateLastUpdate)
         self.totalSecondsAwake = try values.decode(Int.self, forKey: .totalSecondsAwake)
         self.sessions = try values.decode([TealiumLifecycleSession].self, forKey: .sessions)
-        // Force sessions size to default. Forces old installs to trim session size to default.
-        self.sessionsSize = TealiumLifecycleValue.defaultSessionsSize
+        self.sessionsSize = LifecycleKey.defaultSessionsSize
     }
     
     /// - Returns: `String?` `true` if crash was detected (new launch with no previous sleep event)
@@ -158,47 +157,47 @@ public struct TealiumLifecycle: Codable {
 
         let firstSession = sessions.first
 
-        dict[TealiumLifecycleKey.autotracked] = autotracked
+        dict[LifecycleKey.autotracked] = autotracked
         if type == TealiumLifecycleType.launch.rawValue {
-            dict[TealiumLifecycleKey.didDetectCrash] = crashDetected
+            dict[LifecycleKey.didDetectCrash] = crashDetected
         }
-        dict[TealiumLifecycleKey.dayOfWeek] = dayOfWeekLocal(for: date)
-        dict[TealiumLifecycleKey.daysSinceFirstLaunch] = daysFrom(earlierDate: firstSession?.wakeDate, laterDate: date)
-        dict[TealiumLifecycleKey.daysSinceLastUpdate] = daysFrom(earlierDate: dateLastUpdate, laterDate: date)
-        dict[TealiumLifecycleKey.daysSinceLastWake] = daysSinceLastWake(type: type, toDate: date)
-        dict[TealiumLifecycleKey.firstLaunchDate] = firstSession?.wakeDate?.iso8601String
-        dict[TealiumLifecycleKey.firstLaunchDateMMDDYYYY] = firstSession?.wakeDate?.mmDDYYYYString
-        dict[TealiumLifecycleKey.hourOfDayLocal] = hourOfDayLocal(for: date)
+        dict[LifecycleKey.dayOfWeek] = dayOfWeekLocal(for: date)
+        dict[LifecycleKey.daysSinceFirstLaunch] = daysFrom(earlierDate: firstSession?.wakeDate, laterDate: date)
+        dict[LifecycleKey.daysSinceLastUpdate] = daysFrom(earlierDate: dateLastUpdate, laterDate: date)
+        dict[LifecycleKey.daysSinceLastWake] = daysSinceLastWake(type: type, toDate: date)
+        dict[LifecycleKey.firstLaunchDate] = firstSession?.wakeDate?.iso8601String
+        dict[LifecycleKey.firstLaunchDateMMDDYYYY] = firstSession?.wakeDate?.mmDDYYYYString
+        dict[LifecycleKey.hourOfDayLocal] = hourOfDayLocal(for: date)
         if firstLaunch {
-            dict[TealiumLifecycleKey.isFirstLaunch] = "true"
+            dict[LifecycleKey.isFirstLaunch] = "true"
         }
         if firstLaunchAfterUpdate {
-            dict[TealiumLifecycleKey.isFirstLaunchUpdate] = "true"
+            dict[LifecycleKey.isFirstLaunchUpdate] = "true"
         }
         if firstWakeThisMonth {
-            dict[TealiumLifecycleKey.isFirstWakeThisMonth] = "true"
+            dict[LifecycleKey.isFirstWakeThisMonth] = "true"
         }
         if firstWakeToday {
-            dict[TealiumLifecycleKey.isFirstWakeToday] = true
+            dict[LifecycleKey.isFirstWakeToday] = true
         }
-        dict[TealiumLifecycleKey.lastLaunchDate] = lastLaunchDate(type: type)?.iso8601String
-        dict[TealiumLifecycleKey.lastWakeDate] = lastWakeDate(type: type)?.iso8601String
-        dict[TealiumLifecycleKey.lastSleepDate] = lastSleepDate()?.iso8601String
-        dict[TealiumLifecycleKey.launchCount] = String(countLaunch)
-        dict[TealiumLifecycleKey.priorSecondsAwake] = priorSecondsAwake
-        dict[TealiumLifecycleKey.secondsAwake] = secondsAwake(to: date)
-        dict[TealiumLifecycleKey.sleepCount] = String(countSleep)
-        dict[TealiumLifecycleKey.type] = type
-        dict[TealiumLifecycleKey.totalCrashCount] = String(countCrashTotal)
-        dict[TealiumLifecycleKey.totalLaunchCount] = String(countLaunchTotal)
-        dict[TealiumLifecycleKey.totalSleepCount] = String(countSleepTotal)
-        dict[TealiumLifecycleKey.totalWakeCount] = String(countWakeTotal)
-        dict[TealiumLifecycleKey.totalSecondsAwake] = String(totalSecondsAwake)
-        dict[TealiumLifecycleKey.wakeCount] = String(countWake)
+        dict[LifecycleKey.lastLaunchDate] = lastLaunchDate(type: type)?.iso8601String
+        dict[LifecycleKey.lastWakeDate] = lastWakeDate(type: type)?.iso8601String
+        dict[LifecycleKey.lastSleepDate] = lastSleepDate()?.iso8601String
+        dict[LifecycleKey.launchCount] = String(countLaunch)
+        dict[LifecycleKey.priorSecondsAwake] = priorSecondsAwake
+        dict[LifecycleKey.secondsAwake] = secondsAwake(to: date)
+        dict[LifecycleKey.sleepCount] = String(countSleep)
+        dict[LifecycleKey.type] = type
+        dict[LifecycleKey.totalCrashCount] = String(countCrashTotal)
+        dict[LifecycleKey.totalLaunchCount] = String(countLaunchTotal)
+        dict[LifecycleKey.totalSleepCount] = String(countSleepTotal)
+        dict[LifecycleKey.totalWakeCount] = String(countWakeTotal)
+        dict[LifecycleKey.totalSecondsAwake] = String(totalSecondsAwake)
+        dict[LifecycleKey.wakeCount] = String(countWake)
 
         if dateLastUpdate != nil {
             // We've just reset values
-            dict[TealiumLifecycleKey.updateLaunchDate] = dateLastUpdate?.iso8601String
+            dict[LifecycleKey.updateLaunchDate] = dateLastUpdate?.iso8601String
         }
         return dict
     }
@@ -261,7 +260,7 @@ public struct TealiumLifecycle: Codable {
             return nil
         }
 
-        if type == TealiumLifecycleType.sleep.rawValue &&
+        if type == LifecycleKey.sleep &&
             lastSession.wasLaunch == true {
             return lastSession.wakeDate
         }
@@ -296,7 +295,7 @@ public struct TealiumLifecycle: Codable {
             return nil
         }
 
-        if type == TealiumLifecycleType.sleep.rawValue {
+        if type == LifecycleKey.sleep {
             return lastSession.wakeDate
         }
         if sessions.last == sessions.first {
@@ -333,7 +332,7 @@ public struct TealiumLifecycle: Codable {
             resetCountsAfterUpdate(for: date)
         }
 
-        return asDictionary(type: TealiumLifecycleType.launch.rawValue,
+        return asDictionary(type: LifecycleKey.launch,
                             for: date)
     }
 
@@ -356,7 +355,7 @@ public struct TealiumLifecycle: Codable {
         totalSecondsAwake += currentSession.secondsElapsed
         sessions.removeLast()
         sessions.append(currentSession)
-        return asDictionary(type: TealiumLifecycleType.sleep.rawValue,
+        return asDictionary(type: LifecycleKey.sleep,
                             for: date)
     }
 
@@ -388,7 +387,7 @@ public struct TealiumLifecycle: Codable {
         let newSession = overrideSession ?? TealiumLifecycleSession(wakeDate: date)
         sessions.append(newSession)
 
-        return asDictionary(type: TealiumLifecycleType.wake.rawValue,
+        return asDictionary(type: LifecycleKey.wake,
                             for: date)
     }
     
