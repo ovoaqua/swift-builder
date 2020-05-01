@@ -205,7 +205,8 @@ open class TealiumModulesManager: NSObject {
         self.timeoutMillisecondCurrent = 0 // reset
         if let track = track as? TealiumTrackRequest {
             let track = TealiumTrackRequest(data: newModulesManager.gatherTrackData(for: track.trackDictionary), completion: track.completion)
-            newModulesManager.sendTrack(request: track)
+//            newModulesManager.sendTrack(request: track)
+            newModulesManager.track(track)
             firstModule.handle(track)
         } else {
             firstModule.handle(track)

@@ -1,8 +1,8 @@
 //
-//  DispatchManager.swift
+//  NewDispatchManager.swift
 //  TealiumCore
 //
-//  Created by Craig Rouse on 23/04/2020.
+//  Created by Craig Rouse on 30/04/2020.
 //  Copyright © 2020 Tealium, Inc. All rights reserved.
 //
 
@@ -12,14 +12,16 @@ import UIKit
 #else
 #endif
 
-class DispatchManager: DispatchValidator {
-
-    var delegate: TealiumModuleDelegate
+class DispatchManager {
+    
+    var dispatchers = [Dispatcher]()
+    var dispatchValidators = [DispatchValidator]()
+    var logger: TealiumLoggerProtocol?
+    var delegate: TealiumModuleDelegate?
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
-    var logger: TealiumLoggerProtocol?
-    let id = "Dispatch Manager"
+
     // when to start trimming the queue (default 20) - e.g. if offline
     var maxQueueSize: Int {
         if let maxQueueSize = config.dispatchQueueLimit, maxQueueSize >= 0 {
@@ -73,11 +75,27 @@ class DispatchManager: DispatchValidator {
     }
     #endif
     
-    required init (config: TealiumConfig,
-          delegate: TealiumModuleDelegate) {
-        self.config = config.copy
-        self.logger = config.logger
-        self.delegate = delegate
+    init(dispatchers: [Dispatcher]?,
+         dispatchValidators: [DispatchValidator]?,
+         delegate: TealiumModuleDelegate?,
+         logger: TealiumLoggerProtocol?,
+         config: TealiumConfig) {
+        self.config = config
+        if let dispatchers = dispatchers {
+            self.dispatchers = dispatchers
+        }
+        
+        if let dispatchValidators = dispatchValidators {
+            self.dispatchValidators = dispatchValidators
+        }
+        
+        if let logger = logger {
+            self.logger = logger
+        }
+        
+        if let delegate = delegate {
+            self.delegate = delegate
+        }
         // allows overriding for unit tests, independently of enable call
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: TealiumDispatchQueueConstants.moduleName)
@@ -86,6 +104,134 @@ class DispatchManager: DispatchValidator {
         removeOldDispatches()
         Tealium.lifecycleListeners.addDelegate(delegate: self)
         registerForPowerNotifications()
+    }
+    
+    
+    func processTrack(_ request: TealiumTrackRequest) {
+        var newRequest = request
+        triggerRemoteAPIRequest(request )
+        if checkShouldQueue(request: &newRequest) {
+            let enqueueRequest = TealiumEnqueueRequest(data: newRequest, completion: nil)
+//            dispatchManager?.queue(enqueueRequest)
+            queue(enqueueRequest)
+            return
+        }
+        
+        if checkShouldDrop(request: newRequest) {
+            return
+        }
+        
+        if checkShouldPurge(request: newRequest) {
+            self.clearQueue()
+            return
+        }
+        
+        if self.shouldQueue(request: newRequest).0 == true {
+//            dispatchManager?.clearQueue()
+            self.enqueue(request, reason: "batching_enabled")
+            // batch request and release if necessary
+            return
+        }
+        
+        runDispatchers(for: newRequest)
+    }
+    
+    func checkShouldQueue(request: inout TealiumTrackRequest) -> Bool {
+        dispatchValidators.filter {
+            let response = $0.shouldQueue(request: request)
+            if response.0 == true, let data = response.1 {
+                var newData = request.trackDictionary
+                newData += data
+                request.data = newData.encodable
+            }
+            return response.0
+        }.count > 0
+    }
+    
+    func checkShouldQueue(request: inout TealiumBatchTrackRequest) -> Bool {
+        dispatchValidators.filter {
+            let response = $0.shouldQueue(request: request)
+            if response.0 == true,
+                let data = response.1 {
+                request = TealiumBatchTrackRequest(trackRequests: request.trackRequests.map { request in
+                    var newData = request.trackDictionary
+                    newData += data
+                    return TealiumTrackRequest(data: newData, completion: request.completion)
+                }, completion: request.completion)
+            }
+            return response.0
+        }.count > 0
+    }
+    
+    func checkShouldDrop(request: TealiumRequest) -> Bool {
+        dispatchValidators.filter {
+            $0.shouldDrop(request: request)
+        }.count > 0
+    }
+    
+    func checkShouldPurge(request: TealiumRequest) -> Bool {
+        dispatchValidators.filter {
+            $0.shouldPurge(request: request)
+        }.count > 0
+    }
+    
+    func runDispatchers (for request: TealiumRequest) {
+        // TODO: Have dispatchers return Result type and log after all dispatchers finished.
+        var errorResponses = [(module: String, error: Error)]()
+        var successResponses = [String]()
+        let dispatchersResponded = Atomic(value: 0)
+        dispatchers.forEach { module in
+            let moduleId = type(of: module).moduleId
+            module.dynamicTrack(request) { result in
+                dispatchersResponded.value += 1
+                switch result {
+                case .failure(let error):
+                    errorResponses.append((module: moduleId, error: error))
+                case .success:
+                    successResponses.append(moduleId)
+                }
+                if dispatchersResponded.value == self.dispatchers.count {
+                    if successResponses.count > 0 {
+                        self.logTrackSuccess(successResponses, request: request)
+                    }
+                    if errorResponses.count > 0 {
+                        self.logTrackFailure(errorResponses, request: request)
+                    }
+                }
+            }
+        }
+//        logTrackSuccess(successResponses, request: request)
+        
+    }
+    
+    func logTrackSuccess(_ success: [String],
+                         request: TealiumRequest) {
+        var logInfo: [String: Any]? = [String: Any]()
+        switch request {
+        case let request as TealiumTrackRequest:
+            logInfo = request.trackDictionary
+        case let request as TealiumBatchTrackRequest:
+            logInfo = request.compressed()
+        default:
+            return
+        }
+        let logRequest = TealiumLogRequest(title: "Successful Track", messages: success.map { "\($0) Successful Track"}, info: logInfo, logLevel: .info, category: .track)
+        logger?.log(logRequest)
+    }
+
+    func logTrackFailure(_ failures: [(module: String, error: Error)],
+                         request: TealiumRequest) {
+        var logInfo: [String: Any]? = [String: Any]()
+        switch request {
+        case let request as TealiumTrackRequest:
+            logInfo = request.trackDictionary
+        case let request as TealiumBatchTrackRequest:
+            logInfo = request.compressed()
+        default:
+            return
+        }
+        let logRequest = TealiumLogRequest(title: "Failed Track", messages: failures.map { "\($0.module) Error -> \($0.error.localizedDescription)"}, info: logInfo, logLevel: .error, category: .track)
+        logger?.log(logRequest)
     }
     
     func removeOldDispatches() {
@@ -98,12 +244,6 @@ class DispatchManager: DispatchValidator {
     }
     
     func queue(_ request: TealiumEnqueueRequest) {
-        defer {
-            if persistentQueue.currentEvents >= eventsBeforeAutoDispatch,
-                hasSufficientBattery(track: persistentQueue.peek()?.last) {
-                releaseQueue()
-            }
-        }
         removeOldDispatches()
         let allTrackRequests = request.data
 
@@ -119,6 +259,12 @@ class DispatchManager: DispatchValidator {
     
     func enqueue(_ request: TealiumTrackRequest,
                  reason: String?) {
+        defer {
+            if persistentQueue.currentEvents >= eventsBeforeAutoDispatch,
+                hasSufficientBattery(track: persistentQueue.peek()?.last) {
+                releaseQueue()
+            }
+        }
         // no conditions preventing queueing, so queue request
         var requestData = request.trackDictionary
         requestData[TealiumKey.queueReason] = reason ?? TealiumKey.batchingEnabled
@@ -146,14 +292,16 @@ class DispatchManager: DispatchValidator {
                         // for all release calls, bypass the queue and send immediately
                         data += [TealiumDispatchQueueConstants.bypassQueueKey: true]
                         let request = TealiumTrackRequest(data: data, completion: nil)
-                            delegate.tealiumModuleRequests(module: nil,
-                                                            process: request)
+//                            delegate.tealiumModuleRequests(module: nil,
+//                                                            process: request)
+                        runDispatchers(for: request)
                     }
 
                 case let val where val > 1:
                     let batchRequest = TealiumBatchTrackRequest(trackRequests: batch, completion: nil)
-                        delegate.tealiumModuleRequests(module: nil,
-                                                        process: batchRequest)
+//                        delegate.tealiumModuleRequests(module: nil,
+//                                                        process: batchRequest)
+                    runDispatchers(for: batchRequest)
                 default:
                     // should never reach here
                     return
@@ -168,7 +316,8 @@ class DispatchManager: DispatchValidator {
             return
         }
         let request = TealiumRemoteAPIRequest(trackRequest: request)
-        delegate.tealiumModuleRequests(module: nil, process: request)
+//        delegate.tealiumModuleRequests(module: nil, process: request)
+        runDispatchers(for: request)
     }
     
     func logQueue(request: TealiumTrackRequest) {
@@ -182,7 +331,6 @@ class DispatchManager: DispatchValidator {
     }
     
 }
-
 
 extension DispatchManager {
     
@@ -228,14 +376,6 @@ extension DispatchManager {
         }
 
         return (true, ["queue_reason": "batching_enabled"])
-    }
-    
-    func shouldDrop(request: TealiumRequest) -> Bool {
-        return false
-    }
-    
-    func shouldPurge(request: TealiumRequest) -> Bool {
-        return false
     }
     
     

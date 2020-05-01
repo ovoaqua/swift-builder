@@ -17,8 +17,8 @@ public class TealiumQueues {
     public static let mainQueue = DispatchQueue.main
 
     public static let backgroundSerialQueue = DispatchQueue(label: "com.tealium.backgroundserialqueue",
-                                                            qos: .background,
+                                                            qos: .default,
                                                             attributes: [],
                                                             autoreleaseFrequency: .inherit,
-                                                            target: .global(qos: .background))
+                                                            target: .global(qos: .default))
 }

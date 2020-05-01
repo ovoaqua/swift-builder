@@ -10,6 +10,8 @@ import Foundation
 
 public protocol DispatchValidator {
     var id: String { get }
+    init (config: TealiumConfig,
+          delegate: TealiumModuleDelegate)
     func shouldQueue(request: TealiumRequest) -> (Bool, [String: Any]?)
     func shouldDrop(request: TealiumRequest) -> Bool
     func shouldPurge(request: TealiumRequest) -> Bool
