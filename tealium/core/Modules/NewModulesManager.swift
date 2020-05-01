@@ -11,7 +11,7 @@ import Foundation
 public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule", "CrashModule"]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule"]
     var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()

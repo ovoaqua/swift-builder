@@ -8,7 +8,7 @@
 
 import Foundation
 import TealiumCore
-import TealiumCrash
+import TealiumCrash2
 import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
