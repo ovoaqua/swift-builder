@@ -14,6 +14,7 @@ public class CollectModule: Dispatcher {
     
     public static var moduleId: String = "Collect"
     var collect: TealiumCollectProtocol?
+    public var isReady = false
     public var delegate: TealiumModuleDelegate
     var eventDataManager: EventDataManagerProtocol? // TODO:
     var config: TealiumConfig

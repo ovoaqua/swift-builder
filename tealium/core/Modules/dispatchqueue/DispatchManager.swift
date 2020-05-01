@@ -12,7 +12,7 @@ import UIKit
 #else
 #endif
 
-class DispatchManager {
+class DispatchManager: TealiumConnectivityDelegate {
     
     var dispatchers = [Dispatcher]()
     var dispatchValidators = [DispatchValidator]()
@@ -21,6 +21,14 @@ class DispatchManager {
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
+    var connectivityManager: TealiumConnectivity
+    var isConnected: Bool {
+        let connected = TealiumConnectivity.isConnectedToNetwork() == true || (config.wifiOnlySending == true && TealiumConnectivity.currentConnectionType() == TealiumConnectivityKey.connectionTypeWifi)
+        if connected == false {
+            connectivityManager.refreshConnectivityStatus()
+        }
+        return connected
+    }
 
     // when to start trimming the queue (default 20) - e.g. if offline
     var maxQueueSize: Int {
@@ -81,6 +89,8 @@ class DispatchManager {
          logger: TealiumLoggerProtocol?,
          config: TealiumConfig) {
         self.config = config
+        self.connectivityManager = TealiumConnectivity(config: config)
+        self.connectivityManager.connectivityDelegates.add(self)
         if let dispatchers = dispatchers {
             self.dispatchers = dispatchers
         }
@@ -109,7 +119,7 @@ class DispatchManager {
     
     func processTrack(_ request: TealiumTrackRequest) {
         var newRequest = request
-        triggerRemoteAPIRequest(request )
+        triggerRemoteAPIRequest(request)
         if checkShouldQueue(request: &newRequest) {
             let enqueueRequest = TealiumEnqueueRequest(data: newRequest, completion: nil)
 //            dispatchManager?.queue(enqueueRequest)
@@ -126,9 +136,12 @@ class DispatchManager {
             return
         }
         
-        if self.shouldQueue(request: newRequest).0 == true {
+        let shouldQueue = self.shouldQueue(request: newRequest)
+        if shouldQueue.0 == true {
 //            dispatchManager?.clearQueue()
-            self.enqueue(request, reason: "batching_enabled")
+            let batchingReason = shouldQueue.1? ["queue_reason"] as? String ?? "batching_enabled"
+            
+            self.enqueue(request, reason: batchingReason)
             // batch request and release if necessary
             return
         }
@@ -161,6 +174,10 @@ class DispatchManager {
             }
             return response.0
         }.count > 0
+    }
+    
+    var allDispatchersReady: Bool {
+        return dispatchers.filter { !$0.isReady }.count == 0
     }
     
     func checkShouldDrop(request: TealiumRequest) -> Bool {
@@ -281,6 +298,9 @@ class DispatchManager {
     }
     
     func releaseQueue() {
+        guard isConnected else {
+            return
+        }
         if let queuedDispatches = persistentQueue.dequeueDispatches() {
             let batches: [[TealiumTrackRequest]] = queuedDispatches.chunks(maxDispatchSize)
 
@@ -344,8 +364,12 @@ extension DispatchManager {
 
         guard canWrite else {
             return (false, nil)
-
         }
+        
+        guard isConnected else {
+            return (true, ["queue_reason": "connectivity"])
+        }
+        
         guard hasSufficientBattery(track: request) else {
             enqueue(request, reason: TealiumDispatchQueueConstants.insufficientBatteryQueueReason)
             return (true, ["queue_reason": TealiumDispatchQueueConstants.insufficientBatteryQueueReason])
@@ -424,4 +448,19 @@ extension DispatchManager {
     }
     
     
+}
+
+extension DispatchManager {
+    func connectionTypeChanged(_ connectionType: String) {
+        logger?.log(TealiumLogRequest(title: "Dispatch Manager", message: "Connectivity type changed to \(connectionType)", info: nil, logLevel: .info, category: .general))
+    }
+    
+    func connectionLost() {
+        logger?.log(TealiumLogRequest(title: "Dispatch Manager", message: "Connectivity lost", info: nil, logLevel: .info, category: .general))
+    }
+    
+    func connectionRestored() {
+        releaseQueue()
+        connectivityManager.cancelAutoStatusRefresh()
+    }
 }

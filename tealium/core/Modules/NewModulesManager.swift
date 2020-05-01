@@ -16,11 +16,10 @@ public class NewModulesManager {
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
     var dispatchManager: DispatchManager?
-    var knownDispatchValidators: [DispatchValidator.Type] = [TealiumConnectivity.self]
+    var knownDispatchValidators: [DispatchValidator.Type] = []
     var dispatchers = [Dispatcher]()
     var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
-//    var newDispatchManager: NewDispatchManager?
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
@@ -30,7 +29,6 @@ public class NewModulesManager {
             self.setupCollectors(config: config)
             self.setupDispatchers(config: config)
             self.setupDispatchValidators(config: config)
-//            self.dispatchManager = self.dispatchValidators.filter { $0 as? DispatchManager != nil }.first as? DispatchManager
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
                 ["Collectors Initialized: \(self.collectors.map { type(of: $0).moduleId })",
                 "Dispatch Validators Initialized: \(self.dispatchValidators.map { $0.id })",

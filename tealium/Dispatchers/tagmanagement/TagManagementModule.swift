@@ -12,9 +12,9 @@ import TealiumCore
 /// Dispatch Service Module for sending track data to the Tealium Webview.
 public class TagManagementModule: Dispatcher {
     
-    
+    public var isReady = false
     var config: TealiumConfig
-    var errorState = AtomicInteger()
+    var errorState = AtomicInteger(value: 0)
     var eventDataManager: EventDataManagerProtocol?
     var pendingTrackRequests = [TealiumRequest]()
     var remoteCommandResponseObserver: NSObjectProtocol?
@@ -157,7 +157,7 @@ public class TagManagementModule: Dispatcher {
     ///
     /// - Parameter request: `TealiumRequest` to be enqueued
     func enqueue(_ request: TealiumRequest) {
-        guard request is TealiumTrackRequest || request is TealiumBatchTrackRequest else {
+        guard request is TealiumTrackRequest || request is TealiumBatchTrackRequest || request is TealiumRemoteAPIRequest else {
             return
         }
         switch request {
@@ -178,6 +178,8 @@ public class TagManagementModule: Dispatcher {
             trackData[TealiumKey.queueReason] = "Tag Management Webview Not Ready"
             track.data = trackData.encodable
             self.pendingTrackRequests.append(track)
+        case let request as TealiumRemoteAPIRequest:
+            self.pendingTrackRequests.append(request)
         default:
             return
         }

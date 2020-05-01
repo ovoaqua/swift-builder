@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension TealiumConnectivity {
+extension TealiumConnectivity {
 
     /// Method to add new classes implementing the TealiumConnectivityDelegate to subscribe to connectivity updates￼.
     ///

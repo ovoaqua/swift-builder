@@ -10,6 +10,7 @@ import Foundation
 
 public protocol Dispatcher: Module {
     var delegate: TealiumModuleDelegate { get }
+    var isReady: Bool { get }
     init(config: TealiumConfig,
          delegate: TealiumModuleDelegate,
          eventDataManager: EventDataManagerProtocol?,

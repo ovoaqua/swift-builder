@@ -12,8 +12,7 @@ import Foundation
 import SystemConfiguration
 #endif
 
-public class TealiumConnectivity: DispatchValidator {
-    public var id: String = "Connectivity"
+class TealiumConnectivity {
     
     static var connectionType: String?
     static var isConnected: Atomic<Bool> = Atomic(value: true)
@@ -24,14 +23,9 @@ public class TealiumConnectivity: DispatchValidator {
     var currentConnectivityType = ""
     static var currentConnectionStatus: Bool?
     var config: TealiumConfig?
-    var logger: TealiumLoggerProtocol?
-    var delegate: TealiumModuleDelegate?
     
-    required public init (config: TealiumConfig,
-          delegate: TealiumModuleDelegate) {
+    init (config: TealiumConfig) {
         self.config = config.copy
-        self.logger = config.logger
-        self.delegate = delegate
         if let interval = config.connectivityRefreshInterval {
             refreshConnectivityStatus(interval)
         } else {
@@ -108,26 +102,5 @@ public class TealiumConnectivity: DispatchValidator {
     #endif
     deinit {
         timer = nil
-    }
-}
-
-
-public extension TealiumConnectivity {
-    func shouldQueue(request: TealiumRequest) -> (Bool, [String : Any]?) {
-        let shouldQueue = TealiumConnectivity.isConnectedToNetwork() == false || (config?.wifiOnlySending == true &&
-        TealiumConnectivity.currentConnectionType() != TealiumConnectivityKey.connectionTypeWifi)
-        var info: [String: Any]?
-        if shouldQueue {
-            info = ["queue_reason": "connectivity"]
-        }
-        return (shouldQueue, info)
-    }
-    
-    func shouldDrop(request: TealiumRequest) -> Bool {
-        return false
-    }
-    
-    func shouldPurge(request: TealiumRequest) -> Bool {
-        return false
     }
 }
