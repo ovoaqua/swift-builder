@@ -42,7 +42,6 @@ class TealiumHelper: NSObject {
                                    environment: "dev",
                                    datasource: "test12",
                                    optionalData: nil)
-
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .info

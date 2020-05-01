@@ -11,7 +11,7 @@ import Foundation
 public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.TealiumCrashModule", "TealiumCrashModule"]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule", "CrashModule"]
     var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
@@ -23,7 +23,7 @@ public class NewModulesManager {
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        //TealiumQueues.backgroundConcurrentQueue.write {
             self.logger = config.logger
             self.eventDataManager = eventDataManager
             self.setupCollectors(config: config)
@@ -36,7 +36,7 @@ public class NewModulesManager {
                 "Dispatchers Initialized: \(self.dispatchers.map { type(of: $0).moduleId })"
             ], info: nil, logLevel: .info, category: .`init`)
             self.logger?.log(logRequest)
-        }
+        //}
     }
 
     func setupCollectors(config: TealiumConfig) {
