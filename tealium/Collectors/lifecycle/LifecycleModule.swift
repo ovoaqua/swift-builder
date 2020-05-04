@@ -25,7 +25,7 @@ public class LifecycleModule: Collector {
     public static var moduleId: String = "Lifecycle"
     var enabledPrior = false
     var lifecycleData = [String: Any]()
-    var lastLifecycleEvent: TealiumLifecycleType?
+    var lastLifecycleEvent: LifecycleType?
     var diskStorage: TealiumDiskStorageProtocol!
     public var config: TealiumConfig
     
@@ -65,7 +65,7 @@ public class LifecycleModule: Collector {
     /// - Parameters:
     ///     - type: `TealiumLifecycleType`
     ///     - date: `Date` at which the event occurred
-    public func process(type: TealiumLifecycleType,
+    public func process(type: LifecycleType,
         at date: Date) {
         guard var lifecycle = self.lifecycle else {
             return
@@ -89,7 +89,7 @@ public class LifecycleModule: Collector {
     ///
     /// - Parameter type: `TealiumLifecycleType`
     /// - Returns: `Bool` `true` if process should be allowed to continue
-    public func lifecycleAcceptable(type: TealiumLifecycleType) -> Bool {
+    public func lifecycleAcceptable(type: LifecycleType) -> Bool {
         switch type {
         case .launch:
             if enabledPrior == true || lastLifecycleEvent != nil {
@@ -111,7 +111,7 @@ public class LifecycleModule: Collector {
     /// - Parameters:
     ///   - type: `TealiumLifecycleType` launch, sleep, wake
     ///   - date: `Date` of lifecycle event
-    public func lifecycleDetected(type: TealiumLifecycleType,
+    public func lifecycleDetected(type: LifecycleType,
         at date: Date = Date()) {
         guard lifecycleAcceptable(type: type) else {
             return

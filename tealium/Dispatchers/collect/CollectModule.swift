@@ -10,7 +10,7 @@ import Foundation
 import TealiumCore
 
 /// Dispatch Service Module for sending track data to the Tealium Collect or custom endpoint.
-public class CollectModule: Dispatcher {
+public class CollectModule: Dispatcher {    
     
     public static var moduleId: String = "Collect"
     var collect: TealiumCollectProtocol?
@@ -19,16 +19,16 @@ public class CollectModule: Dispatcher {
     var eventDataManager: EventDataManagerProtocol? // TODO:
     public var config: TealiumConfig
     
-    required public init(config: TealiumConfig,
+    public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          eventDataManager: EventDataManagerProtocol?,
-                         completion: @escaping (Result<Bool, Error>) -> Void) {
+                         completion: @escaping (DispatcherResult) -> Void) {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
         updateCollectDispatcher(config: config, completion: nil)
         defer {
-            completion(.success(true))
+            completion(.success(()))
         }
     }
 

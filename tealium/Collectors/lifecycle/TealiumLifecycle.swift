@@ -158,7 +158,7 @@ public struct TealiumLifecycle: Codable {
         let firstSession = sessions.first
 
         dict[LifecycleKey.autotracked] = autotracked
-        if type == TealiumLifecycleType.launch.rawValue {
+        if type == "launch" {
             dict[LifecycleKey.didDetectCrash] = crashDetected
         }
         dict[LifecycleKey.dayOfWeek] = dayOfWeekLocal(for: date)
@@ -234,7 +234,7 @@ public struct TealiumLifecycle: Codable {
     ///     - date: `Date` - the current date for this event
     func daysSinceLastWake(type: String?,
                            toDate date: Date) -> String? {
-        if type == TealiumLifecycleType.sleep.rawValue {
+        if type == "sleep" {
             let earlierDate = sessions.last!.wakeDate
             return daysFrom(earlierDate: earlierDate, laterDate: date)
         }

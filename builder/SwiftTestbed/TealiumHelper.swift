@@ -8,6 +8,7 @@
 
 import Foundation
 import TealiumCore
+//import TealiumCrash2
 import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
@@ -41,7 +42,6 @@ class TealiumHelper: NSObject {
                                    environment: "dev",
                                    datasource: "test12",
                                    optionalData: nil)
-
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .info

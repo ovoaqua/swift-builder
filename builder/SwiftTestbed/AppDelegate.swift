@@ -18,8 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let cookieStore = HTTPCookieStorage.shared
             cookieStore.cookieAcceptPolicy = .always
         TealiumHelper.shared.start()
-        //TealiumHelper.shared.track(title: "start", data: ["test123": "value123"])
+
         return true
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

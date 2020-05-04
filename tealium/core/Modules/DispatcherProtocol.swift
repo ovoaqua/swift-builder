@@ -8,13 +8,15 @@
 
 import Foundation
 
+public typealias DispatcherResult = Result<Void, Error>
+
 public protocol Dispatcher: Module {
     var delegate: TealiumModuleDelegate { get }
     var isReady: Bool { get }
     init(config: TealiumConfig,
          delegate: TealiumModuleDelegate,
          eventDataManager: EventDataManagerProtocol?,
-         completion: @escaping (Result<Bool, Error>) -> Void)
+         completion: @escaping (DispatcherResult) -> Void)
 
     func dynamicTrack(_ request: TealiumRequest,
                       completion: ModuleCompletion?)

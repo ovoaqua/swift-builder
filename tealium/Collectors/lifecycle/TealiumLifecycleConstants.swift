@@ -62,6 +62,11 @@ public enum LifecycleKey {
     }
 
 }
+
+public enum LifecycleType {
+    case launch, sleep, wake
+}
+
 //
 //enum TealiumLifecycleModuleKey {
 //    static let moduleName = "lifecycle"
