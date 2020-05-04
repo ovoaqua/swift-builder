@@ -13,7 +13,7 @@ import TealiumCore
 public class TagManagementModule: Dispatcher {
     
     public var isReady = false
-    var config: TealiumConfig
+    public var config: TealiumConfig
     var errorState = AtomicInteger(value: 0)
     var eventDataManager: EventDataManagerProtocol?
     var pendingTrackRequests = [TealiumRequest]()

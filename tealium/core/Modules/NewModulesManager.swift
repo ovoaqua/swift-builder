@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class NewModulesManager {
+@objc public class NewModulesManager: NSObject {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule"]
@@ -20,15 +20,19 @@ public class NewModulesManager {
     var dispatchers = [Dispatcher]()
     var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
+    public var modules = [Module]()
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
+        super.init()
         TealiumQueues.backgroundConcurrentQueue.write {
             self.logger = config.logger
             self.eventDataManager = eventDataManager
             self.setupCollectors(config: config)
             self.setupDispatchers(config: config)
             self.setupDispatchValidators(config: config)
+            self.modules += self.collectors
+            self.modules += self.dispatchers
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
                 ["Collectors Initialized: \(self.collectors.map { type(of: $0).moduleId })",
                 "Dispatch Validators Initialized: \(self.dispatchValidators.map { $0.id })",

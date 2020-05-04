@@ -17,7 +17,7 @@ public class CollectModule: Dispatcher {
     public var isReady = false
     public var delegate: TealiumModuleDelegate
     var eventDataManager: EventDataManagerProtocol? // TODO:
-    var config: TealiumConfig
+    public var config: TealiumConfig
     
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,

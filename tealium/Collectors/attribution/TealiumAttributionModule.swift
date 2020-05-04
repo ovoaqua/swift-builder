@@ -22,7 +22,7 @@ class TealiumAttributionModule: Collector {
 
     var attributionData: TealiumAttributionDataProtocol!
     var diskStorage: TealiumDiskStorageProtocol!
-    var config: TealiumConfig?
+    public var config: TealiumConfig
 
     /// Provided for unit testing￼.
     ///

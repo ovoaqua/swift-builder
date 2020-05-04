@@ -14,11 +14,9 @@ import TealiumCore
 public extension Tealium {
     /// Returns an instance of TealiumRemoteCommands to allow new commands to be registered.
     func remoteCommands() -> TealiumRemoteCommands? {
-        guard let module = modulesManager.getModule(forName: TealiumRemoteCommandsKey.moduleName) as? TealiumRemoteCommandsModule else {
-            return nil
-        }
-
-        return module.remoteCommands
+        (newModulesManager.modules.first {
+                type(of: $0) == TealiumRemoteCommandsModule.self
+            } as? TealiumRemoteCommandsModule)?.remoteCommands
     }
 }
 

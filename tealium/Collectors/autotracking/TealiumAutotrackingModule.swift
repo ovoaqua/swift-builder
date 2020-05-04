@@ -29,12 +29,9 @@ enum TealiumAutotrackingKey {
 public extension Tealium {
 
     func autotracking() -> TealiumAutotracking? {
-
-        guard let module = modulesManager.getModule(forName: TealiumAutotrackingKey.moduleName) as? TealiumAutotrackingModule else {
-            return nil
-        }
-
-        return module.autotracking
+        (newModulesManager.modules.first {
+            type(of: $0) == TealiumAutotrackingModule.self
+            } as? TealiumAutotrackingModule)?.autotracking
     }
 
 }

@@ -27,7 +27,7 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
     var logger: TealiumLoggerProtocol?
     var delegate: TealiumModuleDelegate
     
-    var config: TealiumConfig
+    public var config: TealiumConfig
 
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
