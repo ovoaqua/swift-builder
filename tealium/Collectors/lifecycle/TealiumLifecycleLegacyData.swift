@@ -8,6 +8,8 @@
 
 import Foundation
 
+// Can get rid of this file
+
 // This will be removed in a future release. Only included to allow migration from legacy NSKeyedArchiver implementation
 public class TealiumLifecycleLegacy: NSObject, NSCoding, Encodable {
 
@@ -54,33 +56,33 @@ public class TealiumLifecycleLegacy: NSObject, NSCoding, Encodable {
 
     // MARK: PERSISTENCE SUPPORT
     required public init?(coder: NSCoder) {
-        self.countLaunch = coder.decodeInteger(forKey: TealiumLifecycleKey.launchCount)
-        self.countSleep = coder.decodeInteger(forKey: TealiumLifecycleKey.sleepCount)
-        self.countWake = coder.decodeInteger(forKey: TealiumLifecycleKey.wakeCount)
-        self.countCrashTotal = coder.decodeInteger(forKey: TealiumLifecycleKey.totalCrashCount)
-        self.countLaunchTotal = coder.decodeInteger(forKey: TealiumLifecycleKey.totalLaunchCount)
-        self.countSleepTotal = coder.decodeInteger(forKey: TealiumLifecycleKey.totalSleepCount)
-        self.countWakeTotal = coder.decodeInteger(forKey: TealiumLifecycleKey.totalWakeCount)
-        self.dateLastUpdate = coder.decodeObject(forKey: TealiumLifecycleKey.lastUpdateDate) as? Date
-        if let savedSessions = coder.decodeObject(forKey: TealiumLifecycleCodingKey.sessions) as? [TealiumLifecycleLegacySession] {
+        self.countLaunch = coder.decodeInteger(forKey: LifecycleKey.launchCount)
+        self.countSleep = coder.decodeInteger(forKey: LifecycleKey.sleepCount)
+        self.countWake = coder.decodeInteger(forKey: LifecycleKey.wakeCount)
+        self.countCrashTotal = coder.decodeInteger(forKey: LifecycleKey.totalCrashCount)
+        self.countLaunchTotal = coder.decodeInteger(forKey: LifecycleKey.totalLaunchCount)
+        self.countSleepTotal = coder.decodeInteger(forKey: LifecycleKey.totalSleepCount)
+        self.countWakeTotal = coder.decodeInteger(forKey: LifecycleKey.totalWakeCount)
+        self.dateLastUpdate = coder.decodeObject(forKey: LifecycleKey.lastUpdateDate) as? Date
+        if let savedSessions = coder.decodeObject(forKey: LifecycleKey.Session.sessions) as? [TealiumLifecycleLegacySession] {
             self.sessions = savedSessions
         }
-        self.sessionsSize = coder.decodeInteger(forKey: TealiumLifecycleCodingKey.sessionsSize)
-        self.totalSecondsAwake = coder.decodeInteger(forKey: TealiumLifecycleCodingKey.totalSecondsAwake)
+        self.sessionsSize = coder.decodeInteger(forKey: LifecycleKey.Session.sessionsSize)
+        self.totalSecondsAwake = coder.decodeInteger(forKey: LifecycleKey.Session.totalSecondsAwake)
     }
 
     public func encode(with: NSCoder) {
-        with.encode(self.countLaunch, forKey: TealiumLifecycleKey.launchCount)
-        with.encode(self.countSleep, forKey: TealiumLifecycleKey.sleepCount)
-        with.encode(self.countWake, forKey: TealiumLifecycleKey.wakeCount)
-        with.encode(self.countCrashTotal, forKey: TealiumLifecycleKey.totalCrashCount)
-        with.encode(self.countLaunchTotal, forKey: TealiumLifecycleKey.totalLaunchCount)
-        with.encode(self.countLaunchTotal, forKey: TealiumLifecycleKey.totalSleepCount)
-        with.encode(self.countLaunchTotal, forKey: TealiumLifecycleKey.totalWakeCount)
-        with.encode(self.dateLastUpdate, forKey: TealiumLifecycleKey.lastUpdateDate)
-        with.encode(self.sessions, forKey: TealiumLifecycleCodingKey.sessions)
+        with.encode(self.countLaunch, forKey: LifecycleKey.launchCount)
+        with.encode(self.countSleep, forKey: LifecycleKey.sleepCount)
+        with.encode(self.countWake, forKey: LifecycleKey.wakeCount)
+        with.encode(self.countCrashTotal, forKey: LifecycleKey.totalCrashCount)
+        with.encode(self.countLaunchTotal, forKey: LifecycleKey.totalLaunchCount)
+        with.encode(self.countLaunchTotal, forKey: LifecycleKey.totalSleepCount)
+        with.encode(self.countLaunchTotal, forKey: LifecycleKey.totalWakeCount)
+        with.encode(self.dateLastUpdate, forKey: LifecycleKey.lastUpdateDate)
+        with.encode(self.sessions, forKey: LifecycleKey.Session.sessions)
         with.encode(self.sessionsSize)
-        with.encode(self.totalSecondsAwake, forKey: TealiumLifecycleCodingKey.totalSecondsAwake)
+        with.encode(self.totalSecondsAwake, forKey: LifecycleKey.Session.totalSecondsAwake)
     }
 
 }
@@ -88,7 +90,7 @@ public class TealiumLifecycleLegacy: NSObject, NSCoding, Encodable {
 // Represents a serializable block of time between a given wake and a sleep
 public class TealiumLifecycleLegacySession: NSObject, NSCoding, Encodable {
 
-    var appVersion: String = TealiumLifecycleSession.getCurrentAppVersion()
+    var appVersion: String = TealiumLifecycleSession.currentAppVersion
     var wakeDate: Date?
     var sleepDate: Date? {
         didSet {
@@ -117,16 +119,16 @@ public class TealiumLifecycleLegacySession: NSObject, NSCoding, Encodable {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        self.wakeDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.wakeDate) as? Date
-        self.sleepDate = aDecoder.decodeObject(forKey: TealiumLifecycleSessionKey.sleepDate) as? Date
-        self.secondsElapsed = aDecoder.decodeInteger(forKey: TealiumLifecycleSessionKey.secondsElapsed) as Int
-        self.wasLaunch = aDecoder.decodeBool(forKey: TealiumLifecycleSessionKey.wasLaunch) as Bool
+        self.wakeDate = aDecoder.decodeObject(forKey: LifecycleKey.Session.wakeDate) as? Date
+        self.sleepDate = aDecoder.decodeObject(forKey: LifecycleKey.Session.sleepDate) as? Date
+        self.secondsElapsed = aDecoder.decodeInteger(forKey: LifecycleKey.Session.secondsElapsed) as Int
+        self.wasLaunch = aDecoder.decodeBool(forKey: LifecycleKey.Session.wasLaunch) as Bool
     }
 
     public func encode(with aCoder: NSCoder) {
-        aCoder.encode(self.wakeDate, forKey: TealiumLifecycleSessionKey.wakeDate)
-        aCoder.encode(self.sleepDate, forKey: TealiumLifecycleSessionKey.sleepDate)
-        aCoder.encode(self.secondsElapsed, forKey: TealiumLifecycleSessionKey.secondsElapsed)
-        aCoder.encode(self.wasLaunch, forKey: TealiumLifecycleSessionKey.wasLaunch)
+        aCoder.encode(self.wakeDate, forKey: LifecycleKey.Session.wakeDate)
+        aCoder.encode(self.sleepDate, forKey: LifecycleKey.Session.sleepDate)
+        aCoder.encode(self.secondsElapsed, forKey: LifecycleKey.Session.secondsElapsed)
+        aCoder.encode(self.wasLaunch, forKey: LifecycleKey.Session.wasLaunch)
     }
 }

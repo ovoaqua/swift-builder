@@ -11,6 +11,8 @@ import Foundation
 import TealiumCore
 #endif
 
+// Can get rid of this file
+
 enum TealiumLifecyclePersistentDataError: Error {
     case couldNotArchiveAsData
     case couldNotUnarchiveData

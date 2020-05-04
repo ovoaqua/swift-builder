@@ -21,6 +21,8 @@ import UIKit
 import TealiumCore
 #endif
 
+// Can get rid of this file
+
 public class TealiumLifecycleModule: TealiumModule {
     var enabledPrior = false    // To differentiate between new launches and re-enables.
     public var lifecycle: TealiumLifecycle?
@@ -63,9 +65,9 @@ public class TealiumLifecycleModule: TealiumModule {
         lifecycle = savedOrNewLifeycle()
         save()
         isEnabled = true
-        if config.lifecycleAutoTrackingEnabled {
-            Tealium.lifecycleListeners.addDelegate(delegate: self)
-        }
+//        if config.lifecycleAutoTrackingEnabled {
+//            Tealium.lifecycleListeners.addDelegate(delegate: self)
+//        }
         didFinish(request)
     }
 
@@ -108,19 +110,8 @@ public class TealiumLifecycleModule: TealiumModule {
                                            completion: track.completion)
         didFinish(newTrack)
     }
-
-    // MARK: INTERNAL
-
-    func processDetected(type: TealiumLifecycleType,
-                         at date: Date = Date()) {
-        guard processAcceptable(type: type) else {
-            return
-        }
-
-        lastProcess = type
-        self.process(type: type, at: date, autotracked: true)
-    }
-
+    
+    
     /// Determines if a lifecycle event should be triggered and requests a track.
     ///
     /// - Parameters:
@@ -160,6 +151,7 @@ public class TealiumLifecycleModule: TealiumModule {
         requestTrack(data: data)
     }
 
+    // MARK: INTERNAL
     /// Prevent manual spanning of repeated lifecycle calls to system.
     ///
     /// - Parameter type: `TealiumLifecycleType`
@@ -194,6 +186,18 @@ public class TealiumLifecycleModule: TealiumModule {
         }
         return true
     }
+    
+    func processDetected(type: TealiumLifecycleType,
+                         at date: Date = Date()) {
+        guard processAcceptable(type: type) else {
+            return
+        }
+
+        lastProcess = type
+        self.process(type: type, at: date, autotracked: true)
+    }
+    
+
 
     /// Sends a track request to the module delegate.
     ///
@@ -239,30 +243,30 @@ public class TealiumLifecycleModule: TealiumModule {
 }
 // swiftlint:enable type_body_length
 
-public func == (lhs: TealiumLifecycle, rhs: TealiumLifecycle ) -> Bool {
-    if lhs.countCrashTotal != rhs.countCrashTotal { return false }
-    if lhs.countLaunchTotal != rhs.countLaunchTotal { return false }
-    if lhs.countSleepTotal != rhs.countSleepTotal { return false }
-    if lhs.countWakeTotal != rhs.countWakeTotal { return false }
+//public func == (lhs: TealiumLifecycle, rhs: TealiumLifecycle ) -> Bool {
+//    if lhs.countCrashTotal != rhs.countCrashTotal { return false }
+//    if lhs.countLaunchTotal != rhs.countLaunchTotal { return false }
+//    if lhs.countSleepTotal != rhs.countSleepTotal { return false }
+//    if lhs.countWakeTotal != rhs.countWakeTotal { return false }
+//
+//    return true
+//}
 
-    return true
-}
-
-extension Array where Element == TealiumLifecycleSession {
-
-    /// Get item before last
-    ///
-    /// - Returns: Target item or item at index 0 if only 1 item.
-    func beforeLast() -> Element? {
-        if self.isEmpty {
-            return nil
-        }
-
-        var index = self.count - 2
-        if index < 0 {
-            index = 0
-        }
-        return self[index]
-    }
-
-}
+//extension Array where Element == TealiumLifecycleSession {
+//
+//    /// Get item before last
+//    ///
+//    /// - Returns: Target item or item at index 0 if only 1 item.
+//    func beforeLast() -> Element? {
+//        if self.isEmpty {
+//            return nil
+//        }
+//
+//        var index = self.count - 2
+//        if index < 0 {
+//            index = 0
+//        }
+//        return self[index]
+//    }
+//
+//}
