@@ -27,7 +27,8 @@ public class LifecycleModule: Collector {
     var lifecycleData = [String: Any]()
     var lastLifecycleEvent: TealiumLifecycleType?
     var diskStorage: TealiumDiskStorageProtocol!
-
+    public var config: TealiumConfig
+    
     public var data: [String: Any]? {
         lifecycle?.asDictionary(type: nil, for: Date())
     }
@@ -38,8 +39,8 @@ public class LifecycleModule: Collector {
                          completion: () -> Void) {
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
                                                              forModule: "lifecycle",
-        
                                                              isCritical: true)
+        self.config = config
         if config.lifecycleAutoTrackingEnabled {
             Tealium.lifecycleListeners.addDelegate(delegate: self)
         }

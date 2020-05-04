@@ -119,17 +119,17 @@ public enum LifecycleKey {
 //    static let totalSecondsAwake = "totalSecondsAwake"
 //}
 //
-//public enum TealiumLifecycleType: String {
-//    case launch, sleep, wake
-//
-//    public var description: String {
-//        switch self {
-//        case .launch:
-//            return "launch"
-//        case .sleep:
-//            return "sleep"
-//        case .wake:
-//            return "wake"
-//        }
-//    }
-//}
+public enum TealiumLifecycleType: String {
+    case launch, sleep, wake
+
+    public var description: String {
+        switch self {
+        case .launch:
+            return "launch"
+        case .sleep:
+            return "sleep"
+        case .wake:
+            return "wake"
+        }
+    }
+}
