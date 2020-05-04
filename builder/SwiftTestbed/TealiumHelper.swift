@@ -128,7 +128,7 @@ class TealiumHelper: NSObject {
     }
 
     func track(title: String, data: [String: Any]?) {
-        tealium?.lifecycle()?.launch(at: Date())
+//        tealium?.lifecycle()?.launch(at: Date())
         tealium?.track(title: title,
                        data: data,
                        completion: { (success, info, error) in

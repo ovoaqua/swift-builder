@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public class CrashModule: Collector {    
+public class CrashModule: Collector {
 
     static public var moduleId: String = "Crash"
     var crashReporter: CrashReporterProtocol?
@@ -45,6 +45,7 @@ public class CrashModule: Collector {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "crash", isCritical: false)
         self.crashReporter = TealiumCrashReporter()
+//        super.init()
     }
 
 }

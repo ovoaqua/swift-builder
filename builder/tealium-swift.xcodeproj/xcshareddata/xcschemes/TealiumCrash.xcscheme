@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CF874814245CBCDA00830230"
+               BlueprintIdentifier = "D7F8D8C22460613300796E12"
                BuildableName = "TealiumCrash.framework"
                BlueprintName = "TealiumCrash"
                ReferencedContainer = "container:tealium-swift.xcodeproj">
@@ -50,7 +50,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CF874814245CBCDA00830230"
+            BlueprintIdentifier = "D7F8D8C22460613300796E12"
             BuildableName = "TealiumCrash.framework"
             BlueprintName = "TealiumCrash"
             ReferencedContainer = "container:tealium-swift.xcodeproj">

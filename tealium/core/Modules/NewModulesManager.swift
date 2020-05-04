@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public class NewModulesManager: NSObject {
+public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule"]
@@ -24,7 +24,6 @@ import Foundation
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
-        super.init()
         TealiumQueues.backgroundConcurrentQueue.write {
             self.logger = config.logger
             self.eventDataManager = eventDataManager
