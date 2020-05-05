@@ -11,7 +11,7 @@ import Foundation
 
 class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
 
-    var mockEventData: EventData!
+    var mockEventData: EventData?
 
     init() {
         let dataItem1 = EventDataItem(key: "singleDataItemKey1", value: "singleDataItemValue1", expires: .distantFuture)

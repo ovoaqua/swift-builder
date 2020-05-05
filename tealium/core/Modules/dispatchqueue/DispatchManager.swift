@@ -112,7 +112,9 @@ class DispatchManager: TealiumConnectivityDelegate {
         }
         persistentQueue = TealiumPersistentDispatchQueue(diskStorage: self.diskStorage)
         removeOldDispatches()
-        Tealium.lifecycleListeners.addDelegate(delegate: self)
+        if config.lifecycleAutoTrackingEnabled {
+           Tealium.lifecycleListeners.addDelegate(delegate: self)
+        }
         registerForPowerNotifications()
     }
     

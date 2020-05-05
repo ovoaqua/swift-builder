@@ -44,7 +44,9 @@ extension EventData {
     /// Removes the `EventDataItem` from the `EventData` store
     /// - Parameter key: `String` name of key to remove
     public mutating func remove(key: String) {
-        self.filter { $0.key == key }.forEach {
+        self.filter {
+            $0.key == key
+        }.forEach {
             remove($0)
         }
     }

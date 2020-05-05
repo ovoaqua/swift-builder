@@ -151,6 +151,16 @@ public extension TealiumConfig {
         }
     }
     #endif
+    
+    var lifecycleAutoTrackingEnabled: Bool {
+        get {
+            return optionalData[LifecycleKey.autotrackingEnabled] as? Bool ?? true
+        }
+
+        set {
+            optionalData[LifecycleKey.autotrackingEnabled] = newValue
+        }
+    }
 }
 
 extension DispatchManager: TealiumLifecycleEvents {
@@ -198,6 +208,7 @@ extension DispatchManager: TealiumLifecycleEvents {
             self.releaseQueue()
         }
     }
+    
 
 }
 #if os(iOS)

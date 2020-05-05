@@ -39,14 +39,14 @@ class EventDataManagerTests: XCTestCase {
                                        "timestamp_local": "2020-05-04T16:05:51",
                                        "tealium_library_name": "swift",
                                        "timestamp_unix_milliseconds": "1588633551183",
-                                       "tealium_random": "4", "tealium_datasource": "testDatasource"]
+                                       "tealium_random": "4", "singleDataItemKey1": "singleDataItemValue1", "singleDataItemKey2": "singleDataItemValue2"]//, "tealium_datasource": "testDatasource"]
         let actual = eventDataManager.allEventData
         XCTAssertEqual(actual.count, expected.count)
         XCTAssertEqual(actual.keys, expected.keys)
         XCTAssertEqual(actual[TealiumKey.account] as! String, "testAccount")
         XCTAssertEqual(actual[TealiumKey.profile] as! String, "testProfile")
         XCTAssertEqual(actual[TealiumKey.environment] as! String, "testEnvironment")
-        XCTAssertEqual(actual[TealiumKey.dataSource] as! String, "testDatasource")
+        //        XCTAssertEqual(actual[TealiumKey.dataSource] as! String, "testDatasource")
         XCTAssertEqual(actual[TealiumKey.libraryName] as! String, "swift")
 
     }
@@ -90,12 +90,31 @@ class EventDataManagerTests: XCTestCase {
     }
 
     func testCurrentTimeStampsExist() {
-        let timeStamps = eventDataManager.currentTimeStamps
+        var timeStamps = eventDataManager.currentTimeStamps
+        timeStamps[TealiumKey.timestampOffset] = Date().timestampInSeconds
         XCTAssertTrue(eventDataManager.currentTimestampsExist(timeStamps))
     }
 
     func testCurrentTimeStampsDontExist() {
         XCTAssertFalse(eventDataManager.currentTimestampsExist([String: Any]()))
+    }
+
+    func testDeleteForKeys() {
+        eventDataManager.delete(forKeys: ["singleDataItemKey1", "singleDataItemKey2"])
+        let retrieved = mockDiskStorage.retrieve(as: EventData.self)
+        XCTAssertEqual(retrieved?.count, 1)
+    }
+
+    func testDeleteForKey() {
+        eventDataManager.delete(forKey: "singleDataItemKey1")
+        let retrieved = mockDiskStorage.retrieve(as: EventData.self)
+        XCTAssertEqual(retrieved?.count, 2)
+    }
+
+    func testDeleteAll() {
+        eventDataManager.deleteAll()
+        let retrieved = mockDiskStorage.retrieve(as: EventData.self)
+        XCTAssertEqual(retrieved?.count, 0)
     }
 
 }

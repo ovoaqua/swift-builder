@@ -25,17 +25,32 @@ class TealiumLifecycleModuleTests: XCTestCase {
     override func setUp() {
         super.setUp()
         config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
-        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
+        //lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
         returnData = [String: Any]()
     }
 
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        lifecycleModule = nil
         expectationRequest = nil
         sleepExpectation = nil
         wakeExpectation = nil
         requestProcess = nil
         super.tearDown()
+    }
+
+    func testLifecycleLoadedFromStorage() {
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
+        let stored = lifecycleModule.lifecycle
+        XCTAssertNotNil(stored)
+    }
+
+    func testLifecycleSavedToStorage() {
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
+        let lifecycle = TealiumLifecycle()
+        lifecycleModule.lifecycle = lifecycle
+        let stored = lifecycleModule.lifecycle
+        XCTAssertNotNil(stored)
     }
 
     func testLifecycleAcceptable() {
@@ -59,6 +74,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
     }
 
     func testAllAdditionalKeysPresent() {
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
         let actual = lifecycleModule.data
 
         guard let request = requestProcess as? TealiumTrackRequest else {
@@ -98,12 +114,8 @@ class TealiumLifecycleModuleTests: XCTestCase {
     }
 
     func testManualLifecycleTrackingConfigSetting() {
-        //        expectationRequest = expectation(description: "lifecycleKeysNotPresent")
-
         config.lifecycleAutoTrackingEnabled = false
-        let teal = Tealium(config: config)
-
-        teal.track(title: "test")
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
 
         if let request = requestProcess as? TealiumTrackRequest {
             returnData = request.trackDictionary
@@ -115,14 +127,13 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         XCTAssertTrue(missingKeys.count == 2, "Unexpected keys missing:\(missingKeys)")
 
-        //self.waitForExpectations(timeout: 10.0, handler: nil)
-
     }
 
     func testManualLaunchMethodCall() {
         expectationRequest = expectation(description: "manualLaunchProducesExpectedData")
 
         config.lifecycleAutoTrackingEnabled = false
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
         _ = Tealium(config: config)
 
         lifecycleModule.launch(at: Date())
@@ -152,6 +163,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
         sleepExpectation = expectation(description: "manualSleepProducesExpectedData")
 
         config.lifecycleAutoTrackingEnabled = false
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
         _ = Tealium(config: config)
 
         lifecycleModule.launch(at: Date())
@@ -182,6 +194,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
         wakeExpectation = expectation(description: "manualWakeProducesExpectedData")
 
         config.lifecycleAutoTrackingEnabled = false
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
         _ = Tealium(config: config)
 
         lifecycleModule.launch(at: Date())
@@ -211,7 +224,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
     func testAutotrackedTrue() {
         autotrackedRequest = expectation(description: "testAutotrackedTrue")
-
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
         _ = Tealium(config: config)
         Tealium.lifecycleListeners.addDelegate(delegate: self)
 
@@ -231,32 +244,11 @@ class TealiumLifecycleModuleTests: XCTestCase {
         self.waitForExpectations(timeout: 8.0, handler: nil)
     }
 
-    func testAutotrackedNil() {
-        autotrackedRequest = expectation(description: "testAutotrackedNil")
-
-        let teal = Tealium(config: config)
-        Tealium.lifecycleListeners.addDelegate(delegate: self)
-
-        teal.track(title: "test")
-
-        if let request = requestProcess as? TealiumTrackRequest {
-            returnData = request.trackDictionary
-        }
-
-        guard let _ = returnData["autotracked"] as? Bool else {
-            autotrackedRequest?.fulfill()
-            XCTAssert(true)
-            self.waitForExpectations(timeout: 8.0, handler: nil)
-            return
-        }
-
-        XCTFail("`autotracked` should be nil")
-    }
-
     func testAutotrackedFalse() {
         autotrackedRequest = expectation(description: "testAutotrackedFalse")
 
         config.lifecycleAutoTrackingEnabled = false
+        lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: {})
         _ = Tealium(config: config)
 
         self.launch(at: Date())

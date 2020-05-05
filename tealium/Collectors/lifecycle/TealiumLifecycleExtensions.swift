@@ -26,15 +26,15 @@ public extension Tealium {
 
 public extension TealiumConfig {
 
-    var lifecycleAutoTrackingEnabled: Bool {
-        get {
-            return optionalData[LifecycleKey.autotrackingEnabled] as? Bool ?? true
-        }
-
-        set {
-            optionalData[LifecycleKey.autotrackingEnabled] = newValue
-        }
-    }
+//    var lifecycleAutoTrackingEnabled: Bool {
+//        get {
+//            return optionalData[LifecycleKey.autotrackingEnabled] as? Bool ?? true
+//        }
+//
+//        set {
+//            optionalData[LifecycleKey.autotrackingEnabled] = newValue
+//        }
+//    }
 
 }
 

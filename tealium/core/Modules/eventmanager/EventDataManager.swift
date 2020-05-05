@@ -25,7 +25,7 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
     public init(config: TealiumConfig,
         diskStorage: TealiumDiskStorageProtocol? = nil,
         sessionStarter: SessionStarterProtocol? = nil) {
-        self.diskStorage = TealiumDiskStorage(config: config, forModule: "eventdata")
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "eventdata")
         self.sessionStarter = sessionStarter ?? SessionStarter(config: config)
         self.minutesBetweenSessionIdentifier = TimeInterval(TealiumKey.defaultMinutesBetweenSession)
         var currentStaticData = [TealiumKey.account: config.account,

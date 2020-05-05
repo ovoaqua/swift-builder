@@ -162,9 +162,7 @@ class TealiumHelper: NSObject {
     }
     
     func crash() {
-        let arr = ["hi"]
-        arr[1]
-        //NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
+        NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
     }
 }
 
