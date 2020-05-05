@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class EventDataManager: EventDataManagerProtocol {
+public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
  
     var data = Set<EventDataItem>()
     var diskStorage: TealiumDiskStorageProtocol
@@ -93,7 +93,6 @@ public class EventDataManager: EventDataManagerProtocol {
             guard let storedData = self.diskStorage.retrieve(as: EventData.self) else {
                 return EventData()
             }
-//            print("😀persistent storage: \(storedData)")
             return storedData
         }
         set {

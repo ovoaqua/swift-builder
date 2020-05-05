@@ -43,7 +43,7 @@ class DeviceDataModule: Collector {
 
     required init(config: TealiumConfig,
                   delegate: TealiumModuleDelegate,
-                  diskStorage: TealiumDiskStorage?,
+                  diskStorage: TealiumDiskStorageProtocol?,
                   completion: () -> Void) {
         self.delegate = delegate
         self.config = config

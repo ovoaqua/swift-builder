@@ -31,7 +31,7 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
 
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
-                         diskStorage: TealiumDiskStorage?,
+                         diskStorage: TealiumDiskStorageProtocol?,
                          completion: () -> Void) {
         defer {
             completion()

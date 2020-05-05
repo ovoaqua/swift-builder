@@ -325,6 +325,28 @@ extension TealiumModulesManager: TealiumModuleDelegate {
         // Pass request to other modules - Regular behavior
         modules?.first?.handle(process)
     }
+    
+    /// Called by a module requesting a new operation￼.
+    ///
+    /// - Parameters:
+    ///     - module: `TealiumModule?` requesting the operation￼
+    ///     - process: `TealiumRequest` to be processed
+    public func newTealiumModuleRequests(module: Module?,
+        process: TealiumRequest) {
+
+        if let track = process as? TealiumTrackRequest {
+            self.track(track)
+            return
+        }
+
+        if let track = process as? TealiumBatchTrackRequest {
+            self.track(track)
+            return
+        }
+
+        // Pass request to other modules - Regular behavior
+        modules?.first?.handle(process)
+    }
 
 }
 

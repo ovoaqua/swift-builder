@@ -1,7 +1,7 @@
 //
 //@testable import TealiumAppData
 @testable import TealiumCollect
-@testable import TealiumConnectivity
+//@testable import TealiumConnectivity
 @testable import TealiumConsentManager
 @testable import TealiumCore
 //@testable import TealiumDelegate
@@ -9,8 +9,8 @@
 //@testable import TealiumLogger
 //@testable import TealiumPersistentData
 @testable import TealiumVisitorService
-@testable import TealiumVolatileData
-@testable import TealiumLogger
+//@testable import TealiumVolatileData
+//@testable import TealiumLogger
 import XCTest
 
 class TealiumModulesTest: XCTestCase {
@@ -52,8 +52,9 @@ class TealiumModulesTest: XCTestCase {
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
             XCTAssert(modules.count == (self.numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
 
-        for module in modules {
-           XCTAssert(!(module is TealiumVisitorServiceModule), "Visitor service module was found when shouldn't have been present.")
+            for module in modules {
+                XCTAssert(!(module is TealiumVisitorServiceModule), "Visitor service module was found when shouldn't have been present.")
+            }
         }
     }
 
@@ -73,15 +74,16 @@ class TealiumModulesTest: XCTestCase {
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
             XCTAssert(modules.count == (self.numberOfCurrentModules - modulesList.moduleNames.count), "Modules contains incorrect number: \(modules)")
 
-        for module in modules {
-            if module is TealiumVisitorServiceModule {
-                XCTFail("Logger module was found when shouldn't have been present.")
+            for module in modules {
+                if module is TealiumVisitorServiceModule {
+                    XCTFail("Logger module was found when shouldn't have been present.")
+                }
+                //                if module is TealiumConsentManagerModule {
+                //                    XCTFail("TealiumConsentManagerModule module was found when shouldn't have been present.")
+                //                }
             }
-            if module is TealiumConsentManagerModule {
-                XCTFail("TealiumConsentManagerModule module was found when shouldn't have been present.")
-            }
-        }
 
+        }
     }
 
     func testEnableSingleModuleFromWhitelistConfig() {
@@ -103,11 +105,12 @@ class TealiumModulesTest: XCTestCase {
 
             let module = modules[0]
 
-        if module is TealiumVisitorServiceModule {
-            // How in the world do we do a 'is not' in Swift?
-        } else {
-            XCTFail("Incorrect module loaded: \(module)")
-            return
+            if module is TealiumVisitorServiceModule {
+                // How in the world do we do a 'is not' in Swift?
+            } else {
+                XCTFail("Incorrect module loaded: \(module)")
+                return
+            }
         }
     }
 
@@ -183,8 +186,9 @@ class TealiumModulesTest: XCTestCase {
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
             XCTAssert(modulesManager.modules!.count == (self.numberOfCurrentModules - newModulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
-        for module in modulesManager.modules! where module is TealiumVisitorServiceModule {
-            XCTFail("Failed to disable the visitor service module.")
+            for module in modulesManager.modules! where module is TealiumVisitorServiceModule {
+                XCTFail("Failed to disable the visitor service module.")
+            }
         }
     }
 
@@ -292,13 +296,13 @@ class TealiumModulesTest: XCTestCase {
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
             XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
 
-        for module in modulesManager.modules! {
-            if module is TealiumDelegateModule {
-                XCTFail("delegate module was found when shouldn't have been present.")
-            }
-            if module is TealiumVisitorServiceModule {
-                XCTFail("visitorservice module was found when shouldn't have been present.")
-            }
+            for module in modulesManager.modules! {
+                if module is TealiumDelegateModule {
+                    XCTFail("delegate module was found when shouldn't have been present.")
+                }
+                if module is TealiumVisitorServiceModule {
+                    XCTFail("visitorservice module was found when shouldn't have been present.")
+                }
 
             }
         }

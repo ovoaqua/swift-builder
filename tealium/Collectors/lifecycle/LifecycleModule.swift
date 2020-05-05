@@ -23,6 +23,7 @@ import TealiumCore
 public class LifecycleModule: Collector {
 
     public static var moduleId: String = "Lifecycle"
+    var delegate: TealiumModuleDelegate
     var enabledPrior = false
     var lifecycleData = [String: Any]()
     var lastLifecycleEvent: LifecycleType?
@@ -35,11 +36,12 @@ public class LifecycleModule: Collector {
 
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
-                         diskStorage: TealiumDiskStorage?,
+                         diskStorage: TealiumDiskStorageProtocol?,
                          completion: () -> Void) {
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
                                                              forModule: "lifecycle",
                                                              isCritical: true)
+        self.delegate = delegate
         self.config = config
         if config.lifecycleAutoTrackingEnabled {
             Tealium.lifecycleListeners.addDelegate(delegate: self)
@@ -66,7 +68,7 @@ public class LifecycleModule: Collector {
     ///     - type: `TealiumLifecycleType`
     ///     - date: `Date` at which the event occurred
     public func process(type: LifecycleType,
-        at date: Date) {
+        at date: Date, autotracked: Bool = false) {
         guard var lifecycle = self.lifecycle else {
             return
         }
@@ -83,6 +85,8 @@ public class LifecycleModule: Collector {
                 overrideSession: nil)
         }
         self.lifecycle = lifecycle
+        lifecycleData[LifecycleKey.autotracked] = autotracked
+        requestTrack(data: lifecycleData)
     }
     
     /// Prevent manual spanning of repeated lifecycle calls to system.
@@ -117,7 +121,21 @@ public class LifecycleModule: Collector {
             return
         }
         lastLifecycleEvent = type
-        self.process(type: type, at: date)
+        self.process(type: type, at: date, autotracked: true)
+    }
+    
+    /// Sends a track request to the module delegate.
+    ///
+    /// - Parameter data: `[String: Any]` containing the lifecycle data to track
+    public func requestTrack(data: [String: Any]) {
+        guard let title = data[LifecycleKey.type] as? String else {
+            return
+        }
+        let trackData = Tealium.trackDataFor(title: title,
+                                             optionalData: data)
+        let track = TealiumTrackRequest(data: trackData,
+                                        completion: nil)
+        delegate.tealiumModuleRequests(module: nil, process: track)
     }
 }
 

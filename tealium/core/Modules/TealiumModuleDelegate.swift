@@ -24,5 +24,5 @@ public protocol TealiumModuleDelegate: class {
     /// - Parameter process: TealiumModuleProcessType requested.
     func tealiumModuleRequests(module: TealiumModule?,
                                process: TealiumRequest)
-
+    
 }

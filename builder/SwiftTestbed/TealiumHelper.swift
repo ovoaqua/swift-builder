@@ -162,15 +162,17 @@ class TealiumHelper: NSObject {
     }
     
     func crash() {
-        NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
+        let arr = ["hi"]
+        arr[1]
+        //NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
     }
 }
 
 extension TealiumHelper: TealiumDelegate {
 
     func tealiumShouldTrack(data: [String: Any]) -> Bool {
-//        let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
-//        logger?.log(logRequest)
+        let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
+        logger?.log(logRequest)
         return true
     }
 
