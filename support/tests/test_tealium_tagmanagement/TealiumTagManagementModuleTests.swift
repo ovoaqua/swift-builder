@@ -14,7 +14,7 @@ class TealiumTagManagementModuleTests: XCTestCase {
 
     var delegateExpectationSuccess: XCTestExpectation?
     var delegateExpectationFail: XCTestExpectation?
-    var module: TealiumTagManagementModule?
+    var module: TagManagementModule?
     var queueName: String?
 
     override func setUp() {
@@ -25,20 +25,6 @@ class TealiumTagManagementModuleTests: XCTestCase {
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
-    }
-
-    func testMinimumProtocolsReturn() {
-        let expectation = self.expectation(description: "minimumProtocolsReturned")
-        let helper = TestTealiumHelper()
-        let module = TealiumTagManagementModule(delegate: nil)
-        helper.modulesReturnsMinimumProtocols(module: module) { success, failingProtocols in
-
-            expectation.fulfill()
-            XCTAssertTrue(success, "Not all protocols returned. Failing protocols: \(failingProtocols)")
-
-        }
-
-        self.waitForExpectations(timeout: 10.0, handler: nil)
     }
 
 }
