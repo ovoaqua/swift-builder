@@ -108,52 +108,8 @@ struct RemotePublishSettings: Codable {
         config.wifiOnlySending = config.wifiOnlySending ?? self.wifiOnlySending
         config.minutesBetweenRefresh = config.minutesBetweenRefresh ?? minutesBetweenRefresh
         config.isEnabled = config.isEnabled ?? isEnabled
-
-        if let existingModulesList = config.modulesList {
-
-            let isWhiteList = existingModulesList.isWhitelist,
-            moduleNames = existingModulesList.moduleNames
-
-            var newModuleNames = moduleNames
-            if isWhiteList {
-                if moduleNames.contains(TealiumKey.tagManagementModuleName), !self.tagManagementEnabled {
-                    newModuleNames.remove(TealiumKey.tagManagementModuleName)
-                } else if !moduleNames.contains(TealiumKey.tagManagementModuleName), self.tagManagementEnabled {
-                    newModuleNames.insert(TealiumKey.tagManagementModuleName)
-                }
-                if moduleNames.contains(TealiumKey.collectModuleName), !self.collectEnabled {
-                    newModuleNames.remove(TealiumKey.collectModuleName)
-                } else if !moduleNames.contains(TealiumKey.collectModuleName), self.collectEnabled {
-                    newModuleNames.insert(TealiumKey.collectModuleName)
-                }
-            } else {
-                if moduleNames.contains(TealiumKey.tagManagementModuleName), self.tagManagementEnabled {
-                    newModuleNames.remove(TealiumKey.tagManagementModuleName)
-                } else if !moduleNames.contains(TealiumKey.tagManagementModuleName), !self.tagManagementEnabled {
-                    newModuleNames.insert(TealiumKey.tagManagementModuleName)
-                }
-                if moduleNames.contains(TealiumKey.collectModuleName), self.collectEnabled {
-                    newModuleNames.remove(TealiumKey.collectModuleName)
-                } else if !moduleNames.contains(TealiumKey.collectModuleName), !self.collectEnabled {
-                    newModuleNames.insert(TealiumKey.collectModuleName)
-                }
-            }
-
-            config.modulesList = TealiumModulesList(isWhitelist: isWhiteList, moduleNames: newModuleNames)
-
-        } else {
-            var newModuleNames = Set<String>()
-
-            if !self.tagManagementEnabled {
-                newModuleNames.insert(TealiumKey.tagManagementModuleName)
-            }
-
-            if !self.collectEnabled {
-                newModuleNames.insert(TealiumKey.collectModuleName)
-            }
-
-            config.modulesList = TealiumModulesList(isWhitelist: false, moduleNames: newModuleNames)
-        }
+        config.isTagManagementEnabled = self.tagManagementEnabled
+        config.isCollectEnabled = self.collectEnabled
 
         let overrideLog = config.logLevel
         config.logLevel = (overrideLog ?? self.overrideLog)

@@ -23,8 +23,12 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
     private var diskStorage: TealiumDiskStorageProtocol!
     private var bundle: Bundle
     var appData = AppData()
-    var existingVisitorId: String?
-    var logger: TealiumLoggerProtocol?
+    var existingVisitorId: String? {
+        config.existingVisitorId
+    }
+    var logger: TealiumLoggerProtocol? {
+        config.logger
+    }
     var delegate: TealiumModuleDelegate
     
     public var config: TealiumConfig
@@ -40,9 +44,6 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
         self.config = config
         self.bundle = Bundle.main
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
-        self.existingVisitorId = config.existingVisitorId
-//        self.logger = config._internal.logger
-        self.logger = config.logger
         setExistingAppData()
     }
 
@@ -144,11 +145,6 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
            self.appData.persistentData = newPersistentData
        }
        newVolatileData()
-    }
-
-    deinit {
-//        let logRequest = TealiumLogRequest(title: "AppData Deinit", messages: ["Success"], info: nil, logLevel: .info)
-//        self.logger?.log(logRequest)
     }
 
 }

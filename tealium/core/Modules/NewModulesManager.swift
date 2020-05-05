@@ -11,7 +11,7 @@ import Foundation
 public class NewModulesManager {
 
     var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule"]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule", "TealiumAutotracking.TealiumAutotrackingModule"]
     var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
@@ -21,6 +21,18 @@ public class NewModulesManager {
     var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
     public var modules = [Module]()
+    var config: TealiumConfig? {
+        willSet {
+            guard let newValue = newValue else {
+                return
+            }
+            self.dispatchManager?.config = newValue
+            self.modules.forEach {
+                var module = $0
+                module.config = newValue
+            }
+        }
+    }
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
@@ -138,11 +150,11 @@ public class NewModulesManager {
 
 
 extension NewModulesManager: TealiumModuleDelegate {
-    public func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
+    public func tealiumModuleFinished(module: Module, process: TealiumRequest) {
         
     }
     
-    public func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
+    public func tealiumModuleRequests(module: Module?, process: TealiumRequest) {
         switch process {
         case let request as TealiumTrackRequest:
 //            sendTrack(request: request)
