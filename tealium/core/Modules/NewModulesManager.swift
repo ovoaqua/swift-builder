@@ -39,9 +39,9 @@ public class NewModulesManager {
         TealiumQueues.backgroundConcurrentQueue.write {
             self.logger = config.logger
             self.eventDataManager = eventDataManager
-            self.setupCollectors(config: config)
             self.setupDispatchers(config: config)
             self.setupDispatchValidators(config: config)
+            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, delegate: self, logger: self.logger, config: config)
             self.modules += self.collectors
             self.modules += self.dispatchers
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
@@ -50,7 +50,8 @@ public class NewModulesManager {
                 "Dispatchers Initialized: \(self.dispatchers.map { type(of: $0).moduleId })"
             ], info: nil, logLevel: .info, category: .`init`)
             self.logger?.log(logRequest)
-            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, delegate: self, logger: self.logger, config: config)
+            
+            self.setupCollectors(config: config)
         }
     }
 

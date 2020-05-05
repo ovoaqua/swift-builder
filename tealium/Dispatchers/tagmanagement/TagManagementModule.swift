@@ -16,7 +16,7 @@ public class TagManagementModule: Dispatcher {
     public var config: TealiumConfig
     var errorState = AtomicInteger(value: 0)
     var eventDataManager: EventDataManagerProtocol?
-    var pendingTrackRequests = [TealiumRequest]()
+    var pendingTrackRequests = [(TealiumRequest, ModuleCompletion?)]()
     var remoteCommandResponseObserver: NSObjectProtocol?
     var tagManagement: TealiumTagManagementProtocol?
     var webViewState: Atomic<TealiumWebViewState>?
@@ -111,12 +111,12 @@ public class TagManagementModule: Dispatcher {
                     self.dynamicTrack(track, completion: completion)
                 } else {
                     _ = self.errorState.incrementAndGet()
-                    self.enqueue(track)
+                    self.enqueue(track, completion: completion)
                 }
             }
             return
         } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
-            self.enqueue(track)
+            self.enqueue(track, completion: completion)
             return
         }
 
@@ -156,7 +156,8 @@ public class TagManagementModule: Dispatcher {
     /// Enqueues a request for later dispatch if the webview isn't ready.
     ///
     /// - Parameter request: `TealiumRequest` to be enqueued
-    func enqueue(_ request: TealiumRequest) {
+    func enqueue(_ request: TealiumRequest,
+                 completion: ModuleCompletion?) {
         guard request is TealiumTrackRequest || request is TealiumBatchTrackRequest || request is TealiumRemoteAPIRequest else {
             return
         }
@@ -170,16 +171,16 @@ public class TagManagementModule: Dispatcher {
                 track.data = trackData.encodable
                 return track
             }
-            self.pendingTrackRequests.append(TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion))
+            self.pendingTrackRequests.append((TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion), completion))
         case let request as TealiumTrackRequest:
             var track = request
             var trackData = track.trackDictionary
             trackData[TealiumKey.wasQueued] = true
             trackData[TealiumKey.queueReason] = "Tag Management Webview Not Ready"
             track.data = trackData.encodable
-            self.pendingTrackRequests.append(track)
+            self.pendingTrackRequests.append((track, completion))
         case let request as TealiumRemoteAPIRequest:
-            self.pendingTrackRequests.append(request)
+            self.pendingTrackRequests.append((request, completion))
         default:
             return
         }
@@ -189,7 +190,7 @@ public class TagManagementModule: Dispatcher {
         let pending = self.pendingTrackRequests
         self.pendingTrackRequests = []
         pending.forEach {
-            self.dynamicTrack($0, completion: nil)
+            self.dynamicTrack($0.0, completion: $0.1)
         }
     }
     
