@@ -134,6 +134,7 @@ class DispatchManager: TealiumConnectivityDelegate {
         }
         
         if checkShouldDrop(request: newRequest) {
+            // TODO: Logging
             return
         }
         
