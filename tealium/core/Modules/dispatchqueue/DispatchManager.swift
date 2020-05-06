@@ -16,6 +16,7 @@ class DispatchManager: TealiumConnectivityDelegate {
     
     var dispatchers = [Dispatcher]()
     var dispatchValidators = [DispatchValidator]()
+    var dispatchListeners = [DispatchListener]()
     var logger: TealiumLoggerProtocol?
     var delegate: TealiumModuleDelegate?
     var persistentQueue: TealiumPersistentDispatchQueue!
@@ -85,6 +86,7 @@ class DispatchManager: TealiumConnectivityDelegate {
     
     init(dispatchers: [Dispatcher]?,
          dispatchValidators: [DispatchValidator]?,
+         dispatchListeners: [DispatchListener]?,
          delegate: TealiumModuleDelegate?,
          logger: TealiumLoggerProtocol?,
          config: TealiumConfig) {
@@ -97,6 +99,10 @@ class DispatchManager: TealiumConnectivityDelegate {
         
         if let dispatchValidators = dispatchValidators {
             self.dispatchValidators = dispatchValidators
+        }
+        
+        if let listeners = dispatchListeners {
+            self.dispatchListeners = listeners
         }
         
         if let logger = logger {
@@ -193,6 +199,11 @@ class DispatchManager: TealiumConnectivityDelegate {
     }
     
     func runDispatchers (for request: TealiumRequest) {
+        if request is TealiumTrackRequest || request is TealiumBatchTrackRequest {
+            self.dispatchListeners.forEach {
+                $0.willTrack(request: request)
+            }
+        }
         self.logTrackSuccess([], request: request)
         dispatchers.forEach { module in
             let moduleId = type(of: module).moduleId

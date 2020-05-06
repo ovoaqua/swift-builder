@@ -42,7 +42,7 @@ public class NewModulesManager {
             self.eventDataManager = eventDataManager
             self.setupDispatchers(config: config)
 //            self.setupDispatchValidators(config: config)
-            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, delegate: self, logger: self.logger, config: config)
+            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, dispatchListeners: self.dispatchListeners, delegate: self, logger: self.logger, config: config)
             self.modules += self.collectors
             self.modules += self.dispatchers
             self.setupCollectors(config: config)
@@ -72,6 +72,7 @@ public class NewModulesManager {
         collectors.append(collector)
     }
     
+    // TODO: tidy this up. Need to update logic and remove duplication
     func addDispatchListener(_ listener: DispatchListener) {
         guard dispatchListeners.contains(where: {
             type(of: $0) == type(of: listener)
@@ -79,6 +80,7 @@ public class NewModulesManager {
             return
         }
         dispatchListeners.append(listener)
+        dispatchManager?.dispatchListeners.append(listener)
     }
     
     func addDispatchValidator(_ validator: DispatchValidator) {

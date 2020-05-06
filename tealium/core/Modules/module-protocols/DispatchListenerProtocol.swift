@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol DispatchListener {
-    func willTrack(request: TealiumTrackRequest)
+    func willTrack(request: TealiumRequest)
 }
