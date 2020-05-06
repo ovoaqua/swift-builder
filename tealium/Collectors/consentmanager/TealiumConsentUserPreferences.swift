@@ -70,7 +70,7 @@ public struct TealiumConsentUserPreferences: Codable {
     }
 
     /// - Returns: `[String: Any]?` representation of TealiumConsentUserPreferences
-    public func toDictionary() -> [String: Any]? {
+    public var dictionary:  [String: Any]? {
         var preferencesDictionary = [String: Any]()
 
         if let status = self.consentStatus?.rawValue {

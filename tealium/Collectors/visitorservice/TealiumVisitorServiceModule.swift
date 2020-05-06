@@ -11,124 +11,39 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumVisitorServiceModule: TealiumModule {
-
-    var visitorServiceManager: TealiumVisitorServiceManagerProtocol?
+public class TealiumVisitorServiceModule: Collector, DispatchListener {
+    
+    public static var moduleId: String = "VisitorService"
+    public var config: TealiumConfig
+    public var data: [String : Any]? = nil
+    var delegate: TealiumModuleDelegate
     var diskStorage: TealiumDiskStorageProtocol!
-    var visitorId: String?
     var firstEventSent = false
-
-    override public class func moduleConfig() -> TealiumModuleConfig {
-        return TealiumModuleConfig(name: TealiumVisitorServiceConstants.moduleName,
-                                   priority: 1150,
-                                   build: 1,
-                                   enabled: true)
-    }
-
-    override public func handle(_ request: TealiumRequest) {
-        switch request {
-        case let request as TealiumEnableRequest:
-            enable(request)
-        case let request as TealiumDisableRequest:
-            disable(request)
-        case let request as TealiumTrackRequest:
-            track(request)
-        case let request as TealiumBatchTrackRequest:
-            batchTrack(request)
-        case let request as TealiumUpdateConfigRequest:
-            updateConfig(request)
-        default:
-            didFinishWithNoResponse(request)
-        }
-    }
-
-    /// Enable function required by TealiumModule.
-    override public func enable(_ request: TealiumEnableRequest) {
-        self.enable(request, diskStorage: nil)
-    }
-
-    /// Enables the module and starts the Visitor Profile Manager instance.
+    var visitorId: String?
+    var visitorServiceManager: TealiumVisitorServiceManagerProtocol?
+    
+    /// Provided for unit testing￼.
     ///
-    /// - Parameter request: `TealiumEnableRequest` - the request from the core library to enable this module
-    public func enable(_ request: TealiumEnableRequest,
-                       diskStorage: TealiumDiskStorageProtocol? = nil,
-                       visitor: TealiumVisitorServiceManagerProtocol? = nil) {
-        if self.diskStorage == nil {
-            self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumVisitorServiceConstants.moduleName, isCritical: false)
-        }
-
-        isEnabled = true
-        guard visitor != nil else {
-            visitorServiceManager = TealiumVisitorServiceManager(config: request.config,
-                                                                 delegate: request.config.visitorServiceDelegate,
-                                                                 diskStorage: self.diskStorage)
-
-            if !request.bypassDidFinish {
-                didFinish(request)
-            }
-            return
-        }
-        visitorServiceManager = visitor
-
+    /// - Parameter visitorServiceManager: Class instance conforming to `TealiumVisitorServiceManagerProtocol`
+    convenience init (config: TealiumConfig,
+                      delegate: TealiumModuleDelegate,
+                      diskStorage: TealiumDiskStorageProtocol?,
+        visitorServiceManager: TealiumVisitorServiceManagerProtocol) {
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) {}
+        self.visitorServiceManager = visitorServiceManager
     }
-
-    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
-        let newConfig = request.config.copy
-        if newConfig != self.config {
-            self.config = newConfig
-            self.diskStorage = TealiumDiskStorage(config: newConfig, forModule: TealiumVisitorServiceConstants.moduleName, isCritical: false)
-            var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
-            enableRequest.bypassDidFinish = true
-            enable(enableRequest)
-        }
-        didFinish(request)
-    }
-
-    /// Disables the module.
-    ///
-    /// - Parameter request: `TealiumDisableRequest` - the request from the core library to disable this module
-    override public func disable(_ request: TealiumDisableRequest) {
-        isEnabled = false
-        didFinish(request)
-    }
-
-    /// Sets the visitor id within the visitor profile retriever upon a track request. Also signals to the visitor profile manager
-    /// that the first event has been sent.
-    ///
-    /// - Parameter request: `TealiumTrackRequest` to be considered for processing.
-    override public func track(_ request: TealiumTrackRequest) {
-        guard isEnabled else {
-            didFinishWithNoResponse(request)
-            return
-        }
-        let request = addModuleName(to: request)
-
-        guard let visitorId = request.visitorId else {
-            didFinishWithNoResponse(request)
-            return
-        }
-        retrieveProfile(visitorId: visitorId)
-
-        didFinishWithNoResponse(request)
-    }
-
-    func batchTrack(_ request: TealiumBatchTrackRequest) {
-        guard isEnabled else {
-            didFinishWithNoResponse(request)
-            return
-        }
-
-        guard let lastRequest = request.trackRequests.last else {
-            didFinishWithNoResponse(request)
-            return
-        }
-        guard let visitorId = lastRequest.visitorId else {
-            didFinishWithNoResponse(request)
-            return
-        }
-        retrieveProfile(visitorId: visitorId)
-
-        didFinishWithNoResponse(request)
+    
+    required public init(config: TealiumConfig,
+                         delegate: TealiumModuleDelegate,
+                         diskStorage: TealiumDiskStorageProtocol?,
+                         completion: () -> Void) {
+        self.delegate = delegate
+        self.config = config
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "visitorservice", isCritical: false)
+        self.visitorServiceManager = TealiumVisitorServiceManager(config: config,
+        delegate: config.visitorServiceDelegate,
+        diskStorage: self.diskStorage)
+        completion()
     }
 
     func retrieveProfile(visitorId: String) {
@@ -142,4 +57,24 @@ public class TealiumVisitorServiceModule: TealiumModule {
             self.visitorServiceManager?.requestVisitorProfile()
         }
     }
+    
+    public func willTrack(request: TealiumRequest) {
+        switch request {
+            case let request as TealiumTrackRequest:
+                guard let visitorId = request.visitorId else {
+                    return
+                }
+                retrieveProfile(visitorId: visitorId)
+            case let request as TealiumBatchTrackRequest:
+                guard let lastRequest = request.trackRequests.last,
+                    let visitorId = lastRequest.visitorId else {
+                    return
+                }
+                retrieveProfile(visitorId: visitorId)
+        default:
+            break
+        }
+
+    }
+    
 }

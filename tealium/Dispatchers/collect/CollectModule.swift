@@ -16,17 +16,14 @@ public class CollectModule: Dispatcher {
     var collect: TealiumCollectProtocol?
     public var isReady = false
     public var delegate: TealiumModuleDelegate
-    var eventDataManager: EventDataManagerProtocol? // TODO:
     public var config: TealiumConfig
     
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
-                         eventDataManager: EventDataManagerProtocol?,
                          completion: ModuleCompletion?) {
         
         self.config = config
         self.delegate = delegate
-        self.eventDataManager = eventDataManager
         updateCollectDispatcher(config: config, completion: nil)
         completion?(.success(true))
     }
@@ -78,11 +75,6 @@ public class CollectModule: Dispatcher {
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
 //        let request = addModuleName(to: request)
         var newTrack = request.trackDictionary
-        
-        if let eventDataManager = eventDataManager {
-            newTrack += eventDataManager.allEventData
-        }
-        
         if newTrack[TealiumKey.account] == nil,
             newTrack[TealiumKey.profile] == nil {
             newTrack[TealiumKey.account] = config.account

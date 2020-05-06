@@ -80,7 +80,7 @@ public class TealiumConsentManager {
     ///
     /// - Parameter preferences: `TealiumConsentUserPreferences?`
     func trackUserConsentPreferences(preferences: TealiumConsentUserPreferences?) {
-        if let preferences = preferences, var consentData = preferences.toDictionary() {
+        if let preferences = preferences, var consentData = preferences.dictionary {
             // we can't log a nil consent status
             if preferences.consentStatus == nil {
                 return
@@ -104,7 +104,7 @@ public class TealiumConsentManager {
             if consentLoggingEnabled {
                 // call type must be set to override "link" or "view"
                 consentData[TealiumKey.callType] = consentData[TealiumKey.event]
-                moduleDelegate?.tealiumModuleRequests(module: nil, process: TealiumTrackRequest(data: consentData, completion: nil))
+                moduleDelegate?.requestTrack(TealiumTrackRequest(data: consentData, completion: nil))
             }
             // in all cases, update the cookie data in TiQ/webview
             updateTIQCookie(consentData)
@@ -120,7 +120,7 @@ public class TealiumConsentManager {
         // collect module ignores this hit
         consentData[TealiumKey.event] = TealiumKey.updateConsentCookieEventName
         consentData[TealiumKey.callType] = TealiumKey.updateConsentCookieEventName
-        moduleDelegate?.tealiumModuleRequests(module: nil, process: TealiumTrackRequest(data: consentData, completion: nil))
+        moduleDelegate?.requestTrack(TealiumTrackRequest(data: consentData, completion: nil))
     }
 
     /// - Returns: `TealiumConsentUserPreferences?` from persistent storage

@@ -13,7 +13,6 @@ public protocol Dispatcher: Module {
     var isReady: Bool { get }
     init(config: TealiumConfig,
          delegate: TealiumModuleDelegate,
-         eventDataManager: EventDataManagerProtocol?,
          completion: ModuleCompletion?)
 
     func dynamicTrack(_ request: TealiumRequest,

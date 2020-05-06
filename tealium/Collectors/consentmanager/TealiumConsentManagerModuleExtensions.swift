@@ -40,9 +40,9 @@ extension TealiumConsentManagerModule: TealiumConsentManagerDelegate {
     func consentStatusChanged(_ status: TealiumConsentStatus) {
         switch status {
         case .notConsented:
-            purgeQueue()
+            print("should purge queue")
         case .consented:
-            releaseQueue()
+            print("should release queue")
         default:
             return
         }
@@ -69,12 +69,32 @@ extension TealiumConsentManagerModule: TealiumConsentManagerDelegate {
 // public interface for consent manager
 public extension Tealium {
 
-    /// - Returns: `TealiumConsentManager` instance
-    func consentManager() -> TealiumConsentManager? {
-        guard let module = modulesManager.getModule(forName: TealiumConsentConstants.moduleName) as? TealiumConsentManagerModule else {
-            return nil
+    var consentManager: TealiumConsentManager? {
+        let module = newModulesManager.collectors.filter {
+            $0 is TealiumConsentManagerModule
+        }.first
+        return (module as! TealiumConsentManagerModule).consentManager
+    }
+    
+//    /// - Returns: `TealiumConsentManager` instance
+//    var consentManager: TealiumConsentManager? {
+//        guard let module = newModulesManager.modules.filter({ $0 is TealiumConsentManagerModule })[0] as? TealiumConsentManagerModule else {
+//            return nil
+//        }
+//        return module.consentManager
+//    }
+}
+
+public extension TealiumConfig {
+    
+    var consentManagerDelegate: TealiumConsentManagerDelegate? {
+        get {
+            optionalData[TealiumConsentConstants.consentManagerDelegate] as? TealiumConsentManagerDelegate
         }
 
-        return module.consentManager
+        set {
+            optionalData[TealiumConsentConstants.consentManagerDelegate] = newValue
+        }
     }
+    
 }

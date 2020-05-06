@@ -11,9 +11,9 @@ import Foundation
 public class NewModulesManager {
 
     var coreCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule", "TealiumAutotracking.TealiumAutotrackingModule"]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule"]
     var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
-    var collectors = [Collector]()
+    public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
     var dispatchManager: DispatchManager?
     
@@ -41,7 +41,7 @@ public class NewModulesManager {
             self.logger = config.logger
             self.eventDataManager = eventDataManager
             self.setupDispatchers(config: config)
-//            self.setupDispatchValidators(config: config)
+            
             self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, dispatchListeners: self.dispatchListeners, delegate: self, logger: self.logger, config: config)
             self.modules += self.collectors
             self.modules += self.dispatchers
@@ -89,7 +89,8 @@ public class NewModulesManager {
         }) == false else {
             return
         }
-        self.dispatchValidators.append(validator)
+        dispatchValidators.append(validator)
+        dispatchManager?.dispatchValidators.append(validator)
     }
     
     func addDispatcher(_ dispatcher: Dispatcher) {
@@ -131,7 +132,7 @@ public class NewModulesManager {
                 self.eventDataManager?.tagManagementIsEnabled = true
             }
             
-            let dispatcher = moduleRef.init(config: config, delegate: self, eventDataManager: eventDataManager) { result in
+            let dispatcher = moduleRef.init(config: config, delegate: self) { result in
                 switch result {
                 case .failure:
                     print("log error")

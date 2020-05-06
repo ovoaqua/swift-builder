@@ -32,7 +32,7 @@ public struct SessionStarter: SessionStarterProtocol {
     }
     
     /// Makes a request to the Tealium CDN session registry.
-    /// - Parameter completion: `Result<HTTPURLResponse, Error>` Optional completion handling if needed, otherwise log output can be monitored.
+    /// - Parameter completion: `Result<HTTPURLResponse, Error>` Optional completion handling if needed.
     public func sessionRequest(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void = { _ in }) {
         guard let url = URL(string: sessionURL) else {
             return

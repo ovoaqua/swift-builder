@@ -260,7 +260,7 @@ public struct TealiumLifecycle: Codable {
             return nil
         }
 
-        if type == LifecycleKey.sleep &&
+        if type == LifecycleType.sleep.description &&
             lastSession.wasLaunch == true {
             return lastSession.wakeDate
         }
@@ -295,7 +295,7 @@ public struct TealiumLifecycle: Codable {
             return nil
         }
 
-        if type == LifecycleKey.sleep {
+        if type == LifecycleType.sleep.description {
             return lastSession.wakeDate
         }
         if sessions.last == sessions.first {
@@ -332,7 +332,7 @@ public struct TealiumLifecycle: Codable {
             resetCountsAfterUpdate(for: date)
         }
 
-        return asDictionary(type: LifecycleKey.launch,
+        return asDictionary(type: LifecycleType.launch.description,
                             for: date)
     }
 
@@ -355,7 +355,7 @@ public struct TealiumLifecycle: Codable {
         totalSecondsAwake += currentSession.secondsElapsed
         sessions.removeLast()
         sessions.append(currentSession)
-        return asDictionary(type: LifecycleKey.sleep,
+        return asDictionary(type: LifecycleType.sleep.description,
                             for: date)
     }
 
@@ -387,7 +387,7 @@ public struct TealiumLifecycle: Codable {
         let newSession = overrideSession ?? TealiumLifecycleSession(wakeDate: date)
         sessions.append(newSession)
 
-        return asDictionary(type: LifecycleKey.wake,
+        return asDictionary(type: LifecycleType.wake.description,
                             for: date)
     }
     

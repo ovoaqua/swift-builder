@@ -19,6 +19,7 @@ public enum TealiumConsentConstants {
     static let consentStatus = "consent_status"
     static let policyKey = "policy"
     static let defaultPolicy = "gdpr"
+    static let consentManagerDelegate = "consent_manager_delegate"
 }
 
 public enum TealiumConsentCategories: String, Codable {
@@ -81,7 +82,7 @@ public enum TealiumConsentStatus: String, Codable {
     case notConsented
 }
 
-public enum TealiumConsentTrackAction {
+public enum TealiumConsentTrackAction: Equatable {
     case trackingAllowed
     case trackingForbidden
     case trackingQueued

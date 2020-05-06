@@ -13,8 +13,9 @@ import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
 //import TealiumRemoteCommands
-//import TealiumVisitorService
+import TealiumVisitorService
 import TealiumLifecycle
+import TealiumConsentManager
 
 extension String: Error {}
 
@@ -45,9 +46,9 @@ class TealiumHelper: NSObject {
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .info
-//        config.consentLoggingEnabled = true
+        config.consentLoggingEnabled = true
         config.searchAdsEnabled = true
-//        config.initialUserConsentStatus = .consented
+        config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
         config.shouldUseRemotePublishSettings = true
         // config.batchSize = 5
@@ -68,8 +69,9 @@ class TealiumHelper: NSObject {
 //        let list = TealiumModulesList(isWhitelist: false,
 //                                      moduleNames: [.autotracking, .consentmanager])
 //        config.modulesList = list
+        config.consentManagerDelegate = self
         config.diskStorageEnabled = true
-        //config.visitorServiceDelegate = self
+        config.visitorServiceDelegate = self
         config.remoteAPIEnabled = true
 //        config.logLevel = .verbose
         config.shouldCollectTealiumData = true
@@ -129,6 +131,25 @@ class TealiumHelper: NSObject {
 
         }
     }
+    
+    func resetConsentPreferences() {
+        tealium?.consentManager?.resetUserConsentPreferences()
+    }
+    
+    func updateConsentPreferences() {
+        let cats = ["analytics", "monitoring", "big_data", /*"mobile", "crm", "affiliates", "email", "search", */"engagement", "cdp"]
+        var dict = [String: Any]()
+        dict["consentStatus"] = "notConsented"
+        dict["consentCategories"] = cats
+        if let status = dict["consentStatus"] as? String {
+            var tealiumConsentCategories = [TealiumConsentCategories]()
+            let tealiumConsentStatus = (status == "consented") ? TealiumConsentStatus.consented : TealiumConsentStatus.notConsented
+            if let categories = dict["consentCategories"] as? [String] {
+                tealiumConsentCategories = TealiumConsentCategories.consentCategoriesStringArrayToEnum(categories)
+            }
+            self.tealium?.consentManager?.setUserConsentStatusWithCategories(status: tealiumConsentStatus, categories: tealiumConsentCategories)
+        }
+    }
 
     func track(title: String, data: [String: Any]?) {
 //        tealium?.lifecycle()?.launch(at: Date())
@@ -185,13 +206,46 @@ extension TealiumHelper: TealiumDelegate {
     }
 }
 
-//extension TealiumHelper: TealiumVisitorServiceDelegate {
-//    func didUpdate(visitorProfile: TealiumVisitorProfile) {
-//        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
-//            if self.enableHelperLogs {
-//                print(string)
-//            }
-//        }
-//    }
-//
-//}
+extension TealiumHelper: TealiumVisitorServiceDelegate {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
+            if self.enableHelperLogs {
+                print(string)
+            }
+        }
+    }
+
+}
+
+extension TealiumHelper: TealiumConsentManagerDelegate {
+    
+    func willDropTrackingCall(_ request: TealiumTrackRequest) {
+        
+    }
+    
+    func willQueueTrackingCall(_ request: TealiumTrackRequest) {
+        
+    }
+    
+    func willSendTrackingCall(_ request: TealiumTrackRequest) {
+        
+    }
+    
+    func consentStatusChanged(_ status: TealiumConsentStatus) {
+        
+    }
+    
+    func userConsentedToTracking() {
+        
+    }
+    
+    func userOptedOutOfTracking() {
+        
+    }
+    
+    func userChangedConsentCategories(categories: [TealiumConsentCategories]) {
+        
+    }
+    
+    
+}

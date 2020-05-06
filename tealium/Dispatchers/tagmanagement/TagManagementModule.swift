@@ -15,7 +15,6 @@ public class TagManagementModule: Dispatcher {
     public var isReady = false
     public var config: TealiumConfig
     var errorState = AtomicInteger(value: 0)
-    var eventDataManager: EventDataManagerProtocol?
     var pendingTrackRequests = [(TealiumRequest, ModuleCompletion?)]()
     var remoteCommandResponseObserver: NSObjectProtocol?
     var tagManagement: TealiumTagManagementProtocol?
@@ -25,11 +24,9 @@ public class TagManagementModule: Dispatcher {
     
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
-                         eventDataManager: EventDataManagerProtocol?,
                          completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate
-        self.eventDataManager = eventDataManager
         self.tagManagement = TealiumTagManagementWKWebView()
         enableNotifications()
         self.tagManagement?.enable(webviewURL: config.webviewURL, shouldMigrateCookies: true, delegates: config.webViewDelegates, shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.rootView) { [weak self] _, error in
@@ -201,9 +198,6 @@ public class TagManagementModule: Dispatcher {
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
-        if let eventDataManager = eventDataManager {
-            newTrack += eventDataManager.allEventData
-        }
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 
