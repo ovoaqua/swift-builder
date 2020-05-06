@@ -44,28 +44,11 @@ extension TealiumDeviceData {
         // UIDevice.current.orientation is available on iOS only
         #if os(iOS)
         let orientation = UIDevice.current.orientation
-        var appOrientation: UIInterfaceOrientation?
-
-        if !Thread.isMainThread {
-            DispatchQueue.main.sync {
-                appOrientation = TealiumDeviceData.sharedApplication?.statusBarOrientation
-            }
-        } else {
-            appOrientation = TealiumDeviceData.sharedApplication?.statusBarOrientation
-            #if targetEnvironment(simulator)
-            appOrientation = .portrait
-            #endif
-        }
 
         let isLandscape = orientation.isLandscape
         var fullOrientation = [TealiumDeviceDataKey.orientation: isLandscape ? "Landscape" : "Portrait"]
 
         fullOrientation[TealiumDeviceDataKey.fullOrientation] = getDeviceOrientation(orientation)
-        if let appOrientation = appOrientation {
-            let isAppLandscape = appOrientation.isLandscape
-            fullOrientation[TealiumDeviceDataKey.appOrientation] = isAppLandscape ? "Landscape" : "Portrait"
-            fullOrientation[TealiumDeviceDataKey.appOrientationExtended] = getUIOrientation(appOrientation)
-        }
         return fullOrientation
         #else
         return [TealiumDeviceDataKey.orientation: TealiumDeviceDataValue.unknown,

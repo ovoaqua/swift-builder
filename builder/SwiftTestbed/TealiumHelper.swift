@@ -73,6 +73,7 @@ class TealiumHelper: NSObject {
         config.remoteAPIEnabled = true
 //        config.logLevel = .verbose
         config.shouldCollectTealiumData = true
+        config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
         logger = config.logger
         //config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
@@ -161,16 +162,18 @@ class TealiumHelper: NSObject {
         self.tealium?.leaveTrace()
     }
     
-    func crash() {
-        NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
-    }
+//    func crash() {
+//        let arr = ["hi"]
+//        arr[1]
+//        //NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
+//    }
 }
 
 extension TealiumHelper: TealiumDelegate {
 
     func tealiumShouldTrack(data: [String: Any]) -> Bool {
-//        let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
-//        logger?.log(logRequest)
+        let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
+        logger?.log(logRequest)
         return true
     }
 

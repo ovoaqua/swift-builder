@@ -12,19 +12,15 @@ import XCTest
 
 class TealiumCrashModuleTests: XCTestCase {
 
-    var crashModule: TealiumCrashModule!
+    var crashModule: CrashModule!
     var config: TealiumConfig!
     var mockCrashReporter: MockTealiumCrashReporter!
-    var delegateModuleRequests = 0
-    var delegateModuleFinished = 0
 
     override func setUp() {
         super.setUp()
-        crashModule = TealiumCrashModule(delegate: self)
         config = TealiumConfig(account: "TestAccount", profile: "TestProfile", environment: "TestEnvironment")
+        crashModule = CrashModule(config: config, delegate: self, diskStorage: nil, completion: {})
         mockCrashReporter = MockTealiumCrashReporter()
-        delegateModuleRequests = 0
-        delegateModuleFinished = 0
     }
 
     override func tearDown() {
@@ -33,58 +29,22 @@ class TealiumCrashModuleTests: XCTestCase {
         super.tearDown()
     }
 
-    func testEnableSetsEnablePropertyToTrue() {
-        XCTAssertFalse(crashModule.isEnabled)
-        let request = TealiumEnableRequest(config: config, enableCompletion: nil)
-        crashModule.handle(TealiumEnableRequest(config: config, enableCompletion: nil))
-        XCTAssertTrue(crashModule.isEnabled)
-    }
-
-    func testDisableSetsEnablePropertyToFalse() {
-        crashModule.handle(TealiumEnableRequest(config: config, enableCompletion: nil))
-        XCTAssertTrue(crashModule.isEnabled)
-        crashModule.handle(TealiumDisableRequest())
-        XCTAssertFalse(crashModule.isEnabled)
-    }
-
-    func testDisablePurgesCrashReport() {
-        crashModule.handle(TealiumEnableRequest(config: config, enableCompletion: nil))
+    func testDataFinishesWithNoResponseIfNotEnabled() {
         crashModule.crashReporter = mockCrashReporter
-        crashModule.disable(TealiumDisableRequest())
-        XCTAssertEqual(1, mockCrashReporter.purgePendingCrashReportCallCount)
-    }
-
-    func testCrashReporterEnabledOnEnableRequest() {
-        let module = TealiumCrashModule(delegate: self, crashReporter: mockCrashReporter)
-        module.handle(TealiumEnableRequest(config: config, enableCompletion: nil))
-        XCTAssertEqual(1, mockCrashReporter.enableCallCount)
-    }
-
-    func testTrackFinishesWithNoResponseIfNotEnabled() {
-        crashModule.crashReporter = mockCrashReporter
-        crashModule.track(TealiumTrackRequest(data: ["a": "1"], completion: nil))
-
-        XCTAssertEqual(1, delegateModuleFinished)
+        _ = crashModule.data
         XCTAssertEqual(0, mockCrashReporter.hasPendingCrashReportCalledCount)
     }
 
-    func testTrackFinishesWithNoResponseWhenNoPendingCrashReport() {
-        crashModule.handle(TealiumEnableRequest(config: config, enableCompletion: nil))
+    func testDataFinishesWithNoResponseWhenNoPendingCrashReport() {
         crashModule.crashReporter = mockCrashReporter
-        crashModule.track(TealiumTrackRequest(data: ["a": "1"], completion: nil))
-
-        XCTAssertEqual(1, mockCrashReporter.hasPendingCrashReportCalledCount)
+        _ = crashModule.data
         XCTAssertEqual(0, mockCrashReporter.loadPendingCrashReportDataCalledCount)
-        XCTAssertEqual(2, delegateModuleFinished)   // enable and track call
     }
 
-    func testTrackGetsCrashDataIfAvailable() {
-        crashModule.handle(TealiumEnableRequest(config: config, enableCompletion: nil))
+    func testDataCallsGetDataMethod() {
         crashModule.crashReporter = mockCrashReporter
         mockCrashReporter.pendingCrashReport = true
-        crashModule.track(TealiumTrackRequest(data: ["a": "1"], completion: nil))
-
-        XCTAssertEqual(1, mockCrashReporter.hasPendingCrashReportCalledCount)
+        _ = crashModule.data
         XCTAssertEqual(1, mockCrashReporter.getDataCallCount)
     }
 }
@@ -92,15 +52,13 @@ class TealiumCrashModuleTests: XCTestCase {
 extension TealiumCrashModuleTests: TealiumModuleDelegate {
 
     func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        delegateModuleFinished += 1
     }
 
     func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        delegateModuleRequests += 1
     }
 }
 
-class MockTealiumCrashReporter: TealiumCrashReporterType {
+class MockTealiumCrashReporter: CrashReporterProtocol {
 
     var pendingCrashReport = false
     var isEnabled = false

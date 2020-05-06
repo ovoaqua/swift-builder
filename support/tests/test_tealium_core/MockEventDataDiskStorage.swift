@@ -12,8 +12,6 @@ import Foundation
 class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
 
     var mockEventData: EventData!
-    var saveCount = 0
-    var retrieveCount = 0
 
     init() {
         let dataItem1 = EventDataItem(key: "singleDataItemKey1", value: "singleDataItemValue1", expires: .distantFuture)
@@ -31,10 +29,9 @@ class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
 
     func save<T>(_ data: T, completion: TealiumCompletion?) where T: Encodable {
         guard T.self == EventData.self,
-        let data = data as? EventData else {
-            return
+            let data = data as? EventData else {
+                return
         }
-        saveCount += 1
         mockEventData = data
         completion?(true, nil, nil)
     }
@@ -47,9 +44,8 @@ class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
 
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
         guard T.self == EventData.self else {
-                return nil
+            return nil
         }
-        retrieveCount += 1
         if let mockEventData = self.mockEventData {
             return mockEventData as? T
         } else {

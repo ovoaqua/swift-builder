@@ -167,5 +167,4 @@ extension NewModulesManager: TealiumModuleDelegate {
         }
     }
     
-    
 }

@@ -6,29 +6,29 @@
 //  Copyright © 2018 Tealium, Inc. All rights reserved.
 //
 
-@testable import TealiumAppData
+//@testable import TealiumAppData
 @testable import TealiumCore
 @testable import TealiumCrash
 @testable import TealiumCrashReporteriOS
-@testable import TealiumDeviceData
-@testable import TealiumVolatileData
+//@testable import TealiumDeviceData
+//@testable import TealiumVolatileData
 import XCTest
 
 class TealiumCrashTests: XCTestCase {
 
-    var mockVolatileDataCollection: TealiumVolatileDataCollection!
+    var mockTimestampCollection: TimestampCollection!
     var mockAppDataCollection: TealiumAppDataCollection!
     var mockDeviceDataCollection: TealiumDeviceDataCollection!
 
     override func setUp() {
         super.setUp()
-        mockVolatileDataCollection = MockTealiumVolatileDataCollection()
+        mockTimestampCollection = MockTimestampCollection()
         mockAppDataCollection = MockTealiumAppDataCollection()
         mockDeviceDataCollection = MockTealiumDeviceDataCollection()
     }
 
     override func tearDown() {
-        mockVolatileDataCollection = nil
+        mockTimestampCollection = nil
         mockAppDataCollection = nil
         mockDeviceDataCollection = nil
         super.tearDown()
@@ -105,7 +105,7 @@ class TealiumCrashTests: XCTestCase {
                                     TealiumCrashKey.deviceMemoryUsage,
                                     TealiumCrashKey.deviceMemoryAvailable,
                                     TealiumCrashKey.deviceOsBuild,
-                                    TealiumAppDataKey.build,
+                                    TealiumKey.appBuild,
                                     TealiumCrashKey.processId,
                                     TealiumCrashKey.processPath,
                                     TealiumCrashKey.parentProcess,
@@ -159,9 +159,9 @@ public class MockTealiumDeviceDataCollection: TealiumDeviceDataCollection {
     }
 }
 
-class MockTealiumVolatileDataCollection: TealiumVolatileDataCollection {
-    func currentTimeStamps() -> [String: Any] {
-        return ["test": "1"]
+class MockTimestampCollection: TimestampCollection {
+    var currentTimeStamps: [String: Any] {
+        ["test": "1"]
     }
 }
 

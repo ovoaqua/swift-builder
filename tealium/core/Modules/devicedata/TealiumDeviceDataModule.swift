@@ -35,7 +35,9 @@ class DeviceDataModule: Collector {
         }
     }
 
-    var isMemoryEnabled = false
+    var isMemoryEnabled: Bool {
+        config.memoryReportingEnabled
+    }
     var deviceDataCollection: TealiumDeviceDataCollection
     var cachedData = [String: Any]()
     var config: TealiumConfig
@@ -43,7 +45,7 @@ class DeviceDataModule: Collector {
 
     required init(config: TealiumConfig,
                   delegate: TealiumModuleDelegate,
-                  diskStorage: TealiumDiskStorage?,
+                  diskStorage: TealiumDiskStorageProtocol?,
                   completion: () -> Void) {
         self.delegate = delegate
         self.config = config

@@ -43,13 +43,13 @@ class TealiumLifecycleIntegrationTests: XCTestCase {
             var returnedData = [String: Any]()
             switch type {
             case "launch":
-                var overrideSession = TealiumLifecycleSession(withLaunchDate: time)
+                var overrideSession = TealiumLifecycleSession(launchDate: time)
                 overrideSession.appVersion = appVersion
                 returnedData = lifecycle.newLaunch(at: time, overrideSession: overrideSession)
             case "sleep":
                 returnedData = lifecycle.newSleep(at: time)
             case "wake":
-                var overrideSession = TealiumLifecycleSession(withWakeDate: time)
+                var overrideSession = TealiumLifecycleSession(wakeDate: time)
                 overrideSession.appVersion = appVersion
                 returnedData = lifecycle.newWake(at: time, overrideSession: overrideSession)
             default:
@@ -67,27 +67,27 @@ class TealiumLifecycleIntegrationTests: XCTestCase {
         // Creating test sessions, only interested in secondsElapsed here.
         let start = Date(timeIntervalSince1970: 1_480_554_000)     // 2016 DEC 1 - 01:00 UTC
         let end = Date(timeIntervalSince1970: 1_480_557_600)       // 2016 DEC 2 - 02:00 UTC
-        var sessionSuccess = TealiumLifecycleSession(withWakeDate: start)
+        var sessionSuccess = TealiumLifecycleSession(wakeDate: start)
         sessionSuccess.sleepDate = end
-        let sessionCrashed = TealiumLifecycleSession(withWakeDate: start)
+        let sessionCrashed = TealiumLifecycleSession(wakeDate: start)
 
         var lifecycle = TealiumLifecycle()
         _ = lifecycle.newLaunch(at: start, overrideSession: nil)
 
         // Double checking that we aren't returning "true" if we're still in the first launch session.
-        let initialDetection = lifecycle.newCrashDetected()
+        let initialDetection = lifecycle.crashDetected
         XCTAssert(initialDetection == nil, "")
 
         // Check if first launch session resulted in a crash on subsequent launch
         _ = lifecycle.newLaunch(at: Date(), overrideSession: nil)
-        XCTAssert(lifecycle.newCrashDetected() == "true", "Should have logged crash as initial launch did not have sleep data. FirstSession: \(String(describing: lifecycle.sessions.first))")
+        XCTAssert(lifecycle.crashDetected == "true", "Should have logged crash as initial launch did not have sleep data. FirstSession: \(String(describing: lifecycle.sessions.first))")
 
         lifecycle.sessions[0].sleepDate = end
-        XCTAssert(lifecycle.newCrashDetected() == nil, "Should not have logged crash as initial launch has sleep data. SessionFirst: \(String(describing: lifecycle.sessions.first)) \nall sessions:\(lifecycle.sessions)")
+        XCTAssert(lifecycle.crashDetected == nil, "Should not have logged crash as initial launch has sleep data. SessionFirst: \(String(describing: lifecycle.sessions.first)) \nall sessions:\(lifecycle.sessions)")
 
         lifecycle.sessions.append(sessionCrashed)
         _ = lifecycle.newLaunch(at: Date(), overrideSession: nil)
-        XCTAssertTrue(lifecycle.newCrashDetected() == "true", "Crashed prior session not caught. Sessions: \(lifecycle.sessions)")
+        XCTAssertTrue(lifecycle.crashDetected == "true", "Crashed prior session not caught. Sessions: \(lifecycle.sessions)")
     }
 
     func dictionaryFromJSONFile(withName: String) -> [String: Any]? {

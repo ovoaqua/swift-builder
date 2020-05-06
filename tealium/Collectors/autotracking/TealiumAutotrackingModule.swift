@@ -102,11 +102,12 @@ public class TealiumAutotracking {
 }
 
 class TealiumAutotrackingModule: Collector {
+    
     var data: [String : Any]? = nil
     var delegate: TealiumModuleDelegate?
     var config: TealiumConfig
     
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorage?, completion: () -> Void) {
+    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: () -> Void) {
         self.delegate = delegate
         self.config = config
         let eventName = NSNotification.Name(TealiumAutotrackingKey.eventNotificationName)

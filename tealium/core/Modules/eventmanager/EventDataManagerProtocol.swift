@@ -8,6 +8,10 @@
 
 import Foundation
 
+public protocol TimestampCollection {
+    var currentTimeStamps: [String: Any] { get }
+}
+
 public protocol EventDataManagerProtocol {
     var allEventData: [String: Any] { get set }
     var allSessionData: [String: Any] { get }
