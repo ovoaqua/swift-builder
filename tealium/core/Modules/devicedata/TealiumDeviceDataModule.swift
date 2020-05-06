@@ -35,7 +35,9 @@ class DeviceDataModule: Collector {
         }
     }
 
-    var isMemoryEnabled = false
+    var isMemoryEnabled: Bool {
+        config.memoryReportingEnabled
+    }
     var deviceDataCollection: TealiumDeviceDataCollection
     var cachedData = [String: Any]()
     var config: TealiumConfig

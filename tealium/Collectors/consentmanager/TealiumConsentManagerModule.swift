@@ -11,13 +11,11 @@ import Foundation
 import TealiumCore
 #endif
 
-class TealiumConsentManagerModule: TealiumModule, DispatchValidator {
+class TealiumConsentManagerModule: Collector, DispatchValidator {
     
     var id: String = ""
-    
-    
-    func shouldPurge(request: TealiumRequest) -> Bool {
-        return true
+    var data: [String: Any] {
+        consentManager.getUserConsentPreferences()?.toDictionary()
     }
     
     let consentManager = TealiumConsentManager()
@@ -150,7 +148,7 @@ class TealiumConsentManagerModule: TealiumModule, DispatchValidator {
         }
         switch consentManager.getTrackingStatus() {
             case .trackingQueued:
-                return (true, addConsentDataToTrack(request).trackDictionary)
+                return (true, nil)
             // yes, user has allowed tracking
             case .trackingAllowed:
                 return (false, addConsentDataToTrack(request).trackDictionary)
@@ -164,6 +162,10 @@ class TealiumConsentManagerModule: TealiumModule, DispatchValidator {
     
     func shouldDrop(request: TealiumRequest) -> Bool {
         false
+    }
+    
+    func shouldPurge(request: TealiumRequest) -> Bool {
+        return true
     }
 
     /// Decides whether a tracking request can be completed based on current consent status.￼

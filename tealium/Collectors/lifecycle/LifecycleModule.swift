@@ -38,6 +38,7 @@ public class LifecycleModule: Collector {
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: () -> Void) {
+        self.delegate = delegate
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
                                                              forModule: "lifecycle",
                                                              isCritical: true)
@@ -72,6 +73,7 @@ public class LifecycleModule: Collector {
         guard var lifecycle = self.lifecycle else {
             return
         }
+
         switch type {
         case .launch:
             if enabledPrior == true { return }
@@ -85,6 +87,7 @@ public class LifecycleModule: Collector {
                 overrideSession: nil)
         }
         self.lifecycle = lifecycle
+
         lifecycleData[LifecycleKey.autotracked] = autotracked
         requestTrack(data: lifecycleData)
     }
@@ -135,7 +138,7 @@ public class LifecycleModule: Collector {
                                              optionalData: data)
         let track = TealiumTrackRequest(data: trackData,
                                         completion: nil)
-        delegate.tealiumModuleRequests(module: nil, process: track)
+        delegate.requestTrack(track)
     }
 }
 

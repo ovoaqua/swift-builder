@@ -14,13 +14,6 @@ import UIKit
 
 public class TealiumDeviceData: TealiumDeviceDataCollection {
 
-    #if os(iOS)
-    class var sharedApplication: UIApplication? {
-        let selector = NSSelectorFromString("sharedApplication")
-        return UIApplication.perform(selector)?.takeUnretainedValue() as? UIApplication
-    }
-    #endif
-
     // needed for use by other modules
     public init() {
     }

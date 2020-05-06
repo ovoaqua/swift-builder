@@ -104,7 +104,7 @@ extension TealiumConfig: Equatable {
         if lhs.environment != rhs.environment { return false }
         let lhsKeys = lhs.optionalData.keys.sorted()
         let rhsKeys = rhs.optionalData.keys.sorted()
-        if lhs.modulesList != rhs.modulesList { return false }
+//        if lhs.modulesList != rhs.modulesList { return false }
         if lhsKeys.count != rhsKeys.count { return false }
         for (index, key) in lhsKeys.enumerated() {
             if key != rhsKeys[index] { return false }
@@ -120,31 +120,31 @@ extension TealiumConfig: Equatable {
 
 public extension TealiumConfig {
 
-    /// Get the existing modules list assigned to this config object.
-    ///
-    /// - Returns: TealiumModulesList as an optional.
-    @available(*, deprecated, message: "Please switch to config.modulesList")
-    func getModulesList() -> TealiumModulesList? {
-        modulesList
-    }
-
-    /// Set a net modules list to this config object.
-    ///￼
-    /// - Parameter list: The TealiumModulesList to assign.
-    @available(*, deprecated, message: "Please switch to config.modulesList")
-    func setModulesList(_ list: TealiumModulesList ) {
-        modulesList = list
-    }
-
-    var modulesList: TealiumModulesList? {
-        get {
-            optionalData[TealiumModulesListKey.config] as? TealiumModulesList
-        }
-
-        set {
-            optionalData[TealiumModulesListKey.config] = newValue
-        }
-    }
+//    /// Get the existing modules list assigned to this config object.
+//    ///
+//    /// - Returns: TealiumModulesList as an optional.
+//    @available(*, deprecated, message: "Please switch to config.modulesList")
+//    func getModulesList() -> TealiumModulesList? {
+//        modulesList
+//    }
+//
+//    /// Set a net modules list to this config object.
+//    ///￼
+//    /// - Parameter list: The TealiumModulesList to assign.
+//    @available(*, deprecated, message: "Please switch to config.modulesList")
+//    func setModulesList(_ list: TealiumModulesList ) {
+//        modulesList = list
+//    }
+//
+//    var modulesList: TealiumModulesList? {
+//        get {
+//            optionalData[TealiumModulesListKey.config] as? TealiumModulesList
+//        }
+//
+//        set {
+//            optionalData[TealiumModulesListKey.config] = newValue
+//        }
+//    }
 }
 
 // MARK: Logger
@@ -253,6 +253,28 @@ public extension TealiumConfig {
 
         set {
             optionalData[TealiumKey.libraryEnabled] = newValue
+        }
+    }
+    
+    /// If `false`, the entire library is disabled, and no tracking calls are sent.
+    var isTagManagementEnabled: Bool? {
+        get {
+            optionalData[TealiumKey.tagManagementModuleName] as? Bool
+        }
+
+        set {
+            optionalData[TealiumKey.tagManagementModuleName] = newValue
+        }
+    }
+    
+    /// If `false`, the entire library is disabled, and no tracking calls are sent.
+    var isCollectEnabled: Bool? {
+        get {
+            optionalData[TealiumKey.collectModuleName] as? Bool
+        }
+
+        set {
+            optionalData[TealiumKey.collectModuleName] = newValue
         }
     }
 

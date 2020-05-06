@@ -101,34 +101,18 @@ public class TealiumAutotracking {
     }
 }
 
-class TealiumAutotrackingModule: TealiumModule {
-
-    var notificationsEnabled = false
-    let autotracking = TealiumAutotracking()
-
-    // MARK: 
-    // MARK: SUBCLASS OVERIDES
-
-    override class func moduleConfig() -> TealiumModuleConfig {
-        return TealiumModuleConfig(name: TealiumAutotrackingKey.moduleName,
-                                   priority: 300,
-                                   build: 4,
-                                   enabled: true)
-    }
-
-    override func handle(_ request: TealiumRequest) {
-        if let request = request as? TealiumEnableRequest {
-            enable(request)
-        } else if let request = request as? TealiumDisableRequest {
-            disable(request)
-        } else {
-            didFinishWithNoResponse(request)
-        }
-    }
-
-    override func enable(_ request: TealiumEnableRequest) {
-        isEnabled = true
-
+class TealiumAutotrackingModule: Collector {
+    
+    var data: [String : Any]? = nil
+    var delegate: TealiumModuleDelegate
+    var config: TealiumConfig
+    
+    required init(config: TealiumConfig,
+                  delegate: TealiumModuleDelegate,
+                  diskStorage: TealiumDiskStorageProtocol?,
+                  completion: () -> Void) {
+        self.delegate = delegate
+        self.config = config
         let eventName = NSNotification.Name(TealiumAutotrackingKey.eventNotificationName)
         NotificationCenter.default.addObserver(self, selector: #selector(requestEventTrack(sender:)), name: eventName, object: nil)
 
@@ -136,23 +120,14 @@ class TealiumAutotrackingModule: TealiumModule {
         NotificationCenter.default.addObserver(self, selector: #selector(requestViewTrack(sender:)), name: viewName, object: nil)
 
         notificationsEnabled = true
-        if !request.bypassDidFinish {
-            didFinish(request)
-        }
     }
-
-    override func disable(_ request: TealiumDisableRequest) {
-        isEnabled = false
-
-        if notificationsEnabled == true {
-            // swiftlint:disable notification_center_detachment
-            NotificationCenter.default.removeObserver(self)
-            // swiftlint:enable notification_center_detachment
-            notificationsEnabled = false
-        }
-
-        didFinish(request)
-    }
+    
+    static var moduleId: String = TealiumAutotrackingKey.moduleName
+    
+    
+    
+    var notificationsEnabled = false
+    let autotracking = TealiumAutotracking()
 
     // MARK: 
     // MARK: INTERNAL
@@ -212,12 +187,16 @@ class TealiumAutotrackingModule: TealiumModule {
         let track = TealiumTrackRequest(data: data,
                                         completion: nil)
 
-        self.delegate?.tealiumModuleRequests(module: self, process: track)
+        delegate.requestTrack(track)
     }
 
+    
     deinit {
         if notificationsEnabled == true {
+            // swiftlint:disable notification_center_detachment
             NotificationCenter.default.removeObserver(self)
+            // swiftlint:enable notification_center_detachment
+            notificationsEnabled = false
         }
     }
 

@@ -25,7 +25,7 @@ class TealiumConnectivity {
     var config: TealiumConfig?
     
     init (config: TealiumConfig) {
-        self.config = config.copy
+        self.config = config
         if let interval = config.connectivityRefreshInterval {
             refreshConnectivityStatus(interval)
         } else {

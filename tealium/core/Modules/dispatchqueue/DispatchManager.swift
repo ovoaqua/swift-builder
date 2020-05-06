@@ -16,6 +16,7 @@ class DispatchManager: TealiumConnectivityDelegate {
     
     var dispatchers = [Dispatcher]()
     var dispatchValidators = [DispatchValidator]()
+    var dispatchListeners = [DispatchListener]()
     var logger: TealiumLoggerProtocol?
     var delegate: TealiumModuleDelegate?
     var persistentQueue: TealiumPersistentDispatchQueue!
@@ -85,6 +86,7 @@ class DispatchManager: TealiumConnectivityDelegate {
     
     init(dispatchers: [Dispatcher]?,
          dispatchValidators: [DispatchValidator]?,
+         dispatchListeners: [DispatchListener]?,
          delegate: TealiumModuleDelegate?,
          logger: TealiumLoggerProtocol?,
          config: TealiumConfig) {
@@ -97,6 +99,10 @@ class DispatchManager: TealiumConnectivityDelegate {
         
         if let dispatchValidators = dispatchValidators {
             self.dispatchValidators = dispatchValidators
+        }
+        
+        if let listeners = dispatchListeners {
+            self.dispatchListeners = listeners
         }
         
         if let logger = logger {
@@ -130,6 +136,7 @@ class DispatchManager: TealiumConnectivityDelegate {
         }
         
         if checkShouldDrop(request: newRequest) {
+            // TODO: Logging
             return
         }
         
@@ -195,32 +202,33 @@ class DispatchManager: TealiumConnectivityDelegate {
     }
     
     func runDispatchers (for request: TealiumRequest) {
-        // TODO: Have dispatchers return Result type and log after all dispatchers finished.
-        var errorResponses = [(module: String, error: Error)]()
-        var successResponses = [String]()
-        let dispatchersResponded = Atomic(value: 0)
+        if request is TealiumTrackRequest || request is TealiumBatchTrackRequest {
+            self.dispatchListeners.forEach {
+                $0.willTrack(request: request)
+            }
+        }
+        self.logTrackSuccess([], request: request)
         dispatchers.forEach { module in
             let moduleId = type(of: module).moduleId
             module.dynamicTrack(request) { result in
-                dispatchersResponded.value += 1
                 switch result {
                 case .failure(let error):
-                    errorResponses.append((module: moduleId, error: error))
+                    self.logModuleResponse(for: moduleId, success: false, error: error)
                 case .success:
-                    successResponses.append(moduleId)
+                    self.logModuleResponse(for: moduleId, success: true, error: nil)
                 }
-                if dispatchersResponded.value == self.dispatchers.count {
-                    if successResponses.count > 0 {
-                        self.logTrackSuccess(successResponses, request: request)
-                    }
-                    if errorResponses.count > 0 {
-                        self.logTrackFailure(errorResponses, request: request)
-                    }
-                }
+                
             }
         }
-//        logTrackSuccess(successResponses, request: request)
-        
+    }
+    
+    func logModuleResponse (for module: String,
+                            success: Bool,
+                            error: Error?) {
+        let message = success ? "Successful Track": "Failed with error: \(error?.localizedDescription ?? "")"
+        let logLevel: TealiumLogLevel = success ? .info : .error
+        let logRequest = TealiumLogRequest(title: module, message: message, info: nil, logLevel: logLevel, category: .track)
+        logger?.log(logRequest)
     }
     
     func logTrackSuccess(_ success: [String],
@@ -234,7 +242,8 @@ class DispatchManager: TealiumConnectivityDelegate {
         default:
             return
         }
-        let logRequest = TealiumLogRequest(title: "Successful Track", messages: success.map { "\($0) Successful Track"}, info: logInfo, logLevel: .info, category: .track)
+//        let logRequest = TealiumLogRequest(title: "Successful Track", messages: success.map { "\($0) Successful Track"}, info: logInfo, logLevel: .info, category: .track)
+        let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Sending dispatch", info: logInfo, logLevel: .info, category: .track)
         logger?.log(logRequest)
     }
 

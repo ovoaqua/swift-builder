@@ -12,8 +12,8 @@ import TealiumCore
 import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
-import TealiumRemoteCommands
-import TealiumVisitorService
+//import TealiumRemoteCommands
+//import TealiumVisitorService
 import TealiumLifecycle
 
 extension String: Error {}
@@ -49,11 +49,11 @@ class TealiumHelper: NSObject {
         config.searchAdsEnabled = true
 //        config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
-        config.shouldUseRemotePublishSettings = false
+        config.shouldUseRemotePublishSettings = true
         // config.batchSize = 5
         // config.dispatchAfter = 5
         // config.dispatchQueueLimit = 200
-        // config.batchingEnabled = true
+//         config.batchingEnabled = true
         // config.visitorServiceRefreshInterval = 0
         // config.visitorServiceOverrideProfile = "main"
         // OPTIONALLY add an external delegate
@@ -65,14 +65,15 @@ class TealiumHelper: NSObject {
         #else
         // OPTIONALLY disable a particular module by name
         
-        let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: [.autotracking, .consentmanager])
-        config.modulesList = list
+//        let list = TealiumModulesList(isWhitelist: false,
+//                                      moduleNames: [.autotracking, .consentmanager])
+//        config.modulesList = list
         config.diskStorageEnabled = true
         //config.visitorServiceDelegate = self
         config.remoteAPIEnabled = true
 //        config.logLevel = .verbose
         config.shouldCollectTealiumData = true
+        config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
         logger = config.logger
         //config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"

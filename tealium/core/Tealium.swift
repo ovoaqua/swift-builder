@@ -52,7 +52,7 @@ public class Tealium {
             guard self.config.isEnabled == nil || self.config.isEnabled == true else {
                 return
             }
-            self.enable(tealiumInstance: self)
+//            self.enable(tealiumInstance: self)
             TealiumInstanceManager.shared.addInstance(self, config: config)
         }
     }
@@ -62,18 +62,18 @@ public class Tealium {
         self.init(config: config, enableCompletion: nil)
     }
 
-    /// Enable call used after disable() to re-enable library activites. Unnecessary to call after
-    /// initial init. Does NOT override individual module enabled flags.
-    public func enable(tealiumInstance: Tealium? = nil) {
-        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-            guard let self = self else {
-                return
-            }
-//            self.modulesManager.enable(config: self.config,
-//                                       enableCompletion: self.enableCompletion,
-//                                       tealiumInstance: tealiumInstance)
-        }
-    }
+//    /// Enable call used after disable() to re-enable library activites. Unnecessary to call after
+//    /// initial init. Does NOT override individual module enabled flags.
+//    public func enable(tealiumInstance: Tealium? = nil) {
+//        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+//            guard let self = self else {
+//                return
+//            }
+////            self.modulesManager.enable(config: self.config,
+////                                       enableCompletion: self.enableCompletion,
+////                                       tealiumInstance: tealiumInstance)
+//        }
+//    }
 
     /// Update an actively running library with new configuration object.
     ///￼
@@ -81,9 +81,10 @@ public class Tealium {
     public func update(config: TealiumConfig) {
         TealiumQueues.backgroundConcurrentQueue.write {
 //            self.modulesManager.update(config: config.copy, oldConfig: self.config.copy)
-            let updateConfigRequest = TealiumUpdateConfigRequest(config: config)
-            self.newModulesManager.tealiumModuleRequests(module: nil, process: updateConfigRequest)
+//            let updateConfigRequest = TealiumUpdateConfigRequest(config: config)
+//            self.newModulesManager.tealiumModuleRequests(module: nil, process: updateConfigRequest)
 //            self.modulesManager.tealiumModuleRequests(module: nil, process: updateConfigRequest)
+            self.newModulesManager.config = config
             self.config = config
         }
     }
@@ -131,7 +132,7 @@ public class Tealium {
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
-            self.newModulesManager.track(track)
+            self.newModulesManager.sendTrack(track)
 //            self.modulesManager.track(track)
         }
     }
