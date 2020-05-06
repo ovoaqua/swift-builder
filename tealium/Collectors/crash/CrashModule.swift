@@ -12,6 +12,7 @@ import TealiumCore
 #endif
 
 public class CrashModule: Collector, DispatchListener {
+    // TODO: Only added as an example
     public func willTrack(request: TealiumRequest) {
         print("willtrack")
     }
