@@ -193,10 +193,6 @@ class DispatchManager: TealiumConnectivityDelegate {
     }
     
     func runDispatchers (for request: TealiumRequest) {
-        // TODO: Have dispatchers return Result type and log after all dispatchers finished.
-        var errorResponses = [(module: String, error: Error)]()
-        var successResponses = [String]()
-        let dispatchersResponded = Atomic(value: 0)
         self.logTrackSuccess([], request: request)
         dispatchers.forEach { module in
             let moduleId = type(of: module).moduleId
@@ -210,8 +206,6 @@ class DispatchManager: TealiumConnectivityDelegate {
                 
             }
         }
-//        logTrackSuccess(successResponses, request: request)
-        
     }
     
     func logModuleResponse (for module: String,

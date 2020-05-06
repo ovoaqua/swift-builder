@@ -138,7 +138,7 @@ public class LifecycleModule: Collector {
                                              optionalData: data)
         let track = TealiumTrackRequest(data: trackData,
                                         completion: nil)
-        delegate.tealiumModuleRequests(module: nil, process: track)
+        delegate.requestTrack(track)
     }
 }
 

@@ -10,14 +10,15 @@ import Foundation
 
 public class NewModulesManager {
 
-    var knownCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
+    var coreCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule", "TealiumAutotracking.TealiumAutotrackingModule"]
     var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
     var dispatchManager: DispatchManager?
-    var knownDispatchValidators: [DispatchValidator.Type] = []
+    
     var dispatchers = [Dispatcher]()
+    var dispatchListeners = [DispatchListener]()
     var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
     public var modules = [Module]()
@@ -40,32 +41,71 @@ public class NewModulesManager {
             self.logger = config.logger
             self.eventDataManager = eventDataManager
             self.setupDispatchers(config: config)
-            self.setupDispatchValidators(config: config)
+//            self.setupDispatchValidators(config: config)
             self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, delegate: self, logger: self.logger, config: config)
             self.modules += self.collectors
             self.modules += self.dispatchers
+            self.setupCollectors(config: config)
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
                 ["Collectors Initialized: \(self.collectors.map { type(of: $0).moduleId })",
                 "Dispatch Validators Initialized: \(self.dispatchValidators.map { $0.id })",
                 "Dispatchers Initialized: \(self.dispatchers.map { type(of: $0).moduleId })"
             ], info: nil, logLevel: .info, category: .`init`)
             self.logger?.log(logRequest)
-            
-            self.setupCollectors(config: config)
         }
     }
 
+    func addCollector(_ collector: Collector) {
+        if let listener = collector as? DispatchListener {
+            addDispatchListener(listener)
+        }
+        
+        if let dispatchValidator = collector as? DispatchValidator {
+            addDispatchValidator(dispatchValidator)
+        }
+        
+        guard collectors.contains(where: {
+            type(of: $0) == type(of: collector)
+        }) == false else {
+            return
+        }
+        collectors.append(collector)
+    }
+    
+    func addDispatchListener(_ listener: DispatchListener) {
+        guard dispatchListeners.contains(where: {
+            type(of: $0) == type(of: listener)
+        }) == false else {
+            return
+        }
+        dispatchListeners.append(listener)
+    }
+    
+    func addDispatchValidator(_ validator: DispatchValidator) {
+        guard dispatchValidators.contains(where: {
+            type(of: $0) == type(of: validator)
+        }) == false else {
+            return
+        }
+        self.dispatchValidators.append(validator)
+    }
+    
+    func addDispatcher(_ dispatcher: Dispatcher) {
+        guard dispatchers.contains(where: {
+            type(of: $0) == type(of: dispatcher)
+        }) == false else {
+            return
+        }
+        dispatchers.append(dispatcher)
+    }
+    
     func setupCollectors(config: TealiumConfig) {
-        knownCollectors.forEach { knownCollector in
-            let collector = knownCollector.init(config: config, delegate: self, diskStorage: nil) {
+        coreCollectors.forEach { coreCollector in
+            let collector = coreCollector.init(config: config, delegate: self, diskStorage: nil) {
 
             }
-            guard collectors.contains(where: {
-                type(of: $0) == knownCollector
-            }) == false else {
-                return
-            }
-            collectors.append(collector)
+            
+            addCollector(collector)
         }
 
         optionalCollectors.forEach { optionalCollector in
@@ -76,55 +116,47 @@ public class NewModulesManager {
             let collector = moduleRef.init(config: config, delegate: self, diskStorage: nil) {
 
             }
-            guard self.collectors.contains(where: {
-                type(of: $0) == moduleRef
-            }) == false else {
-                return
-            }
-            collectors.append(collector)
-        }
-    }
-    
-    func setupDispatchValidators(config: TealiumConfig) {
-        knownDispatchValidators.forEach { dispatchValidator in
-            let validator = dispatchValidator.init(config: config, delegate: self)
-            guard self.dispatchValidators.contains(where: {
-                type(of: $0) == dispatchValidator
-            }) == false else {
-                return
-            }
-            self.dispatchValidators.append(validator)
+            addCollector(collector)
         }
     }
     
     func setupDispatchers(config: TealiumConfig) {
-        knownDispatchers.forEach { knownDispatcher in
-            guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
+        knownDispatchers.forEach { coreDispatcher in
+            guard let moduleRef = objc_getClass(coreDispatcher) as? Dispatcher.Type else {
                 return
             }
-            if knownDispatcher.contains("TagManagement") {
+            if coreDispatcher.contains("TagManagement") {
                 self.eventDataManager?.tagManagementIsEnabled = true
             }
             
             let dispatcher = moduleRef.init(config: config, delegate: self, eventDataManager: eventDataManager) { result in
                 switch result {
-                case .failure(let error):
+                case .failure:
                     print("log error")
                 default:
                     break
                 }
             }
 
-            guard self.dispatchers.contains(where: {
-                type(of: $0) == moduleRef
-            }) == false else {
-                return
-            }
-            dispatchers.append(dispatcher)
+           addDispatcher(dispatcher)
         }
     }
+    
+    // TODO: allow dispatch validators to be set up from config, replaces delegate
+    //    func setupDispatchValidators(config: TealiumConfig) {
+//        config.dispatchValidators.forEach {
+//            self.addDispatchValidator($0)
+//        }
+//    }
+    
+        // TODO: allow dispatch listeners to be set up from config
+    //    func setupListeners(config: TealiumConfig) {
+    //        config.dispatchListeners.forEach {
+    //            self.addDispatchListener($0)
+    //        }
+    //    }
 
-    func track(_ request: TealiumTrackRequest) {
+    func sendTrack(_ request: TealiumTrackRequest) {
         let requestData = gatherTrackData(for: request.trackDictionary)
         let newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
         dispatchManager?.processTrack(newRequest)
@@ -138,6 +170,10 @@ public class NewModulesManager {
             }
             allData.value += data
         }
+        
+        if let eventData = eventDataManager?.allEventData {
+            allData.value += eventData
+        }
 
         if let data = data {
             allData.value += data
@@ -145,26 +181,13 @@ public class NewModulesManager {
         return allData.value
     }
     
-
-    
 }
 
 
 extension NewModulesManager: TealiumModuleDelegate {
-    public func tealiumModuleFinished(module: Module, process: TealiumRequest) {
-        
-    }
-    
-    public func tealiumModuleRequests(module: Module?, process: TealiumRequest) {
-        switch process {
-        case let request as TealiumTrackRequest:
-//            sendTrack(request: request)
-            track(request)
-//            let logRequest = TealiumLogRequest(title: "Module Delegate", message: "Sending Batch Track Request", info: request.trackDictionary, logLevel: .info, category: .track)
-//            self.logger?.log(logRequest)
-        default:
-            return
+    public func requestTrack(_ track: TealiumTrackRequest) {
+        TealiumQueues.backgroundConcurrentQueue.write {
+            self.sendTrack(track)
         }
     }
-    
 }

@@ -22,13 +22,13 @@ public class CollectModule: Dispatcher {
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          eventDataManager: EventDataManagerProtocol?,
-                         completion: @escaping (DispatcherResult) -> Void) {
+                         completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
         updateCollectDispatcher(config: config, completion: nil)
         defer {
-            completion(.success(()))
+            completion?(.success(true))
         }
     }
 
@@ -134,7 +134,7 @@ public class CollectModule: Dispatcher {
             //  modified track data.
 //            self.didFinish(track,
 //                           info: trackInfo)
-            completion?(.success(()))
+            completion?(.success(true))
         })
     }
 
@@ -149,8 +149,9 @@ public class CollectModule: Dispatcher {
         }
 
         guard let compressed = request.compressed() else {
-            let logRequest = TealiumReportRequest(message: "Batch track request failed. Will not be sent.")
-            delegate.tealiumModuleRequests(module: nil, process: logRequest)
+//            let logRequest = TealiumReportRequest(message: "Batch track request failed. Will not be sent.")
+            // TODO: log error
+//            delegate.tealiumModuleRequests(module: nil, process: logRequest)
             return
         }
 
@@ -162,7 +163,7 @@ public class CollectModule: Dispatcher {
                 return
             }
 
-            completion?(.success(()))
+            completion?(.success(true))
         }
     }
 

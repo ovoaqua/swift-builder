@@ -104,10 +104,13 @@ public class TealiumAutotracking {
 class TealiumAutotrackingModule: Collector {
     
     var data: [String : Any]? = nil
-    var delegate: TealiumModuleDelegate?
+    var delegate: TealiumModuleDelegate
     var config: TealiumConfig
     
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: () -> Void) {
+    required init(config: TealiumConfig,
+                  delegate: TealiumModuleDelegate,
+                  diskStorage: TealiumDiskStorageProtocol?,
+                  completion: () -> Void) {
         self.delegate = delegate
         self.config = config
         let eventName = NSNotification.Name(TealiumAutotrackingKey.eventNotificationName)
@@ -184,7 +187,7 @@ class TealiumAutotrackingModule: Collector {
         let track = TealiumTrackRequest(data: data,
                                         completion: nil)
 
-        self.delegate?.tealiumModuleRequests(module: self, process: track)
+        delegate.requestTrack(track)
     }
 
     

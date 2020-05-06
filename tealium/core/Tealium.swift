@@ -132,7 +132,7 @@ public class Tealium {
             trackData += self.eventDataManager.allEventData
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
-            self.newModulesManager.track(track)
+            self.newModulesManager.sendTrack(track)
 //            self.modulesManager.track(track)
         }
     }

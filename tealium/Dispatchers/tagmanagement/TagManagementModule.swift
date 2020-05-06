@@ -26,7 +26,7 @@ public class TagManagementModule: Dispatcher {
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          eventDataManager: EventDataManagerProtocol?,
-                         completion: @escaping (DispatcherResult) -> Void) {
+                         completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate
         self.eventDataManager = eventDataManager
@@ -40,12 +40,12 @@ public class TagManagementModule: Dispatcher {
                 if error != nil {
                     self.errorState.incrementAndGet()
                     self.webViewState?.value = .loadFailure
-                    completion(.failure(TealiumTagManagementError.webViewNotYetReady))
+                    completion?(.failure(TealiumTagManagementError.webViewNotYetReady))
                 } else {
                     self.errorState.resetToZero()
                     self.webViewState = Atomic(value: .loadSuccess)
                     self.flushQueue()
-                    completion(.success(()))
+                    completion?(.success(true))
                 }
             }
         }
@@ -74,7 +74,7 @@ public class TagManagementModule: Dispatcher {
                     }
 //                    self.didFinish(track,
 //                                   info: info)
-                    completion?(.success(()))
+                    completion?(.success(true))
                 }
             }
             #endif
@@ -90,7 +90,7 @@ public class TagManagementModule: Dispatcher {
                         }
                         return
                     }
-                    completion?(.success(()))
+                    completion?(.success(true))
                 }
             }
             #endif

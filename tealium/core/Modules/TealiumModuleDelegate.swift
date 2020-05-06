@@ -10,11 +10,9 @@ import Foundation
 
 public protocol TealiumModuleDelegate: class {
 
-    /// Called by module requesting an library operation.￼
+    /// Called by a module send a new track request to the Dispatch Manager
     ///
-    /// - Parameter module: Module making request.￼
-    /// - Parameter process: TealiumModuleProcessType requested.
-    func tealiumModuleRequests(module: Module?,
-                               process: TealiumRequest)
+    /// - Parameter track: TealiumTrackRequest
+    func requestTrack(_ track: TealiumTrackRequest)
     
 }

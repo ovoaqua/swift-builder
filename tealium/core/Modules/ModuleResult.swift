@@ -8,6 +8,6 @@
 
 import Foundation
 
-public typealias ModuleResult = Result<Void, Error>
+public typealias ModuleResult = Result<Bool, Error>
 
 public typealias ModuleCompletion = ((ModuleResult) -> Void)
