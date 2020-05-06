@@ -19,7 +19,7 @@ public protocol EventDataManagerProtocol {
     var secondsBetweenTrackEvents: TimeInterval { get set }
     var sessionId: String? { get set }
     var sessionData: [String: Any] { get set }
-    var sessionStarter: SessionStarterProtocol { get set }
+    var sessionStarter: SessionStarterProtocol { get }
     var tagManagementIsEnabled: Bool { get set }
     func add(data: [String: Any], expiration: Expiration)
     func add(key: String, value: Any, expiration: Expiration)

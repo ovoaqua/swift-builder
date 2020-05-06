@@ -120,6 +120,8 @@ class TealiumHelper: NSObject {
 
             //sessionPersistence.deleteData(forKeys: ["hello", "test"])
             
+            persitence.add(value: "hello", forKey: "itsme", expiration: .afterCustom((.months, 1)))
+            
             print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
 
             print("Persistent Data: \(String(describing: persitence.dictionary))")
