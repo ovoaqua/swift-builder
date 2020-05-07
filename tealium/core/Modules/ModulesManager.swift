@@ -108,7 +108,7 @@ public class ModulesManager {
     
     func setupCollectors(config: TealiumConfig) {
         coreCollectors.forEach { coreCollector in
-            let collector = coreCollector.init(config: config, delegate: self, diskStorage: nil) {
+            let collector = coreCollector.init(config: config, delegate: self, diskStorage: nil) { result in
 
             }
             
@@ -120,7 +120,7 @@ public class ModulesManager {
                 return
             }
             
-            let collector = moduleRef.init(config: config, delegate: self, diskStorage: nil) {
+            let collector = moduleRef.init(config: config, delegate: self, diskStorage: nil) { result in
 
             }
             addCollector(collector)

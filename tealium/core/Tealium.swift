@@ -43,6 +43,8 @@ public class Tealium {
                 self.config = remoteConfig
             }
         }
+        // TODO: Return any init errors here
+        enableCompletion?(.success(true))
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
                 return

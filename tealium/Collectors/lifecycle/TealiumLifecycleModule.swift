@@ -37,7 +37,7 @@ public class TealiumLifecycleModule: Collector {
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
-                         completion: () -> Void) {
+                         completion: ModuleCompletion) {
         self.delegate = delegate
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
                                                              forModule: "lifecycle",
@@ -47,6 +47,7 @@ public class TealiumLifecycleModule: Collector {
         if config.lifecycleAutoTrackingEnabled {
             Tealium.lifecycleListeners.addDelegate(delegate: self)
         }
+        completion(.success(true))
     }
     
     var lifecycle: TealiumLifecycle? {

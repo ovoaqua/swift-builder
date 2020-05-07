@@ -13,5 +13,5 @@ public protocol Collector: TealiumModule {
     init(config: TealiumConfig,
          delegate: TealiumModuleDelegate,
          diskStorage: TealiumDiskStorageProtocol?,
-         completion: () -> Void)
+         completion: ModuleCompletion)
 }

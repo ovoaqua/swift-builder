@@ -25,7 +25,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
         consentManager.getUserConsentPreferences()?.dictionary
     }
     
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: () -> Void) {
+    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: ModuleCompletion) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
                                                              forModule: TealiumConsentConstants.moduleName,
@@ -36,6 +36,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
             self.ready = true
         }
         consentManager.addConsentDelegate(self)
+        completion(.success(true))
     }
 
 //    override class func moduleConfig() -> TealiumModuleConfig {

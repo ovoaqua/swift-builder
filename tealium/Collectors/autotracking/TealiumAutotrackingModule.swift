@@ -110,7 +110,7 @@ class TealiumAutotrackingModule: Collector {
     required init(config: TealiumConfig,
                   delegate: TealiumModuleDelegate,
                   diskStorage: TealiumDiskStorageProtocol?,
-                  completion: () -> Void) {
+                  completion: ModuleCompletion) {
         self.delegate = delegate
         self.config = config
         let eventName = NSNotification.Name(TealiumAutotrackingKey.eventNotificationName)
@@ -120,6 +120,7 @@ class TealiumAutotrackingModule: Collector {
         NotificationCenter.default.addObserver(self, selector: #selector(requestViewTrack(sender:)), name: viewName, object: nil)
 
         notificationsEnabled = true
+        completion(.success(true))
     }
     
     let moduleId: String = TealiumAutotrackingKey.moduleName

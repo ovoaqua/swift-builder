@@ -30,21 +30,19 @@ public class TealiumCrashModule: Collector {
                       delegate: TealiumModuleDelegate,
                       diskStorage: TealiumDiskStorageProtocol?,
         crashReporter: CrashReporterProtocol) {
-        self.init(config: config, delegate: delegate, diskStorage: diskStorage) {}
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
         self.crashReporter = crashReporter
     }
     
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
-                         completion: () -> Void) {
-        defer {
-            completion()
-        }
+                         completion: ModuleCompletion) {
         self.delegate = delegate
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "crash", isCritical: false)
         self.crashReporter = TealiumCrashReporter()
+        completion(.success(true))
     }
 
 }

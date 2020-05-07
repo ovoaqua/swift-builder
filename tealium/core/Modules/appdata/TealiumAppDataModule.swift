@@ -29,22 +29,18 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
     var logger: TealiumLoggerProtocol? {
         config.logger
     }
-    weak var delegate: TealiumModuleDelegate?
     
     public var config: TealiumConfig
 
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
-                         completion: () -> Void) {
-        defer {
-            completion()
-        }
-        self.delegate = delegate
+                         completion: ModuleCompletion) {
         self.config = config
         self.bundle = Bundle.main
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
         setExistingAppData()
+        completion(.success(true))
     }
 
     /// Retrieves existing data from persistent storage and stores in volatile memory.

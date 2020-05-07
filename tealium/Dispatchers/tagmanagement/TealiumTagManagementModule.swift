@@ -202,7 +202,7 @@ public class TealiumTagManagementModule: Dispatcher {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self.remoteCommandResponseObserver)
+        NotificationCenter.default.removeObserver(self.remoteCommandResponseObserver as Any)
     }
 
 }
