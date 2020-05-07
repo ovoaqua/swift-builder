@@ -29,7 +29,7 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
     var logger: TealiumLoggerProtocol? {
         config.logger
     }
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     
     public var config: TealiumConfig
 

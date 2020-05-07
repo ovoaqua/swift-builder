@@ -23,7 +23,7 @@ public extension Tealium {
 
     /// - Returns: `VisitorServiceManager` instance
     func visitorService() -> TealiumVisitorServiceManager? {
-        (newModulesManager.modules.first {
+        (modulesManager?.modules.first {
             type(of: $0) == TealiumVisitorServiceModule.self
         } as? TealiumVisitorServiceModule)?.visitorServiceManager as? TealiumVisitorServiceManager
     }

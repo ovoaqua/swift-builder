@@ -41,7 +41,7 @@ class DeviceDataModule: Collector {
     var deviceDataCollection: TealiumDeviceDataCollection
     var cachedData = [String: Any]()
     var config: TealiumConfig
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
 
     required init(config: TealiumConfig,
                   delegate: TealiumModuleDelegate,

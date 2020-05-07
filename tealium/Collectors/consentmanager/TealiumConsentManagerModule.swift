@@ -18,7 +18,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
     var config: TealiumConfig
     let consentManager = TealiumConsentManager()
     var ready: Bool = false
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
     
     var data: [String : Any]? {

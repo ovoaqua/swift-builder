@@ -65,7 +65,7 @@ class TealiumModulesManagerTests: XCTestCase {
                 return
             }
 
-            XCTAssert(modulesManager.allModulesReady(), "All modules not ready: \(String(describing: self.modulesManager?.modules))")
+            XCTAssert(modulesManager?.allModulesReady(), "All modules not ready: \(String(describing: self.modulesManager?.modules))")
         }, tealiumInstance: instance)
 
         self.wait(for: [enableExpectation], timeout: 5.0)
@@ -102,7 +102,7 @@ class TealiumModulesManagerTests: XCTestCase {
             for _ in 0..<iterations {
 
                 let modulesManager = TealiumModulesManager(defaultTealiumConfig)
-                modulesManager.enable(config: defaultTealiumConfig, enableCompletion: nil)
+                modulesManager?.enable(config: defaultTealiumConfig, enableCompletion: nil)
             }
         }
     }
@@ -207,8 +207,8 @@ class TealiumModulesManagerTests: XCTestCase {
 
     func testTrackWhenDisabled() {
         let modulesManager = TealiumModulesManager(testTealiumConfig)
-        modulesManager.enable(config: testTealiumConfig, enableCompletion: nil)
-        modulesManager.disable()
+        modulesManager?.enable(config: testTealiumConfig, enableCompletion: nil)
+        modulesManager?.disable()
         let trackExpectation = self.expectation(description: "track")
 
         let track = TealiumTrackRequest(data: [:]) { success, _, _ in
@@ -218,7 +218,7 @@ class TealiumModulesManagerTests: XCTestCase {
 
         }
 
-        modulesManager.track(track)
+        modulesManager?.track(track)
         self.wait(for: [trackExpectation],
                   timeout: 1.0)
 

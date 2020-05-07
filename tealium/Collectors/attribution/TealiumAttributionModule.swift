@@ -13,7 +13,7 @@ import TealiumCore
 
 class TealiumAttributionModule: Collector {
     let moduleId: String = "Attribution"
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var data: [String: Any]? {
         self.attributionData.allAttributionData
     }

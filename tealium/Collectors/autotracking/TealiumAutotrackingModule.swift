@@ -29,7 +29,7 @@ enum TealiumAutotrackingKey {
 public extension Tealium {
 
     func autotracking() -> TealiumAutotracking? {
-        (newModulesManager.modules.first {
+        (modulesManager?.modules.first {
             type(of: $0) == TealiumAutotrackingModule.self
             } as? TealiumAutotrackingModule)?.autotracking
     }
@@ -104,7 +104,7 @@ public class TealiumAutotracking {
 class TealiumAutotrackingModule: Collector {
     
     var data: [String : Any]? = nil
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var config: TealiumConfig
     
     required init(config: TealiumConfig,
@@ -187,7 +187,7 @@ class TealiumAutotrackingModule: Collector {
         let track = TealiumTrackRequest(data: data,
                                         completion: nil)
 
-        delegate.requestTrack(track)
+        delegate?.requestTrack(track)
     }
 
     

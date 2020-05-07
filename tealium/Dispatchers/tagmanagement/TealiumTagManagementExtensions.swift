@@ -117,7 +117,7 @@ public extension TealiumConfig {
 //
 //    /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
 //    func tagManagement() -> TealiumTagManagementProtocol? {
-//        guard let module = modulesManager.getModule(forName: TealiumTagManagementKey.moduleName) as? TagManagementModule else {
+//        guard let module = modulesManager?.getModule(forName: TealiumTagManagementKey.moduleName) as? TagManagementModule else {
 //            return nil
 //        }
 //

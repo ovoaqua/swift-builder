@@ -19,7 +19,7 @@ public class TealiumTagManagementModule: Dispatcher {
     var remoteCommandResponseObserver: NSObjectProtocol?
     var tagManagement: TealiumTagManagementProtocol?
     var webViewState: Atomic<TealiumWebViewState>?
-    public var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     public let moduleId: String = "Tag Management"
     
     public required init(config: TealiumConfig,
@@ -199,6 +199,10 @@ public class TealiumTagManagementModule: Dispatcher {
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self.remoteCommandResponseObserver)
     }
 
 }

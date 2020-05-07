@@ -17,7 +17,7 @@ import TealiumCore
 public extension Tealium {
 
     func lifecycle() -> TealiumLifecycleModule? {
-        newModulesManager.modules.first {
+        modulesManager?.modules.first {
             type(of: $0) == TealiumLifecycleModule.self
         } as? TealiumLifecycleModule
     }

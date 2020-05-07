@@ -15,7 +15,7 @@ public class TealiumCrashModule: Collector {
 
     public let moduleId: String = "Crash"
     var crashReporter: CrashReporterProtocol?
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
     public var config: TealiumConfig
     

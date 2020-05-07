@@ -15,7 +15,7 @@ public class TealiumCollectModule: Dispatcher {
     public let moduleId: String = "Collect"
     var collect: TealiumCollectProtocol?
     public var isReady = false
-    public var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     public var config: TealiumConfig
     
     public required init(config: TealiumConfig,

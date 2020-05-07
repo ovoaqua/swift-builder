@@ -10,7 +10,7 @@ import Foundation
 
 //public extension Tealium {
 //    func delegates() -> TealiumDelegates? {
-//        guard let module = modulesManager.getModule(forName: TealiumDelegateKey.moduleName) as? TealiumDelegateModule else {
+//        guard let module = modulesManager?.getModule(forName: TealiumDelegateKey.moduleName) as? TealiumDelegateModule else {
 //            return nil
 //        }
 //

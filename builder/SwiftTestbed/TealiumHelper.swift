@@ -155,6 +155,7 @@ class TealiumHelper: NSObject {
 
     func track(title: String, data: [String: Any]?) {
 //        tealium?.lifecycle()?.launch(at: Date())
+        tealium?.disable()
         tealium?.track(title: title,
                        data: data,
                        completion: { (success, info, error) in
@@ -168,6 +169,7 @@ class TealiumHelper: NSObject {
     }
 
     func trackView(title: String, data: [String: Any]?) {
+        self.start()
         tealium?.trackView(title: title,
                        data: data,
                        completion: { (success, info, error) in

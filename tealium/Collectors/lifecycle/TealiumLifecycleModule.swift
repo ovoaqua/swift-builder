@@ -23,7 +23,7 @@ import TealiumCore
 public class TealiumLifecycleModule: Collector {
 
     public let moduleId: String = "Lifecycle"
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var enabledPrior = false
     var lifecycleData = [String: Any]()
     var lastLifecycleEvent: LifecycleType?
@@ -138,7 +138,7 @@ public class TealiumLifecycleModule: Collector {
                                              optionalData: data)
         let track = TealiumTrackRequest(data: trackData,
                                         completion: nil)
-        delegate.requestTrack(track)
+        delegate?.requestTrack(track)
     }
 }
 

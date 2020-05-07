@@ -16,7 +16,7 @@ public class TealiumVisitorServiceModule: Collector, DispatchListener {
     public let moduleId: String = "Visitor Service"
     public var config: TealiumConfig
     public var data: [String : Any]? = nil
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
     var firstEventSent = false
     var visitorId: String?

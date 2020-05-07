@@ -16,7 +16,7 @@ public extension Tealium {
     func joinTrace(traceId: String) {
 //        self.config.optionalData[TealiumKey.traceId] = traceId
 //        let joinTraceRequest = TealiumJoinTraceRequest(traceId: traceId)
-//        self.modulesManager.tealiumModuleRequests(module: nil, process: joinTraceRequest)
+//        self.modulesManager?.tealiumModuleRequests(module: nil, process: joinTraceRequest)
         eventDataManager.addTrace(id: traceId)
     }
 
@@ -25,7 +25,7 @@ public extension Tealium {
     /// - Parameter killVisitorSession: Bool indicating whether the visitor session should be ended when the trace is left (default true).
     func leaveTrace(killVisitorSession: Bool = true) {
 //        let leaveTraceRequest = TealiumLeaveTraceRequest()
-//        self.modulesManager.tealiumModuleRequests(module: nil, process: leaveTraceRequest)
+//        self.modulesManager?.tealiumModuleRequests(module: nil, process: leaveTraceRequest)
         if killVisitorSession {
             self.killVisitorSession()
         }

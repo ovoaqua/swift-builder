@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class NewModulesManager {
+public class ModulesManager {
 
     var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.TealiumCrashModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule"]
@@ -188,10 +188,14 @@ public class NewModulesManager {
         return allData.value
     }
     
+    func disable() {
+        
+    }
+    
 }
 
 
-extension NewModulesManager: TealiumModuleDelegate {
+extension ModulesManager: TealiumModuleDelegate {
     public func requestTrack(_ track: TealiumTrackRequest) {
         TealiumQueues.backgroundConcurrentQueue.write {
             self.sendTrack(track)
