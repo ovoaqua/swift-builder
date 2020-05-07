@@ -13,276 +13,172 @@ import XCTest
 
 class ConsentManagerModuleUnitTests: XCTestCase {
 
-    var expectations = [XCTestExpectation]()
-    let waiter = XCTWaiter()
-    var currentTest = ""
-    var allTestsFinished = false
-    let maxRuns = 10 // max runs for each test
-
-    func getExpectation(forDescription: String) -> XCTestExpectation? {
-        let exp = expectations.filter {
-            $0.description == forDescription
-        }
-        if exp.count > 0 {
-            return exp[0]
-        }
-        return nil
-    }
-
-    func runMultiple(_ localExpectations: [XCTestExpectation]? = nil, _ completion: (() -> Void)) {
-        for iter in 0...maxRuns {
-            completion()
-            if iter == maxRuns - 1 {
-                allTestsFinished = true
-            }
-        }
-        localExpectations?.forEach { expectation in
-            expectation.fulfill()
-        }
-    }
+    var config: TealiumConfig!
+    var track: TealiumTrackRequest!
+    var module: TealiumConsentManagerModule!
 
     override func setUp() {
-        super.setUp()
-        allTestsFinished = false
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-        allTestsFinished = false
+    func testShouldQueueIsBatchTrackRequest() {
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let batchTrack = TealiumBatchTrackRequest(trackRequests: [track, track, track], completion: nil)
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        let queue = module.shouldQueue(request: batchTrack)
+        XCTAssertTrue(queue.0)
+        XCTAssertTrue(queue.1?["queue_reason"] as? String == "batching_enabled", "Consent Manager Module: \(#function) - Track call contained unexpected value")
     }
 
-    func testMinimumProtocolsReturn() {
-        currentTest = "\(#function)"
-        let helper = TestTealiumHelper()
-        let module = TealiumConsentManagerModule(delegate: nil)
-        helper.modulesReturnsMinimumProtocols(module: module) { success, failingProtocols in
-            // track is expected to fail
-            let successful = success || (!success && failingProtocols == ["track"])
-            XCTAssertTrue(successful, "Not all protocols returned. Failing protocols: \(failingProtocols)")
+    func testShouldQueueAllowAuditingEvents() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        let auditingEvents = [
+            TealiumConsentConstants.consentPartialEventName,
+            TealiumConsentConstants.consentGrantedEventName,
+            TealiumConsentConstants.consentDeclinedEventName,
+            TealiumKey.updateConsentCookieEventName
+        ]
+        auditingEvents.forEach {
+            track = TealiumTrackRequest(data: [TealiumKey.event: $0])
+            let queue = module.shouldQueue(request: track)
+            XCTAssertFalse(queue.0)
+            XCTAssertNil(queue.1)
         }
     }
 
-    func testConsentManagerDisabled() {
-        currentTest = "testConsentManagerDisabled"
-        self.expectations.append(expectation(description: "consentManagerDisabled"))
-        let module = TealiumConsentManagerModule(delegate: self)
-        module.isEnabled = false
-        let track = TealiumTrackRequest(data: ["consent_disabled": "true"], completion: nil)
-        module.track(track)
-        waiter.wait(for: expectations, timeout: 20)
-    }
-
-    // MARK: Queue Tests
-
-    func testPurgeQueueOnConsentDeclined() {
-        expectations.append(expectation(description: "testPurgeQueueOnConsentDeclined"))
-        runMultiple {
-            currentTest = "testPurgeQueueOnConsentDeclined"
-            let helper = TestTealiumHelper()
-            let config = helper.getConfig()
-
-            let module = TealiumConsentManagerModule(delegate: self)
-            module.consentManager.diskStorage = ConsentMockDiskStorage()
-            module.consentManager.resetUserConsentPreferences()
-            let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
-            module.enable(enableRequest, diskStorage: ConsentMockDiskStorage())
-            let track = TealiumTrackRequest(data: ["purge_test": "true"], completion: nil)
-            module.track(track)
-            module.consentManager.setUserConsentStatus(.notConsented)
-            currentTest = ""
+    func testShouldQueueTrackingStatusTrackingQueued() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.resetUserConsentPreferences()
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let queue = module.shouldQueue(request: track)
+        XCTAssertTrue(queue.0)
+        XCTAssertTrue(queue.1?["queue_reason"] as? String == "consentmanager", "Consent Manager Module: \(#function) - Track call contained unexpected value")
+        XCTAssertTrue(queue.1?["tracking_consented"] as? String == "unknown", "Consent Manager Module: \(#function) - Track call contained unexpected value")
+        guard let categories = queue.1?["consent_categories"] as? [String] else {
+            XCTFail("Consent categories should be present in dictionary")
+            return
         }
-        waiter.wait(for: expectations, timeout: 100)
+        XCTAssertEqual(categories.count, 0)
     }
 
-    func testReleaseQueueOnConsentGranted() {
-        expectations.append(expectation(description: "testReleaseQueueOnConsentGranted"))
-        runMultiple {
-            let helper = TestTealiumHelper()
-            let config = helper.getConfig()
-            let module = TealiumConsentManagerModule(delegate: self)
-            module.consentManager.resetUserConsentPreferences()
-            let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
-            module.enable(enableRequest)
-            // set currentTest here to avoid triggering ReleaseQueue at module enable (avoid multiple fulfill on expectation)
-            currentTest = "testReleaseQueueOnConsentGranted"
-            let track = TealiumTrackRequest(data: ["release_test": "true"], completion: nil)
-            module.track(track)
-            module.consentManager.setUserConsentStatus(.consented)
-            currentTest = ""
+    func testShouldQueueTrackingStatusTrackingAllowed() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.setUserConsentStatus(.consented)
+        module.consentManager.setUserConsentCategories([.affiliates, .analytics, .bigData])
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let queue = module.shouldQueue(request: track)
+        XCTAssertFalse(queue.0)
+        XCTAssertTrue(queue.1?["tracking_consented"] as? String == "consented", "Consent Manager Module: \(#function) - Track call contained unexpected value")
+        guard let categories = queue.1?["consent_categories"] as? [String] else {
+            XCTFail("Consent categories should be present in dictionary")
+            return
         }
-        waiter.wait(for: expectations, timeout: 100)
+        XCTAssertEqual(categories.count, 3)
     }
 
-    // MARK: Consent Logging Tests
-
-    func testConsentLoggingFullConsent() {
-        expectations.append(expectation(description: "testConsentLoggingFullConsent"))
-        runMultiple {
-            let helper = TestTealiumHelper()
-            let config = helper.getConfig()
-            config.consentLoggingEnabled = true
-            let module = TealiumConsentManagerModule(delegate: self)
-            module.consentManager.resetUserConsentPreferences()
-            let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
-            module.enable(enableRequest)
-            currentTest = "testConsentLoggingFullConsent"
-            module.consentManager.setUserConsentStatus(.consented)
-            currentTest = ""
+    func testShouldQueueTrackingStatusTrackingForbidden() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.setUserConsentStatus(.notConsented)
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let queue = module.shouldQueue(request: track)
+        XCTAssertFalse(queue.0)
+        XCTAssertTrue(queue.1?["tracking_consented"] as? String == "notConsented", "Consent Manager Module: \(#function) - Track call contained unexpected value")
+        guard let categories = queue.1?["consent_categories"] as? [String] else {
+            XCTFail("Consent categories should be present in dictionary")
+            return
         }
-        waiter.wait(for: expectations, timeout: 100)
+        XCTAssertEqual(categories.count, 0)
     }
 
-    func testConsentLoggingPartialConsent() {
-        expectations.append(expectation(description: "testConsentLoggingPartialConsent"))
-        runMultiple {
-            let helper = TestTealiumHelper()
-            let config = helper.getConfig()
-            config.consentLoggingEnabled = true
-            let module = TealiumConsentManagerModule(delegate: self)
-            module.consentManager.resetUserConsentPreferences()
-            let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
-            module.enable(enableRequest)
-            currentTest = "testConsentLoggingPartialConsent"
-            module.consentManager.setUserConsentCategories([.analytics, .cdp])
-            currentTest = ""
-        }
-        waiter.wait(for: expectations, timeout: 100)
+    func testShouldDropWhenTrackingForbidden() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.setUserConsentStatus(.notConsented)
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let drop = module.shouldDrop(request: track)
+        XCTAssertTrue(drop)
     }
 
-    func testUpdateConsentCookieFullConsent() {
-        expectations.append(expectation(description: "testUpdateConsentCookieFullConsent"))
-        runMultiple {
-            let helper = TestTealiumHelper()
-            let config = helper.getConfig()
-            config.consentLoggingEnabled = true
-            let module = TealiumConsentManagerModule(delegate: self)
-            module.consentManager.resetUserConsentPreferences()
-            let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
-            module.enable(enableRequest)
-            currentTest = "testUpdateConsentCookieFullConsent"
-            module.consentManager.setUserConsentStatus(.consented)
-            currentTest = ""
-        }
-        waiter.wait(for: expectations, timeout: 100)
+    func testShouldNotDropWhenTrackingAllowed() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.setUserConsentStatus(.consented)
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let drop = module.shouldDrop(request: track)
+        XCTAssertFalse(drop)
     }
 
-    func testUpdateConsentCookiePartialConsent() {
-        expectations.append(expectation(description: "testUpdateConsentCookiePartialConsent"))
-        runMultiple {
-            let helper = TestTealiumHelper()
-            let config = helper.getConfig()
-            config.consentLoggingEnabled = true
-            let module = TealiumConsentManagerModule(delegate: self)
-            module.consentManager.resetUserConsentPreferences()
-            let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
-            module.enable(enableRequest)
-            currentTest = "testUpdateConsentCookiePartialConsent"
-            module.consentManager.setUserConsentCategories([.analytics, .cdp])
-            currentTest = ""
-        }
-        waiter.wait(for: expectations, timeout: 100)
+    func testShouldPurgeWhenTrackingForbidden() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.setUserConsentStatus(.notConsented)
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let purge = module.shouldPurge(request: track)
+        XCTAssertTrue(purge)
     }
 
-    func testUpdateConsentCookieDeclineConsent() {
-        expectations.append(expectation(description: "testUpdateConsentCookieDeclineConsent"))
-        runMultiple {
-            let helper = TestTealiumHelper()
-            let config = helper.getConfig()
-            config.consentLoggingEnabled = false
-            let module = TealiumConsentManagerModule(delegate: self)
-            module.consentManager.resetUserConsentPreferences()
-            let enableRequest = TealiumEnableRequest(config: config, enableCompletion: nil)
-            module.enable(enableRequest)
-            currentTest = "testUpdateConsentCookieDeclineConsent"
-            module.consentManager.setUserConsentStatus(.notConsented)
-            currentTest = ""
-        }
-        waiter.wait(for: expectations, timeout: 100)
+    func testShouldNotPurgeWhenTrackingAllowed() {
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.setUserConsentStatus(.consented)
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let purge = module.shouldPurge(request: track)
+        XCTAssertFalse(purge)
     }
+
+    func testAddConsentDataToTrackWhenConsented() {
+        config.initialUserConsentStatus = .consented
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        let expected: [String: Any] = [
+            TealiumConsentConstants.trackingConsentedKey: "consented",
+            TealiumConsentConstants.consentCategoriesKey: ["analytics",
+                                                           "affiliates",
+                                                           "display_ads",
+                                                           "email",
+                                                           "personalization",
+                                                           "search",
+                                                           "social",
+                                                           "big_data",
+                                                           "mobile",
+                                                           "engagement",
+                                                           "monitoring",
+                                                           "crm",
+                                                           "cdp",
+                                                           "cookiematch",
+                                                           "misc"],
+            "test": "track"
+        ]
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let trackWithConsentData = module.addConsentDataToTrack(track).trackDictionary
+        XCTAssertTrue(NSDictionary(dictionary: expected).isEqual(to: trackWithConsentData))
+    }
+
+    func testAddConsentDataToTrackWhenNotConsented() {
+        config.initialUserConsentStatus = .notConsented
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        let expected: [String: Any] = [
+            TealiumConsentConstants.trackingConsentedKey: "notConsented",
+            TealiumConsentConstants.consentCategoriesKey: [],
+            "test": "track"
+        ]
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let trackWithConsentData = module.addConsentDataToTrack(track).trackDictionary
+        XCTAssertTrue(NSDictionary(dictionary: expected).isEqual(to: trackWithConsentData))
+    }
+
+    func testAddConsentDataToTrackWhenResetConsentStatus() {
+        config.initialUserConsentStatus = .consented
+        module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+        module.consentManager.resetUserConsentPreferences()
+        let expected: [String: Any] = [
+            TealiumConsentConstants.trackingConsentedKey: "unknown",
+            TealiumConsentConstants.consentCategoriesKey: [],
+            "test": "track"
+        ]
+        track = TealiumTrackRequest(data: ["test": "track"])
+        let trackWithConsentData = module.addConsentDataToTrack(track).trackDictionary
+        XCTAssertTrue(NSDictionary(dictionary: expected).isEqual(to: trackWithConsentData))
+    }
+
 }
 
 extension ConsentManagerModuleUnitTests: TealiumModuleDelegate {
-
-    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        if let process = process as? TealiumTrackRequest {
-            let trackData = process.trackDictionary
-            if trackData["consent_disabled"] as? String == "true" {
-                XCTAssertTrue(trackData["consent_categories"] == nil, "Consent Manager Module: \(#function) - Consent Categories unexpectedly found in track call")
-                XCTAssertTrue(trackData["was_queued"] == nil, "Consent Manager Module: \(#function) - Track call contained unexpected value")
-                self.getExpectation(forDescription: "consentManagerDisabled")?.fulfill()
-            }
-        }
+    func requestTrack(_ track: TealiumTrackRequest) {
     }
-
-    // swiftlint:disable cyclomatic_complexity
-    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        if let process = process as? TealiumEnqueueRequest, currentTest == "testPurgeQueueOnConsentDeclined" {
-            let trackRequest = process.data.first!, trackData = trackRequest.trackDictionary
-            XCTAssertTrue(trackData["purge_test"] as? String == "true", "Consent Manager Module: \(#function) - Track call contained unexpected value")
-        } else if let _ = process as? TealiumClearQueuesRequest, currentTest == "testPurgeQueueOnConsentDeclined" {
-            if allTestsFinished {
-                self.getExpectation(forDescription: "testPurgeQueueOnConsentDeclined")?.fulfill()
-            }
-        } else if let process = process as? TealiumEnqueueRequest, currentTest == "testReleaseQueueOnConsentGranted" {
-            let trackRequest = process.data.first!, trackData = trackRequest.trackDictionary
-            XCTAssertTrue(trackData["release_test"] as? String == "true", "Consent Manager Module: \(#function) - Track call contained unexpected value")
-        } else if let _ = process as? TealiumReleaseQueuesRequest, currentTest == "testReleaseQueueOnConsentGranted" {
-            if allTestsFinished {
-                self.getExpectation(forDescription: "testReleaseQueueOnConsentGranted")?.fulfill()
-            }
-        } else if let process = process as? TealiumTrackRequest, currentTest == "testConsentLoggingFullConsent" {
-            let trackRequest = process.trackDictionary
-            if trackRequest[TealiumKey.event] as? String == TealiumKey.updateConsentCookieEventName {
-                return
-            }
-            XCTAssertTrue(trackRequest[TealiumKey.event] as? String == TealiumConsentConstants.consentGrantedEventName, "Consent Manager Module: \(#function) - Track call contained unexpected event name")
-            XCTAssertTrue((trackRequest[TealiumConsentConstants.consentCategoriesKey] as? [String])?.count == TealiumConsentCategories.all().count, "Consent Manager Module: \(#function) - Track call contained unexpected event categories")
-            if allTestsFinished {
-                getExpectation(forDescription: "testConsentLoggingFullConsent")?.fulfill()
-            }
-        } else if let process = process as? TealiumTrackRequest, currentTest == "testConsentLoggingPartialConsent" {
-            let trackRequest = process.trackDictionary
-            if trackRequest[TealiumKey.event] as? String == TealiumKey.updateConsentCookieEventName {
-                return
-            }
-            XCTAssertTrue(trackRequest[TealiumKey.event] as? String == TealiumConsentConstants.consentPartialEventName, "Consent Manager Module: \(#function) - Track call contained unexpected event name")
-            XCTAssertTrue(trackRequest[TealiumConsentConstants.consentCategoriesKey] as? [String] == ["analytics", "cdp"], "Consent Manager Module: \(#function) - Track call contained unexpected event categories")
-            if allTestsFinished {
-                getExpectation(forDescription: "testConsentLoggingPartialConsent")?.fulfill()
-            }
-        } else if let process = process as? TealiumTrackRequest, currentTest == "testUpdateConsentCookieFullConsent" {
-            let trackRequest = process.trackDictionary
-            if trackRequest[TealiumKey.event] as? String != TealiumKey.updateConsentCookieEventName {
-                return
-            }
-            XCTAssertTrue(trackRequest[TealiumKey.event] as? String == TealiumKey.updateConsentCookieEventName, "Consent Manager Module: \(#function) - Track call contained unexpected event name")
-            XCTAssertTrue((trackRequest[TealiumConsentConstants.consentCategoriesKey] as? [String])?.count == TealiumConsentCategories.all().count, "Consent Manager Module: \(#function) - Track call contained unexpected event categories")
-            if allTestsFinished {
-                getExpectation(forDescription: "testUpdateConsentCookieFullConsent")?.fulfill()
-            }
-        } else if let process = process as? TealiumTrackRequest, currentTest == "testUpdateConsentCookiePartialConsent" {
-            let trackRequest = process.trackDictionary
-            if trackRequest[TealiumKey.event] as? String != TealiumKey.updateConsentCookieEventName {
-                return
-            }
-            XCTAssertTrue(trackRequest[TealiumKey.event] as? String == TealiumKey.updateConsentCookieEventName, "Consent Manager Module: \(#function) - Track call contained unexpected event name")
-            XCTAssertTrue(trackRequest[TealiumConsentConstants.consentCategoriesKey] as? [String] == ["analytics", "cdp"], "Consent Manager Module: \(#function) - Track call contained unexpected event categories")
-            if allTestsFinished {
-                getExpectation(forDescription: "testUpdateConsentCookiePartialConsent")?.fulfill()
-            }
-        } else if let process = process as? TealiumTrackRequest, currentTest == "testUpdateConsentCookieDeclineConsent" {
-            let trackRequest = process.trackDictionary
-            if trackRequest[TealiumKey.event] as? String != TealiumKey.updateConsentCookieEventName {
-                return
-            }
-            XCTAssertTrue(trackRequest[TealiumKey.event] as? String == TealiumKey.updateConsentCookieEventName, "Consent Manager Module: \(#function) - Track call contained unexpected event name")
-            XCTAssertTrue((trackRequest[TealiumConsentConstants.consentCategoriesKey] as? [String])?.count == 0, "Consent Manager Module: \(#function) - Track call contained unexpected event categories")
-            if allTestsFinished {
-                getExpectation(forDescription: "testUpdateConsentCookieDeclineConsent")?.fulfill()
-            }
-        }
-    }
-    // swiftlint:enable cyclomatic_complexity
 }

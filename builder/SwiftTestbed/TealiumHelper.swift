@@ -50,11 +50,11 @@ class TealiumHelper: NSObject {
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
-        config.shouldUseRemotePublishSettings = true
+        config.shouldUseRemotePublishSettings = false
         // config.batchSize = 5
         // config.dispatchAfter = 5
         // config.dispatchQueueLimit = 200
-//         config.batchingEnabled = true
+        config.batchingEnabled = false
         // config.visitorServiceRefreshInterval = 0
         // config.visitorServiceOverrideProfile = "main"
         // OPTIONALLY add an external delegate
@@ -72,7 +72,7 @@ class TealiumHelper: NSObject {
         config.consentManagerDelegate = self
         config.diskStorageEnabled = true
         config.visitorServiceDelegate = self
-        config.remoteAPIEnabled = true
+        config.remoteAPIEnabled = false
 //        config.logLevel = .verbose
         config.shouldCollectTealiumData = true
         config.memoryReportingEnabled = true

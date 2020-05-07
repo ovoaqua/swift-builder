@@ -12,10 +12,8 @@ import XCTest
 
 class TealiumTagManagementModuleTests: XCTestCase {
 
-    var delegateExpectationSuccess: XCTestExpectation?
-    var delegateExpectationFail: XCTestExpectation?
-    var module: TagManagementModule?
-    var queueName: String?
+    var expect: XCTestExpectation!
+    var module: TagManagementModule!
     var config: TealiumConfig!
 
     override func setUp() {
@@ -29,20 +27,24 @@ class TealiumTagManagementModuleTests: XCTestCase {
     }
 
     func testDispatchTrackCreatesTrackRequest() {
-        module = TagManagementModule(config: config, delegate: self, eventDataManager: MockEventDataManager(), completion: { _ in })
+        expect = expectation(description: "trackRequest")
+        module = TagManagementModule(config: config, delegate: self, completion: { _ in })
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
         module?.dispatchTrack(track, completion: { result in
             switch result {
             case .failure(let error):
                 XCTFail("Something went wrong creating track request: \(error)")
             case .success:
+                self.expect.fulfill()
                 XCTAssertTrue(true)
             }
         })
+        wait(for: [expect], timeout: 2.0)
     }
 
     func testDispatchTrackCreatesBatchTrackRequest() {
-        module = TagManagementModule(config: config, delegate: self, eventDataManager: MockEventDataManager(), completion: { _ in })
+        expect = expectation(description: "batchTrackRequest")
+        module = TagManagementModule(config: config, delegate: self, completion: { _ in })
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
         let batchTrack = TealiumBatchTrackRequest(trackRequests: [track, track, track], completion: nil)
         module?.dispatchTrack(batchTrack, completion: { result in
@@ -50,25 +52,28 @@ class TealiumTagManagementModuleTests: XCTestCase {
             case .failure(let error):
                 XCTFail("Something went wrong creating batch track request: \(error)")
             case .success:
+                self.expect.fulfill()
                 XCTAssertTrue(true)
             }
         })
+        wait(for: [expect], timeout: 2.0)
     }
 
     func testDynamicTrackWithError() {
-
-        module = TagManagementModule(config: config, delegate: self, eventDataManager: MockEventDataManager(), completion: { _ in })
+        expect = expectation(description: "dynamicTrackWithError")
+        module = TagManagementModule(config: config, delegate: self, completion: { _ in })
         module?.errorState = AtomicInteger(value: 1)
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
         module?.dynamicTrack(track, completion: { result in
             switch result {
             case .failure(let error):
-                XCTFail("Something went wrong creating batch track request: \(error)")
+                self.expect.fulfill()
+                XCTAssertNotNil(error)
             case .success:
-                XCTAssertTrue(true)
+                XCTFail("Should not be successful")
             }
         })
-
+        wait(for: [expect], timeout: 2.0)
     }
 
     //    func testTrack() {
@@ -122,20 +127,8 @@ class TealiumTagManagementModuleTests: XCTestCase {
 }
 
 extension TealiumTagManagementModuleTests: TealiumModuleDelegate {
-    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        if let process = process as? TealiumTrackRequest {
-            XCTAssertEqual(process.trackDictionary["test_track"] as! Bool, true)
-        } else if let process = process as? TealiumBatchTrackRequest {
-            process.trackRequests.forEach {
-                XCTAssertEqual($0.trackDictionary["test_track"] as! Bool, true)
-            }
-        }
+    func requestTrack(_ track: TealiumTrackRequest) {
     }
-
-    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        XCTFail("Should not be called")
-    }
-
 }
 
 func currentQueueName() -> String? {
@@ -146,7 +139,7 @@ func currentQueueName() -> String? {
 //extension TealiumTagManagementModuleTests: TealiumModuleDelegate {
 //
 //    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-//        delegateExpectationSuccess?.fulfill()
+//        delegateExpectation?.fulfill()
 //
 //        queueName = currentQueueName()
 //    }

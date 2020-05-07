@@ -146,7 +146,7 @@ extension TealiumConnectivityModuleTests: TealiumModuleDelegate {
     }
 
     func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        // let expectation = self.delegateExpectationSuccess
+        // let expectation = self.delegateExpectation
         if let req = process as? TealiumReportRequest {
             if req.message.contains("Sending queued track") {
                 print("\n\(req.message)\n")
