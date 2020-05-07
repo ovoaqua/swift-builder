@@ -12,20 +12,20 @@ import Foundation
 #endif
 
 class TealiumConsentManagerModule: Collector, DispatchValidator {
-
-    public static var moduleId: String = "ConsentManager"
+    
+    public let moduleId: String = "Consent Manager"
     var id: String = "ConsentManager"
     var config: TealiumConfig
     let consentManager = TealiumConsentManager()
     var ready: Bool = false
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
 
     var data: [String: Any]? {
         consentManager.getUserConsentPreferences()?.dictionary
     }
-
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: () -> Void) {
+    
+    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: ModuleCompletion) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
             forModule: TealiumConsentConstants.moduleName,
@@ -36,6 +36,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
             self.ready = true
         }
         consentManager.addConsentDelegate(self)
+        completion(.success(true))
     }
 
     func updateConfig(_ request: TealiumUpdateConfigRequest) {

@@ -1,10 +1,9 @@
 //
-//  TealiumLifecycleModule.swift
-//  tealium-swift
+//  LifecycleModule.swift
+//  TealiumSwift
 //
-//  Created by Jason Koo on 1/10/17.
-//  Copyright © 2017 Tealium, Inc. All rights reserved.
-//
+//  Created by Christina S on 4/30/20.
+//  Copyright © 2020 Tealium, Inc. All rights reserved.
 //
 
 import Foundation
@@ -21,252 +20,141 @@ import UIKit
 import TealiumCore
 #endif
 
-// Can get rid of this file
+public class TealiumLifecycleModule: Collector {
 
-public class TealiumLifecycleModule: TealiumModule {
-    var enabledPrior = false    // To differentiate between new launches and re-enables.
-    public var lifecycle: TealiumLifecycle?
-    var uniqueId = ""
-    var lastProcess: TealiumLifecycleType?
-    var lifecyclePersistentData: TealiumLifecyclePersistentData!
+    public let moduleId: String = "Lifecycle"
+    weak var delegate: TealiumModuleDelegate?
+    var enabledPrior = false
+    var lifecycleData = [String: Any]()
+    var lastLifecycleEvent: LifecycleType?
     var diskStorage: TealiumDiskStorageProtocol!
-
-    public var dictionary: [String: Any]? {
+    public var config: TealiumConfig
+    
+    public var data: [String: Any]? {
         lifecycle?.asDictionary(type: nil, for: Date())
     }
 
-    override public class func moduleConfig() -> TealiumModuleConfig {
-        return TealiumModuleConfig(name: TealiumLifecycleModuleKey.moduleName,
-                                   priority: 175,
-                                   build: 3,
-                                   enabled: true)
-    }
-
-    /// Enable function required by TealiumModule.
-    override public func enable(_ request: TealiumEnableRequest) {
-        self.enable(request, diskStorage: nil)
-    }
-
-    /// Enables the module and loads Lifecycle data into memory￼￼￼.
-    ///
-    /// - Parameters:
-    ///     - request: `TealiumEnableRequest` - the request from the core library to enable this module￼￼
-    ///     - diskStorage: `TealiumDiskStorageProtocol` instance to allow overriding for unit testing
-    public func enable(_ request: TealiumEnableRequest,
-                       diskStorage: TealiumDiskStorageProtocol? = nil) {
-        let config = request.config
-        uniqueId = "\(config.account).\(config.profile).\(config.environment)"
-        // allows overriding for unit tests, indepdendently of enable call
-        if self.diskStorage == nil {
-            self.diskStorage = diskStorage ?? TealiumDiskStorage(config: request.config, forModule: TealiumLifecycleModuleKey.moduleName)
+    public required init(config: TealiumConfig,
+                         delegate: TealiumModuleDelegate,
+                         diskStorage: TealiumDiskStorageProtocol?,
+                         completion: ModuleCompletion) {
+        self.delegate = delegate
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
+                                                             forModule: "lifecycle",
+                                                             isCritical: true)
+        self.delegate = delegate
+        self.config = config
+        if config.lifecycleAutoTrackingEnabled {
+            Tealium.lifecycleListeners.addDelegate(delegate: self)
         }
-        self.lifecyclePersistentData = TealiumLifecyclePersistentData(diskStorage: self.diskStorage, uniqueId: uniqueId)
-
-        lifecycle = savedOrNewLifeycle()
-        save()
-        isEnabled = true
-//        if config.lifecycleAutoTrackingEnabled {
-//            Tealium.lifecycleListeners.addDelegate(delegate: self)
-//        }
-        didFinish(request)
-    }
-
-    /// Disables the module and deletes all associated data￼￼.
-    ///
-    /// - Parameter request: `TealiumDisableRequest`
-    override public func disable(_ request: TealiumDisableRequest) {
-        isEnabled = false
-        lifecycle = nil
-        didFinish(request)
-    }
-
-    /// Adds current Lifecycle data to the track request￼￼.
-    ///
-    /// - Parameter track: `TealiumTrackRequest` to be modified
-    override public func track(_ track: TealiumTrackRequest) {
-
-        guard isEnabled else {
-            didFinishWithNoResponse(track)
-            return
-        }
-        let track = addModuleName(to: track)
-
-        // do not add data to queued hits
-        guard track.trackDictionary[TealiumKey.wasQueued] as? String == nil else {
-            didFinishWithNoResponse(track)
-            return
-        }
-
-        // Lifecycle ready?
-        guard let lifecycle = lifecycle else {
-            didFinish(track)
-            return
-        }
-
-        var newData = lifecycle.newTrack(at: Date())
-        newData += track.trackDictionary
-        newData[TealiumLifecycleKey.autotracked] = nil
-        let newTrack = TealiumTrackRequest(data: newData,
-                                           completion: track.completion)
-        didFinish(newTrack)
+        completion(.success(true))
     }
     
+    var lifecycle: TealiumLifecycle? {
+        get {
+            guard let storedData = diskStorage.retrieve(as: TealiumLifecycle.self) else {
+                return TealiumLifecycle()
+            }
+            return storedData
+        }
+        set {
+            if let newData = newValue {
+                diskStorage.save(newData, completion: nil)
+            }
+        }
+    }
     
     /// Determines if a lifecycle event should be triggered and requests a track.
     ///
     /// - Parameters:
     ///     - type: `TealiumLifecycleType`
     ///     - date: `Date` at which the event occurred
-    func process(type: TealiumLifecycleType,
-                 at date: Date, autotracked: Bool = false) {
-        guard isEnabled else {
+    public func process(type: LifecycleType,
+        at date: Date, autotracked: Bool = false) {
+        guard var lifecycle = self.lifecycle else {
             return
         }
-        // If lifecycle has been nil'd out - module not ready or has been disabled
-        guard var lifecycle = self.lifecycle else { return }
 
-        // Setup data to be used in switch statement
-        var data: [String: Any]
-
-        // Update internal model and retrieve data for a track call
         switch type {
         case .launch:
             if enabledPrior == true { return }
             enabledPrior = true
-            data = lifecycle.newLaunch(at: date,
-                                       overrideSession: nil)
+            lifecycleData += lifecycle.newLaunch(at: date,
+                overrideSession: nil)
         case .sleep:
-            data = lifecycle.newSleep(at: date)
+            lifecycleData += lifecycle.newSleep(at: date)
         case .wake:
-            data = lifecycle.newWake(at: date,
-                                     overrideSession: nil)
+            lifecycleData += lifecycle.newWake(at: date,
+                overrideSession: nil)
         }
         self.lifecycle = lifecycle
-        // Save now in case we crash later
-        save()
 
-        data[TealiumLifecycleKey.autotracked] = autotracked
-
-        // Make the track request to the modulesManager
-        requestTrack(data: data)
+        lifecycleData[LifecycleKey.autotracked] = autotracked
+        requestTrack(data: lifecycleData)
     }
-
-    // MARK: INTERNAL
+    
     /// Prevent manual spanning of repeated lifecycle calls to system.
     ///
     /// - Parameter type: `TealiumLifecycleType`
     /// - Returns: `Bool` `true` if process should be allowed to continue
-    func processAcceptable(type: TealiumLifecycleType) -> Bool {
+    public func lifecycleAcceptable(type: LifecycleType) -> Bool {
         switch type {
         case .launch:
-            // Can only occur once per app lifecycle
-            if enabledPrior == true {
-                return false
-            }
-            if lastProcess != nil {
-                // Should never have more than 1 launch event per app lifecycle run
+            if enabledPrior == true || lastLifecycleEvent != nil {
                 return false
             }
         case .sleep:
-            guard let lastProcess = lastProcess else {
-                // Should not be possible
-                return false
-            }
-            if lastProcess != .wake && lastProcess != .launch {
+            if lastLifecycleEvent != .wake && lastLifecycleEvent != .launch {
                 return false
             }
         case .wake:
-            guard let lastProcess = lastProcess else {
-                // Should not be possible
-                return false
-            }
-            if lastProcess != .sleep {
+            if lastLifecycleEvent != .sleep {
                 return false
             }
         }
         return true
     }
     
-    func processDetected(type: TealiumLifecycleType,
-                         at date: Date = Date()) {
-        guard processAcceptable(type: type) else {
+    /// Lifecycle event detected.
+    /// - Parameters:
+    ///   - type: `TealiumLifecycleType` launch, sleep, wake
+    ///   - date: `Date` of lifecycle event
+    public func lifecycleDetected(type: LifecycleType,
+        at date: Date = Date()) {
+        guard lifecycleAcceptable(type: type) else {
             return
         }
-
-        lastProcess = type
+        lastLifecycleEvent = type
         self.process(type: type, at: date, autotracked: true)
     }
     
-
-
     /// Sends a track request to the module delegate.
     ///
     /// - Parameter data: `[String: Any]` containing the lifecycle data to track
-    func requestTrack(data: [String: Any]) {
-        guard isEnabled else {
+    public func requestTrack(data: [String: Any]) {
+        guard let title = data[LifecycleKey.type] as? String else {
             return
         }
-        guard let title = data[TealiumLifecycleKey.type] as? String else {
-            // Should not happen
-            return
-        }
-
-        // Conforming to universally available Tealium data variables
         let trackData = Tealium.trackDataFor(title: title,
                                              optionalData: data)
         let track = TealiumTrackRequest(data: trackData,
                                         completion: nil)
-        self.delegate?.tealiumModuleRequests(module: self,
-                                             process: track)
+        delegate?.requestTrack(track)
     }
-
-    /// Saves current lifecycle data to persistent storage.
-    func save() {
-        // Error handling?
-        guard let lifecycle = self.lifecycle else {
-            return
-        }
-        _ = lifecyclePersistentData.save(lifecycle)
-    }
-
-    /// Attempts to load lifecycle data from persistent storage, or returns new lifecycle data if not found.
-    ///
-    /// - Returns: `TealiumLifecycle`
-    func savedOrNewLifeycle() -> TealiumLifecycle {
-        // Attempt to load first
-        if let loadedLifecycle = lifecyclePersistentData.load() {
-            return loadedLifecycle
-        }
-        return TealiumLifecycle()
-    }
-
 }
-// swiftlint:enable type_body_length
 
-//public func == (lhs: TealiumLifecycle, rhs: TealiumLifecycle ) -> Bool {
-//    if lhs.countCrashTotal != rhs.countCrashTotal { return false }
-//    if lhs.countLaunchTotal != rhs.countLaunchTotal { return false }
-//    if lhs.countSleepTotal != rhs.countSleepTotal { return false }
-//    if lhs.countWakeTotal != rhs.countWakeTotal { return false }
-//
-//    return true
-//}
+extension TealiumLifecycleModule: TealiumLifecycleEvents {
+    public func sleep() {
+        lifecycleDetected(type: .sleep)
+    }
 
-//extension Array where Element == TealiumLifecycleSession {
-//
-//    /// Get item before last
-//    ///
-//    /// - Returns: Target item or item at index 0 if only 1 item.
-//    func beforeLast() -> Element? {
-//        if self.isEmpty {
-//            return nil
-//        }
-//
-//        var index = self.count - 2
-//        if index < 0 {
-//            index = 0
-//        }
-//        return self[index]
-//    }
-//
-//}
+    public func wake() {
+        lifecycleDetected(type: .wake)
+    }
+
+    public func launch(at date: Date) {
+        lifecycleDetected(type: .launch, at: date)
+    }
+}
+
+

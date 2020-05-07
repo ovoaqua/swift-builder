@@ -23,7 +23,7 @@ import WatchKit
 import Darwin
 
 class DeviceDataModule: Collector {
-    static var moduleId: String = "Device Data"
+    let moduleId: String = "Device Data"
     
     var data: [String: Any]? {
         get {
@@ -41,19 +41,15 @@ class DeviceDataModule: Collector {
     var deviceDataCollection: TealiumDeviceDataCollection
     var cachedData = [String: Any]()
     var config: TealiumConfig
-    var delegate: TealiumModuleDelegate
 
     required init(config: TealiumConfig,
                   delegate: TealiumModuleDelegate,
                   diskStorage: TealiumDiskStorageProtocol?,
-                  completion: () -> Void) {
-        self.delegate = delegate
+                  completion: ModuleCompletion) {
         self.config = config
         self.deviceDataCollection = TealiumDeviceData()
         self.cachedData = enableTimeData()
-        defer {
-            completion()
-        }
+        completion(.success(true))
     }
 
     /// Data that only needs to be retrieved once for the lifetime of the host app.

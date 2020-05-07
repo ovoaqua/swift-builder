@@ -13,10 +13,9 @@ import TealiumCore
 
 public class TealiumVisitorServiceModule: Collector, DispatchListener {
     
-    public static var moduleId: String = "VisitorService"
+    public let moduleId: String = "Visitor Service"
     public var config: TealiumConfig
     public var data: [String : Any]? = nil
-    var delegate: TealiumModuleDelegate
     var diskStorage: TealiumDiskStorageProtocol!
     var firstEventSent = false
     var visitorId: String?
@@ -29,21 +28,20 @@ public class TealiumVisitorServiceModule: Collector, DispatchListener {
                       delegate: TealiumModuleDelegate,
                       diskStorage: TealiumDiskStorageProtocol?,
         visitorServiceManager: TealiumVisitorServiceManagerProtocol) {
-        self.init(config: config, delegate: delegate, diskStorage: diskStorage) {}
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
         self.visitorServiceManager = visitorServiceManager
     }
     
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
-                         completion: () -> Void) {
-        self.delegate = delegate
+                         completion: ModuleCompletion) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "visitorservice", isCritical: false)
         self.visitorServiceManager = TealiumVisitorServiceManager(config: config,
         delegate: config.visitorServiceDelegate,
         diskStorage: self.diskStorage)
-        completion()
+        completion(.success(true))
     }
 
     func retrieveProfile(visitorId: String) {

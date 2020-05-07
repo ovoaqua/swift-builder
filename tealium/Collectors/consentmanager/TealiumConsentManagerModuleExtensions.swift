@@ -70,15 +70,15 @@ extension TealiumConsentManagerModule: TealiumConsentManagerDelegate {
 public extension Tealium {
 
     var consentManager: TealiumConsentManager? {
-        let module = newModulesManager.collectors.filter {
+        let module = modulesManager?.collectors.filter {
             $0 is TealiumConsentManagerModule
         }.first
-        return (module as! TealiumConsentManagerModule).consentManager
+        return (module as? TealiumConsentManagerModule)?.consentManager
     }
     
 //    /// - Returns: `TealiumConsentManager` instance
 //    var consentManager: TealiumConsentManager? {
-//        guard let module = newModulesManager.modules.filter({ $0 is TealiumConsentManagerModule })[0] as? TealiumConsentManagerModule else {
+//        guard let module = modulesManager?.modules.filter({ $0 is TealiumConsentManagerModule })[0] as? TealiumConsentManagerModule else {
 //            return nil
 //        }
 //        return module.consentManager

@@ -12,8 +12,8 @@ import TealiumCore
 #endif
 
 class TealiumAttributionModule: Collector {
-    static var moduleId: String = "Attribution"
-    var delegate: TealiumModuleDelegate
+    let moduleId: String = "Attribution"
+
     var data: [String: Any]? {
         self.attributionData.allAttributionData
     }
@@ -31,22 +31,19 @@ class TealiumAttributionModule: Collector {
                       delegate: TealiumModuleDelegate,
                       diskStorage: TealiumDiskStorageProtocol?,
         attributionData: TealiumAttributionDataProtocol) {
-        self.init(config: config, delegate: delegate, diskStorage: diskStorage) {}
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
         self.attributionData = attributionData
     }
 
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
-                         completion: () -> Void) {
-        defer {
-            completion()
-        }
-        self.delegate = delegate
+                         completion: ModuleCompletion) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "attribution", isCritical: false)
         self.attributionData = TealiumAttributionData(diskStorage: self.diskStorage,
                                                       isSearchAdsEnabled: config.searchAdsEnabled)
+        completion(.success(true))
     }
 
 }

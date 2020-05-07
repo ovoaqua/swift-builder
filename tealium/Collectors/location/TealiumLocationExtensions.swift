@@ -19,7 +19,7 @@ extension Tealium {
     ///
     /// - Returns: `TealiumLocation?` instance (nil if disabled)
     func location() -> TealiumLocation? {
-        guard let module = modulesManager.getModule(forName: TealiumLocationKey.name) as? TealiumLocationModule else {
+        guard let module = modulesManager?.getModule(forName: TealiumLocationKey.name) as? TealiumLocationModule else {
             return nil
         }
 

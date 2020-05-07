@@ -11,16 +11,11 @@ import Foundation
 import TealiumCore
 #endif
 
-public class CrashModule: Collector, DispatchListener {
-    // TODO: Only added as an example
-    public func willTrack(request: TealiumRequest) {
-        print("willtrack")
-    }
-    
+public class TealiumCrashModule: Collector {   
 
-    static public var moduleId: String = "Crash"
+    public let moduleId: String = "Crash"
     var crashReporter: CrashReporterProtocol?
-    var delegate: TealiumModuleDelegate
+    weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
     public var config: TealiumConfig
     
@@ -35,21 +30,19 @@ public class CrashModule: Collector, DispatchListener {
                       delegate: TealiumModuleDelegate,
                       diskStorage: TealiumDiskStorageProtocol?,
         crashReporter: CrashReporterProtocol) {
-        self.init(config: config, delegate: delegate, diskStorage: diskStorage) {}
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
         self.crashReporter = crashReporter
     }
     
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
-                         completion: () -> Void) {
-        defer {
-            completion()
-        }
+                         completion: ModuleCompletion) {
         self.delegate = delegate
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "crash", isCritical: false)
         self.crashReporter = TealiumCrashReporter()
+        completion(.success(true))
     }
 
 }

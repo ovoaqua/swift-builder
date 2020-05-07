@@ -61,7 +61,10 @@ public class TealiumRepeatingTimer {
 
     /// Resumes this timer instance if suspended
     public func resume() {
-        readWriteQueue.write {
+        readWriteQueue.write { [weak self] in
+           guard let self = self else {
+               return
+           }
             if self.state == .resumed {
                 return
             }
@@ -72,7 +75,10 @@ public class TealiumRepeatingTimer {
 
     /// Suspends this timer instance if running
     public func suspend() {
-        readWriteQueue.write {
+        readWriteQueue.write { [weak self] in
+            guard let self = self else {
+                return
+            }
             if self.state == .suspended {
                 return
             }

@@ -163,11 +163,11 @@ class TealiumModulesTest: XCTestCase {
         initialConfig.modulesList = modulesList
 
         let modulesManager = TealiumModulesManager(initialConfig)
-        modulesManager.setupModulesFrom(config: initialConfig)
-        modulesManager.enable(config: initialConfig, enableCompletion: nil)
+        modulesManager?.setupModulesFrom(config: initialConfig)
+        modulesManager?.enable(config: initialConfig, enableCompletion: nil)
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == (self.numberOfCurrentModules - modulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == (self.numberOfCurrentModules - modulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager?.modules!)")
         }
 
         // Updated setup
@@ -181,12 +181,12 @@ class TealiumModulesTest: XCTestCase {
 
         newConfig.modulesList = newModulesList
 
-        modulesManager.update(config: newConfig, oldConfig: initialConfig)
+        modulesManager?.update(config: newConfig, oldConfig: initialConfig)
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == (self.numberOfCurrentModules - newModulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == (self.numberOfCurrentModules - newModulesList.moduleNames.count), "Incorrect number of enabled modules: \(modulesManager?.modules!)")
 
-            for module in modulesManager.modules! where module is TealiumVisitorServiceModule {
+            for module in modulesManager?.modules! where module is TealiumVisitorServiceModule {
                 XCTFail("Failed to disable the visitor service module.")
             }
         }
@@ -205,10 +205,10 @@ class TealiumModulesTest: XCTestCase {
         initialConfig.modulesList = modulesList
 
         let modulesManager = TealiumModulesManager(initialConfig)
-        modulesManager.setupModulesFrom(config: initialConfig)
+        modulesManager?.setupModulesFrom(config: initialConfig)
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager?.modules!)")
         }
 
         // Updated setup
@@ -221,10 +221,10 @@ class TealiumModulesTest: XCTestCase {
         newConfig.isEnabled = true
         newConfig.modulesList = newModulesList
 
-        modulesManager.update(config: newConfig, oldConfig: initialConfig)
+        modulesManager?.update(config: newConfig, oldConfig: initialConfig)
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager?.modules!)")
         }
     }
 
@@ -241,9 +241,9 @@ class TealiumModulesTest: XCTestCase {
         initialConfig.modulesList = modulesList
 
         let modulesManager = TealiumModulesManager(initialConfig)
-        modulesManager.setupModulesFrom(config: initialConfig)
+        modulesManager?.setupModulesFrom(config: initialConfig)
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager?.modules!)")
         }
         // Updated setup
         let newModulesList = TealiumModulesList(isWhitelist: true,
@@ -255,10 +255,10 @@ class TealiumModulesTest: XCTestCase {
 
         newConfig.modulesList = newModulesList
         newConfig.isEnabled = true
-        modulesManager.update(config: newConfig, oldConfig: initialConfig)
+        modulesManager?.update(config: newConfig, oldConfig: initialConfig)
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == newModulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager?.modules!)")
         }
     }
 
@@ -275,10 +275,10 @@ class TealiumModulesTest: XCTestCase {
         initialConfig.modulesList = modulesList
 
         let modulesManager = TealiumModulesManager(initialConfig)
-        modulesManager.setupModulesFrom(config: initialConfig)
+        modulesManager?.setupModulesFrom(config: initialConfig)
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager?.modules!)")
         }
 
         // Updated setup
@@ -291,12 +291,12 @@ class TealiumModulesTest: XCTestCase {
 
         newConfig.modulesList = newModulesList
         newConfig.isEnabled = true
-        modulesManager.update(config: newConfig, oldConfig: initialConfig)
+        modulesManager?.update(config: newConfig, oldConfig: initialConfig)
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-            XCTAssert(modulesManager.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager.modules!)")
+            XCTAssert(modulesManager?.modules!.count == modulesList.moduleNames.count, "Incorrect number of enabled modules: \(modulesManager?.modules!)")
 
-            for module in modulesManager.modules! {
+            for module in modulesManager?.modules! {
                 if module is TealiumDelegateModule {
                     XCTFail("delegate module was found when shouldn't have been present.")
                 }

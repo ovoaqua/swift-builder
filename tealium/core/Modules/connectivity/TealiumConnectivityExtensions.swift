@@ -61,7 +61,10 @@ extension TealiumConnectivity {
             return
         }
         timer = TealiumRepeatingTimer(timeInterval: timeInterval, dispatchQueue: queue)
-        timer?.eventHandler = {
+        timer?.eventHandler = { [weak self] in
+            guard let self = self else {
+                return
+            }
             #if os(watchOS)
             TealiumConnectivity.isConnected = Atomic(value: true)
             self.connectionRestored()

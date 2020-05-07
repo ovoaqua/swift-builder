@@ -18,8 +18,9 @@ open class TealiumConfig {
     public lazy var optionalData = [String: Any]()
     // Set to false to avoid collecting optional default data
     public var shouldCollectTealiumData = true
-    public var delegate: TealiumDelegate?
     public var logger: TealiumLoggerProtocol?
+    public var dispatchValidators: [DispatchValidator]?
+    public var dispatchListeners: [DispatchListener]?
 
     public var copy: TealiumConfig {
         return TealiumConfig(account: self.account,
@@ -147,36 +148,6 @@ public extension TealiumConfig {
 //    }
 }
 
-// MARK: Logger
-public extension TealiumConfig {
-
-//    /// - Returns: `TealiumLogLevel` (default is `.errors`)
-//    @available(*, deprecated, message: "Please switch to config.logLevel")
-//    func getLogLevel() -> TealiumLogLevel? {
-//       logLevel
-//    }
-//
-//    /// Sets the log level to be used by the library
-//    ///
-//    /// - Parameter logLevel: `TealiumLogLevel`
-//    @available(*, deprecated, message: "Please switch to config.logLevel")
-//    func setLogLevel(_ logLevel: TealiumLogLevel) {
-//        self.logLevel = logLevel
-//    }
-//
-//    /// Sets a known visitor ID. Must be unique (i.e. UUID).
-//    /// Should only be used in cases where the user has an existing visitor ID
-//    var logLevel: TealiumLogLevel? {
-//        get {
-//            optionalData[TealiumKey.logLevelConfig] as? TealiumLogLevel
-//        }
-//
-//        set {
-//            optionalData[TealiumKey.logLevelConfig] = newValue
-//        }
-//    }
-}
-
 public extension TealiumConfig {
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
     /// Should only be used in cases where the user has an existing visitor ID
@@ -256,10 +227,10 @@ public extension TealiumConfig {
         }
     }
     
-    /// If `false`, the entire library is disabled, and no tracking calls are sent.
-    var isTagManagementEnabled: Bool? {
+    /// If `false`, the the tag management module is disabled and will not be used for dispatching events
+    var isTagManagementEnabled: Bool {
         get {
-            optionalData[TealiumKey.tagManagementModuleName] as? Bool
+            optionalData[TealiumKey.tagManagementModuleName] as? Bool ?? true
         }
 
         set {
@@ -267,10 +238,10 @@ public extension TealiumConfig {
         }
     }
     
-    /// If `false`, the entire library is disabled, and no tracking calls are sent.
-    var isCollectEnabled: Bool? {
+    /// If `false`, the the collect module is disabled and will not be used for dispatching events
+    var isCollectEnabled: Bool {
         get {
-            optionalData[TealiumKey.collectModuleName] as? Bool
+            optionalData[TealiumKey.collectModuleName] as? Bool ?? true
         }
 
         set {
@@ -364,4 +335,5 @@ public extension TealiumConfig {
             optionalData[TealiumKey.minutesBetweenRefresh] = newValue
         }
     }
+    
 }

@@ -47,6 +47,8 @@ class TealiumHelper: NSObject {
         config.loggerType = .os
         config.logLevel = .info
         config.consentLoggingEnabled = true
+        config.dispatchListeners = [self]
+        config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
@@ -57,8 +59,6 @@ class TealiumHelper: NSObject {
         config.batchingEnabled = false
         // config.visitorServiceRefreshInterval = 0
         // config.visitorServiceOverrideProfile = "main"
-        // OPTIONALLY add an external delegate
-        config.addDelegate(self)
         config.memoryReportingEnabled = true
 
         #if AUTOTRACKING
@@ -98,33 +98,33 @@ class TealiumHelper: NSObject {
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self, let teal = self.tealium else { return }
-            
+
             self.track(title: "init", data: nil)
-            
+
             let persitence = teal.persistentData()
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
-                
+
             //dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
-                        
+
             //persitence.add(data: ["some_key1": "some_val1"], expiration: .session)
-            
+
             //persitence.add(data: ["some_key_forever":"some_val_forever"]) // forever
-            
+
             // persitence.add(data: ["until": "restart"], expiration: .untilRestart)
-            
+
             //persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
-   
+
             //persitence.deleteData(forKeys: ["myvarforever"])
-            
+
 //            sessionPersistence.add(data: ["hello": "world"]) // session
 
 //            sessionPersistence.add(value: 123, forKey: "test") // session
 
             //sessionPersistence.deleteData(forKeys: ["hello", "test"])
-            
+
             persitence.add(value: "hello", forKey: "itsme", expiration: .afterCustom((.months, 1)))
-            
+
             print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
 
             print("Persistent Data: \(String(describing: persitence.dictionary))")
@@ -153,6 +153,8 @@ class TealiumHelper: NSObject {
 
     func track(title: String, data: [String: Any]?) {
 //        tealium?.lifecycle()?.launch(at: Date())
+//        tealium?.disable()
+        self.tealium = nil
         tealium?.track(title: title,
                        data: data,
                        completion: { (success, info, error) in
@@ -166,6 +168,7 @@ class TealiumHelper: NSObject {
     }
 
     func trackView(title: String, data: [String: Any]?) {
+//        self.start()
         tealium?.trackView(title: title,
                        data: data,
                        completion: { (success, info, error) in
@@ -187,22 +190,6 @@ class TealiumHelper: NSObject {
     
     func crash() {
         NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
-    }
-}
-
-extension TealiumHelper: TealiumDelegate {
-
-    func tealiumShouldTrack(data: [String: Any]) -> Bool {
-        let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
-        logger?.log(logRequest)
-        return true
-    }
-
-    func tealiumTrackCompleted(success: Bool, info: [String: Any]?, error: Error?) {
-        if enableHelperLogs == false {
-            return
-        }
-        print("\n*** Tealium Helper: Tealium Delegate : tealiumTrackCompleted *** Track finished. Was successful:\(success)\nInfo:\(info as AnyObject)\((error != nil) ? "\nError:\(String(describing: error))":"")")
     }
 }
 
@@ -248,4 +235,30 @@ extension TealiumHelper: TealiumConsentManagerDelegate {
     }
     
     
+}
+//
+extension TealiumHelper: DispatchListener {
+    public func willTrack(request: TealiumRequest) {
+        print("helper - willtrack")
+    }
+}
+
+extension TealiumHelper: DispatchValidator {
+    var id: String {
+        return "Helper"
+    }
+
+    func shouldQueue(request: TealiumRequest) -> (Bool, [String : Any]?) {
+        (false, nil)
+    }
+
+    func shouldDrop(request: TealiumRequest) -> Bool {
+        false
+    }
+
+    func shouldPurge(request: TealiumRequest) -> Bool {
+        false
+    }
+
+
 }

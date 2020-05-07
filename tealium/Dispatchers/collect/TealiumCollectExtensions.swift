@@ -68,7 +68,7 @@ public extension TealiumConfig {
 //
 //    /// - Returns: An instance of a `TealiumCollectProtocol`
 //    func collect() -> TealiumCollectProtocol? {
-//        guard let collectModule = modulesManager.getModule(forName: TealiumCollectKey.moduleName) as? TealiumCollectModule else {
+//        guard let collectModule = modulesManager?.getModule(forName: TealiumCollectKey.moduleName) as? TealiumCollectModule else {
 //            return nil
 //        }
 //

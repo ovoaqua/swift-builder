@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Module {
-    static var moduleId: String { get }
+public protocol TealiumModule {
+    var moduleId: String { get }
     var config: TealiumConfig { get set }
 }

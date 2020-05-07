@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class AppDataModule: Collector, TealiumAppDataCollection {
+public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
     public var data: [String: Any]? {
         if self.config.shouldCollectTealiumData {
             return appData.dictionary
@@ -17,7 +17,7 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
         }
     }
     
-    public static var moduleId: String = "App Data"
+    public let moduleId: String = "App Data"
 
     private(set) var uuid: String?
     private var diskStorage: TealiumDiskStorageProtocol!
@@ -29,22 +29,18 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
     var logger: TealiumLoggerProtocol? {
         config.logger
     }
-    var delegate: TealiumModuleDelegate
     
     public var config: TealiumConfig
 
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          diskStorage: TealiumDiskStorageProtocol?,
-                         completion: () -> Void) {
-        defer {
-            completion()
-        }
-        self.delegate = delegate
+                         completion: ModuleCompletion) {
         self.config = config
         self.bundle = Bundle.main
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
         setExistingAppData()
+        completion(.success(true))
     }
 
     /// Retrieves existing data from persistent storage and stores in volatile memory.
@@ -131,7 +127,7 @@ public class AppDataModule: Collector, TealiumAppDataCollection {
     ///
     /// - Parameter data: `PersistentAppData` instance  containing existing AppData variables
     func setLoadedAppData(data: PersistentAppData) {
-       guard !AppDataModule.isMissingPersistentKeys(data: data.dictionary) else {
+       guard !TealiumAppDataModule.isMissingPersistentKeys(data: data.dictionary) else {
            setNewAppData()
            return
        }

@@ -18,7 +18,7 @@ class DispatchManager: TealiumConnectivityDelegate {
     var dispatchValidators = [DispatchValidator]()
     var dispatchListeners = [DispatchListener]()
     var logger: TealiumLoggerProtocol?
-    var delegate: TealiumModuleDelegate?
+//    weak var delegate: TealiumModuleDelegate?
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
@@ -109,9 +109,9 @@ class DispatchManager: TealiumConnectivityDelegate {
             self.logger = logger
         }
         
-        if let delegate = delegate {
-            self.delegate = delegate
-        }
+//        if let delegate = delegate {
+//            self.delegate = delegate
+//        }
         // allows overriding for unit tests, independently of enable call
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: TealiumDispatchQueueConstants.moduleName)
@@ -209,7 +209,7 @@ class DispatchManager: TealiumConnectivityDelegate {
         }
         self.logTrackSuccess([], request: request)
         dispatchers.forEach { module in
-            let moduleId = type(of: module).moduleId
+            let moduleId = module.moduleId
             module.dynamicTrack(request) { result in
                 switch result {
                 case .failure(let error):
@@ -359,6 +359,10 @@ class DispatchManager: TealiumConnectivityDelegate {
         let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: message, info: nil, logLevel: .info, category: .track)
         
         logger?.log(logRequest)
+    }
+    
+    deinit {
+        connectivityManager.removeAllConnectivityDelegates()
     }
     
 }
