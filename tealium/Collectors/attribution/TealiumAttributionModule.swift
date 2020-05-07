@@ -12,7 +12,7 @@ import TealiumCore
 #endif
 
 class TealiumAttributionModule: Collector {
-    static var moduleId: String = "Attribution"
+    let moduleId: String = "Attribution"
     var delegate: TealiumModuleDelegate
     var data: [String: Any]? {
         self.attributionData.allAttributionData

@@ -10,11 +10,7 @@ import Foundation
 
 public extension Tealium {
 
-    func logger() -> TealiumLogger? {
-        guard let module = modulesManager.getModule(forName: TealiumLoggerKey.moduleName) as? TealiumLoggerModule else {
-            return nil
-        }
-
-        return module.logger
+    func logger() -> TealiumLoggerProtocol? {
+        newModulesManager.logger
     }
 }

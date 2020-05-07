@@ -13,7 +13,7 @@ import TealiumCore
 
 class TealiumConsentManagerModule: Collector, DispatchValidator {
     
-    public static var moduleId: String = "ConsentManager"
+    public let moduleId: String = "Consent Manager"
     var id: String = "ConsentManager"
     var config: TealiumConfig
     let consentManager = TealiumConsentManager()

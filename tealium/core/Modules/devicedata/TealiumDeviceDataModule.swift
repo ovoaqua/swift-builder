@@ -23,7 +23,7 @@ import WatchKit
 import Darwin
 
 class DeviceDataModule: Collector {
-    static var moduleId: String = "Device Data"
+    let moduleId: String = "Device Data"
     
     var data: [String: Any]? {
         get {

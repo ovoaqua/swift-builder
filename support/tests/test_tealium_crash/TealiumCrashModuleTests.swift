@@ -12,14 +12,14 @@ import XCTest
 
 class TealiumCrashModuleTests: XCTestCase {
 
-    var crashModule: CrashModule!
+    var crashModule: TealiumCrashModule!
     var config: TealiumConfig!
     var mockCrashReporter: MockTealiumCrashReporter!
 
     override func setUp() {
         super.setUp()
         config = TealiumConfig(account: "TestAccount", profile: "TestProfile", environment: "TestEnvironment")
-        crashModule = CrashModule(config: config, delegate: self, diskStorage: nil, completion: {})
+        crashModule = TealiumCrashModule(config: config, delegate: self, diskStorage: nil, completion: {})
         mockCrashReporter = MockTealiumCrashReporter()
     }
 

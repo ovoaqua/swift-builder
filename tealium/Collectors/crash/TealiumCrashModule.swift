@@ -11,14 +11,9 @@ import Foundation
 import TealiumCore
 #endif
 
-public class CrashModule: Collector, DispatchListener {
-    // TODO: Only added as an example
-    public func willTrack(request: TealiumRequest) {
-        print("willtrack")
-    }
-    
+public class TealiumCrashModule: Collector {   
 
-    static public var moduleId: String = "Crash"
+    public let moduleId: String = "Crash"
     var crashReporter: CrashReporterProtocol?
     var delegate: TealiumModuleDelegate
     var diskStorage: TealiumDiskStorageProtocol!

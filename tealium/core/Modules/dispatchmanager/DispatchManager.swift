@@ -209,7 +209,7 @@ class DispatchManager: TealiumConnectivityDelegate {
         }
         self.logTrackSuccess([], request: request)
         dispatchers.forEach { module in
-            let moduleId = type(of: module).moduleId
+            let moduleId = module.moduleId
             module.dynamicTrack(request) { result in
                 switch result {
                 case .failure(let error):

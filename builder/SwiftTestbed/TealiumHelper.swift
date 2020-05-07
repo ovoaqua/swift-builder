@@ -47,6 +47,8 @@ class TealiumHelper: NSObject {
         config.loggerType = .os
         config.logLevel = .info
         config.consentLoggingEnabled = true
+        config.dispatchListeners = [self]
+        config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
@@ -245,6 +247,32 @@ extension TealiumHelper: TealiumConsentManagerDelegate {
     
     func userChangedConsentCategories(categories: [TealiumConsentCategories]) {
         
+    }
+    
+    
+}
+
+extension TealiumHelper: DispatchListener {
+    public func willTrack(request: TealiumRequest) {
+        print("helper - willtrack")
+    }
+}
+
+extension TealiumHelper: DispatchValidator {
+    var id: String {
+        return "Helper"
+    }
+    
+    func shouldQueue(request: TealiumRequest) -> (Bool, [String : Any]?) {
+        (false, nil)
+    }
+    
+    func shouldDrop(request: TealiumRequest) -> Bool {
+        false
+    }
+    
+    func shouldPurge(request: TealiumRequest) -> Bool {
+        false
     }
     
     

@@ -16,10 +16,10 @@ import TealiumCore
 
 public extension Tealium {
 
-    func lifecycle() -> LifecycleModule? {
+    func lifecycle() -> TealiumLifecycleModule? {
         newModulesManager.modules.first {
-            type(of: $0) == LifecycleModule.self
-        } as? LifecycleModule
+            type(of: $0) == TealiumLifecycleModule.self
+        } as? TealiumLifecycleModule
     }
 
 }

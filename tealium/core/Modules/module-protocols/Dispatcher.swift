@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Dispatcher: Module {
+public protocol Dispatcher: TealiumModule {
     var delegate: TealiumModuleDelegate { get }
     var isReady: Bool { get }
     init(config: TealiumConfig,

@@ -122,7 +122,7 @@ class TealiumAutotrackingModule: Collector {
         notificationsEnabled = true
     }
     
-    static var moduleId: String = TealiumAutotrackingKey.moduleName
+    let moduleId: String = TealiumAutotrackingKey.moduleName
     
     
     

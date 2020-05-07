@@ -10,9 +10,9 @@ import Foundation
 
 public class NewModulesManager {
 
-    var coreCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.CrashModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule"]
-    var knownDispatchers: [String] = ["TealiumCollect.CollectModule", "TealiumTagManagement.TagManagementModule"]
+    var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.TealiumCrashModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule"]
+    var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
     var dispatchManager: DispatchManager?
@@ -21,7 +21,7 @@ public class NewModulesManager {
     var dispatchListeners = [DispatchListener]()
     var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
-    public var modules = [Module]()
+    public var modules = [TealiumModule]()
     var config: TealiumConfig? {
         willSet {
             guard let newValue = newValue else {
@@ -37,19 +37,23 @@ public class NewModulesManager {
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.logger = config.logger
             self.eventDataManager = eventDataManager
             self.setupDispatchers(config: config)
-            
+            self.setupDispatchValidators(config: config)
+            self.setupDispatchListeners(config: config)
             self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, dispatchListeners: self.dispatchListeners, delegate: self, logger: self.logger, config: config)
             self.modules += self.collectors
             self.modules += self.dispatchers
             self.setupCollectors(config: config)
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
-                ["Collectors Initialized: \(self.collectors.map { type(of: $0).moduleId })",
+                ["Collectors Initialized: \(self.collectors.map { $0.moduleId })",
                 "Dispatch Validators Initialized: \(self.dispatchValidators.map { $0.id })",
-                "Dispatchers Initialized: \(self.dispatchers.map { type(of: $0).moduleId })"
+                "Dispatchers Initialized: \(self.dispatchers.map { $0.moduleId })"
             ], info: nil, logLevel: .info, category: .`init`)
             self.logger?.log(logRequest)
         }
@@ -145,19 +149,19 @@ public class NewModulesManager {
         }
     }
     
-    // TODO: allow dispatch validators to be set up from config, replaces delegate
-    //    func setupDispatchValidators(config: TealiumConfig) {
-//        config.dispatchValidators.forEach {
-//            self.addDispatchValidator($0)
-//        }
-//    }
+//     TODO: allow dispatch validators to be set up from config, replaces delegate
+    func setupDispatchValidators(config: TealiumConfig) {
+        config.dispatchValidators?.forEach {
+            self.addDispatchValidator($0)
+        }
+    }
     
-        // TODO: allow dispatch listeners to be set up from config
-    //    func setupListeners(config: TealiumConfig) {
-    //        config.dispatchListeners.forEach {
-    //            self.addDispatchListener($0)
-    //        }
-    //    }
+    // TODO: allow dispatch listeners to be set up from config
+    func setupDispatchListeners(config: TealiumConfig) {
+        config.dispatchListeners?.forEach {
+            self.addDispatchListener($0)
+        }
+    }
 
     func sendTrack(_ request: TealiumTrackRequest) {
         let requestData = gatherTrackData(for: request.trackDictionary)

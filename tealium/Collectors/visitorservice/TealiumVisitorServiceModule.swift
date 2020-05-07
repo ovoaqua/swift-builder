@@ -13,7 +13,7 @@ import TealiumCore
 
 public class TealiumVisitorServiceModule: Collector, DispatchListener {
     
-    public static var moduleId: String = "VisitorService"
+    public let moduleId: String = "Visitor Service"
     public var config: TealiumConfig
     public var data: [String : Any]? = nil
     var delegate: TealiumModuleDelegate

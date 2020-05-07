@@ -20,6 +20,8 @@ open class TealiumConfig {
     public var shouldCollectTealiumData = true
     public var delegate: TealiumDelegate?
     public var logger: TealiumLoggerProtocol?
+    public var dispatchValidators: [DispatchValidator]?
+    public var dispatchListeners: [DispatchListener]?
 
     public var copy: TealiumConfig {
         return TealiumConfig(account: self.account,
@@ -364,4 +366,5 @@ public extension TealiumConfig {
             optionalData[TealiumKey.minutesBetweenRefresh] = newValue
         }
     }
+    
 }
