@@ -26,7 +26,7 @@ public class ReadWrite {
 
     public init(_ label: String) {
         specificValue = label
-        queue = DispatchQueue(label: label, qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: .global())
+        queue = DispatchQueue(label: label, qos: .utility, attributes: .concurrent, autoreleaseFrequency: .inherit, target: .global())
         queue.setSpecific(key: queueSpecificKey, value: specificValue)
         queue.setSpecific(key: barrierSpecificKey, value: false)
     }

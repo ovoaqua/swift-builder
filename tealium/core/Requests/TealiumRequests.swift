@@ -17,69 +17,13 @@
 /// Request protocol
 public protocol TealiumRequest {
     var typeId: String { get set }
-    var moduleResponses: [TealiumModuleResponse] { get set }
     var completion: TealiumCompletion? { get set }
 
     static func instanceTypeId() -> String
 }
 
-/// Request to delete persistent data
-public struct TealiumDeleteRequest: TealiumRequest {
-    public var typeId = TealiumDeleteRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public let name: String
-
-    public init(name: String) {
-        self.name = name
-        self.completion = nil
-    }
-
-    public static func instanceTypeId() -> String {
-        return "delete"
-    }
-}
-
-/// Request to disable.
-public struct TealiumDisableRequest: TealiumRequest {
-    public var typeId = TealiumDisableRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public init() {}
-
-    public static func instanceTypeId() -> String {
-        return "disable"
-    }
-}
-
-/// Request to enable.
-public struct TealiumEnableRequest: TealiumRequest {
-    public var typeId = TealiumEnableRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-    public var enableCompletion: TealiumEnableCompletion?
-    public let config: TealiumConfig
-    public var bypassDidFinish = false
-    public var eventDataManager: EventDataManagerProtocol?
-
-    public init(config: TealiumConfig,
-                eventDataManager: EventDataManagerProtocol? = nil,
-                enableCompletion: TealiumEnableCompletion?) {
-        self.config = config
-        self.eventDataManager = eventDataManager
-        self.enableCompletion = enableCompletion
-    }
-
-    public static func instanceTypeId() -> String {
-        return "enable"
-    }
-}
-
 public struct TealiumUpdateConfigRequest: TealiumRequest {
     public var typeId = TealiumUpdateConfigRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
     public var completion: TealiumCompletion?
     public let config: TealiumConfig
 
@@ -92,77 +36,25 @@ public struct TealiumUpdateConfigRequest: TealiumRequest {
     }
 }
 
-/// Request to load persistent data.
-public struct TealiumLoadRequest: TealiumRequest {
-    public var typeId = TealiumLoadRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-    public let name: String
-
-    public init(name: String,
-                completion: TealiumCompletion?) {
-        self.name = name
-        self.completion = completion
-    }
-
-    public static func instanceTypeId() -> String {
-        return "load"
-    }
-}
-
-// Module wants to report status to any listening modules
-public struct TealiumReportRequest: TealiumRequest {
-    public var typeId = TealiumReportNotificationsRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public let message: String
-
-    public init(message: String) {
-        self.message = message
-    }
-
-    public static func instanceTypeId() -> String {
-        return "report"
-    }
-}
-
-// Module requests to be notified of any reports or when all modules finished
-//  processing a request.
-public struct TealiumReportNotificationsRequest: TealiumRequest {
-    public var typeId = TealiumReportNotificationsRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public init() {
-    }
-
-    public static func instanceTypeId() -> String {
-        return "reportnotification"
-    }
-}
-
 /// Request to send any queued data.
-public struct TealiumReleaseQueuesRequest: TealiumRequest {
-    public var typeId = TealiumReleaseQueuesRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public init(typeId: String, moduleResponses: [TealiumModuleResponse], completion: TealiumCompletion?) {
-        self.typeId = typeId
-        self.moduleResponses = moduleResponses
-        self.completion = completion
-    }
-
-    public static func instanceTypeId() -> String {
-        return "queuerelease"
-    }
-}
+//public struct TealiumReleaseQueuesRequest: TealiumRequest {
+//    public var typeId = TealiumReleaseQueuesRequest.instanceTypeId()
+//    public var completion: TealiumCompletion?
+//
+//    public init(typeId: String, moduleResponses: [TealiumModuleResponse], completion: TealiumCompletion?) {
+//        self.typeId = typeId
+//        self.moduleResponses = moduleResponses
+//        self.completion = completion
+//    }
+//
+//    public static func instanceTypeId() -> String {
+//        return "queuerelease"
+//    }
+//}
 
 /// Request to queue a track call
 public struct TealiumEnqueueRequest: TealiumRequest {
     public var typeId = TealiumEnqueueRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
     public var completion: TealiumCompletion?
     public var data: [TealiumTrackRequest]
     var queueReason: String?
@@ -201,70 +93,8 @@ public struct TealiumEnqueueRequest: TealiumRequest {
     }
 }
 
-public struct TealiumConnectivityRequest: TealiumRequest {
-    public var completion: TealiumCompletion?
-
-    public enum TealiumConnectivityStatus {
-        case reachable
-        case notReachable
-    }
-
-    public init(status: TealiumConnectivityStatus) {
-        self.connectivityStatus = status
-    }
-
-    public var typeId = TealiumConnectivityRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    //    public var completion: TealiumCompletion?
-    public var connectivityStatus: TealiumConnectivityStatus
-
-    public static func instanceTypeId() -> String {
-        return "connectivity"
-    }
-}
-
-/// Request to send any queued data.
-public struct TealiumClearQueuesRequest: TealiumRequest {
-    public var typeId = TealiumClearQueuesRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public init(typeId: String, moduleResponses: [TealiumModuleResponse], completion: TealiumCompletion?) {
-        self.typeId = typeId
-        self.moduleResponses = moduleResponses
-        self.completion = completion
-    }
-
-    public static func instanceTypeId() -> String {
-        return "queuedelete"
-    }
-}
-
-/// Request to save persistent data.
-public struct TealiumSaveRequest: TealiumRequest {
-    public var typeId = TealiumSaveRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-    public var requestingModule: String?
-
-    public let name: String
-    public let data: [String: Any]
-
-    public init(name: String,
-                data: [String: Any]) {
-        self.name = name
-        self.data = data
-        self.completion = nil
-    }
-
-    public static func instanceTypeId() -> String {
-        return "save"
-    }
-}
-
 public struct TealiumRemoteAPIRequest: TealiumRequest {
     public var typeId = TealiumRemoteAPIRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
     public var completion: TealiumCompletion?
     public var trackRequest: TealiumTrackRequest
 
@@ -299,7 +129,6 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
     }
 
     public var typeId = TealiumTrackRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
     public var completion: TealiumCompletion?
 
     public var data: AnyEncodable
@@ -384,7 +213,6 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
     ]
     public var trackRequests: [TealiumTrackRequest]
 
-    public var moduleResponses = [TealiumModuleResponse]()
     public var completion: TealiumCompletion?
 
     enum CodingKeys: String, CodingKey {
@@ -438,42 +266,4 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
         return newSharedDictionary
     }
 
-}
-
-public struct TealiumDeviceDataRequest: TealiumRequest {
-    public var typeId = TealiumDeviceDataRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public static func instanceTypeId() -> String {
-        return "devicedata"
-    }
-}
-
-public struct TealiumJoinTraceRequest: TealiumRequest {
-    public var typeId = TealiumJoinTraceRequest.instanceTypeId()
-    public var traceId: String
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public static func instanceTypeId() -> String {
-        return "jointrace"
-    }
-
-    public init(traceId: String) {
-        self.traceId = traceId
-    }
-
-}
-
-public struct TealiumLeaveTraceRequest: TealiumRequest {
-    public var typeId = TealiumLeaveTraceRequest.instanceTypeId()
-    public var moduleResponses = [TealiumModuleResponse]()
-    public var completion: TealiumCompletion?
-
-    public static func instanceTypeId() -> String {
-        return "leavetrace"
-    }
-
-    public init () {}
 }

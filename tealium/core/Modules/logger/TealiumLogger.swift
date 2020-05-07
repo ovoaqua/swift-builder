@@ -51,6 +51,7 @@ public struct TealiumLogger: TealiumLoggerProtocol {
             textLog(request)
         }
     }
+    
     // set log level to default to hide info messages xcrun simctl spawn booted log config --mode "level:default" --subsystem com.tealium.swift
     @available(iOS 10.0, *)
     func osLog(_ request: LogRequest){

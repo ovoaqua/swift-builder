@@ -59,8 +59,6 @@ class TealiumHelper: NSObject {
 //         config.batchingEnabled = true
         // config.visitorServiceRefreshInterval = 0
         // config.visitorServiceOverrideProfile = "main"
-        // OPTIONALLY add an external delegate
-        config.addDelegate(self)
         config.memoryReportingEnabled = true
 
         #if AUTOTRACKING
@@ -192,22 +190,6 @@ class TealiumHelper: NSObject {
     
     func crash() {
         NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
-    }
-}
-
-extension TealiumHelper: TealiumDelegate {
-
-    func tealiumShouldTrack(data: [String: Any]) -> Bool {
-        let logRequest = TealiumLogRequest(title: "😀Track data", message: "", info: data, logLevel: .info, category: .general)
-        logger?.log(logRequest)
-        return true
-    }
-
-    func tealiumTrackCompleted(success: Bool, info: [String: Any]?, error: Error?) {
-        if enableHelperLogs == false {
-            return
-        }
-        print("\n*** Tealium Helper: Tealium Delegate : tealiumTrackCompleted *** Track finished. Was successful:\(success)\nInfo:\(info as AnyObject)\((error != nil) ? "\nError:\(String(describing: error))":"")")
     }
 }
 

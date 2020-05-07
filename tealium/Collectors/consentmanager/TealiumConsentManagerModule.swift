@@ -280,11 +280,11 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
 
     /// Clears all pending dispatches from the DispatchQueue. Called if tracking consent is declined by the user.
     func purgeQueue() {
-        let req = TealiumClearQueuesRequest(typeId: "consent", moduleResponses: [TealiumModuleResponse]()) { _, _, _ in
+//        let req = TealiumClearQueuesRequest(typeId: "consent", moduleResponses: [TealiumModuleResponse]()) { _, _, _ in
 //            let report = TealiumReportRequest(message: "Consent Manager: Purging queue.")
 //            //self.delegate?.tealiumModuleRequests(module: self,
 //                                                 //process: report)
-        }
+//        }
         
         // self.delegate?.tealiumModuleRequests(module: self, process: req)
     }

@@ -41,11 +41,6 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
 
     /// Loads persistent attribution data into memory, or fetches new data if not found.
     func setPersistentAttributionData() {
-        if let data = TealiumLegacyMigrator.getLegacyData(forModule: TealiumAttributionKey.moduleName),
-            let persistentData = PersistentAttributionData(withDictionary: data) {
-            persistentAttributionData = persistentData
-            diskStorage.save(self.persistentAttributionData, completion: nil)
-        } else {
             guard let data = diskStorage.retrieve(as: PersistentAttributionData.self) else {
                 self.appleSearchAdsData { data in
                     self.persistentAttributionData = data
@@ -54,7 +49,6 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
                 return
             }
             self.persistentAttributionData = data
-        }
     }
 
     /// - Returns: `String` representation of IDFA

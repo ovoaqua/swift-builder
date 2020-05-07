@@ -9,6 +9,9 @@
 import Foundation
 import TealiumCore
 
+// TODO: Handle errors better
+// TODO: Handle break in connectivity - assume no track successful and resubmit track request (start queueing)
+
 /// Dispatch Service Module for sending track data to the Tealium Webview.
 public class TealiumTagManagementModule: Dispatcher {
     
@@ -125,7 +128,6 @@ public class TealiumTagManagementModule: Dispatcher {
         case let track as TealiumBatchTrackRequest:
             var newRequest = TealiumBatchTrackRequest(trackRequests: track.trackRequests.map { prepareForDispatch($0) },
                                                       completion: track.completion)
-            newRequest.moduleResponses = track.moduleResponses
             self.dispatchTrack(newRequest, completion: completion)
         case let track as TealiumRemoteAPIRequest:
             self.dispatchTrack(prepareForDispatch(track.trackRequest), completion: completion)

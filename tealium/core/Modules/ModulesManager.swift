@@ -28,6 +28,7 @@ public class ModulesManager {
                 return
             }
             self.dispatchManager?.config = newValue
+            self.updateConfig(config: newValue)
             self.modules.forEach {
                 var module = $0
                 module.config = newValue
@@ -37,10 +38,6 @@ public class ModulesManager {
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
-        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-            guard let self = self else {
-                return
-            }
             self.logger = config.logger
             self.eventDataManager = eventDataManager
             self.setupDispatchers(config: config)
@@ -56,7 +53,18 @@ public class ModulesManager {
                 "Dispatchers Initialized: \(self.dispatchers.map { $0.moduleId })"
             ], info: nil, logLevel: .info, category: .`init`)
             self.logger?.log(logRequest)
+    }
+    
+    func updateConfig(config: TealiumConfig) {
+        if config.isCollectEnabled == false {
+            disableModule(id: "Collect")
         }
+        
+        if config.isTagManagementEnabled == false {
+            disableModule(id: "Tag Management")
+        }
+        
+        self.setupDispatchers(config: config)
     }
 
     func addCollector(_ collector: Collector) {
@@ -128,12 +136,22 @@ public class ModulesManager {
     }
     
     func setupDispatchers(config: TealiumConfig) {
-        knownDispatchers.forEach { coreDispatcher in
-            guard let moduleRef = objc_getClass(coreDispatcher) as? Dispatcher.Type else {
+        knownDispatchers.forEach { knownDispatcher in
+            guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
                 return
             }
-            if coreDispatcher.contains("TagManagement") {
+            
+            if knownDispatcher.contains("TagManagement") {
+                guard config.isTagManagementEnabled == true else {
+                    return
+                }
                 self.eventDataManager?.tagManagementIsEnabled = true
+            }
+            
+            if knownDispatcher.contains("Collect") {
+                guard config.isCollectEnabled == true else {
+                    return
+                }
             }
             
             let dispatcher = moduleRef.init(config: config, delegate: self) { result in
@@ -188,8 +206,18 @@ public class ModulesManager {
         return allData.value
     }
     
-    func disable() {
-        
+    func disableModule(id: String) {
+        if let module = modules.first(where: { $0.moduleId == id }) {
+            switch module {
+            case let module as Dispatcher:
+                self.collectors = self.collectors.filter { type(of: module) != type(of: $0) }
+            case let module as Collector:
+                self.dispatchers = self.dispatchers.filter { type(of: module) != type(of: $0) }
+            default:
+                return
+            }
+            self.modules = self.modules.filter { type(of: module) != type(of: $0) }
+        }
     }
     
 }
