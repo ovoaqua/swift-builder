@@ -293,10 +293,10 @@ class VisitorProfileTests: XCTestCase {
 
     func testTallySubscriptSuccess() {
         let expected: [String: Float] = ["category 1": 2.0,
-                          "category 2": 1.0,
-                          "category 3": 1.0,
-                          "category 4": 1.0,
-                          "category 5": 12.0]
+                                         "category 2": 1.0,
+                                         "category 3": 1.0,
+                                         "category 4": 1.0,
+                                         "category 5": 12.0]
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
         if let shouldExistInProfile = visitor.tallies?["8481"] {
             XCTAssert(NSDictionary(dictionary: shouldExistInProfile).isEqual(to: expected) )
@@ -304,12 +304,12 @@ class VisitorProfileTests: XCTestCase {
     }
 
     func testTallySubscriptNil() {
-           visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorAllNil)
-           if let _ = visitor.tallies?["9999"] {
-                XCTFail("Should not get here - nil")
-           }
-           XCTAssertTrue(true)
-       }
+        visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorAllNil)
+        if let _ = visitor.tallies?["9999"] {
+            XCTFail("Should not get here - nil")
+        }
+        XCTAssertTrue(true)
+    }
 
     func testTallyValueSubscriptNoResult() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
@@ -328,12 +328,12 @@ class VisitorProfileTests: XCTestCase {
     }
 
     func testTallyValueSubscriptNil() {
-           visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorAllNil)
-           if let _ = visitor.tallies?["9999"] {
-                XCTFail("Should not get here - nil")
-           }
-           XCTAssertTrue(true)
-       }
+        visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorAllNil)
+        if let _ = visitor.tallies?["9999"] {
+            XCTFail("Should not get here - nil")
+        }
+        XCTAssertTrue(true)
+    }
 
     func testVisitorStringSubscriptNoResult() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)

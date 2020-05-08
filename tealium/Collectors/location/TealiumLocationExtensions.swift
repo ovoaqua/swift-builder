@@ -3,7 +3,6 @@
 //  TealiumLocation
 //
 //  Created by Harry Cassell on 12/09/2019.
-//  Updated by Christina Sund on 1/13/2020.
 //  Copyright © 2019 Tealium, Inc. All rights reserved.
 //
 #if os(iOS)
@@ -14,17 +13,17 @@ import TealiumCore
 
 // MARK: EXTENSIONS
 extension Tealium {
-
-    /// Get the Data Manager instance for accessing file persistence and auto data variable APIs.
-    ///
-    /// - Returns: `TealiumLocation?` instance (nil if disabled)
-    func location() -> TealiumLocation? {
-        guard let module = modulesManager?.getModule(forName: TealiumLocationKey.name) as? TealiumLocationModule else {
-            return nil
-        }
-
-        return module.tealiumLocationManager
-    }
+//
+//    /// Get the Data Manager instance for accessing file persistence and auto data variable APIs.
+//    ///
+//    /// - Returns: `TealiumLocation?` instance (nil if disabled)
+//    func location() -> TealiumLocation? {
+//        guard let module = modulesManager?.getModule(forName: TealiumLocationKey.name) as? TealiumLocationModule else {
+//            return nil
+//        }
+//
+//        return module.tealiumLocationManager
+//    }
 
 }
 

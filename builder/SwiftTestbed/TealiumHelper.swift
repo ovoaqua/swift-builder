@@ -16,6 +16,7 @@ import TealiumAttribution
 import TealiumVisitorService
 import TealiumLifecycle
 import TealiumConsentManager
+import TealiumLocation
 
 extension String: Error {}
 
@@ -78,7 +79,7 @@ class TealiumHelper: NSObject {
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
         logger = config.logger
-        //config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         #endif
 //        #if os(iOS)
 //

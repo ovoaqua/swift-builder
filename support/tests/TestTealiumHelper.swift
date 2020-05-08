@@ -41,14 +41,14 @@ let testTealiumConfig = TealiumConfig(account: TealiumTestValue.account,
                                       environment: TealiumTestValue.environment,
                                       optionalData: testOptionalData as [String: Any])
 
-let testDeleteRequest = TealiumDeleteRequest(name: "testDelete")
-let testDisableRequest = TealiumDisableRequest()
-let testEnableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
-let testLoadRequest = TealiumLoadRequest(name: "test") { _, _, _ in
-    // Future processing... maybe
-}
-let testReportNotificationRequest = TealiumReportNotificationsRequest()
-let testSaveRequest = TealiumSaveRequest(name: "test", data: ["key": "value"])
+//let testDeleteRequest = TealiumDeleteRequest(name: "testDelete")
+//let testDisableRequest = TealiumDisableRequest()
+//let testEnableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
+//let testLoadRequest = TealiumLoadRequest(name: "test") { _, _, _ in
+//    // Future processing... maybe
+//}
+//let testReportNotificationRequest = TealiumReportNotificationsRequest()
+//let testSaveRequest = TealiumSaveRequest(name: "test", data: ["key": "value"])
 let testTrackRequest = TealiumTrackRequest(data: [:],
                                            completion: nil)
 
@@ -183,19 +183,19 @@ class TestTealiumHelper {
         #endif
     }
 
-    class func allTealiumRequestNames() -> [String] {
-
-        return [
-            TealiumEnableRequest.instanceTypeId(),
-            TealiumDeleteRequest.instanceTypeId(),
-            TealiumDisableRequest.instanceTypeId(),
-            TealiumLoadRequest.instanceTypeId(),
-            TealiumReportNotificationsRequest.instanceTypeId(),
-            TealiumSaveRequest.instanceTypeId(),
-            TealiumTrackRequest.instanceTypeId()
-        ]
-
-    }
+//    class func allTealiumRequestNames() -> [String] {
+//
+//        return [
+//            TealiumEnableRequest.instanceTypeId(),
+//            TealiumDeleteRequest.instanceTypeId(),
+//            TealiumDisableRequest.instanceTypeId(),
+//            TealiumLoadRequest.instanceTypeId(),
+//            TealiumReportNotificationsRequest.instanceTypeId(),
+//            TealiumSaveRequest.instanceTypeId(),
+//            TealiumTrackRequest.instanceTypeId()
+//        ]
+//
+//    }
 
     func getConfig() -> TealiumConfig {
         return testTealiumConfig
@@ -205,17 +205,17 @@ class TestTealiumHelper {
         return TealiumConfig(account: TealiumTestValue.account, profile: TealiumTestValue.profile, environment: TealiumTestValue.environment)
     }
 
-    class func allTestTealiumRequests() -> [TealiumRequest] {
-        return [
-            testDeleteRequest,
-            testDisableRequest,
-            testEnableRequest,
-            testLoadRequest,
-            testReportNotificationRequest,
-            testSaveRequest,
-            testTrackRequest
-        ]
-    }
+//    class func allTestTealiumRequests() -> [TealiumRequest] {
+////        return [
+////            testDeleteRequest,
+////            testDisableRequest,
+////            testEnableRequest,
+////            testLoadRequest,
+////            testReportNotificationRequest,
+////            testSaveRequest,
+////            testTrackRequest
+////        ]
+//    }
 
 //    class func executeAllKnownTealiumRequests(forModule: TealiumModule) {
 //        forModule.handle(testDeleteRequest)

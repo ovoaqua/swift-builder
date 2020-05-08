@@ -11,7 +11,7 @@ import Foundation
 public class ModulesManager {
 
     var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.TealiumCrashModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule"]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.TealiumCrashModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule", "TealiumLocation.TealiumLocationModule"]
     var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()

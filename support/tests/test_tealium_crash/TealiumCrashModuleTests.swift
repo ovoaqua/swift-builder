@@ -19,7 +19,7 @@ class TealiumCrashModuleTests: XCTestCase {
     override func setUp() {
         super.setUp()
         config = TealiumConfig(account: "TestAccount", profile: "TestProfile", environment: "TestEnvironment")
-        crashModule = TealiumCrashModule(config: config, delegate: self, diskStorage: nil, completion: {})
+        crashModule = TealiumCrashModule(config: config, delegate: self, diskStorage: nil, completion: { _ in })
         mockCrashReporter = MockTealiumCrashReporter()
     }
 
@@ -50,11 +50,7 @@ class TealiumCrashModuleTests: XCTestCase {
 }
 
 extension TealiumCrashModuleTests: TealiumModuleDelegate {
-
-    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-    }
-
-    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
+    func requestTrack(_ track: TealiumTrackRequest) {
     }
 }
 

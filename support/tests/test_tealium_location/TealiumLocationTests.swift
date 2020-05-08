@@ -27,7 +27,7 @@ class TealiumLocationTests: XCTestCase {
         self.locationManager = locationManager
         TealiumLocationTests.expectations = [XCTestExpectation]()
         config = TealiumConfig(account: "tealiummobile", profile: "location", environment: "dev")
-        tealiumLocationModule = TealiumLocationModule(delegate: self)
+        tealiumLocationModule = TealiumLocationModule(config: config, delegate: self, diskStorage: MockLocationDiskStorage(config: config), completion: { _ in })
     }
 
     override func tearDown() {
@@ -376,39 +376,6 @@ class TealiumLocationTests: XCTestCase {
 
     // MARK: Location Module Tests
 
-    func testEnable() {
-        let expect = expectation(description: "testEnable")
-        TealiumLocationTests.expectations.append(expect)
-        let request = TealiumEnableRequest(config: config, enableCompletion: nil)
-        tealiumLocationModule!.enable(request)
-        XCTAssertTrue(tealiumLocationModule!.isEnabled)
-        waitForExpectations(timeout: 3.0, handler: nil)
-    }
-
-    func testTrackWhenEnabled() {
-        let expect = expectation(description: "testTrackWhenEnabled")
-        TealiumLocationTests.expectations.append(expect)
-        let request = TealiumTrackRequest(data: ["testing": "location"], completion: nil)
-        tealiumLocationModule!.track(request)
-        waitForExpectations(timeout: 3.0, handler: nil)
-    }
-
-    func testTrackWhenDisabled() {
-        let expect = expectation(description: "testTrackWhenDisabled")
-        tealiumLocationModule!.isEnabled = false
-        TealiumLocationTests.expectations.append(expect)
-        let request = TealiumTrackRequest(data: ["testing": "location"], completion: nil)
-        tealiumLocationModule!.track(request)
-        waitForExpectations(timeout: 3.0, handler: nil)
-    }
-
-    func testDisable() {
-        let expect = expectation(description: "testDisable")
-        TealiumLocationTests.expectations.append(expect)
-        tealiumLocationModule!.disable(TealiumDisableRequest())
-        waitForExpectations(timeout: 3.0, handler: nil)
-    }
-
     func testDidEnterGeofence() {
         let expect = expectation(description: "testDidEnterGeofence")
         TealiumLocationTests.expectations.append(expect)
@@ -462,36 +429,48 @@ class TealiumLocationTests: XCTestCase {
 
 extension TealiumLocationTests: TealiumModuleDelegate {
 
-    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        if let _ = process as? TealiumTrackRequest {
-            TealiumLocationTests.expectations
-                .filter {
-                    $0.description == "testTrackWhenEnabled" ||
-                        $0.description == "testTrackWhenDisabled"
+    func requestTrack(_ track: TealiumTrackRequest) {
+        TealiumLocationTests.expectations
+            .filter {
+                $0.description == "testTrackWhenEnabled" ||
+                    $0.description == "testTrackWhenDisabled" ||
+                    $0.description == "testDidEnterGeofence" ||
+                    $0.description == "testDidExitGeofence" ||
+                    $0.description == "testSendGeofenceTrackingEvent"
             }
-            .forEach { $0.fulfill() }
-        } else if let _ = process as? TealiumEnableRequest {
-            TealiumLocationTests.expectations
-                .filter { $0.description == "testEnable" }
-                .forEach { $0.fulfill() }
-        } else if let _ = process as? TealiumDisableRequest {
-            TealiumLocationTests.expectations
-                .filter { $0.description == "testDisable" }
-                .forEach { $0.fulfill() }
-        }
+        .forEach { $0.fulfill() }
     }
 
-    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        if let _ = process as? TealiumTrackRequest {
-            TealiumLocationTests.expectations
-                .filter {
-                    $0.description == "testDidEnterGeofence" ||
-                        $0.description == "testDidExitGeofence" ||
-                        $0.description == "testSendGeofenceTrackingEvent"
-            }
-            .forEach { $0.fulfill() }
-        }
-    }
+    //    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
+    //        if let _ = process as? TealiumTrackRequest {
+    //            TealiumLocationTests.expectations
+    //                .filter {
+    //                    $0.description == "testTrackWhenEnabled" ||
+    //                        $0.description == "testTrackWhenDisabled"
+    //            }
+    //            .forEach { $0.fulfill() }
+    //        } else if let _ = process as? TealiumEnableRequest {
+    //            TealiumLocationTests.expectations
+    //                .filter { $0.description == "testEnable" }
+    //                .forEach { $0.fulfill() }
+    //        } else if let _ = process as? TealiumDisableRequest {
+    //            TealiumLocationTests.expectations
+    //                .filter { $0.description == "testDisable" }
+    //                .forEach { $0.fulfill() }
+    //        }
+    //    }
+    //
+    //    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
+    //        if let _ = process as? TealiumTrackRequest {
+    //            TealiumLocationTests.expectations
+    //                .filter {
+    //                    $0.description == "testDidEnterGeofence" ||
+    //                        $0.description == "testDidExitGeofence" ||
+    //                        $0.description == "testSendGeofenceTrackingEvent"
+    //            }
+    //            .forEach { $0.fulfill() }
+    //        }
+    //    }
 }
 
 extension TealiumLocationTests: LocationListener {
@@ -503,7 +482,7 @@ extension TealiumLocationTests: LocationListener {
                                        TealiumLocationKey.geofenceTransition: TealiumLocationKey.entered,
                                        TealiumLocationKey.deviceLatitude: "37.3317",
                                        TealiumLocationKey.deviceLongitude: "-122.0325086",
-                                       TealiumLocationKey.timestamp: "2020-01-15 05:31:00 +0000",
+                                       TealiumLocationKey.timestamp: "2020-01-15 06:31:00 +0000",
                                        TealiumLocationKey.speed: "40.0"]
         XCTAssertEqual(expected.keys.sorted(), data.keys.sorted())
         data.forEach {

@@ -3,7 +3,6 @@
 //  TealiumLocation
 //
 //  Created by Harry Cassell on 02/09/2019.
-//  Updated by Christina Sund on 1/13/2020.
 //  Copyright © 2019 Harry Cassell. All rights reserved.
 //
 #if os(iOS)

@@ -43,10 +43,10 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
     }
 
     func testInitialVisitorProfileSettingsFromConfig() {
-            let config = tealHelper.getConfig()
-            config.visitorServiceRefreshInterval = 10
-            let interval = config.visitorServiceRefreshInterval!
-            XCTAssertEqual(interval, 10)
+        let config = tealHelper.getConfig()
+        config.visitorServiceRefreshInterval = 10
+        let interval = config.visitorServiceRefreshInterval!
+        XCTAssertEqual(interval, 10)
     }
 
     func testRequestVisitorProfile() {
@@ -105,12 +105,12 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
 extension TealiumVisitorServiceManagerTests: TealiumVisitorServiceDelegate {
 
     func didUpdate(visitorProfile: TealiumVisitorProfile) {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
-            self.getExpectation(forDescription: "testDelegateDidUpdateViaRequestVisitorProfile")?.fulfill()
-//        }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
-            self.getExpectation(forDescription: "testPollForVisitorProfile")?.fulfill()
-//        }
+        //        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
+        self.getExpectation(forDescription: "testDelegateDidUpdateViaRequestVisitorProfile")?.fulfill()
+        //        }
+        //        DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
+        self.getExpectation(forDescription: "testPollForVisitorProfile")?.fulfill()
+        //        }
         visitorServiceManager?.timer?.suspend()
     }
 
