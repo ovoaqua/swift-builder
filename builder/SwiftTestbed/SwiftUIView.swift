@@ -34,6 +34,13 @@ struct SwiftUIView: View {
                          Text("Track Event")
                     }).padding(.bottom)
             
+                    Button(action: {
+                        TealiumHelper.shared.toggleConsentStatus()
+                    },
+                    label: {
+                         Text("Toggle consent status")
+                    }).padding(.bottom)
+            
                     TextField("Trace ID", text: $text) {
                         TealiumHelper.shared.joinTrace(self.text)
                     }.multilineTextAlignment(.center)

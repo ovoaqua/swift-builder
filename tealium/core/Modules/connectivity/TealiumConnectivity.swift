@@ -22,7 +22,11 @@ class TealiumConnectivity {
     var connectivityDelegates = TealiumMulticastDelegate<TealiumConnectivityDelegate>()
     var currentConnectivityType = ""
     static var currentConnectionStatus: Bool?
-    var config: TealiumConfig?
+    var config: TealiumConfig
+    var hasViableConnection: Bool {
+        TealiumConnectivity.isConnectedToNetwork() == true || (self.config.wifiOnlySending == true && TealiumConnectivity.currentConnectionType() == TealiumConnectivityKey.connectionTypeWifi)
+    }
+    
     
     init (config: TealiumConfig) {
         self.config = config

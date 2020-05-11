@@ -42,7 +42,8 @@ extension TealiumConsentManagerModule: TealiumConsentManagerDelegate {
         case .notConsented:
             print("should purge queue")
         case .consented:
-            print("should release queue")
+//            print("should release queue")
+            self.delegate?.requestReleaseQueue(reason: "Consent status changed to .consented")
         default:
             return
         }

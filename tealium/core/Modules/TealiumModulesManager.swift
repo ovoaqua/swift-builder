@@ -16,7 +16,7 @@ public class ModulesManager {
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]()
     var dispatchManager: DispatchManager?
-    
+    var connectivityManager: TealiumConnectivity
     var dispatchers = [Dispatcher]()
     var dispatchListeners = [DispatchListener]()
     var eventDataManager: EventDataManagerProtocol?
@@ -38,12 +38,15 @@ public class ModulesManager {
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
+            self.config = config
+            self.connectivityManager = TealiumConnectivity(config: config)
+            connectivityManager.addConnectivityDelegate(delegate: self)
             self.logger = config.logger
             self.eventDataManager = eventDataManager
             self.setupDispatchers(config: config)
             self.setupDispatchValidators(config: config)
             self.setupDispatchListeners(config: config)
-            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, dispatchListeners: self.dispatchListeners, delegate: self, logger: self.logger, config: config)
+            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, dispatchListeners: self.dispatchListeners, delegate: self, connectivityManager: self.connectivityManager, logger: self.logger, config: config)
             self.modules += self.collectors
             self.modules += self.dispatchers
             self.setupCollectors(config: config)
@@ -76,9 +79,9 @@ public class ModulesManager {
             addDispatchValidator(dispatchValidator)
         }
         
-        guard collectors.contains(where: {
+        guard collectors.first(where: {
             type(of: $0) == type(of: collector)
-        }) == false else {
+        }) == nil else {
             return
         }
         collectors.append(collector)
@@ -86,9 +89,9 @@ public class ModulesManager {
     
     // TODO: tidy this up. Need to update logic and remove duplication
     func addDispatchListener(_ listener: DispatchListener) {
-        guard dispatchListeners.contains(where: {
+        guard dispatchListeners.first(where: {
             type(of: $0) == type(of: listener)
-        }) == false else {
+        }) == nil else {
             return
         }
         dispatchListeners.append(listener)
@@ -96,9 +99,9 @@ public class ModulesManager {
     }
     
     func addDispatchValidator(_ validator: DispatchValidator) {
-        guard dispatchValidators.contains(where: {
+        guard dispatchValidators.first(where: {
             type(of: $0) == type(of: validator)
-        }) == false else {
+        }) == nil else {
             return
         }
         dispatchValidators.append(validator)
@@ -106,9 +109,9 @@ public class ModulesManager {
     }
     
     func addDispatcher(_ dispatcher: Dispatcher) {
-        guard dispatchers.contains(where: {
+        guard dispatchers.first(where: {
             type(of: $0) == type(of: dispatcher)
-        }) == false else {
+        }) == nil else {
             return
         }
         dispatchers.append(dispatcher)
@@ -136,6 +139,9 @@ public class ModulesManager {
     }
     
     func setupDispatchers(config: TealiumConfig) {
+        guard TealiumConnectivity.isConnectedToNetwork() else {
+            return
+        }
         knownDispatchers.forEach { knownDispatcher in
             guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
                 return
@@ -165,6 +171,7 @@ public class ModulesManager {
 
            addDispatcher(dispatcher)
         }
+        self.dispatchManager?.dispatchers = self.dispatchers
     }
     
 //     TODO: allow dispatch validators to be set up from config, replaces delegate
@@ -229,4 +236,29 @@ extension ModulesManager: TealiumModuleDelegate {
             self.sendTrack(track)
         }
     }
+    
+    public func requestReleaseQueue(reason: String) {
+        self.dispatchManager?.handleReleaseRequest(reason: reason)
+    }
+}
+
+extension ModulesManager: TealiumConnectivityDelegate {
+    public func connectionTypeChanged(_ connectionType: String) {
+        
+    }
+    
+    public func connectionLost() {
+        
+    }
+    
+    public func connectionRestored() {
+        if self.dispatchers.isEmpty {
+            if let config = self.config {
+                self.setupDispatchers(config: config)
+                self.requestReleaseQueue(reason: "Connection Restored")
+            }
+        }
+    }
+    
+    
 }

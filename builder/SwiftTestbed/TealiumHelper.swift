@@ -79,7 +79,7 @@ class TealiumHelper: NSObject {
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
         logger = config.logger
-        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+//        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         #endif
 //        #if os(iOS)
 //
@@ -98,31 +98,36 @@ class TealiumHelper: NSObject {
         
         // REQUIRED Initialization
         tealium = Tealium(config: config) { [weak self] response in
-            guard let self = self, let teal = self.tealium else { return }
+            guard let self = self,
+                let teal = self.tealium else {
+                return
+                
+            }
 
             self.track(title: "init", data: nil)
 
             let persitence = teal.persistentData()
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
+            teal.consentManager?.setUserConsentStatus(.consented)
 
-            //dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
+            dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
 
-            //persitence.add(data: ["some_key1": "some_val1"], expiration: .session)
+            persitence.add(data: ["some_key1": "some_val1"], expiration: .session)
 
-            //persitence.add(data: ["some_key_forever":"some_val_forever"]) // forever
+            persitence.add(data: ["some_key_forever":"some_val_forever"]) // forever
 
-            // persitence.add(data: ["until": "restart"], expiration: .untilRestart)
+             persitence.add(data: ["until": "restart"], expiration: .untilRestart)
 
-            //persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
+            persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
 
-            //persitence.deleteData(forKeys: ["myvarforever"])
+            persitence.deleteData(forKeys: ["myvarforever"])
 
-//            sessionPersistence.add(data: ["hello": "world"]) // session
+            sessionPersistence.add(data: ["hello": "world"]) // session
 
-//            sessionPersistence.add(value: 123, forKey: "test") // session
+            sessionPersistence.add(value: 123, forKey: "test") // session
 
-            //sessionPersistence.deleteData(forKeys: ["hello", "test"])
+            sessionPersistence.deleteData(forKeys: ["hello", "test"])
 
             persitence.add(value: "hello", forKey: "itsme", expiration: .afterCustom((.months, 1)))
 
@@ -136,6 +141,19 @@ class TealiumHelper: NSObject {
     func resetConsentPreferences() {
         tealium?.consentManager?.resetUserConsentPreferences()
     }
+    
+    
+    func toggleConsentStatus() {
+        if let consentStatus = tealium?.consentManager?.getUserConsentStatus() {
+            switch consentStatus {
+            case .consented:
+                TealiumHelper.shared.tealium?.consentManager?.setUserConsentStatus(.notConsented)
+            default:
+                TealiumHelper.shared.tealium?.consentManager?.setUserConsentStatus(.consented)
+            }
+        }
+    }
+    
     
     func updateConsentPreferences() {
         let cats = ["analytics", "monitoring", "big_data", /*"mobile", "crm", "affiliates", "email", "search", */"engagement", "cdp"]
@@ -155,7 +173,7 @@ class TealiumHelper: NSObject {
     func track(title: String, data: [String: Any]?) {
 //        tealium?.lifecycle()?.launch(at: Date())
 //        tealium?.disable()
-        self.tealium = nil
+//        self.tealium = nil
         tealium?.track(title: title,
                        data: data,
                        completion: { (success, info, error) in

@@ -18,13 +18,12 @@ class DispatchManager: TealiumConnectivityDelegate {
     var dispatchValidators = [DispatchValidator]()
     var dispatchListeners = [DispatchListener]()
     var logger: TealiumLoggerProtocol?
-//    weak var delegate: TealiumModuleDelegate?
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
     var connectivityManager: TealiumConnectivity
     var isConnected: Bool {
-        let connected = TealiumConnectivity.isConnectedToNetwork() == true || (config.wifiOnlySending == true && TealiumConnectivity.currentConnectionType() == TealiumConnectivityKey.connectionTypeWifi)
+        let connected = self.connectivityManager.hasViableConnection
         if connected == false {
             connectivityManager.refreshConnectivityStatus()
         }
@@ -88,10 +87,11 @@ class DispatchManager: TealiumConnectivityDelegate {
          dispatchValidators: [DispatchValidator]?,
          dispatchListeners: [DispatchListener]?,
          delegate: TealiumModuleDelegate?,
+         connectivityManager: TealiumConnectivity,
          logger: TealiumLoggerProtocol?,
          config: TealiumConfig) {
         self.config = config
-        self.connectivityManager = TealiumConnectivity(config: config)
+        self.connectivityManager = connectivityManager
         self.connectivityManager.connectivityDelegates.add(self)
         if let dispatchers = dispatchers {
             self.dispatchers = dispatchers
@@ -155,6 +155,11 @@ class DispatchManager: TealiumConnectivityDelegate {
             return
         }
         
+        if self.dispatchers.isEmpty {
+            self.enqueue(request, reason: "Dispatchers Not Ready")
+            return
+        }
+        
         runDispatchers(for: newRequest)
     }
     
@@ -165,6 +170,8 @@ class DispatchManager: TealiumConnectivityDelegate {
                 var newData = request.trackDictionary
                 newData += data
                 request.data = newData.encodable
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
             }
             return response.0
         }.count > 0
@@ -180,6 +187,8 @@ class DispatchManager: TealiumConnectivityDelegate {
                     newData += data
                     return TealiumTrackRequest(data: newData, completion: request.completion)
                 }, completion: request.completion)
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
             }
             return response.0
         }.count > 0
@@ -191,13 +200,23 @@ class DispatchManager: TealiumConnectivityDelegate {
     
     func checkShouldDrop(request: TealiumRequest) -> Bool {
         dispatchValidators.filter {
-            $0.shouldDrop(request: request)
+            if $0.shouldDrop(request: request) == true {
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request dropped by Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
+                return true
+            }
+            return false
         }.count > 0
     }
     
     func checkShouldPurge(request: TealiumRequest) -> Bool {
         dispatchValidators.filter {
-            $0.shouldPurge(request: request)
+            if $0.shouldPurge(request: request) == true {
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Purge request received from Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
+                return true
+            }
+            return false
         }.count > 0
     }
     
@@ -288,9 +307,11 @@ class DispatchManager: TealiumConnectivityDelegate {
     func enqueue(_ request: TealiumTrackRequest,
                  reason: String?) {
         defer {
-            if persistentQueue.currentEvents >= eventsBeforeAutoDispatch,
-                hasSufficientBattery(track: persistentQueue.peek()?.last) {
-                releaseQueue()
+            if !self.dispatchers.isEmpty {
+                if persistentQueue.currentEvents >= eventsBeforeAutoDispatch,
+                    hasSufficientBattery(track: persistentQueue.peek()?.last) {
+                    handleReleaseRequest(reason: "Dispatch queue limit reached.")
+                }
             }
         }
         // no conditions preventing queueing, so queue request
@@ -306,6 +327,32 @@ class DispatchManager: TealiumConnectivityDelegate {
     
     func clearQueue() {
         persistentQueue.clearQueue()
+    }
+    
+    func handleReleaseRequest(reason: String) {
+        guard isConnected else {
+            return
+        }
+        
+        // dummy request
+        var request = TealiumTrackRequest(data: ["release_request":true])
+        
+        guard !self.dispatchers.isEmpty else {
+            return
+        }
+        
+        guard !checkShouldQueue(request: &request),
+            !checkShouldDrop(request: request),
+            !checkShouldPurge(request: request) else {
+                return
+        }
+        
+        if let count = persistentQueue.peek()?.count, count > 0 {
+            let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Releasing queued dispatches. Reason: \(reason)", info: nil, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
+            
+                self.releaseQueue()
+        }
     }
     
     func releaseQueue() {
@@ -475,7 +522,7 @@ extension DispatchManager {
     }
     
     func connectionRestored() {
-        releaseQueue()
+        handleReleaseRequest(reason: "Connectivity Restored")
         connectivityManager.cancelAutoStatusRefresh()
     }
 }

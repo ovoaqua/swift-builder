@@ -32,6 +32,11 @@ public class Tealium {
     public init(config: TealiumConfig,
                 eventDataManager: EventDataManagerProtocol? = nil,
                 enableCompletion: TealiumEnableCompletion?) {
+        defer {
+            TealiumQueues.backgroundConcurrentQueue.write {
+                enableCompletion?(.success(true))
+            }
+        }
         self.config = config
         self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
@@ -43,8 +48,6 @@ public class Tealium {
                 self.config = remoteConfig
             }
         }
-        // TODO: Return any init errors here
-        enableCompletion?(.success(true))
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
                 return
@@ -54,6 +57,7 @@ public class Tealium {
             }
             TealiumInstanceManager.shared.addInstance(self, config: config)
         }
+        // TODO: Return any init errors here
     }
 
     /// - Parameter config: `TealiumConfig` Object created with Tealium account, profile, environment, optional loglevel)
