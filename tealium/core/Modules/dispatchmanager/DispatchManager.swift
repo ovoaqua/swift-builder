@@ -1,5 +1,5 @@
 //
-//  NewDispatchManager.swift
+//  DispatchManager.swift
 //  TealiumCore
 //
 //  Created by Craig Rouse on 30/04/2020.
@@ -104,9 +104,6 @@ class DispatchManager {
             self.logger = logger
         }
         
-//        if let delegate = delegate {
-//            self.delegate = delegate
-//        }
         // allows overriding for unit tests, independently of enable call
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: TealiumDispatchQueueConstants.moduleName)
@@ -125,13 +122,11 @@ class DispatchManager {
         triggerRemoteAPIRequest(request)
         if checkShouldQueue(request: &newRequest) {
             let enqueueRequest = TealiumEnqueueRequest(data: newRequest, completion: nil)
-//            dispatchManager?.queue(enqueueRequest)
             queue(enqueueRequest)
             return
         }
         
         if checkShouldDrop(request: newRequest) {
-            // TODO: Logging
             return
         }
         
@@ -142,7 +137,6 @@ class DispatchManager {
         
         let shouldQueue = self.shouldQueue(request: newRequest)
         if shouldQueue.0 == true {
-//            dispatchManager?.clearQueue()
             let batchingReason = shouldQueue.1? ["queue_reason"] as? String ?? "batching_enabled"
             
             self.enqueue(request, reason: batchingReason)
@@ -279,7 +273,7 @@ class DispatchManager {
         default:
             return
         }
-//        let logRequest = TealiumLogRequest(title: "Successful Track", messages: success.map { "\($0) Successful Track"}, info: logInfo, logLevel: .info, category: .track)
+
         let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Sending dispatch", info: logInfo, logLevel: .info, category: .track)
         logger?.log(logRequest)
     }
@@ -355,7 +349,7 @@ class DispatchManager {
             return
         }
         
-        // dummy request
+        // dummy request to check if queueing active
         var request = TealiumTrackRequest(data: ["release_request":true])
         
         guard !self.dispatchers.isEmpty else {
@@ -411,7 +405,6 @@ class DispatchManager {
             return
         }
         let request = TealiumRemoteAPIRequest(trackRequest: request)
-//        delegate.tealiumModuleRequests(module: nil, process: request)
         runDispatchers(for: request)
     }
     
