@@ -12,7 +12,7 @@ import UIKit
 #else
 #endif
 
-class DispatchManager: TealiumConnectivityDelegate {
+class DispatchManager {
     
     var dispatchers = [Dispatcher]()
     var dispatchValidators = [DispatchValidator]()
@@ -23,11 +23,7 @@ class DispatchManager: TealiumConnectivityDelegate {
     var config: TealiumConfig
     var connectivityManager: TealiumConnectivity
     var isConnected: Bool {
-        let connected = self.connectivityManager.hasViableConnection
-        if connected == false {
-            connectivityManager.refreshConnectivityStatus()
-        }
-        return connected
+        self.connectivityManager.hasViableConnection
     }
 
     // when to start trimming the queue (default 20) - e.g. if offline
@@ -92,7 +88,6 @@ class DispatchManager: TealiumConnectivityDelegate {
          config: TealiumConfig) {
         self.config = config
         self.connectivityManager = connectivityManager
-        self.connectivityManager.connectivityDelegates.add(self)
         if let dispatchers = dispatchers {
             self.dispatchers = dispatchers
         }
@@ -518,11 +513,11 @@ extension DispatchManager {
     }
     
     func connectionLost() {
-        logger?.log(TealiumLogRequest(title: "Dispatch Manager", message: "Connectivity lost", info: nil, logLevel: .info, category: .general))
+        
     }
     
     func connectionRestored() {
         handleReleaseRequest(reason: "Connectivity Restored")
-        connectivityManager.cancelAutoStatusRefresh()
+        
     }
 }

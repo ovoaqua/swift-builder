@@ -244,20 +244,22 @@ extension ModulesManager: TealiumModuleDelegate {
 
 extension ModulesManager: TealiumConnectivityDelegate {
     public func connectionTypeChanged(_ connectionType: String) {
-        
+        logger?.log(TealiumLogRequest(title: "Modules Manager", message: "Connectivity changed to \(connectionType)", info: nil, logLevel: .info, category: .general))
     }
     
     public func connectionLost() {
-        
+        connectivityManager.refreshConnectivityStatus()
+        logger?.log(TealiumLogRequest(title: "Modules Manager", message: "Connectivity lost", info: nil, logLevel: .info, category: .general))
     }
     
     public func connectionRestored() {
         if self.dispatchers.isEmpty {
             if let config = self.config {
                 self.setupDispatchers(config: config)
-                self.requestReleaseQueue(reason: "Connection Restored")
             }
         }
+        self.requestReleaseQueue(reason: "Connection Restored")
+        connectivityManager.cancelAutoStatusRefresh()
     }
     
     
