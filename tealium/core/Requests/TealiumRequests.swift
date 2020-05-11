@@ -14,6 +14,8 @@
 //  any of the following additional requests or to a module's own custom request
 //  type.
 
+import Foundation
+
 /// Request protocol
 public protocol TealiumRequest {
     var typeId: String { get set }
@@ -35,22 +37,6 @@ public struct TealiumUpdateConfigRequest: TealiumRequest {
         return "updateconfig"
     }
 }
-
-/// Request to send any queued data.
-//public struct TealiumReleaseQueuesRequest: TealiumRequest {
-//    public var typeId = TealiumReleaseQueuesRequest.instanceTypeId()
-//    public var completion: TealiumCompletion?
-//
-//    public init(typeId: String, moduleResponses: [TealiumModuleResponse], completion: TealiumCompletion?) {
-//        self.typeId = typeId
-//        self.moduleResponses = moduleResponses
-//        self.completion = completion
-//    }
-//
-//    public static func instanceTypeId() -> String {
-//        return "queuerelease"
-//    }
-//}
 
 /// Request to queue a track call
 public struct TealiumEnqueueRequest: TealiumRequest {
@@ -128,6 +114,7 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
         lhs.trackDictionary == rhs.trackDictionary
     }
 
+    public var uuid: String
     public var typeId = TealiumTrackRequest.instanceTypeId()
     public var completion: TealiumCompletion?
 
@@ -147,6 +134,9 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
 
     public init(data: [String: Any],
                 completion: TealiumCompletion?) {
+        self.uuid = data[TealiumKey.requestUUID] as? String ?? UUID().uuidString
+        var data = data
+        data[TealiumKey.requestUUID] = uuid
         self.data = data.encodable
         self.completion = completion
     }
@@ -172,8 +162,14 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let decoded = try values.decode(AnyDecodable.self, forKey: .data)
-
-        data = AnyEncodable(decoded.value as? [String: Any])
+        var trackData = decoded.value as? [String: Any]
+        if let uuid = trackData?[TealiumKey.requestUUID] as? String {
+            self.uuid = uuid
+        } else {
+            self.uuid = UUID().uuidString
+            trackData?[TealiumKey.requestUUID] = self.uuid
+        }
+        data = AnyEncodable(trackData)
         typeId = try values.decode(String.self, forKey: .typeId)
     }
 
@@ -191,12 +187,13 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
 
 public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
     public var typeId = TealiumTrackRequest.instanceTypeId()
+    public var uuid: String
     let sharedKeys = [TealiumKey.account,
                       TealiumKey.profile,
                       TealiumKey.dataSource,
                       TealiumKey.libraryName,
                       TealiumKey.libraryVersion,
-                      TealiumKey.uuid,
+                      TealiumKey.requestUUID,
                       TealiumKey.device,
                       TealiumKey.simpleModel,
                       TealiumKey.architectureLegacy,
@@ -228,9 +225,11 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
                 completion: TealiumCompletion?) {
         self.trackRequests = trackRequests
         self.completion = completion
+        self.uuid = UUID().uuidString
     }
 
     public init(from decoder: Decoder) throws {
+        self.uuid = UUID().uuidString
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
         trackRequests = try values.decode([TealiumTrackRequest].self, forKey: CodingKeys.trackRequests)

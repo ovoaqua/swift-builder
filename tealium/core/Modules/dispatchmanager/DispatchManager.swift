@@ -227,9 +227,9 @@ class DispatchManager {
             module.dynamicTrack(request) { result in
                 switch result {
                 case .failure(let error):
-                    self.logModuleResponse(for: moduleId, success: false, error: error)
+                    self.logModuleResponse(for: moduleId, request: request, success: false, error: error)
                 case .success:
-                    self.logModuleResponse(for: moduleId, success: true, error: nil)
+                    self.logModuleResponse(for: moduleId, request: request, success: true, error: nil)
                 }
                 
             }
@@ -237,11 +237,29 @@ class DispatchManager {
     }
     
     func logModuleResponse (for module: String,
+                            request: TealiumRequest,
                             success: Bool,
                             error: Error?) {
         let message = success ? "Successful Track": "Failed with error: \(error?.localizedDescription ?? "")"
         let logLevel: TealiumLogLevel = success ? .info : .error
-        let logRequest = TealiumLogRequest(title: module, message: message, info: nil, logLevel: logLevel, category: .track)
+        var uuid: String?
+        var event: String?
+        switch request {
+        case let request as TealiumBatchTrackRequest:
+            uuid = request.uuid
+            event = "batch"
+        case let request as TealiumTrackRequest:
+            uuid = request.uuid
+            event = request.event()
+        default:
+            uuid = nil
+        }
+        var messages = [String]()
+        if let uuid = uuid, let event = event {
+            messages.append("Event: \(event), Track UUID: \(uuid)")
+        }
+        messages.append(message)
+        let logRequest = TealiumLogRequest(title: module, messages: messages, info: nil, logLevel: logLevel, category: .track)
         logger?.log(logRequest)
     }
     

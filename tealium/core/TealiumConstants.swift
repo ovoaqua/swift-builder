@@ -55,6 +55,7 @@ public enum TealiumKey {
     public static let visitorId = "tealium_visitor_id"
     public static let random = "tealium_random"
     public static let uuid = "app_uuid"
+    public static let requestUUID = "request_uuid"
     public static let simpleModel = "model_name" // e.g. iPhone 5s // OLD: device
     public static let device = "device" // == model_name
     public static let deviceType = "device_type"
