@@ -20,6 +20,9 @@ public class TealiumCollectModule: Dispatcher {
     public var isReady = false
     weak var delegate: TealiumModuleDelegate?
     public var config: TealiumConfig
+    var logger: TealiumLoggerProtocol? {
+        config.logger
+    }
     
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
@@ -43,15 +46,14 @@ public class TealiumCollectModule: Dispatcher {
     public func dynamicTrack(_ request: TealiumRequest,
                              completion: ModuleCompletion?) {
         guard collect != nil else {
-//            didFailToFinish(track,
-//                            error: TealiumCollectError.collectNotInitialized)
+            let logRequest = TealiumLogRequest(message: "Collect dispatcher not initialized")
+            self.logger?.log(logRequest)
             return
         }
 
         switch request {
         case let request as TealiumTrackRequest:
             guard request.trackDictionary[TealiumKey.event] as? String != TealiumKey.updateConsentCookieEventName else {
-//                didFinishWithNoResponse(track)
                 return
             }
             self.track(prepareForDispatch(request), completion: completion)
@@ -65,7 +67,6 @@ public class TealiumCollectModule: Dispatcher {
             let newRequest = TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion)
             self.batchTrack(newRequest, completion: completion)
         default:
-//            self.didFinishWithNoResponse(track)
             return
         }
     }
@@ -75,7 +76,6 @@ public class TealiumCollectModule: Dispatcher {
     /// - Parameter request: `TealiumTrackRequest` to be insepcted/modified
     /// - Returns: `TealiumTrackRequest`
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
-//        let request = addModuleName(to: request)
         var newTrack = request.trackDictionary
         if newTrack[TealiumKey.account] == nil,
             newTrack[TealiumKey.profile] == nil {

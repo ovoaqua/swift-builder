@@ -11,6 +11,6 @@ import Foundation
 public extension Tealium {
 
     func logger() -> TealiumLoggerProtocol? {
-        modulesManager?.logger
+        zz_internal_modulesManager?.logger
     }
 }

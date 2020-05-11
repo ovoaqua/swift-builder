@@ -14,15 +14,14 @@ public typealias TealiumEnableCompletion = ((_ result: Result<Bool, Error>) -> V
 ///  Public interface for the Tealium library.
 public class Tealium {
 
-    public var config: TealiumConfig
+    var config: TealiumConfig
     var originalConfig: TealiumConfig
     /// Mediator for all Tealium modules.
-    public var enableCompletion: TealiumEnableCompletion?
-    public static var numberOfTrackRequests = AtomicInteger()
+    var enableCompletion: TealiumEnableCompletion?
     public static var lifecycleListeners = TealiumLifecycleListeners()
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     public var eventDataManager: EventDataManagerProtocol
-    public var modulesManager: ModulesManager?
+    public var zz_internal_modulesManager: ModulesManager?
     // MARK: PUBLIC
 
     /// Initializer.
@@ -41,7 +40,7 @@ public class Tealium {
         self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
         self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
-        modulesManager = ModulesManager(config, eventDataManager: eventDataManager)
+        zz_internal_modulesManager = ModulesManager(config, eventDataManager: eventDataManager)
         if config.shouldUseRemotePublishSettings {
             self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
             if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
@@ -70,7 +69,7 @@ public class Tealium {
     /// - Parameter config: TealiumConfiguration to update library with.
     public func update(config: TealiumConfig) {
         TealiumQueues.backgroundConcurrentQueue.write {
-            self.modulesManager?.config = config
+            self.zz_internal_modulesManager?.config = config
             self.config = config
         }
     }
@@ -78,7 +77,7 @@ public class Tealium {
     /// Suspends all library activity, may release internal objects.
     public func disable() {
         TealiumInstanceManager.shared.removeInstance(config: self.config)
-        self.modulesManager = nil
+        self.zz_internal_modulesManager = nil
     }
 
     /// Convenience track method with only a title argument.
@@ -116,7 +115,7 @@ public class Tealium {
             self.eventDataManager.sessionRefresh()
             let track = TealiumTrackRequest(data: trackData,
                                             completion: completion)
-            self.modulesManager?.sendTrack(track)
+            self.zz_internal_modulesManager?.sendTrack(track)
         }
     }
 

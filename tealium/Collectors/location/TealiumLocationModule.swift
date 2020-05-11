@@ -17,10 +17,13 @@ class TealiumLocationModule: Collector {
     public let moduleId: String = "Location"
     var config: TealiumConfig
     weak var delegate: TealiumModuleDelegate?
-    var tealiumLocationManager: TealiumLocation!
+    var tealiumLocationManager: TealiumLocation?
     
     var data: [String : Any]? {
         var newData = [String: Any]()
+        guard let tealiumLocationManager = tealiumLocationManager else {
+            return nil
+        }
         let location = tealiumLocationManager.latestLocation
         if location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
             newData = [TealiumLocationKey.deviceLatitude: "\(location.coordinate.latitude)",
@@ -37,8 +40,8 @@ class TealiumLocationModule: Collector {
         if Thread.isMainThread {
             tealiumLocationManager = TealiumLocation(config: config, locationListener: self)
         } else {
-            TealiumQueues.mainQueue.sync {
-                tealiumLocationManager = TealiumLocation(config: config, locationListener: self)
+            TealiumQueues.mainQueue.async {
+                self.tealiumLocationManager = TealiumLocation(config: config, locationListener: self)
             }
         }
         
@@ -46,7 +49,7 @@ class TealiumLocationModule: Collector {
 
     /// Disables the module and deletes all associated data
     func disable() {
-        tealiumLocationManager.disable()
+        tealiumLocationManager?.disable()
     }
 
 }

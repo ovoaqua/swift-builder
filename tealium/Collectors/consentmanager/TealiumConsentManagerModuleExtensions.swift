@@ -71,7 +71,7 @@ extension TealiumConsentManagerModule: TealiumConsentManagerDelegate {
 public extension Tealium {
 
     var consentManager: TealiumConsentManager? {
-        let module = modulesManager?.collectors.filter {
+        let module = zz_internal_modulesManager?.collectors.filter {
             $0 is TealiumConsentManagerModule
         }.first
         return (module as? TealiumConsentManagerModule)?.consentManager
