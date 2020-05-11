@@ -114,7 +114,13 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
         lhs.trackDictionary == rhs.trackDictionary
     }
 
-    public var uuid: String
+    public var uuid: String {
+        willSet {
+            var data = self.trackDictionary
+            data[TealiumKey.requestUUID] = newValue
+            self.data = data.encodable
+        }
+    }
     public var typeId = TealiumTrackRequest.instanceTypeId()
     public var completion: TealiumCompletion?
 
@@ -193,7 +199,7 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
                       TealiumKey.dataSource,
                       TealiumKey.libraryName,
                       TealiumKey.libraryVersion,
-                      TealiumKey.requestUUID,
+                      TealiumKey.uuid,
                       TealiumKey.device,
                       TealiumKey.simpleModel,
                       TealiumKey.architectureLegacy,

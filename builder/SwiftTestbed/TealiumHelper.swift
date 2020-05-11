@@ -45,7 +45,7 @@ class TealiumHelper: NSObject {
                                    datasource: "test12",
                                    optionalData: nil)
         config.connectivityRefreshInterval = 5
-        config.loggerType = .os
+        config.loggerType = .os 
         config.logLevel = .info
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
@@ -57,7 +57,7 @@ class TealiumHelper: NSObject {
         // config.batchSize = 5
         // config.dispatchAfter = 5
         // config.dispatchQueueLimit = 200
-        config.batchingEnabled = false
+        config.batchingEnabled = true
         // config.visitorServiceRefreshInterval = 0
         // config.visitorServiceOverrideProfile = "main"
         config.memoryReportingEnabled = true

@@ -173,15 +173,20 @@ class DispatchManager {
     }
     
     func checkShouldQueue(request: inout TealiumBatchTrackRequest) -> Bool {
-        dispatchValidators.filter {
+        let uuid = request.uuid
+        return dispatchValidators.filter {
             let response = $0.shouldQueue(request: request)
             if response.0 == true,
                 let data = response.1 {
                 request = TealiumBatchTrackRequest(trackRequests: request.trackRequests.map { request in
+                    let singleRequestUUID = request.uuid
                     var newData = request.trackDictionary
                     newData += data
-                    return TealiumTrackRequest(data: newData, completion: request.completion)
+                    var newRequest = TealiumTrackRequest(data: newData, completion: request.completion)
+                    newRequest.uuid = singleRequestUUID
+                    return newRequest
                 }, completion: request.completion)
+                request.uuid = uuid
                 let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
                 self.logger?.log(logRequest)
             }
@@ -310,10 +315,12 @@ class DispatchManager {
         allTrackRequests.forEach {
             var newData = $0.trackDictionary
             newData[TealiumKey.wasQueued] = "true"
-            let newTrack = TealiumTrackRequest(data: newData,
+            let uuid = $0.uuid
+            var newTrack = TealiumTrackRequest(data: newData,
                                                completion: $0.completion)
+            newTrack.uuid = uuid
             persistentQueue.appendDispatch(newTrack)
-            logQueue(request: newTrack)
+            logQueue(request: newTrack, reason: nil)
         }
     }
     
@@ -331,10 +338,11 @@ class DispatchManager {
         var requestData = request.trackDictionary
         requestData[TealiumKey.queueReason] = reason ?? TealiumKey.batchingEnabled
         requestData[TealiumKey.wasQueued] = "true"
-        let newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
+        var newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
+        newRequest.uuid = request.uuid
         persistentQueue.appendDispatch(newRequest)
 
-        logQueue(request: newRequest)
+        logQueue(request: newRequest, reason: reason)
     }
     
     
@@ -383,15 +391,11 @@ class DispatchManager {
                         // for all release calls, bypass the queue and send immediately
                         data += [TealiumDispatchQueueConstants.bypassQueueKey: true]
                         let request = TealiumTrackRequest(data: data, completion: nil)
-//                            delegate.tealiumModuleRequests(module: nil,
-//                                                            process: request)
                         runDispatchers(for: request)
                     }
 
                 case let val where val > 1:
                     let batchRequest = TealiumBatchTrackRequest(trackRequests: batch, completion: nil)
-//                        delegate.tealiumModuleRequests(module: nil,
-//                                                        process: batchRequest)
                     runDispatchers(for: batchRequest)
                 default:
                     // should never reach here
@@ -411,18 +415,19 @@ class DispatchManager {
         runDispatchers(for: request)
     }
     
-    func logQueue(request: TealiumTrackRequest) {
-        let message = """
-        ⏳ Event: \(request.trackDictionary[TealiumKey.event] as? String ?? "") queued for batch dispatch
-        """
+    func logQueue(request: TealiumTrackRequest,
+                  reason: String?) {
         
-        let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: message, info: nil, logLevel: .info, category: .track)
+        let message = """
+        Event: \(request.trackDictionary[TealiumKey.event] as? String ?? "") queued for batch dispatch. Track UUID: \(request.uuid)
+        """
+        var messages = [message]
+        if let reason = reason {
+            messages.append("Queue Reason: \(reason)")
+        }
+        let logRequest = TealiumLogRequest(title: "Dispatch Manager", messages: messages, info: nil, logLevel: .info, category: .track)
         
         logger?.log(logRequest)
-    }
-    
-    deinit {
-        connectivityManager.removeAllConnectivityDelegates()
     }
     
 }

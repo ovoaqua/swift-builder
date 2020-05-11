@@ -227,6 +227,10 @@ public class ModulesManager {
         }
     }
     
+    deinit {
+        connectivityManager.removeAllConnectivityDelegates()
+    }
+    
 }
 
 
