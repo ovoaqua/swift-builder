@@ -15,9 +15,9 @@ import XCTest
 #if os(iOS)
     @testable import TealiumAttribution
     @testable import TealiumAutotracking
-//@testable import TealiumCrash
-// @testable import TealiumLocation
-// @testable import TealiumRemoteCommands
+    @testable import TealiumCrash
+    @testable import TealiumLocation
+    @testable import TealiumRemoteCommands
     @testable import TealiumTagManagement
 #endif
 
@@ -61,7 +61,7 @@ class PerformanceTests: XCTestCase {
     func testModulesManagerInitPerformance() {
         iterations = 100
         let eventDataManager = EventDataManager(config: defaultTealiumConfig)
-        
+
         // Time: 0.285 sec
         self.measure {
             for _ in 0..<iterations {
@@ -71,22 +71,20 @@ class PerformanceTests: XCTestCase {
     }
 
     func testTimeToInitializeTealiumWithBaseModules() {
-        iterations = 30
+        //expect = expectation(description: "testTimeToInitializeTealiumWithAllModules")
         let optionalCollectors = [String]()
         let knownDispatchers = ["TealiumCollect.TealiumCollectModule"]
         let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
         defaultTealiumConfig.shouldUseRemotePublishSettings = false
 
         // Time: 0.137 sec
+        // Time: 0.004 sec
         self.measure {
-            for iter in 0..<iterations {
-                expect = expectation(description: "testTimeToInitializeTealiumWithAllModules\(iter)")
-                tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager) { _ in
-                    self.expect.fulfill()
-                }
-                wait(for: [expect], timeout: 10.0)
+            tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager) { _ in
+                //self.expect.fulfill()
             }
         }
+        //wait(for: [expect], timeout: 10.0)
     }
 
     func testTimeToInitializeTealiumWithAllModules() {
@@ -105,22 +103,45 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    // TODO:
     func testTimeToDispatchTrackInCollect() {
         trackExpectation = expectation(description: "testTimeToDispatchTrackInCollect")
+
         let optionalCollectors = [String]()
         let knownDispatchers = ["TealiumCollect.TealiumCollectModule"]
         let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
         defaultTealiumConfig.shouldUseRemotePublishSettings = false
+        defaultTealiumConfig.batchingEnabled = false
+        tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager, enableCompletion: nil)
 
-        // Time: .0000402 sec
-        self.measure {
-            tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager) { _ in
-                self.tealium.track(title: "tester", data: nil) { _, _, _ in
+        let start = Date()
 
-                }
-            }
+        tealium.track(title: "tester", data: nil) { _, _, _ in
+            let diff = Date().timeIntervalSince(start)
+            print(String(diff))
+            self.trackExpectation.fulfill()
         }
+
+        wait(for: [trackExpectation], timeout: 100.0)
+    }
+
+    func testTimeToDispatchTrackInTagManagement() {
+        trackExpectation = expectation(description: "testTimeToDispatchTrackInTagManagement")
+
+        let optionalCollectors = [String]()
+        let knownDispatchers = ["TealiumTagManagement.TealiumTagManagementModule"]
+        let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
+        defaultTealiumConfig.shouldUseRemotePublishSettings = false
+        defaultTealiumConfig.batchingEnabled = false
+        tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager, enableCompletion: nil)
+
+        let start = Date()
+
+        tealium.track(title: "tester", data: nil) { _, _, _ in
+            let diff = Date().timeIntervalSince(start)
+            print(String(diff))
+            self.trackExpectation.fulfill()
+        }
+
         wait(for: [trackExpectation], timeout: 10.0)
     }
 
@@ -134,11 +155,8 @@ extension PerformanceTests: TealiumVisitorServiceDelegate {
     }
 }
 
-extension PerformanceTests: TealiumModuleDelegate {
-    func requestTrack(_ track: TealiumTrackRequest) {
-        self.trackExpectation.fulfill()
-    }
-    func requestReleaseQueue(reason: String) {
-
+extension PerformanceTests: DispatchListener {
+    func willTrack(request: TealiumRequest) {
+        trackExpectation.fulfill()
     }
 }
