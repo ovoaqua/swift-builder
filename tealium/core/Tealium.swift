@@ -30,6 +30,7 @@ public class Tealium {
     /// - Parameter enableCompletion: `TealiumEnableCompletion` block to be called when library has finished initializing
     public init(config: TealiumConfig,
                 eventDataManager: EventDataManagerProtocol? = nil,
+                modulesManager: ModulesManager? = nil,
                 enableCompletion: TealiumEnableCompletion?) {
         defer {
             TealiumQueues.backgroundConcurrentQueue.write {
@@ -40,7 +41,7 @@ public class Tealium {
         self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
         self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
-        zz_internal_modulesManager = ModulesManager(config, eventDataManager: eventDataManager)
+        zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: eventDataManager)
         if config.shouldUseRemotePublishSettings {
             self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
             if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {

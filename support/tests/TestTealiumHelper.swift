@@ -334,6 +334,10 @@ class TestTealiumHelper {
 }
 
 extension TestTealiumHelper: TealiumModuleDelegate {
+    func requestReleaseQueue(reason: String) {
+        
+    }
+    
     func requestTrack(_ track: TealiumTrackRequest) {
         
     }

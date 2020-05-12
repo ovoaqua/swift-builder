@@ -36,6 +36,15 @@ public class ModulesManager {
         }
     }
     
+    convenience init(_ conifg: TealiumConfig,
+                     eventDataManager: EventDataManagerProtocol?,
+                     optionalCollectors: [String],
+                     knownDispatchers: [String]) {
+        self.init(conifg, eventDataManager: eventDataManager)
+        self.optionalCollectors = optionalCollectors
+        self.knownDispatchers = knownDispatchers
+    }
+    
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
             self.config = config
