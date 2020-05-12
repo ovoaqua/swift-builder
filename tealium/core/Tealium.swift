@@ -22,6 +22,7 @@ public class Tealium {
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     public var eventDataManager: EventDataManagerProtocol
     public var zz_internal_modulesManager: ModulesManager?
+
     // MARK: PUBLIC
 
     /// Initializer.

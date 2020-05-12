@@ -13,12 +13,12 @@
 @testable import TealiumVisitorService
 import XCTest
 #if os(iOS)
-@testable import TealiumAttribution
-@testable import TealiumAutotracking
+    @testable import TealiumAttribution
+    @testable import TealiumAutotracking
 //@testable import TealiumCrash
 // @testable import TealiumLocation
 // @testable import TealiumRemoteCommands
-@testable import TealiumTagManagement
+    @testable import TealiumTagManagement
 #endif
 
 class PerformanceTests: XCTestCase {
@@ -53,7 +53,7 @@ class PerformanceTests: XCTestCase {
         self.measure {
             for _ in 0..<iterations {
                 config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", datasource: "testDatasource", optionalData: [TealiumCollectKey.overrideCollectUrl: "https://6372509c65ca83cb33983be9c6f8f204.m.pipedream.net",
-                                                                                                                                                                    TealiumVisitorServiceConstants.visitorServiceDelegate: self])
+                    TealiumVisitorServiceConstants.visitorServiceDelegate: self])
             }
         }
     }
@@ -61,8 +61,8 @@ class PerformanceTests: XCTestCase {
     func testModulesManagerInitPerformance() {
         iterations = 100
         let eventDataManager = EventDataManager(config: defaultTealiumConfig)
+        
         // Time: 0.285 sec
-
         self.measure {
             for _ in 0..<iterations {
                 _ = ModulesManager(defaultTealiumConfig, eventDataManager: eventDataManager)
@@ -75,12 +75,12 @@ class PerformanceTests: XCTestCase {
         let optionalCollectors = [String]()
         let knownDispatchers = ["TealiumCollect.TealiumCollectModule"]
         let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
+        defaultTealiumConfig.shouldUseRemotePublishSettings = false
 
         // Time: 0.137 sec
         self.measure {
             for iter in 0..<iterations {
                 expect = expectation(description: "testTimeToInitializeTealiumWithAllModules\(iter)")
-                defaultTealiumConfig.shouldUseRemotePublishSettings = false
                 tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager) { _ in
                     self.expect.fulfill()
                 }
@@ -91,11 +91,12 @@ class PerformanceTests: XCTestCase {
 
     func testTimeToInitializeTealiumWithAllModules() {
         iterations = 10
+        defaultTealiumConfig.shouldUseRemotePublishSettings = false
+
         // Time: 0.054 sec
         self.measure {
             for iter in 0..<iterations {
                 expect = expectation(description: "testTimeToInitializeTealiumWithBaseModules\(iter)")
-                defaultTealiumConfig.shouldUseRemotePublishSettings = false
                 tealium = Tealium(config: defaultTealiumConfig) { _ in
                     self.expect.fulfill()
                 }
@@ -116,7 +117,7 @@ class PerformanceTests: XCTestCase {
         self.measure {
             tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager) { _ in
                 self.tealium.track(title: "tester", data: nil) { _, _, _ in
-                    self.trackExpectation.fulfill()
+
                 }
             }
         }
@@ -130,5 +131,14 @@ extension PerformanceTests: TealiumVisitorServiceDelegate {
         if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             print(string)
         }
+    }
+}
+
+extension PerformanceTests: TealiumModuleDelegate {
+    func requestTrack(_ track: TealiumTrackRequest) {
+        self.trackExpectation.fulfill()
+    }
+    func requestReleaseQueue(reason: String) {
+
     }
 }
