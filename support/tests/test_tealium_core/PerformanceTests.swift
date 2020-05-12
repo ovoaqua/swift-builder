@@ -124,3 +124,11 @@ class PerformanceTests: XCTestCase {
     }
 
 }
+
+extension PerformanceTests: TealiumVisitorServiceDelegate {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
+            print(string)
+        }
+    }
+}
