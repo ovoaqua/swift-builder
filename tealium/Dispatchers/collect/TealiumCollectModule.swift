@@ -20,9 +20,6 @@ public class TealiumCollectModule: Dispatcher {
     public var isReady = false
     weak var delegate: TealiumModuleDelegate?
     public var config: TealiumConfig
-    var logger: TealiumLoggerProtocol? {
-        config.logger
-    }
     
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
@@ -31,11 +28,11 @@ public class TealiumCollectModule: Dispatcher {
         self.config = config
         self.delegate = delegate
         updateCollectDispatcher(config: config, completion: nil)
-        completion?(.success(true))
+        completion?((.success(true), nil))
     }
 
     func updateCollectDispatcher(config: TealiumConfig,
-                                 completion: ((_ success: Bool, _ error: TealiumCollectError) -> Void)?) {
+                                 completion: ModuleCompletion?) {
         let urlString = config.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL
         collect = TealiumCollectPostDispatcher(dispatchURL: urlString, completion: completion)
     }
@@ -46,14 +43,14 @@ public class TealiumCollectModule: Dispatcher {
     public func dynamicTrack(_ request: TealiumRequest,
                              completion: ModuleCompletion?) {
         guard collect != nil else {
-            let logRequest = TealiumLogRequest(message: "Collect dispatcher not initialized")
-            self.logger?.log(logRequest)
+            completion?((.failure(TealiumCollectError.collectNotInitialized), nil))
             return
         }
 
         switch request {
         case let request as TealiumTrackRequest:
             guard request.trackDictionary[TealiumKey.event] as? String != TealiumKey.updateConsentCookieEventName else {
+                completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
                 return
             }
             self.track(prepareForDispatch(request), completion: completion)
@@ -64,9 +61,14 @@ public class TealiumCollectModule: Dispatcher {
             }.map {
                 prepareForDispatch($0)
             }
+            guard !requests.isEmpty else {
+                completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
+                return
+            }
             let newRequest = TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion)
             self.batchTrack(newRequest, completion: completion)
         default:
+            completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
             return
         }
     }
@@ -83,7 +85,7 @@ public class TealiumCollectModule: Dispatcher {
             newTrack[TealiumKey.profile] = config.profile
         }
 
-        if let profileOverride = config.optionalData[TealiumCollectKey.overrideCollectProfile] as? String {
+        if let profileOverride = config.collectOverrideProfile {
             newTrack[TealiumKey.profile] = profileOverride
         }
 
@@ -97,38 +99,14 @@ public class TealiumCollectModule: Dispatcher {
     func track(_ track: TealiumTrackRequest,
                completion: ModuleCompletion?) {
         guard let collect = collect else {
-//            didFinishWithNoResponse(track)
+            completion?((.failure(TealiumCollectError.collectNotInitialized), nil))
             return
         }
 
         // Send the current track call
         let data = track.trackDictionary
 
-        collect.dispatch(data: data, completion: { success, info, error in
-
-            track.completion?(success, info, error)
-
-            // Let the modules manager know we had a failure.
-            guard success else {
-//                let localError = error ?? TealiumCollectError.unknownIssueWithSend
-//                self.didFailToFinish(track,
-//                                     info: info,
-//                                     error: localError)
-                if let error = error {
-                    completion?(.failure(error))
-                }
-                return
-            }
-
-            var trackInfo = info ?? [String: Any]()
-            trackInfo += [TealiumCollectKey.payload: track.trackDictionary]
-
-            // Another message to moduleManager of completed track, this time of
-            //  modified track data.
-//            self.didFinish(track,
-//                           info: trackInfo)
-            completion?(.success(true))
-        })
+        collect.dispatch(data: data, completion: completion)
     }
 
     /// Adds relevant info to the track request, then passes the request to a dipatcher for processing￼.
@@ -137,73 +115,16 @@ public class TealiumCollectModule: Dispatcher {
     func batchTrack(_ request: TealiumBatchTrackRequest,
                     completion: ModuleCompletion?) {
         guard let collect = collect else {
-//            didFinishWithNoResponse(request)
+            completion?((.failure(TealiumCollectError.collectNotInitialized), nil))
             return
         }
 
         guard let compressed = request.compressed() else {
-//            let logRequest = TealiumReportRequest(message: "Batch track request failed. Will not be sent.")
-            // TODO: log error
-//            delegate.tealiumModuleRequests(module: nil, process: logRequest)
+            completion?((.failure(TealiumCollectError.invalidBatchRequest), nil))
             return
         }
 
-        collect.dispatchBulk(data: compressed) { success, info, error in
-            
-            guard success else {
-                let localError = error ?? TealiumCollectError.unknownIssueWithSend
-                completion?(.failure(localError))
-                return
-            }
-
-            completion?(.success(true))
-        }
+        collect.dispatchBulk(data: compressed, completion: completion)
     }
-
-//    /// Called when the module failed for to complete a request￼.
-//    ///
-//    /// - Parameters:
-//    ///     - request: `TealiumRequest` that failed￼
-//    ///     - info: `[String: Any]? `containing information about the failure￼
-//    ///     - error: `Error` with precise information about the failure
-//    func didFailToFinish(_ request: TealiumRequest,
-//                         info: [String: Any]?,
-//                         error: Error) {
-//        var newRequest = request
-//        var response = TealiumModuleResponse(moduleName: type(of: self).moduleConfig().name,
-//                                             success: false,
-//                                             error: error)
-//        if let error = error as? URLError,
-//        error.code == URLError.notConnectedToInternet || error.code == URLError.networkConnectionLost || error.code == URLError.timedOut {
-//
-//            switch request {
-//            case let request as TealiumTrackRequest:
-//                let enqueueRequest = TealiumEnqueueRequest(data: request, queueReason: "connectivity", completion: nil)
-//                delegate?.tealiumModuleRequests(module: self, process: enqueueRequest)
-//            case let request as TealiumBatchTrackRequest:
-//                let enqueueRequest = TealiumEnqueueRequest(data: request, queueReason: "connectivity", completion: nil)
-//                delegate?.tealiumModuleRequests(module: self, process: enqueueRequest)
-//            default:
-//                return
-//            }
-//
-//            let connectivityRequest = TealiumConnectivityRequest(status: .notReachable)
-//            delegate?.tealiumModuleRequests(module: self, process: connectivityRequest)
-//        } else {
-//            response.info = info
-//            newRequest.moduleResponses.append(response)
-//            delegate?.tealiumModuleFinished(module: self,
-//                                            process: newRequest)
-//        }
-//    }
-//
-//    /// Disables the module￼.
-//    ///
-//    /// - Parameter request: `TealiumDisableRequest`
-//    override func disable(_ request: TealiumDisableRequest) {
-//        isEnabled = false
-//        self.collect = nil
-//        didFinish(request)
-//    }
 
 }

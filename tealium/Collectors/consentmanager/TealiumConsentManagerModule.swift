@@ -36,7 +36,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
             self.ready = true
         }
         consentManager.addConsentDelegate(self)
-        completion(.success(true))
+        completion((.success(true), nil))
     }
 
     func updateConfig(_ request: TealiumUpdateConfigRequest) {

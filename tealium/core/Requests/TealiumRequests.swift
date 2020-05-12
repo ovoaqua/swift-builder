@@ -24,6 +24,7 @@ public protocol TealiumRequest {
     static func instanceTypeId() -> String
 }
 
+// MARK: Update Config Request
 public struct TealiumUpdateConfigRequest: TealiumRequest {
     public var typeId = TealiumUpdateConfigRequest.instanceTypeId()
     public var completion: TealiumCompletion?
@@ -38,6 +39,7 @@ public struct TealiumUpdateConfigRequest: TealiumRequest {
     }
 }
 
+// MARK: Enqueue Request
 /// Request to queue a track call
 public struct TealiumEnqueueRequest: TealiumRequest {
     public var typeId = TealiumEnqueueRequest.instanceTypeId()
@@ -79,6 +81,7 @@ public struct TealiumEnqueueRequest: TealiumRequest {
     }
 }
 
+// MARK: Remote API Request
 public struct TealiumRemoteAPIRequest: TealiumRequest {
     public var typeId = TealiumRemoteAPIRequest.instanceTypeId()
     public var completion: TealiumCompletion?
@@ -96,6 +99,7 @@ public struct TealiumRemoteAPIRequest: TealiumRequest {
 
 }
 
+// MARK: Track Request
 /// Request to deliver data.
 public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
     public static func < (lhs: TealiumTrackRequest, rhs: TealiumTrackRequest) -> Bool {
@@ -191,6 +195,7 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
 
 }
 
+// MARK: Batch track request
 public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
     public var typeId = TealiumTrackRequest.instanceTypeId()
     public var uuid: String

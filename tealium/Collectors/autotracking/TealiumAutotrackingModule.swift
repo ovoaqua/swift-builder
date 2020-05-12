@@ -120,7 +120,7 @@ class TealiumAutotrackingModule: Collector {
         NotificationCenter.default.addObserver(self, selector: #selector(requestViewTrack(sender:)), name: viewName, object: nil)
 
         notificationsEnabled = true
-        completion(.success(true))
+        completion((.success(true), nil))
     }
     
     let moduleId: String = TealiumAutotrackingKey.moduleName

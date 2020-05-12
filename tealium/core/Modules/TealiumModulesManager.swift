@@ -170,7 +170,7 @@ public class ModulesManager {
             }
             
             let dispatcher = moduleRef.init(config: config, delegate: self) { result in
-                switch result {
+                switch result.0 {
                 case .failure:
                     print("log error")
                 default:

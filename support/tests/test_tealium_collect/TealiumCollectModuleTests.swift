@@ -22,64 +22,99 @@ class TealiumCollectModuleTests: XCTestCase {
         super.tearDown()
     }
 
-    func testMinimumProtocolsReturn() {
-        let expectation = self.expectation(description: "minimumProtocolsReturned")
-        let helper = TestTealiumHelper()
-        let module = TealiumCollectModule(delegate: nil)
-        helper.modulesReturnsMinimumProtocols(module: module) { success, failingProtocols in
-
-            expectation.fulfill()
-            XCTAssertTrue(success, "Not all protocols returned. Failing protocols: \(failingProtocols)")
-
-        }
-
-        self.waitForExpectations(timeout: 4.0, handler: nil)
-    }
-
-    func testEnableDisable() {
-        // Need to know that the TealiumCollect instance was instantiated + that we have a base url.
-
-        let collectModule = TealiumCollectModule(delegate: nil)
-
-        let config = testTealiumConfig
-        collectModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
-
-        XCTAssertTrue(collectModule.collect != nil, "TealiumCollect did not initialize.")
-
-        if let collect = collectModule.collect as? TealiumCollectPostDispatcher {
-            XCTAssertEqual(collect.bulkEventDispatchURL, "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.bulkEventPath)")
-            XCTAssertEqual(collect.singleEventDispatchURL, "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.singleEventPath)")
-            collectModule.disable(TealiumDisableRequest())
-            let newCollect = collectModule.collect as? TealiumCollectPostDispatcher
-            XCTAssertTrue(newCollect == nil, "TealiumCollect instance did not de-initialize properly")
-        } else {
-            XCTFail("Collect module did not initialize properly")
-        }
-    }
-
     func testBatchTrack() {
-        let collectModule = TealiumCollectModule(delegate: self)
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
         collectModule.collect = TealiumCollectPostDispatcher(dispatchURL: "https://collect.tealiumiq.com", urlSession: MockURLSession(), completion: nil)
-        let config = testTealiumConfig
-        collectModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
         let batchTrack = TealiumBatchTrackRequest(trackRequests: [track, track, track], completion: nil)
-        collectModule.batchTrack(batchTrack)
+        collectModule.batchTrack(batchTrack) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTFail("Unexpected failure: \(error.localizedDescription)")
+            case .success(let success):
+                XCTAssertTrue(success)
+            }
+        }
+    }
+
+    func testBatchTrackInvalidRequest() {
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        collectModule.collect = TealiumCollectPostDispatcher(dispatchURL: "https://collect.tealiumiq.com", urlSession: MockURLSession(), completion: nil)
+        //        let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
+        let batchTrack = TealiumBatchTrackRequest(trackRequests: [], completion: nil)
+        collectModule.batchTrack(batchTrack) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.invalidBatchRequest)
+            case .success:
+                XCTFail("Unexpected success")
+            }
+        }
+    }
+
+    func testBatchTrackCollectNotInitialized() {
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        collectModule.collect = nil
+        //        let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
+        let batchTrack = TealiumBatchTrackRequest(trackRequests: [], completion: nil)
+        collectModule.batchTrack(batchTrack) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.collectNotInitialized)
+            case .success(let success):
+                XCTFail("Unexpected success")
+            }
+        }
     }
 
     func testTrack() {
-        let collectModule = TealiumCollectModule(delegate: self)
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
         collectModule.collect = TealiumCollectPostDispatcher(dispatchURL: "https://collect.tealiumiq.com", urlSession: MockURLSession(), completion: nil)
-        let config = testTealiumConfig
-        collectModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
-        collectModule.track(track)
+        collectModule.track(track) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTFail("Unexpected failure: \(error.localizedDescription)")
+            case .success(let success):
+                XCTAssertTrue(success)
+            }
+        }
+    }
+
+    func testTrackCollectNotInitialized() {
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        collectModule.collect = nil
+        let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
+        collectModule.track(track) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.collectNotInitialized)
+            case .success(let success):
+                XCTFail("Unexpected success")
+            }
+        }
+    }
+
+    func testCollectNil() {
+        let expectation = self.expectation(description: "dynamic track")
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        collectModule.collect = nil
+        let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
+        collectModule.dynamicTrack(track) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.collectNotInitialized)
+                expectation.fulfill()
+            case .success:
+                XCTFail("Unexpected success")
+            }
+        }
+        wait(for: [expectation], timeout: 4.0)
     }
 
     func testPrepareForDispatch() {
-        let collectModule = TealiumCollectModule(delegate: nil)
-        let config = testTealiumConfig
-        collectModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        //            collectModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
         let track = TealiumTrackRequest(data: [String: Any](), completion: nil)
         let newTrack = collectModule.prepareForDispatch(track).trackDictionary
         XCTAssertNotNil(newTrack[TealiumKey.account])
@@ -87,22 +122,101 @@ class TealiumCollectModuleTests: XCTestCase {
     }
 
     func testDynamicDispatchSingleTrack() {
-        let collectModule = TealiumCollectModule(delegate: self)
+        let expectation = self.expectation(description: "dynamic track")
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
         collectModule.collect = TealiumCollectPostDispatcher(dispatchURL: "https://collect.tealiumiq.com", urlSession: MockURLSession(), completion: nil)
-        let config = testTealiumConfig
-        collectModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
-        collectModule.dynamicTrack(track)
+        collectModule.dynamicTrack(track) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTFail("Unexpected error: \(error.localizedDescription)")
+            case .success(let success):
+                XCTAssertTrue(success)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 4.0)
+    }
+
+    func testDynamicDispatchSingleTrackConsentCookie() {
+        let expectation = self.expectation(description: "dynamic track")
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        collectModule.collect = TealiumCollectPostDispatcher(dispatchURL: "https://collect.tealiumiq.com", urlSession: MockURLSession(), completion: nil)
+        let track = TealiumTrackRequest(data: [TealiumKey.event: "update_consent_cookie"], completion: nil)
+        collectModule.dynamicTrack(track) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.trackNotApplicableForCollectModule)
+                expectation.fulfill()
+            case .success:
+                XCTFail("Unexpected success")
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 4.0)
     }
 
     func testDynamicDispatchBatchTrack() {
-        let collectModule = TealiumCollectModule(delegate: self)
+        let expectation = self.expectation(description: "dynamic track")
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
         collectModule.collect = TealiumCollectPostDispatcher(dispatchURL: "https://collect.tealiumiq.com", urlSession: MockURLSession(), completion: nil)
-        let config = testTealiumConfig
-        collectModule.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
-        let batchTrack = TealiumBatchTrackRequest(trackRequests: [track, track, track], completion: nil)
-        collectModule.dynamicTrack(batchTrack)
+        let batchRequest = TealiumBatchTrackRequest(trackRequests: [track], completion: nil)
+        collectModule.dynamicTrack(batchRequest) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTFail("Unexpected error: \(error.localizedDescription)")
+            case .success(let success):
+                XCTAssertTrue(success)
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 4.0)
+    }
+
+    func testDynamicDispatchBatchTrackConsentCookie() {
+        let expectation = self.expectation(description: "dynamic track")
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        collectModule.collect = TealiumCollectPostDispatcher(dispatchURL: "https://collect.tealiumiq.com", urlSession: MockURLSession(), completion: nil)
+        let track = TealiumTrackRequest(data: [TealiumKey.event: "update_consent_cookie"], completion: nil)
+        let batchRequest = TealiumBatchTrackRequest(trackRequests: [track], completion: nil)
+        collectModule.dynamicTrack(batchRequest) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.trackNotApplicableForCollectModule)
+                expectation.fulfill()
+            case .success:
+                XCTFail("Unexpected success")
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 4.0)
+    }
+
+    func testUpdateCollectDispatcher() {
+        let config = TealiumConfig(account: "dummy", profile: "dummy", environment: "dummy")
+        let collectModule = TealiumCollectModule(config: config, delegate: self, completion: nil)
+        collectModule.updateCollectDispatcher(config: config) { result in
+            switch result.0 {
+            case .failure:
+                XCTFail("Unexpected error")
+            case .success(let success):
+                XCTAssertTrue(success)
+            }
+        }
+    }
+
+    func testUpdateCollectDispatcherInvalidURL() {
+        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
+        testTealiumConfig.collectOverrideURL = "tealium"
+        collectModule.updateCollectDispatcher(config: testTealiumConfig) { result in
+            switch result.0 {
+            case .failure(let error):
+                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.invalidDispatchURL)
+            case .success:
+                XCTFail("Unexpected success")
+            }
+        }
     }
 
     func testOverrideCollectURL() {
@@ -118,18 +232,12 @@ class TealiumCollectModuleTests: XCTestCase {
 }
 
 extension TealiumCollectModuleTests: TealiumModuleDelegate {
-    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        if let process = process as? TealiumTrackRequest {
-            XCTAssertEqual(process.trackDictionary["test_track"] as! Bool, true)
-        } else if let process = process as? TealiumBatchTrackRequest {
-            process.trackRequests.forEach {
-                XCTAssertEqual($0.trackDictionary["test_track"] as! Bool, true)
-            }
-        }
+    func requestTrack(_ track: TealiumTrackRequest) {
+
     }
 
-    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        XCTFail("Should not be called")
+    func requestReleaseQueue(reason: String) {
+
     }
 
 }

@@ -41,7 +41,7 @@ public class TealiumVisitorServiceModule: Collector, DispatchListener {
         self.visitorServiceManager = TealiumVisitorServiceManager(config: config,
         delegate: config.visitorServiceDelegate,
         diskStorage: self.diskStorage)
-        completion(.success(true))
+        completion((.success(true), nil))
     }
 
     func retrieveProfile(visitorId: String) {

@@ -50,12 +50,12 @@ public class TealiumTagManagementModule: Dispatcher {
                 if error != nil {
                     self.errorState.incrementAndGet()
                     self.webViewState?.value = .loadFailure
-                    completion?(.failure(TealiumTagManagementError.webViewNotYetReady))
+                    completion?((.failure(TealiumTagManagementError.webViewNotYetReady), nil))
                 } else {
                     self.errorState.resetToZero()
                     self.webViewState = Atomic(value: .loadSuccess)
                     self.flushQueue()
-                    completion?(.success(true))
+                    completion?((.success(true), nil))
                 }
             }
         }
@@ -78,13 +78,13 @@ public class TealiumTagManagementModule: Dispatcher {
                         track.completion?(success, info, error)
                         guard error == nil else {
                             if let error = error {
-                                completion?(.failure(error))
+                                completion?((.failure(error), nil))
                             }
                             return
                         }
 //                    self.didFinish(track,
 //                                   info: info)
-                        completion?(.success(true))
+                        completion?((.success(true), nil))
                     }
                 }
             #endif
@@ -96,11 +96,11 @@ public class TealiumTagManagementModule: Dispatcher {
                         track.completion?(success, info, error)
                         guard error == nil else {
                             if let error = error {
-                                completion?(.failure(error))
+                                completion?((.failure(error), nil))
                             }
                             return
                         }
-                        completion?(.success(true))
+                        completion?((.success(true), nil))
                     }
                 }
             #endif

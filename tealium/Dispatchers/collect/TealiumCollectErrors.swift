@@ -16,4 +16,6 @@ public enum TealiumCollectError: Error {
     case noDataToTrack
     case unknownIssueWithSend
     case invalidDispatchURL
+    case trackNotApplicableForCollectModule
+    case invalidBatchRequest
 }
