@@ -50,7 +50,7 @@ public class TealiumTagManagementModule: Dispatcher {
                 if error != nil {
                     self.errorState.incrementAndGet()
                     self.webViewState?.value = .loadFailure
-                    completion?(.failure(TealiumTagManagementError.webViewNotYetReady, nil))
+                    completion?((.failure(TealiumTagManagementError.webViewNotYetReady), nil))
                 } else {
                     self.errorState.resetToZero()
                     self.webViewState = Atomic(value: .loadSuccess)
@@ -78,7 +78,7 @@ public class TealiumTagManagementModule: Dispatcher {
                         track.completion?(success, info, error)
                         guard error == nil else {
                             if let error = error {
-                                completion?(.failure(error), nil)
+                                completion?((.failure(error), nil))
                             }
                             return
                         }
@@ -96,7 +96,7 @@ public class TealiumTagManagementModule: Dispatcher {
                         track.completion?(success, info, error)
                         guard error == nil else {
                             if let error = error {
-                                completion?(.failure(error), nil)
+                                completion?((.failure(error), nil))
                             }
                             return
                         }

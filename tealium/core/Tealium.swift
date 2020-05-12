@@ -166,6 +166,19 @@ public class Tealium {
         if let clientOptionalVariables = newOptionalData {
             trackData += clientOptionalVariables
         }
+        
+        trackData = trackData.compactMapValues {
+            if let value = $0 as? Double {
+                if value.isNaN {
+                    return "NaN"
+                }
+                if value.isInfinite {
+                    return "Infinity"
+                }
+                return value
+            }
+            return $0
+        }
 
         return trackData
     }
