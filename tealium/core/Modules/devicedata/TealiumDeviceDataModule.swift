@@ -49,7 +49,7 @@ class DeviceDataModule: Collector {
         self.config = config
         self.deviceDataCollection = TealiumDeviceData()
         self.cachedData = enableTimeData()
-        completion(.success(true))
+        completion((.success(true), nil))
     }
 
     /// Data that only needs to be retrieved once for the lifetime of the host app.

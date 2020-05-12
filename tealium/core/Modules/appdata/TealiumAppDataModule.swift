@@ -40,7 +40,7 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
         self.bundle = Bundle.main
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
         setExistingAppData()
-        completion(.success(true))
+        completion((.success(true), nil))
     }
 
     /// Retrieves existing data from persistent storage and stores in volatile memory.

@@ -42,7 +42,7 @@ public class TealiumCrashModule: Collector {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "crash", isCritical: false)
         self.crashReporter = TealiumCrashReporter()
-        completion(.success(true))
+        completion((.success(true), nil))
     }
 
 }

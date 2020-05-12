@@ -47,7 +47,7 @@ public class TealiumLifecycleModule: Collector {
         if config.lifecycleAutoTrackingEnabled {
             Tealium.lifecycleListeners.addDelegate(delegate: self)
         }
-        completion(.success(true))
+        completion((.success(true), nil))
     }
     
     var lifecycle: TealiumLifecycle? {

@@ -19,7 +19,7 @@ public protocol TealiumCollectProtocol {
     ///     - data: `[String:Any]` of variables to be dispatched￼
     ///     - completion: Optional completion block to be called when operation complete
     func dispatch(data: [String: Any],
-                  completion: TealiumCompletion?)
+                  completion: ModuleCompletion?)
 
     /// Dispatches batched data to an HTTP endpoint, then calls optional completion block when finished￼.
     ///
@@ -27,5 +27,5 @@ public protocol TealiumCollectProtocol {
     ///     - data: `[String:Any]` of variables to be dispatched￼
     ///     - completion: Optional completion block to be called when operation complete
     func dispatchBulk(data: [String: Any],
-                      completion: TealiumCompletion?)
+                      completion: ModuleCompletion?)
 }

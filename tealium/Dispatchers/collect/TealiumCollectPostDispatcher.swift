@@ -31,7 +31,8 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     ///     - completion: Completion handler to run when the dispatcher has finished initializing
     init(dispatchURL: String,
          urlSession: URLSessionProtocol = TealiumCollectPostDispatcher.getURLSession(),
-         completion: ((_ success: Bool, _ error: TealiumCollectError) -> Void)? = nil) {
+         completion: ModuleCompletion? = nil) {
+        self.urlSession = urlSession
         if TealiumCollectPostDispatcher.isValidUrl(url: dispatchURL) {
             // if using a custom endpoint, we recommend disabling batching, otherwise custom endpoint must handle batched events using Tealium's proprietary format
             // if using a CNAMEd domain, batching will work as normal.
@@ -39,20 +40,31 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
                 self.bulkEventDispatchURL = "https://\(baseURL)\(TealiumCollectPostDispatcher.bulkEventPath)"
                 self.singleEventDispatchURL = "https://\(baseURL)\(TealiumCollectPostDispatcher.singleEventPath)"
             } else {
-                self.bulkEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.bulkEventPath)"
-                self.singleEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.singleEventPath)"
+                // should never get here, as URL is already pre-validated
+                setDefaultURLs()
             }
         } else {
-            completion?(false, .invalidDispatchURL)
+            setDefaultURLs()
+            completion?((.failure(TealiumCollectError.invalidDispatchURL), ["error": ""]))
+            return
         }
-        self.urlSession = urlSession
+        
+        completion?((.success(true), nil))
     }
 
+    /// Returns an ephemeral URLSession instance
     class func getURLSession() -> URLSession {
         let config = URLSessionConfiguration.ephemeral
         return URLSession(configuration: config)
     }
 
+    /// Sets dispatch URLs to default values
+    func setDefaultURLs() {
+        // should never get here, as URL is already pre-validated
+        self.bulkEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.bulkEventPath)"
+        self.singleEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.singleEventPath)"
+    }
+    
     /// Gets the hostname from a url￼.
     ///
     /// - Parameter url: `String` representation of a URL
@@ -78,7 +90,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     }
 
     func dispatch(data: [String: Any],
-                  completion: TealiumCompletion?) {
+                  completion: ModuleCompletion?) {
         dispatch(data: data, url: nil, completion: completion)
     }
 
@@ -90,13 +102,13 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     ///     - completion: Optional completion block to be called when operation complete
     func dispatch(data: [String: Any],
                   url: String? = nil,
-                  completion: TealiumCompletion?) {
+                  completion: ModuleCompletion?) {
         if let jsonString = jsonToString(from: data),
             let url = url ?? singleEventDispatchURL,
             let urlRequest = urlPOSTRequestWithJSONString(jsonString, dispatchURL: url) {
             sendURLRequest(urlRequest, completion)
         } else {
-            completion?(false, nil, TealiumCollectError.noDataToTrack)
+            completion?((.failure(TealiumCollectError.noDataToTrack), nil))
         }
     }
 
@@ -106,7 +118,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     ///     - data: `[String:Any]` containing the nested data structure for a bulk dispatch
     ///     - completion: Optional completion block to be called when operation complete
     func dispatchBulk(data: [String: Any],
-                      completion: TealiumCompletion?) {
+                      completion: ModuleCompletion?) {
         dispatch(data: data, url: bulkEventDispatchURL, completion: completion)
     }
 
@@ -116,19 +128,19 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     ///     - request: `URLRequest` object￼
     ///     - completion: Optional completion block to handle success/failure
     func sendURLRequest(_ request: URLRequest,
-                        _ completion: TealiumCompletion?) {
+                        _ completion: ModuleCompletion?) {
         if let urlSession = self.urlSession {
             let task = urlSession.tealiumDataTask(with: request) { _, response, error in
                 if let error = error as? URLError {
-                    completion?(false, nil, error)
+                    completion?((.failure(error), nil))
                 } else if let status = response as? HTTPURLResponse {
                     // error only indicates "no response from server. 400 responses are considered successful
                     if let errorHeader = status.allHeaderFields[TealiumCollectKey.errorHeaderKey] as? String {
-                        completion?(false, ["error": errorHeader], TealiumCollectError.xErrorDetected)
+                        completion?((.failure(TealiumCollectError.xErrorDetected), ["error": errorHeader]))
                     } else if status.statusCode != 200 {
-                        completion?(false, nil, TealiumCollectError.non200Response)
+                        completion?((.failure(TealiumCollectError.non200Response), nil))
                     } else {
-                        completion?(true, nil, nil)
+                        completion?((.success(true), nil))
                     }
                 }
             }

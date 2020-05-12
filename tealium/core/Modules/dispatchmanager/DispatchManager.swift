@@ -224,11 +224,11 @@ class DispatchManager {
         dispatchers.forEach { module in
             let moduleId = module.moduleId
             module.dynamicTrack(request) { result in
-                switch result {
+                switch result.0 {
                 case .failure(let error):
-                    self.logModuleResponse(for: moduleId, request: request, success: false, error: error)
+                    self.logModuleResponse(for: moduleId, request: request, info: result.1, success: false, error: error)
                 case .success:
-                    self.logModuleResponse(for: moduleId, request: request, success: true, error: nil)
+                    self.logModuleResponse(for: moduleId, request: request, info: result.1, success: true, error: nil)
                 }
                 
             }
@@ -237,6 +237,7 @@ class DispatchManager {
     
     func logModuleResponse (for module: String,
                             request: TealiumRequest,
+                            info: [String: Any]?,
                             success: Bool,
                             error: Error?) {
         let message = success ? "Successful Track": "Failed with error: \(error?.localizedDescription ?? "")"
