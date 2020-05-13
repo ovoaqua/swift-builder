@@ -147,7 +147,7 @@ public class TealiumVisitorServiceRetriever {
         sendURLRequest(request) { [weak self] result in
             switch result {
             case .success(let data):
-                if let visitor = try? JSONDecoder().decode(TealiumVisitorProfile.self, from: data) {
+                if let visitor = try? Tealium.jsonDecoder.decode(TealiumVisitorProfile.self, from: data) {
                     self?.visitorProfile = visitor
                     self?.lastFetch = Date()
                     completion(.success(visitor))

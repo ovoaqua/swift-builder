@@ -7,6 +7,7 @@
 //
 #if os(iOS)
 import Foundation
+import TealiumCore
 
 public struct PersistentAttributionData: Codable {
 
@@ -59,8 +60,8 @@ public struct PersistentAttributionData: Codable {
 
     // will only be called on migration from legacy storage
     public init?(withDictionary dictionary: [String: Any]) {
-        if let json = try? JSONSerialization.data(withJSONObject: dictionary, options: []) {
-            if let data = try? JSONDecoder().decode(PersistentAttributionData.self, from: json) {
+        if let json = try? JSONSerialization.data(withJSONObject: dictionary, options: []) {            
+            if let data = try? Tealium.jsonDecoder.decode(PersistentAttributionData.self, from: json) {
                 self = data
             }
         }

@@ -64,7 +64,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     /// - Parameter data: `T` Encodable object
     func size<T: Encodable>(of data: T) -> Int? {
         do {
-            return try JSONEncoder().encode(data).count
+            return try Tealium.jsonEncoder.encode(data).count
         } catch {
             return nil
         }
@@ -131,8 +131,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                      fileName: String,
                      completion: TealiumCompletion?) {
         guard isDiskStorageEnabled else {
-            let encoder = JSONEncoder()
-            if let data = try? encoder.encode(data) {
+            if let data = try? Tealium.jsonEncoder.encode(data) {
                 self.saveToDefaults(key: self.filePath(fileName), value: data)
                 completion?(true, nil, nil)
             } else {
@@ -176,8 +175,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                                    fileName: String,
                                    completion: TealiumCompletion?) {
         guard isDiskStorageEnabled else {
-            let encoder = JSONEncoder()
-            if let data = try? encoder.encode(data) {
+            if let data = try? Tealium.jsonEncoder.encode(data) {
                 self.saveToDefaults(key: self.filePath(fileName), value: data)
                 completion?(true, nil, nil)
             } else {
@@ -291,7 +289,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                 return nil
             }
             guard isDiskStorageEnabled else {
-                let decoder = JSONDecoder()
+                let decoder = Tealium.jsonDecoder
                 if let data = self.getFromDefaults(key: self.filePath(fileName)) as? Data,
                     let decoded = try? decoder.decode(type, from: data) {
                     return decoded
@@ -321,7 +319,7 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                 return
             }
             guard self.isDiskStorageEnabled else {
-                let decoder = JSONDecoder()
+                let decoder = Tealium.jsonDecoder
                 if let data = self.getFromDefaults(key: self.filePath(fileName)) as? Data,
                     let decoded = ((try? decoder.decode(AnyCodable.self, from: data).value as? [String: Any]) as [String: Any]??) {
                     completion(true, decoded, nil)
@@ -377,14 +375,13 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
                                    as type: T.Type,
                                    completion: TealiumCompletion?) {
         let data = retrieve(module, as: type.self)
-        let encoder = JSONEncoder()
-        guard let encoded = try? encoder.encode(data),
+        guard let encoded = try? Tealium.jsonEncoder.encode(data),
             let dictionary = ((try? JSONSerialization.jsonObject(with: encoded, options: .allowFragments) as? [String: Any]) as [String: Any]??),
             var dict = dictionary else {
                 return
         }
         dict[key] = value
-        let decoder = JSONDecoder()
+        let decoder = Tealium.jsonDecoder
         if let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []),
             let newData = try? decoder.decode(T.self, from: jsonData) {
             self.save(newData, fileName: self.module, completion: completion)

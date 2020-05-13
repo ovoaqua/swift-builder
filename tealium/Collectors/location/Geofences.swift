@@ -63,7 +63,7 @@ public struct GeofenceData: Codable {
             //logger.log(message: TealiumLocationErrors.couldNotRetrieve.rawValue, logLevel: .errors)
             return nil
         }
-        guard let geofenceData = try? JSONDecoder().decode(Geofences.self, from: jsonData) else {
+        guard let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: jsonData) else {
             //logger.log(message: TealiumLocationErrors.couldNotDecode.rawValue, logLevel: .errors)
             return nil
         }
@@ -84,7 +84,7 @@ public struct GeofenceData: Codable {
         do {
             let jsonString = try String(contentsOf: geofenceUrl)
             guard let data = jsonString.data(using: .utf8),
-                let geofenceData = try? JSONDecoder().decode(Geofences.self, from: data) else {
+                let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
                     return
             }
             geofences = filter(geofences: geofenceData)
@@ -101,7 +101,7 @@ public struct GeofenceData: Codable {
             return
         }
         guard let data = json.data(using: .utf8),
-            let geofenceData = try? JSONDecoder().decode(Geofences.self, from: data) else {
+            let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
                 //logger.log(message: TealiumLocationErrors.couldNotDecode.rawValue, logLevel: .errors)
                 return
         }

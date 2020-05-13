@@ -156,7 +156,7 @@ class TealiumPublishSettingsRetriever {
             return nil
         }
 
-        return try? JSONDecoder().decode(RemotePublishSettings.self, from: data)
+        return try? Tealium.jsonDecoder.decode(RemotePublishSettings.self, from: data)
 
     }
 }
