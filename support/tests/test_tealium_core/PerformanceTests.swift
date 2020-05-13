@@ -99,8 +99,6 @@ class PerformanceTests: XCTestCase {
     }
 
     func testTimeToDispatchTrackInCollect() {
-        //trackExpectation = expectation(description: "testTimeToDispatchTrackInCollect")
-
         let optionalCollectors = [String]()
         let knownDispatchers = ["TealiumCollect.TealiumCollectModule"]
         let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
@@ -110,13 +108,10 @@ class PerformanceTests: XCTestCase {
         tealium.consentManager?.setUserConsentStatus(.consented)
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            tealium.track(title: "tester", data: nil) { _, _, _ in
-                //self.trackExpectation.fulfill()
-            }
+            tealium.track(title: "tester")
             self.stopMeasuring()
         }
 
-        //wait(for: [trackExpectation], timeout: 10.0)
     }
 
     func testTimeToDispatchTrackInTagManagement() {
@@ -131,13 +126,10 @@ class PerformanceTests: XCTestCase {
         tealium.consentManager?.setUserConsentStatus(.consented)
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            tealium.track(title: "tester", data: nil) { _, _, _ in
-                //self.trackExpectation.fulfill()
-            }
+            tealium.track(title: "tester")
             self.stopMeasuring()
         }
 
-        //wait(for: [trackExpectation], timeout: 10.0)
     }
 
     // MARK: Individual Module Performance Tests
