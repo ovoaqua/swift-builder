@@ -375,6 +375,7 @@ extension TestTealiumHelper: TealiumModuleDelegate {
 ////    }
 //
 //}
+}
 
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
 

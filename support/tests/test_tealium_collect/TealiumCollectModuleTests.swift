@@ -129,7 +129,7 @@ class TealiumCollectModuleTests: XCTestCase {
         collectModule.dynamicTrack(track) { result in
             switch result.0 {
             case .failure(let error):
-                XCTFail("Unexpected error: \(error.localizedDescription)")
+                
             case .success(let success):
                 XCTAssertTrue(success)
                 expectation.fulfill()

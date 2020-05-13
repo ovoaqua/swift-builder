@@ -27,12 +27,12 @@ class TealiumTagManagementModuleTests: XCTestCase {
         module = TealiumTagManagementModule(config: config, delegate: self, completion: { _ in })
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
         module?.dispatchTrack(track, completion: { result in
-            switch result {
+            switch result.0 {
             case .failure(let error):
-                XCTFail("Something went wrong creating track request: \(error)")
-            case .success:
+                XCTFail("Unexpected error: \(error.localizedDescription)")
+            case .success(let success):
+                XCTAssertTrue(success)
                 self.expect.fulfill()
-                XCTAssertTrue(true)
             }
         })
         wait(for: [expect], timeout: 2.0)
@@ -44,12 +44,12 @@ class TealiumTagManagementModuleTests: XCTestCase {
         let track = TealiumTrackRequest(data: ["test_track": true], completion: nil)
         let batchTrack = TealiumBatchTrackRequest(trackRequests: [track, track, track], completion: nil)
         module?.dispatchTrack(batchTrack, completion: { result in
-            switch result {
+            switch result.0 {
             case .failure(let error):
-                XCTFail("Something went wrong creating batch track request: \(error)")
-            case .success:
+                XCTFail("Unexpected error: \(error.localizedDescription)")
+            case .success(let success):
+                XCTAssertTrue(success)
                 self.expect.fulfill()
-                XCTAssertTrue(true)
             }
         })
         wait(for: [expect], timeout: 2.0)
@@ -181,6 +181,10 @@ class TealiumTagManagementModuleTests: XCTestCase {
 }
 
 extension TealiumTagManagementModuleTests: TealiumModuleDelegate {
+    func requestReleaseQueue(reason: String) {
+
+    }
+
     func requestTrack(_ track: TealiumTrackRequest) {
     }
 }
