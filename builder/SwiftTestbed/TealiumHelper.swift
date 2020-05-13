@@ -97,7 +97,7 @@ class TealiumHelper: NSObject {
 //        #endif
         
         // REQUIRED Initialization
-        tealium?.logger()
+//        tealium?.logger()
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self,
                 let teal = self.tealium else {

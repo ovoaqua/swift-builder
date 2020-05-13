@@ -31,7 +31,7 @@ public extension Disk {
     ///   - path: file location to store the data (i.e. "Folder/file.json")
     ///   - encoder: custom JSONEncoder to encode value
     /// - Throws: Error if there were any issues encoding the struct or writing it to disk
-    static func save<T: Encodable>(_ value: T, to directory: Directory, as path: String, encoder: JSONEncoder = JSONEncoder()) throws {
+    static func save<T: Encodable>(_ value: T, to directory: Directory, as path: String, encoder: JSONEncoder = Tealium.jsonEncoder) throws {
         if path.hasSuffix("/") {
             throw createInvalidFileNameForStructsError()
         }
@@ -54,7 +54,7 @@ public extension Disk {
     ///   - decoder: custom JSONDecoder to decode existing values
     ///   - encoder: custom JSONEncoder to encode new value
     /// - Throws: Error if there were any issues with encoding/decoding or writing the encoded struct to disk
-    static func append<T: Codable>(_ value: T, to path: String, in directory: Directory, decoder: JSONDecoder = JSONDecoder(), encoder: JSONEncoder = JSONEncoder()) throws {
+    static func append<T: Codable>(_ value: T, to path: String, in directory: Directory, decoder: JSONDecoder = Tealium.jsonDecoder, encoder: JSONEncoder = Tealium.jsonEncoder) throws {
         if path.hasSuffix("/") {
             throw createInvalidFileNameForStructsError()
         }
@@ -93,7 +93,7 @@ public extension Disk {
     ///   - decoder: custom JSONDecoder to decode existing values
     ///   - encoder: custom JSONEncoder to encode new value
     /// - Throws: Error if there were any issues writing the encoded struct array to disk
-    static func append<T: Codable>(_ value: [T], to path: String, in directory: Directory, decoder: JSONDecoder = JSONDecoder(), encoder: JSONEncoder = JSONEncoder()) throws {
+    static func append<T: Codable>(_ value: [T], to path: String, in directory: Directory, decoder: JSONDecoder = Tealium.jsonDecoder, encoder: JSONEncoder = Tealium.jsonEncoder) throws {
         if path.hasSuffix("/") {
             throw createInvalidFileNameForStructsError()
         }
@@ -132,7 +132,7 @@ public extension Disk {
     ///   - decoder: custom JSONDecoder to decode existing values
     /// - Returns: decoded structs of data
     /// - Throws: Error if there were any issues retrieving the data or decoding it to the specified type
-    static func retrieve<T: Decodable>(_ path: String, from directory: Directory, as type: T.Type, decoder: JSONDecoder = JSONDecoder()) throws -> T {
+    static func retrieve<T: Decodable>(_ path: String, from directory: Directory, as type: T.Type, decoder: JSONDecoder = Tealium.jsonDecoder) throws -> T {
         if path.hasSuffix("/") {
             throw createInvalidFileNameForStructsError()
         }

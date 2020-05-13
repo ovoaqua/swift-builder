@@ -159,27 +159,9 @@ public class Tealium {
     ///     - Returns: Dictionary of type [String:Any]
     public class func trackDataFor(title: String,
                                    optionalData: [String: Any]?) -> [String: Any] {
-        let newOptionalData = optionalData
 
-        var trackData: [String: Any] = [TealiumKey.event: title]
-
-        if let clientOptionalVariables = newOptionalData {
-            trackData += clientOptionalVariables
-        }
-        
-        trackData = trackData.compactMapValues {
-            if let value = $0 as? Double {
-                if value.isNaN {
-                    return "NaN"
-                }
-                if value.isInfinite {
-                    return "Infinity"
-                }
-                return value
-            }
-            return $0
-        }
-
+        var trackData = optionalData ?? [String: Any]()
+        trackData[TealiumKey.event] = title
         return trackData
     }
 }

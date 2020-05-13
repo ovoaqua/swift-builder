@@ -8,72 +8,27 @@
 
 import Foundation
 
-/// Returns a JSON string from a dictionary input.
-///
-/// - Parameter dictionary: `[String: Any]`
-/// - Returns: `String?`
-public func jsonToString(from dictionary: [String: Any]) -> String? {
-    return TealiumQueues.backgroundConcurrentQueue.read { () -> String? in
-        var writingOptions: JSONEncoder.OutputFormatting
-
-        if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, OSX 10.13, *) {
-            writingOptions = [.prettyPrinted, .sortedKeys]
-        } else {
-            writingOptions = [.prettyPrinted]
-        }
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = writingOptions
-        let encodable = dictionary.encodable
-        if let jsonData = try? encoder.encode(encodable) {
-            return String(data: jsonData, encoding: .utf8)
-        } else {
-            return nil
-        }
-    }
-}
-
-public extension Dictionary {
+public extension Dictionary where Key == String, Value == Any {
     var toJSONString: String? {
         get {
-            TealiumQueues.backgroundConcurrentQueue.read {
-                var writingOptions: JSONSerialization.WritingOptions
+            return TealiumQueues.backgroundConcurrentQueue.read { () -> String? in
+                var writingOptions: JSONEncoder.OutputFormatting
+
                 if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, OSX 10.13, *) {
                     writingOptions = [.prettyPrinted, .sortedKeys]
                 } else {
                     writingOptions = [.prettyPrinted]
                 }
 
-                if let jsonData = try? JSONSerialization.data(withJSONObject: self, options: writingOptions) {
+                let encoder = Tealium.jsonEncoder
+                encoder.outputFormatting = writingOptions
+                let encodable = self.encodable
+                if let jsonData = try? encoder.encode(encodable) {
                     return String(data: jsonData, encoding: .utf8)
+                } else {
+                    return nil
                 }
-                return nil
             }
-        }
-    }
-}
-
-/// Returns a JSON string from an array of dictionaries.
-///
-/// - Parameter array: `[[String: Any]]`
-/// - Returns: `String?`
-public func jsonToString(from array: [[String: Any]]) -> String? {
-    return TealiumQueues.backgroundConcurrentQueue.read { () -> String? in
-        var writingOptions: JSONEncoder.OutputFormatting
-
-        if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, OSX 10.13, *) {
-            writingOptions = [.prettyPrinted, .sortedKeys]
-        } else {
-            writingOptions = [.prettyPrinted]
-        }
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = writingOptions
-        let encodable = AnyEncodable(array)
-        if let jsonData = try? encoder.encode(encodable) {
-            return String(data: jsonData, encoding: .utf8)
-        } else {
-            return nil
         }
     }
 }
