@@ -105,6 +105,7 @@ class PerformanceTests: XCTestCase {
         defaultTealiumConfig.shouldUseRemotePublishSettings = false
         defaultTealiumConfig.batchingEnabled = false
         tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager, enableCompletion: nil)
+        tealium.eventDataManager.deleteAll()
         tealium.consentManager?.setUserConsentStatus(.consented)
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
@@ -123,6 +124,7 @@ class PerformanceTests: XCTestCase {
         defaultTealiumConfig.shouldUseRemotePublishSettings = false
         defaultTealiumConfig.batchingEnabled = false
         tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager, enableCompletion: nil)
+        tealium.eventDataManager.deleteAll()
         tealium.consentManager?.setUserConsentStatus(.consented)
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
@@ -250,7 +252,7 @@ class PerformanceTests: XCTestCase {
         let dispatchers = [collect]
         let connecivity = TealiumConnectivity(config: defaultTealiumConfig)
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = DispatchManager(dispatchers: dispatchers, dispatchValidators: nil, dispatchListeners: nil, delegate: nil, connectivityManager: connecivity, logger: nil, config: defaultTealiumConfig)
+            _ = DispatchManager(dispatchers: dispatchers, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connecivity, logger: nil, config: defaultTealiumConfig)
             self.stopMeasuring()
         }
     }
