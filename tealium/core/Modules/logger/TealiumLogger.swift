@@ -20,16 +20,24 @@ extension OSLog {
 public struct TealiumLogger: TealiumLoggerProtocol {
 
     
-    var logThreshold: TealiumLogLevel
-    var loggerType: TealiumLoggerType
+    var logThreshold: TealiumLogLevel {
+        get {
+            config.logLevel ?? TealiumConstants.defaultLogLevel
+        }
+    }
+    var loggerType: TealiumLoggerType {
+        get {
+            config.loggerType
+        }
+    }
+    var config: TealiumConfig
     
     /// Modules may initialize their own loggers, passing in the log level from the TealiumConfig object￼.
     ///
     /// - Parameters:
     ///     - logLevel: `TealiumLogLevel` indicating the type of errors that should be logged
-    public init(config: TealiumConfig?) {
-        self.logThreshold = config?.logLevel ?? TealiumConstants.defaultLogLevel
-        self.loggerType = config?.loggerType ?? TealiumConstants.defaultLoggerType
+    public init(config: TealiumConfig) {
+        self.config = config
     }
 
     /// Prints messages to the console￼.

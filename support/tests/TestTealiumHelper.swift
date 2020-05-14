@@ -29,26 +29,15 @@ enum TealiumTestValue {
     static let testIDFVString = "599F9C00-92DC-4B5C-9464-7971F01F8370"
 }
 
-enum TealiumTestError: Error {
-    case generic
-}
-
 let testStringArrayValue = ["value1", "value2"]
 var testOptionalData = [TealiumTestKey.stringKey: TealiumTestValue.stringValue,
                         TealiumTestKey.stringArrayKey: testStringArrayValue] as [String: Any]
-let testTealiumConfig = TealiumConfig(account: TealiumTestValue.account,
+var testTealiumConfig: TealiumConfig { TealiumConfig(account: TealiumTestValue.account,
                                       profile: TealiumTestValue.profile,
                                       environment: TealiumTestValue.environment,
                                       optionalData: testOptionalData as [String: Any])
+}
 
-//let testDeleteRequest = TealiumDeleteRequest(name: "testDelete")
-//let testDisableRequest = TealiumDisableRequest()
-//let testEnableRequest = TealiumEnableRequest(config: testTealiumConfig, enableCompletion: nil)
-//let testLoadRequest = TealiumLoadRequest(name: "test") { _, _, _ in
-//    // Future processing... maybe
-//}
-//let testReportNotificationRequest = TealiumReportNotificationsRequest()
-//let testSaveRequest = TealiumSaveRequest(name: "test", data: ["key": "value"])
 let testTrackRequest = TealiumTrackRequest(data: [:],
                                            completion: nil)
 

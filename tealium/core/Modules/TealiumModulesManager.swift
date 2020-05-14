@@ -11,17 +11,50 @@ import Foundation
 public class ModulesManager {
 
     var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumCrash.TealiumCrashModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule", "TealiumLocation.TealiumLocationModule"]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule", "TealiumLocation.TealiumLocationModule"]
     var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
     public var collectors = [Collector]()
-    var dispatchValidators = [DispatchValidator]()
-    var dispatchManager: DispatchManager?
+    var dispatchValidators = [DispatchValidator]() {
+        willSet {
+            dispatchManager?.dispatchValidators = newValue
+        }
+    }
+    var dispatchManager: DispatchManagerProtocol?
     var connectivityManager: TealiumConnectivity
-    var dispatchers = [Dispatcher]()
-    var dispatchListeners = [DispatchListener]()
+    var dispatchers = [Dispatcher]() {
+           willSet {
+               self.dispatchManager?.dispatchers = newValue
+           }
+       }
+    var dispatchListeners = [DispatchListener]() {
+              willSet {
+                  self.dispatchManager?.dispatchListeners = newValue
+              }
+          }
     var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
-    public var modules = [TealiumModule]()
+    public var modules : [TealiumModule] {
+        get {
+            self.collectors + self.dispatchers
+        }
+        
+        set {
+            let modules = newValue
+            dispatchers = []
+            collectors = []
+            modules.forEach {
+                switch $0 {
+                case let module as Dispatcher:
+                    addDispatcher(module)
+                case let module as Collector:
+                    addCollector(module)
+                default:
+                    return
+                }
+            }
+            
+        }
+    }
     var config: TealiumConfig? {
         willSet {
             guard let newValue = newValue else {
@@ -55,9 +88,12 @@ public class ModulesManager {
             self.setupDispatchers(config: config)
             self.setupDispatchValidators(config: config)
             self.setupDispatchListeners(config: config)
-            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers, dispatchValidators: self.dispatchValidators, dispatchListeners: self.dispatchListeners, delegate: self, connectivityManager: self.connectivityManager, logger: self.logger, config: config)
-            self.modules += self.collectors
-            self.modules += self.dispatchers
+            self.dispatchManager = DispatchManager(dispatchers: self.dispatchers,
+                                                   dispatchValidators: self.dispatchValidators,
+                                                   dispatchListeners: self.dispatchListeners,
+                                                   connectivityManager: self.connectivityManager,
+                                                   logger: self.logger,
+                                                   config: config)
             self.setupCollectors(config: config)
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
                 ["Collectors Initialized: \(self.collectors.map { $0.moduleId })",
@@ -104,7 +140,6 @@ public class ModulesManager {
             return
         }
         dispatchListeners.append(listener)
-        dispatchManager?.dispatchListeners.append(listener)
     }
     
     func addDispatchValidator(_ validator: DispatchValidator) {
@@ -114,7 +149,6 @@ public class ModulesManager {
             return
         }
         dispatchValidators.append(validator)
-        dispatchManager?.dispatchValidators.append(validator)
     }
     
     func addDispatcher(_ dispatcher: Dispatcher) {
@@ -180,7 +214,6 @@ public class ModulesManager {
 
            addDispatcher(dispatcher)
         }
-        self.dispatchManager?.dispatchers = self.dispatchers
     }
     
 //     TODO: allow dispatch validators to be set up from config, replaces delegate
@@ -225,14 +258,13 @@ public class ModulesManager {
     func disableModule(id: String) {
         if let module = modules.first(where: { $0.moduleId == id }) {
             switch module {
-            case let module as Dispatcher:
-                self.collectors = self.collectors.filter { type(of: module) != type(of: $0) }
             case let module as Collector:
+                self.collectors = self.collectors.filter { type(of: module) != type(of: $0) }
+            case let module as Dispatcher:
                 self.dispatchers = self.dispatchers.filter { type(of: module) != type(of: $0) }
             default:
                 return
             }
-            self.modules = self.modules.filter { type(of: module) != type(of: $0) }
         }
     }
     
