@@ -333,9 +333,27 @@ class TestTealiumHelper {
 
 }
 
-//extension TestTealiumHelper: TealiumModuleDelegate {
-//    func requestTrack(_ track: TealiumTrackRequest) {
-//        
+extension TestTealiumHelper: TealiumModuleDelegate {
+    func requestReleaseQueue(reason: String) {
+        
+    }
+    
+    func requestTrack(_ track: TealiumTrackRequest) {
+        
+    }
+
+//    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
+//        // NOTE: Don't leave a breakpoint in here, can throw off the test
+//        callBack?(module, process.typeId)
+//        successfulRequests.append(process)
+//
+//        if areTestsFinished() {
+//            let successStrings = stringsFrom(successfulRequests)
+//            let failing = TestTealiumHelper.failingProtocols(testingList: TestTealiumHelper.allTealiumRequestNames(),
+//                                                             passedList: successStrings)
+//            testCompletion?(failing.isEmpty ? true : false, failing)
+//        }
+//
 //    }
 //
 ////    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
@@ -357,6 +375,7 @@ class TestTealiumHelper {
 ////    }
 //
 //}
+}
 
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
 

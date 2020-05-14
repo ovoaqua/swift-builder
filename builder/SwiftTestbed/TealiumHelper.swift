@@ -29,7 +29,7 @@ class TealiumHelper: NSObject {
 
     static let shared = TealiumHelper()
     var tealium: Tealium?
-    var enableHelperLogs = false
+    var enableHelperLogs = true
     var traceId = "04136"
     var logger: TealiumLoggerProtocol?
 
