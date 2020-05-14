@@ -12,11 +12,29 @@ import UIKit
 #else
 #endif
 
-class DispatchManager {
+protocol DispatchManagerProtocol {
+    var dispatchers: [Dispatcher]? { get set }
+    var dispatchListeners: [DispatchListener]? { get set }
+    var dispatchValidators: [DispatchValidator]? { get set }
+    var config: TealiumConfig { get set }
     
-    var dispatchers = [Dispatcher]()
-    var dispatchValidators = [DispatchValidator]()
-    var dispatchListeners = [DispatchListener]()
+    init(dispatchers: [Dispatcher]?,
+         dispatchValidators: [DispatchValidator]?,
+         dispatchListeners: [DispatchListener]?,
+         connectivityManager: TealiumConnectivity,
+         logger: TealiumLoggerProtocol?,
+         config: TealiumConfig)
+    
+    func processTrack(_ request: TealiumTrackRequest)
+    func handleReleaseRequest(reason: String)
+    
+}
+
+class DispatchManager: DispatchManagerProtocol {
+    
+    var dispatchers: [Dispatcher]?
+    var dispatchValidators: [DispatchValidator]?
+    var dispatchListeners: [DispatchListener]?
     var logger: TealiumLoggerProtocol?
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
@@ -79,26 +97,18 @@ class DispatchManager {
     }
     #endif
     
-    init(dispatchers: [Dispatcher]?,
+    required init(dispatchers: [Dispatcher]?,
          dispatchValidators: [DispatchValidator]?,
          dispatchListeners: [DispatchListener]?,
-         delegate: TealiumModuleDelegate?,
          connectivityManager: TealiumConnectivity,
          logger: TealiumLoggerProtocol?,
          config: TealiumConfig) {
         self.config = config
         self.connectivityManager = connectivityManager
-        if let dispatchers = dispatchers {
-            self.dispatchers = dispatchers
-        }
+        self.dispatchers = dispatchers
+        self.dispatchValidators = dispatchValidators
         
-        if let dispatchValidators = dispatchValidators {
-            self.dispatchValidators = dispatchValidators
-        }
-        
-        if let listeners = dispatchListeners {
-            self.dispatchListeners = listeners
-        }
+        self.dispatchListeners = dispatchListeners
         
         if let logger = logger {
             self.logger = logger
@@ -144,7 +154,7 @@ class DispatchManager {
             return
         }
         
-        if self.dispatchers.isEmpty {
+        guard let dispatchers = dispatchers, !dispatchers.isEmpty else {
             self.enqueue(request, reason: "Dispatchers Not Ready")
             return
         }
@@ -153,7 +163,10 @@ class DispatchManager {
     }
     
     func checkShouldQueue(request: inout TealiumTrackRequest) -> Bool {
-        dispatchValidators.filter {
+        guard let dispatchValidators = dispatchValidators else {
+            return false
+        }
+        return dispatchValidators.filter {
             let response = $0.shouldQueue(request: request)
             if response.0 == true, let data = response.1 {
                 var newData = request.trackDictionary
@@ -167,6 +180,9 @@ class DispatchManager {
     }
     
     func checkShouldQueue(request: inout TealiumBatchTrackRequest) -> Bool {
+        guard let dispatchValidators = dispatchValidators else {
+            return false
+        }
         let uuid = request.uuid
         return dispatchValidators.filter {
             let response = $0.shouldQueue(request: request)
@@ -189,11 +205,14 @@ class DispatchManager {
     }
     
     var allDispatchersReady: Bool {
-        return dispatchers.filter { !$0.isReady }.count == 0
+        return dispatchers?.filter { !$0.isReady }.count == 0
     }
     
     func checkShouldDrop(request: TealiumRequest) -> Bool {
-        dispatchValidators.filter {
+        guard let dispatchValidators = dispatchValidators else {
+            return false
+        }
+        return dispatchValidators.filter {
             if $0.shouldDrop(request: request) == true {
                 let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request dropped by Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
                 self.logger?.log(logRequest)
@@ -204,7 +223,10 @@ class DispatchManager {
     }
     
     func checkShouldPurge(request: TealiumRequest) -> Bool {
-        dispatchValidators.filter {
+        guard let dispatchValidators = dispatchValidators else {
+            return false
+        }
+        return dispatchValidators.filter {
             if $0.shouldPurge(request: request) == true {
                 let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Purge request received from Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
                 self.logger?.log(logRequest)
@@ -216,12 +238,12 @@ class DispatchManager {
     
     func runDispatchers (for request: TealiumRequest) {
         if request is TealiumTrackRequest || request is TealiumBatchTrackRequest {
-            self.dispatchListeners.forEach {
+            self.dispatchListeners?.forEach {
                 $0.willTrack(request: request)
             }
         }
         self.logTrackSuccess([], request: request)
-        dispatchers.forEach { module in
+        dispatchers?.forEach { module in
             let moduleId = module.moduleId
             module.dynamicTrack(request) { result in
                 switch result.0 {
@@ -322,7 +344,7 @@ class DispatchManager {
     func enqueue(_ request: TealiumTrackRequest,
                  reason: String?) {
         defer {
-            if !self.dispatchers.isEmpty {
+            if let dispatchers = dispatchers, !dispatchers.isEmpty {
                 if persistentQueue.currentEvents >= eventsBeforeAutoDispatch,
                     hasSufficientBattery(track: persistentQueue.peek()?.last) {
                     handleReleaseRequest(reason: "Dispatch queue limit reached.")
@@ -353,7 +375,7 @@ class DispatchManager {
         // dummy request to check if queueing active
         var request = TealiumTrackRequest(data: ["release_request":true])
         
-        guard !self.dispatchers.isEmpty else {
+        guard let dispatchers = dispatchers, !dispatchers.isEmpty else {
             return
         }
         

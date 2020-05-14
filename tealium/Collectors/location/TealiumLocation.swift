@@ -30,9 +30,9 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         self.locationListener = locationListener
         self.locationManager = locationManager
 
-        if let logLevel = config.logLevel {
-            //self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: logLevel)
-        }
+//        if let logLevel = config.logLevel {
+//            //self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: logLevel)
+//        }
 
         super.init()
 
