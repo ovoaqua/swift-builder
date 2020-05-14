@@ -262,14 +262,14 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    func testEventDataCollectionWithStandardData() {
-        let eventData = EventDataManager(config: defaultTealiumConfig)
-        eventData.deleteAll()
-        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = eventData.allEventData
-            self.stopMeasuring()
-        }
-    }
+    //    func testEventDataCollectionWithStandardData() {
+    //        let eventData = EventDataManager(config: defaultTealiumConfig)
+    //        eventData.deleteAll()
+    //        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
+    //            _ = eventData.allEventData
+    //            self.stopMeasuring()
+    //        }
+    //    }
 
     func testEventDataCollectionWithLargePersistentDataSet() {
         let eventDataManager = EventDataManager(config: defaultTealiumConfig)
@@ -328,15 +328,15 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    func testLoggerWithOSLog() {
-        defaultTealiumConfig.loggerType = .os
-        let logger = TealiumLogger(config: defaultTealiumConfig)
-        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            let logRequest = TealiumLogRequest(title: "Hello There", message: "This is a test message", info: ["info1": "one", "info2": 123], logLevel: .info, category: .general)
-            logger.log(logRequest)
-            self.stopMeasuring()
-        }
-    }
+    //    func testLoggerWithOSLog() {
+    //        defaultTealiumConfig.loggerType = .os
+    //        let logger = TealiumLogger(config: defaultTealiumConfig)
+    //        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
+    //            let logRequest = TealiumLogRequest(title: "Hello There", message: "This is a test message", info: ["info1": "one", "info2": 123], logLevel: .info, category: .general)
+    //            logger.log(logRequest)
+    //            self.stopMeasuring()
+    //        }
+    //    }
 
     func testLoggerWithPrintLog() {
         defaultTealiumConfig.loggerType = .print
