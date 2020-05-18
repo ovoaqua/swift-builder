@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@testable import TealiumConsentManager
 @testable import TealiumCore
 
 class ConsentMockDiskStorage: TealiumDiskStorageProtocol {

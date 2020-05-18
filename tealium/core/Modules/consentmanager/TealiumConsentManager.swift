@@ -7,9 +7,6 @@
 //
 
 import Foundation
-#if consentmanager
-import TealiumCore
-#endif
 
 public class TealiumConsentManager {
 

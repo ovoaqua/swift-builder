@@ -9,6 +9,7 @@
 import Foundation
 
 public enum TealiumConsentConstants {
+    static let enableConsentManager = "enable_consent_manager"
     static let consentCategoriesKey = "consent_categories"
     static let trackingConsentedKey = "tracking_consented"
     static let consentGrantedEventName = "grant_full_consent"

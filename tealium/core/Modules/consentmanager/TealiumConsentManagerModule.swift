@@ -7,22 +7,19 @@
 //
 
 import Foundation
-#if consentmanager
-    import TealiumCore
-#endif
 
 class TealiumConsentManagerModule: Collector, DispatchValidator {
     
     public let moduleId: String = "Consent Manager"
     var id: String = "ConsentManager"
     var config: TealiumConfig
-    let consentManager = TealiumConsentManager()
+    let consentManager: TealiumConsentManager?
     var ready: Bool = false
     weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
 
     var data: [String: Any]? {
-        consentManager.getUserConsentPreferences()?.dictionary
+        consentManager?.getUserConsentPreferences()?.dictionary
     }
     
     required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: ModuleCompletion) {
@@ -31,16 +28,24 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
             forModule: TealiumConsentConstants.moduleName,
             isCritical: true)
         self.delegate = delegate
+        guard config.enableConsentManager else {
+            self.consentManager = nil
+            return
+        }
         // start consent manager with completion block
-        consentManager.start(config: config, delegate: delegate, diskStorage: self.diskStorage) {
+        consentManager = TealiumConsentManager()
+        consentManager?.start(config: config, delegate: delegate, diskStorage: self.diskStorage) {
             self.ready = true
         }
-        consentManager.addConsentDelegate(self)
+        consentManager?.addConsentDelegate(self)
         completion((.success(true), nil))
     }
 
     func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
+        guard newConfig.enableConsentManager else {
+            return
+        }
         if newConfig != self.config,
             newConfig.account != config.account,
             newConfig.profile != config.profile,
@@ -48,7 +53,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
             newConfig.initialUserConsentStatus != config.initialUserConsentStatus {
             ready = false
             self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumConsentConstants.moduleName, isCritical: true)
-            consentManager.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {
+            consentManager?.start(config: request.config, delegate: delegate, diskStorage: self.diskStorage) {
                 self.ready = true
             }
         }
@@ -67,7 +72,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
                     || event == TealiumConsentConstants.consentGrantedEventName || event == TealiumConsentConstants.consentDeclinedEventName || event == TealiumKey.updateConsentCookieEventName) {
             return (false, nil)
         }
-        switch consentManager.getTrackingStatus() {
+        switch consentManager?.getTrackingStatus() {
         case .trackingQueued:
             var newData = request.trackDictionary
             newData[TealiumKey.queueReason] = TealiumConsentConstants.moduleName
@@ -79,6 +84,8 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
             // user declined tracking. we will discard this request
         case .trackingForbidden:
             return (false, addConsentDataToTrack(request).trackDictionary)
+        case .none:
+            return (false, nil)
         }
     }
     
@@ -86,14 +93,14 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
     /// - Parameter request: incoming `TealiumRequest`
     /// - Returns: `Bool` true/false if should be dropped.
     func shouldDrop(request: TealiumRequest) -> Bool {
-        consentManager.getTrackingStatus() == .trackingForbidden
+        consentManager?.getTrackingStatus() == .trackingForbidden
     }
     
     /// Determines whether or not a request should be purged based on a user's consent preferences selection.
     /// - Parameter request: incoming `TealiumRequest`
     /// - Returns: `Bool` true/false if should be purged.
     func shouldPurge(request: TealiumRequest) -> Bool {
-        consentManager.getTrackingStatus() == .trackingForbidden
+        consentManager?.getTrackingStatus() == .trackingForbidden
     }
 
     /// Adds consent categories and status to the tracking request.￼
@@ -101,7 +108,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
     /// - Parameter track: `TealiumTrackRequest` to be modified
     func addConsentDataToTrack(_ track: TealiumTrackRequest) -> TealiumTrackRequest {
         var newTrack = track.trackDictionary
-        if let consentDictionary = consentManager.getUserConsentPreferences()?.dictionary {
+        if let consentDictionary = consentManager?.getUserConsentPreferences()?.dictionary {
             newTrack.merge(consentDictionary) { _, new -> Any in
                 new
             }

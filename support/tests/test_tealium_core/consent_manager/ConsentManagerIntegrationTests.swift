@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@testable import TealiumConsentManager
 @testable import TealiumCore
 import XCTest
 
@@ -395,10 +394,12 @@ class ConsentManagerTests: XCTestCase {
         expectations.append(expectation)
         runMultiple {
             let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
-            let consentManagerModule = TealiumConsentManagerModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+            let config = TestTealiumHelper().getConfig()
+            config.enableConsentManager = true
+            let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
             let localConsentManager = consentManagerModule.consentManager
-            localConsentManager.setUserConsentStatus(.notConsented)
-            localConsentManager.addConsentDelegate(self)
+            localConsentManager?.setUserConsentStatus(.notConsented)
+            localConsentManager?.addConsentDelegate(self)
             currentTest = "testDelegateWillDropTrackingCall"
             consentManagerModule.ready = true
             let shouldDrop = consentManagerModule.shouldDrop(request: track)
@@ -413,10 +414,12 @@ class ConsentManagerTests: XCTestCase {
         expectations.append(expectation)
         runMultiple {
             let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
-            let consentManagerModule = TealiumConsentManagerModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+            let config = TestTealiumHelper().getConfig()
+            config.enableConsentManager = true
+            let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
             let localConsentManager = consentManagerModule.consentManager
-            localConsentManager.setUserConsentStatus(.unknown)
-            localConsentManager.addConsentDelegate(self)
+            localConsentManager?.setUserConsentStatus(.unknown)
+            localConsentManager?.addConsentDelegate(self)
             currentTest = "testDelegateWillQueueTrackingCall"
             consentManagerModule.ready = true
             let queue = consentManagerModule.shouldQueue(request: track)
@@ -431,10 +434,10 @@ class ConsentManagerTests: XCTestCase {
         expectations.append(expectation)
         runMultiple {
             let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
-            let consentManagerModule = TealiumConsentManagerModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { })
+            let consentManagerModule = TealiumConsentManagerModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
             let localConsentManager = consentManagerModule.consentManager
-            localConsentManager.setUserConsentStatus(.consented)
-            localConsentManager.addConsentDelegate(self)
+            localConsentManager?.setUserConsentStatus(.consented)
+            localConsentManager?.addConsentDelegate(self)
             currentTest = "testDelegateWillSendTrackingCall"
             consentManagerModule.ready = true
             let queue = consentManagerModule.shouldQueue(request: track)
@@ -455,7 +458,11 @@ class ConsentManagerTests: XCTestCase {
     func testNotConsentedRemovesAllCategoryNames() {
         consentManager?.setUserConsentStatus(.consented)
         consentManager?.setUserConsentStatus(.notConsented)
-        XCTAssertTrue(consentManager?.getUserConsentCategories()?.isEmpty)
+        guard let categories = consentManager?.getUserConsentCategories() else {
+            XCTFail("Categories should return at least empty array")
+            return
+        }
+        XCTAssertTrue(categories.isEmpty)
     }
 
     func testConsentStatusIsConsentedIfCategoriesAreSet() {
@@ -531,6 +538,10 @@ extension ConsentManagerTests: TealiumConsentManagerDelegate {
 }
 
 extension ConsentManagerTests: TealiumModuleDelegate {
+    func requestReleaseQueue(reason: String) {
+        
+    }
+    
     func requestTrack(_ track: TealiumTrackRequest) {
         if let track = track as? TealiumTrackRequest {
             trackData = track.trackDictionary

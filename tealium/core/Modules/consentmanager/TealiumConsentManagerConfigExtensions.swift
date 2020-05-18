@@ -7,11 +7,17 @@
 //
 
 import Foundation
-#if consentmanager
-import TealiumCore
-#endif
 
 public extension TealiumConfig {
+    
+    var enableConsentManager: Bool {
+        get {
+            optionalData[TealiumConsentConstants.enableConsentManager] as? Bool ?? false
+        }
+        set {
+            optionalData[TealiumConsentConstants.enableConsentManager] = newValue
+        }
+    }
 
     /// Determines whether consent logging events should be sent to Tealium UDH￼.
     ///
