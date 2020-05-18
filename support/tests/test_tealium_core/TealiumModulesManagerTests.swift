@@ -2,8 +2,8 @@
 //  TealiumModulesManagerTests.swift
 //  tealium-swift
 //
-//  Created by Jason Koo on 10/11/16.
-//  Copyright © 2016 Tealium, Inc. All rights reserved.
+//  Created by Craig Rouse on 04/30/20.
+//  Copyright © 2020 Tealium, Inc. All rights reserved.
 //
 
 //@testable import TealiumAppData
@@ -30,6 +30,10 @@ class TealiumModulesManagerTests: XCTestCase {
         let config = testTealiumConfig
         config.logLevel = TealiumLogLevel.error
         config.loggerType = .print
+        return ModulesManager(config, eventDataManager: nil)
+    }
+
+    func modulesManagerForConfig(config: TealiumConfig) -> ModulesManager {
         return ModulesManager(config, eventDataManager: nil)
     }
 
@@ -246,6 +250,26 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.modules = []
         XCTAssertEqual(modulesManager.modules.count, modulesManager.collectors.count)
         XCTAssertEqual(modulesManager.modules.count, 0)
+    }
+
+    func testDispatchValidatorAddedFromConfig() {
+        let validator = DummyCollector(config: testTealiumConfig, delegate: self, diskStorage: nil) { _ in
+
+        }
+        let config = testTealiumConfig
+        config.dispatchValidators = [validator]
+        let modulesManager = self.modulesManagerForConfig(config: config)
+        XCTAssertTrue(modulesManager.dispatchValidators.contains(where: { $0.id == "Dummy" }))
+    }
+
+    func testDispatchListenerAddedFromConfig() {
+        let listener = DummyCollector(config: testTealiumConfig, delegate: self, diskStorage: nil) { _ in
+
+        }
+        let config = testTealiumConfig
+        config.dispatchListeners = [listener]
+        let modulesManager = self.modulesManagerForConfig(config: config)
+        XCTAssertTrue(modulesManager.dispatchListeners.contains(where: { ($0 as! DispatchValidator).id == "Dummy" }))
     }
 
 }

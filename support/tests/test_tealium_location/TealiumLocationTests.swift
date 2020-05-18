@@ -424,7 +424,7 @@ class TealiumLocationTests: XCTestCase {
 
 }
 
-// XCTAssertTrue(tealiumLocationModule?.tealiumLocationManager.monitoredGeofences?.count == 0)
+// XCTAssertTrue(tealiumLocationModule?.tealiumLocationManager.monitoredGeofences?.isEmpty)
 // XCTAssertTrue((tealiumLocationModule?.tealiumLocationManager.geofences.isEmpty)!)
 
 extension TealiumLocationTests: TealiumModuleDelegate {

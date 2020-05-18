@@ -17,10 +17,45 @@ open class TealiumConfig {
     public let datasource: String?
     public lazy var optionalData = [String: Any]()
     // Set to false to avoid collecting optional default data
-    public var shouldCollectTealiumData = true
-    public var logger: TealiumLoggerProtocol?
-    public var dispatchValidators: [DispatchValidator]?
-    public var dispatchListeners: [DispatchListener]?
+    public var shouldCollectTealiumData: Bool {
+        get {
+            optionalData[TealiumKey.shouldCollectTealiumData] as? Bool ?? true
+        }
+        
+        set {
+            optionalData[TealiumKey.shouldCollectTealiumData] = newValue
+        }
+    }
+    
+    public var logger: TealiumLoggerProtocol? {
+        get {
+            optionalData[TealiumKey.logger] as? TealiumLoggerProtocol
+        }
+        
+        set {
+            optionalData[TealiumKey.logger] = newValue
+        }
+    }
+    
+    public var dispatchValidators: [DispatchValidator]? {
+           get {
+               optionalData[TealiumKey.dispatchValidators] as? [DispatchValidator]
+           }
+           
+           set {
+               optionalData[TealiumKey.dispatchValidators] = newValue
+           }
+   }
+    
+    public var dispatchListeners: [DispatchListener]? {
+           get {
+               optionalData[TealiumKey.dispatchListeners] as? [DispatchListener]
+           }
+           
+           set {
+               optionalData[TealiumKey.dispatchListeners] = newValue
+           }
+   }
 
     public var copy: TealiumConfig {
         return TealiumConfig(account: self.account,
@@ -83,7 +118,7 @@ open class TealiumConfig {
         if let optionalData = optionalData {
             self.optionalData = optionalData
         }
-        self.logger = getLogger()
+        self.logger = self.logger ?? getLogger()
     }
     
     func getLogger() -> TealiumLoggerProtocol {

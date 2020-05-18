@@ -18,7 +18,7 @@ public enum TealiumLogLevel: Int, Comparable, CustomStringConvertible {
     case debug = 100
     case error = 200
     case fault = 300
-    case none = -9999
+    case silent = -9999
     
     public init(from string: String) {
         switch string {
@@ -31,9 +31,9 @@ public enum TealiumLogLevel: Int, Comparable, CustomStringConvertible {
         case "fault":
             self = .fault
         case "none":
-            self = .none
+            self = .silent
         default:
-            self = .none
+            self = .silent
         }
     }
     
@@ -48,8 +48,8 @@ public enum TealiumLogLevel: Int, Comparable, CustomStringConvertible {
                 return "Error"
             case .fault:
                 return "Fault"
-            case .none:
-                return "None"
+            case .silent:
+                return "Silent"
             }
         }
     }

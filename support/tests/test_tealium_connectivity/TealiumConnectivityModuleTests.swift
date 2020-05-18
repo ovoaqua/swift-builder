@@ -34,7 +34,7 @@ class TealiumConnectivityModuleTests: XCTestCase {
         let module = TealiumConnectivityModule(delegate: nil)
 
         let failing = helper.failingRequestsFor(module: module)
-        XCTAssert(failing.count == 0, "Unexpected failing requests: \(failing)")
+        XCTAssert(failing.isEmpty, "Unexpected failing requests: \(failing)")
     }
 
     func testMinimumProtocolsReturn() {
@@ -45,7 +45,7 @@ class TealiumConnectivityModuleTests: XCTestCase {
         helper.modulesReturnsMinimumProtocols(module: module) { _, failing in
 
             expectation.fulfill()
-            XCTAssert(failing.count == 0, "Unexpected failing requests: \(failing)")
+            XCTAssert(failing.isEmpty, "Unexpected failing requests: \(failing)")
         }
 
         self.waitForExpectations(timeout: 1.0, handler: nil)

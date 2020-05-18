@@ -17,7 +17,7 @@ extension OSLog {
 }
 
 /// Internal console logger for library debugging.
-public struct TealiumLogger: TealiumLoggerProtocol {
+public class TealiumLogger: TealiumLoggerProtocol {
 
     
     var logThreshold: TealiumLogLevel {
@@ -30,13 +30,14 @@ public struct TealiumLogger: TealiumLoggerProtocol {
             config.loggerType
         }
     }
-    var config: TealiumConfig
+    
+    public var config: TealiumConfig
     
     /// Modules may initialize their own loggers, passing in the log level from the TealiumConfig object￼.
     ///
     /// - Parameters:
     ///     - logLevel: `TealiumLogLevel` indicating the type of errors that should be logged
-    public init(config: TealiumConfig) {
+    required public init(config: TealiumConfig) {
         self.config = config
     }
 
@@ -64,7 +65,7 @@ public struct TealiumLogger: TealiumLoggerProtocol {
     @available(iOS 10.0, *)
     func osLog(_ request: LogRequest){
         
-        guard logThreshold > .none else {
+        guard logThreshold > .silent else {
             return
         }
         
@@ -101,7 +102,7 @@ public struct TealiumLogger: TealiumLoggerProtocol {
     }
     
     func textLog(_ request: TealiumLogRequest){
-        guard logThreshold > .none,
+        guard logThreshold > .silent,
             request.logLevel >= logThreshold else {
             return
         }

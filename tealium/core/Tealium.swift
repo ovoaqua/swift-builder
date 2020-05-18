@@ -14,12 +14,11 @@ public typealias TealiumEnableCompletion = ((_ result: Result<Bool, Error>) -> V
 ///  Public interface for the Tealium library.
 public class Tealium {
 
-    var config: TealiumConfig
-    var originalConfig: TealiumConfig
-    /// Mediator for all Tealium modules.
+//    var config: TealiumConfig
+//    var originalConfig: TealiumConfig
     var enableCompletion: TealiumEnableCompletion?
     public static var lifecycleListeners = TealiumLifecycleListeners()
-    var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
+//    var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     public var eventDataManager: EventDataManagerProtocol
     public var zz_internal_modulesManager: ModulesManager?
 
@@ -38,26 +37,29 @@ public class Tealium {
                 enableCompletion?(.success(true))
             }
         }
-        self.config = config
-        self.originalConfig = config.copy
+//        self.config = config
+//        self.originalConfig = config.copy
         self.enableCompletion = enableCompletion
         self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
-        zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: eventDataManager)
-        if config.shouldUseRemotePublishSettings {
-            self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
-            if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
-                self.config = remoteConfig
-            }
+//        if config.shouldUseRemotePublishSettings {
+//            self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
+//            if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
+//                self.config = remoteConfig
+//            }
+//        }
+        TealiumQueues.backgroundConcurrentQueue.write {
+            self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: eventDataManager)
         }
-        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-            guard let self = self else {
-                return
-            }
-            guard self.config.isEnabled == nil || self.config.isEnabled == true else {
-                return
-            }
+        
+//        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+//            guard let self = self else {
+//                return
+//            }
+//            guard self.config.isEnabled == nil || self.config.isEnabled == true else {
+//                return
+//            }
             TealiumInstanceManager.shared.addInstance(self, config: config)
-        }
+//        }
         // TODO: Return any init errors here
     }
 
@@ -66,19 +68,11 @@ public class Tealium {
         self.init(config: config, enableCompletion: nil)
     }
 
-    /// Update an actively running library with new configuration object.
-    ///￼
-    /// - Parameter config: TealiumConfiguration to update library with.
-    public func update(config: TealiumConfig) {
-        TealiumQueues.backgroundConcurrentQueue.write {
-            self.zz_internal_modulesManager?.config = config
-            self.config = config
-        }
-    }
-
     /// Suspends all library activity, may release internal objects.
     public func disable() {
-        TealiumInstanceManager.shared.removeInstance(config: self.config)
+        if let config = self.zz_internal_modulesManager?.config {
+            TealiumInstanceManager.shared.removeInstance(config: config)
+        }
         self.zz_internal_modulesManager = nil
     }
 
@@ -105,18 +99,22 @@ public class Tealium {
     public func track(title: String,
                       data: [String: Any]?,
                       completion: ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)?) {
+        let trackData = Tealium.trackDataFor(title: title,
+                                             optionalData: data)
+        let track = TealiumTrackRequest(data: trackData,
+                                        completion: completion)
+
+        self.sendTrack(track)
+    }
+    
+    /// Sends a track on the background queue
+    /// Will not be executed until modules manager is ready (first work item in queue is to enable modules manager)
+    func sendTrack(_ track: TealiumTrackRequest) {
         TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
             guard let self = self else {
                 return
             }
-            if self.config.shouldUseRemotePublishSettings {
-                self.remotePublishSettingsRetriever?.refresh()
-            }
-            let trackData = Tealium.trackDataFor(title: title,
-                                                 optionalData: data)
-            self.eventDataManager.sessionRefresh()
-            let track = TealiumTrackRequest(data: trackData,
-                                            completion: completion)
+
             self.zz_internal_modulesManager?.sendTrack(track)
         }
     }
@@ -165,14 +163,5 @@ public class Tealium {
         var trackData = optionalData ?? [String: Any]()
         trackData[TealiumKey.event] = title
         return trackData
-    }
-}
-
-extension Tealium: TealiumPublishSettingsDelegate {
-    func didUpdate(_ publishSettings: RemotePublishSettings) {
-        let newConfig = publishSettings.newConfig(with: self.originalConfig)
-        if newConfig != self.config {
-            self.update(config: newConfig)
-        }
     }
 }

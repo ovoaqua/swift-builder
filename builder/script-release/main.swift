@@ -103,7 +103,7 @@ func checkForNewModules(_ version: String) {
                     print("List your excluded platforms in a comma separated string e.g. tvos,osx")
                     while let excluded = main.stdin.readSome()?.trimmingCharacters(in: .controlCharacters) {
                         guard excluded.split(separator: ",")
-                            .filter({ $0 != "tvos" && $0 != "osx" && $0 != "ios" && $0 != "watchos" }).count == 0 else {
+                            .filter({ $0 != "tvos" && $0 != "osx" && $0 != "ios" && $0 != "watchos" }).isEmpty else {
                                 print("""
                                 The excluded platforms must be either of the following: tvos, ios, osx or watchos.
                                 Separated by a comma with no whitespace.

@@ -175,7 +175,7 @@ extension DispatchManager: TealiumLifecycleEvents {
             }
 
         TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-            self.releaseQueue()
+            self.handleReleaseRequest(reason: "App Launch")
         }
         if let taskId = backgroundTaskId {
             TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
@@ -188,24 +188,24 @@ extension DispatchManager: TealiumLifecycleEvents {
         pInfo.performExpiringActivity(withReason: "Tealium Swift: Dispatch Queued Events") { willBeSuspended in
             if !willBeSuspended {
                 TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-                    self.releaseQueue()
+                    self.handleReleaseRequest(reason: "App Launch")
                 }
             }
         }
         #else
-        self.releaseQueue()
+        self.handleReleaseRequest(reason: "App Launch")
         #endif
     }
 
     func wake() {
         TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-            self.releaseQueue()
+            self.handleReleaseRequest(reason: "App Wake")
         }
     }
 
     func launch(at date: Date) {
         TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-            self.releaseQueue()
+            self.handleReleaseRequest(reason: "App Sleep")
         }
     }
     
@@ -233,7 +233,7 @@ extension DispatchManager {
                 self.lowPowerModeEnabled = true
             } else {
                 self.lowPowerModeEnabled = false
-                self.releaseQueue()
+                self.handleReleaseRequest(reason: "Low power mode disabled.")
             }
         }
         #endif

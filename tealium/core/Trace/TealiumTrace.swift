@@ -29,7 +29,7 @@ public extension Tealium {
 
     /// Ends the current visitor session. Trace remains active, but visitor session is terminated.
     func killVisitorSession() {
-        guard let traceId = self.config.optionalData[TealiumKey.traceId] as? String else {
+        guard let traceId = self.zz_internal_modulesManager?.config.optionalData[TealiumKey.traceId] as? String else {
             return
         }
         self.track(title: TealiumKey.killVisitorSession, data: ["event": TealiumKey.killVisitorSession, "call_type": TealiumKey.killVisitorSession, TealiumKey.traceId: traceId], completion: nil)

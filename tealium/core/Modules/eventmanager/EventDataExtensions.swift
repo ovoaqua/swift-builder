@@ -14,14 +14,14 @@ public extension Tealium {
     ///
     /// - Returns: `TealiumPersistentData` instance
     func persistentData() -> TealiumPersistentData {
-        return TealiumPersistentData(eventDataManager: self.eventDataManager)
+        return TealiumPersistentData(eventDataManager: eventDataManager)
     }
     
     /// Get the Data Manager instance for accessing file persistence and auto data variable APIs.
     ///
     /// - Returns: `TealiumVolatileData` instance 
     func volatileData() -> TealiumVolatileData {
-        return TealiumVolatileData(eventDataManager: self.eventDataManager)
+        return TealiumVolatileData(eventDataManager: eventDataManager)
     }
 
 }

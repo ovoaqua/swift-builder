@@ -108,9 +108,9 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         let missingDictKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedDictKeys)
 
-        XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
+        XCTAssertTrue(missingKeys.isEmpty, "Unexpected keys missing:\(missingKeys)")
 
-        XCTAssertTrue(missingDictKeys.count == 0, "Unexpected keys missing:\(missingDictKeys)")
+        XCTAssertTrue(missingDictKeys.isEmpty, "Unexpected keys missing:\(missingDictKeys)")
     }
 
     func testManualLifecycleTrackingConfigSetting() {
@@ -148,7 +148,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
 
-        XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
+        XCTAssertTrue(missingKeys.isEmpty, "Unexpected keys missing:\(missingKeys)")
 
         _ = expectedKeys.enumerated().map {
             if let value = returnData[$1] as? String {
@@ -179,7 +179,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
 
-        XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
+        XCTAssertTrue(missingKeys.isEmpty, "Unexpected keys missing:\(missingKeys)")
 
         _ = expectedKeys.enumerated().map {
             if let value = returnData[$1] as? String {
@@ -211,7 +211,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: returnData, keys: expectedKeys)
 
-        XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
+        XCTAssertTrue(missingKeys.isEmpty, "Unexpected keys missing:\(missingKeys)")
 
         _ = expectedKeys.enumerated().map {
             if let value = returnData[$1] as? String {

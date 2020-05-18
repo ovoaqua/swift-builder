@@ -46,14 +46,14 @@ class TealiumHelper: NSObject {
                                    optionalData: nil)
         config.connectivityRefreshInterval = 5
         config.loggerType = .os 
-        config.logLevel = .info
+//        config.logLevel = .info
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
-        config.shouldUseRemotePublishSettings = false
+        config.shouldUseRemotePublishSettings = true
         // config.batchSize = 5
         // config.dispatchAfter = 5
         // config.dispatchQueueLimit = 200
@@ -75,6 +75,8 @@ class TealiumHelper: NSObject {
         config.visitorServiceDelegate = self
         config.remoteAPIEnabled = false
 //        config.logLevel = .verbose
+        config.logLevel = .info
+        config.loggerType = .print
         config.shouldCollectTealiumData = true
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
@@ -137,6 +139,8 @@ class TealiumHelper: NSObject {
             print("Persistent Data: \(String(describing: persitence.dictionary))")
 
         }
+        tealium?.track(title: "hello")
+        
     }
     
     func resetConsentPreferences() {
@@ -217,7 +221,7 @@ extension TealiumHelper: TealiumVisitorServiceDelegate {
     func didUpdate(visitorProfile: TealiumVisitorProfile) {
         if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             if self.enableHelperLogs {
-                print(string)
+//                print(string)
             }
         }
     }

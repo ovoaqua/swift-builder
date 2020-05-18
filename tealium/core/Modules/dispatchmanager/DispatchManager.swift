@@ -40,6 +40,15 @@ class DispatchManager: DispatchManagerProtocol {
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
     var connectivityManager: TealiumConnectivity
+    
+    var shouldRelease: Bool {
+        if let dispatchers = dispatchers, !dispatchers.isEmpty {
+        return persistentQueue.currentEvents >= eventsBeforeAutoDispatch &&
+            hasSufficientBattery(track: persistentQueue.peek()?.last)
+        }
+        return false
+    }
+    
     var isConnected: Bool {
         self.connectivityManager.hasViableConnection
     }
@@ -128,6 +137,10 @@ class DispatchManager: DispatchManagerProtocol {
     
     
     func processTrack(_ request: TealiumTrackRequest) {
+        // first release the queue if the dispatch limit has been reached
+        if shouldRelease {
+            handleReleaseRequest(reason: "Processing track request")
+        }
         var newRequest = request
         triggerRemoteAPIRequest(request)
         if checkShouldQueue(request: &newRequest) {
@@ -202,10 +215,6 @@ class DispatchManager: DispatchManagerProtocol {
             }
             return response.0
         }.count > 0
-    }
-    
-    var allDispatchersReady: Bool {
-        return dispatchers?.filter { !$0.isReady }.count == 0
     }
     
     func checkShouldDrop(request: TealiumRequest) -> Bool {
@@ -344,11 +353,8 @@ class DispatchManager: DispatchManagerProtocol {
     func enqueue(_ request: TealiumTrackRequest,
                  reason: String?) {
         defer {
-            if let dispatchers = dispatchers, !dispatchers.isEmpty {
-                if persistentQueue.currentEvents >= eventsBeforeAutoDispatch,
-                    hasSufficientBattery(track: persistentQueue.peek()?.last) {
-                    handleReleaseRequest(reason: "Dispatch queue limit reached.")
-                }
+            if shouldRelease {
+                handleReleaseRequest(reason: "Dispatch queue limit reached.")
             }
         }
         // no conditions preventing queueing, so queue request

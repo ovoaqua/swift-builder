@@ -46,6 +46,7 @@ class TealiumPublishSettingsRetriever {
     var cachedSettings: RemotePublishSettings?
     var config: TealiumConfig
     var hasFetched = false
+    var isFetching: Atomic<Bool> = Atomic(value: false)
     var publishSettingsURL: URL? {
         get {
             if let urlString = config.publishSettingsURL,
@@ -71,6 +72,9 @@ class TealiumPublishSettingsRetriever {
     }
 
     func refresh() {
+        guard !isFetching.value else {
+            return
+        }
         // always request on launch
         if !hasFetched || cachedSettings == nil {
             getAndSave()
@@ -89,6 +93,7 @@ class TealiumPublishSettingsRetriever {
     }
 
     func getAndSave() {
+        isFetching.value = true
         hasFetched = true
 
         guard let mobileHTML = publishSettingsURL else {
@@ -105,6 +110,7 @@ class TealiumPublishSettingsRetriever {
                                 self.cachedSettings?.lastFetch = Date()
                                 self.diskStorage.save(settings, completion: nil)
                             }
+                            self.isFetching.value = false
         }
 
     }

@@ -455,7 +455,7 @@ class ConsentManagerTests: XCTestCase {
     func testNotConsentedRemovesAllCategoryNames() {
         consentManager?.setUserConsentStatus(.consented)
         consentManager?.setUserConsentStatus(.notConsented)
-        XCTAssertTrue(consentManager?.getUserConsentCategories()?.count == 0)
+        XCTAssertTrue(consentManager?.getUserConsentCategories()?.isEmpty)
     }
 
     func testConsentStatusIsConsentedIfCategoriesAreSet() {
@@ -523,7 +523,7 @@ extension ConsentManagerTests: TealiumConsentManagerDelegate {
             }
         } else if currentTest == "testResetUserConsentPreferencesTriggersConsentCategoriesChanged" {
             if allTestsFinished {
-                XCTAssertTrue(categories.count == 0, "Consent Manager Test: \(#function) - unexpected categories found")
+                XCTAssertTrue(categories.isEmpty, "Consent Manager Test: \(#function) - unexpected categories found")
                 getExpectation(forDescription: "testResetUserConsentPreferencesTriggersConsentCategoriesChanged")?.fulfill()
             }
         }

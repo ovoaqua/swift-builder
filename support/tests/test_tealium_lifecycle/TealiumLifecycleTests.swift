@@ -55,7 +55,7 @@ class TealiumLifecycleTests: XCTestCase {
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: data, keys: expectedKeys)
 
-        XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
+        XCTAssertTrue(missingKeys.isEmpty, "Unexpected keys missing:\(missingKeys)")
     }
 
     func testAllExpectedRegularTrackRequestKeys() {
@@ -84,7 +84,7 @@ class TealiumLifecycleTests: XCTestCase {
 
         let missingKeys = TestTealiumHelper.missingKeys(fromDictionary: data, keys: expectedKeys)
 
-        XCTAssertTrue(missingKeys.count == 0, "Unexpected keys missing:\(missingKeys)")
+        XCTAssertTrue(missingKeys.isEmpty, "Unexpected keys missing:\(missingKeys)")
     }
 
     func testDayOfWeekLocal() {

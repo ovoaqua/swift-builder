@@ -9,9 +9,11 @@
 import Foundation
 
 public class ModulesManager {
-
-    var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule", "TealiumLocation.TealiumLocationModule"]
+    // must store a copy of the initial config to allow locally-overridden properties to take precedence over remote ones. These would otherwise be lost after the first update.
+    var originalConfig: TealiumConfig
+    var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
+    var coreCollectors: ContiguousArray<Collector.Type> = [TealiumAppDataModule.self, DeviceDataModule.self]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule"]
     var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
@@ -31,7 +33,7 @@ public class ModulesManager {
                   self.dispatchManager?.dispatchListeners = newValue
               }
           }
-    var eventDataManager: EventDataManagerProtocol?
+    var eventDataManager: EventDataManagerProtocol
     var logger: TealiumLoggerProtocol?
     public var modules : [TealiumModule] {
         get {
@@ -55,12 +57,10 @@ public class ModulesManager {
             
         }
     }
-    var config: TealiumConfig? {
+    var config: TealiumConfig {
         willSet {
-            guard let newValue = newValue else {
-                return
-            }
             self.dispatchManager?.config = newValue
+            self.logger?.config = newValue
             self.updateConfig(config: newValue)
             self.modules.forEach {
                 var module = $0
@@ -80,21 +80,29 @@ public class ModulesManager {
     
     init (_ config: TealiumConfig,
           eventDataManager: EventDataManagerProtocol?) {
+            self.originalConfig = config.copy
             self.config = config
-            self.connectivityManager = TealiumConnectivity(config: config)
+            self.connectivityManager = TealiumConnectivity(config: self.config)
+            self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
             connectivityManager.addConnectivityDelegate(delegate: self)
-            self.logger = config.logger
-            self.eventDataManager = eventDataManager
-            self.setupDispatchers(config: config)
-            self.setupDispatchValidators(config: config)
-            self.setupDispatchListeners(config: config)
+            if config.shouldUseRemotePublishSettings {
+                self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: self.config, delegate: self)
+                if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: self.config) {
+                    self.config = remoteConfig
+                }
+            }
+            self.logger = self.config.logger
+            self.setupDispatchers(config: self.config)
+            self.setupDispatchValidators(config: self.config)
+            self.setupDispatchListeners(config: self.config)
+
             self.dispatchManager = DispatchManager(dispatchers: self.dispatchers,
                                                    dispatchValidators: self.dispatchValidators,
                                                    dispatchListeners: self.dispatchListeners,
                                                    connectivityManager: self.connectivityManager,
                                                    logger: self.logger,
-                                                   config: config)
-            self.setupCollectors(config: config)
+                                                   config: self.config)
+            self.setupCollectors(config: self.config)
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
                 ["Collectors Initialized: \(self.collectors.map { $0.moduleId })",
                 "Dispatch Validators Initialized: \(self.dispatchValidators.map { $0.id })",
@@ -194,7 +202,7 @@ public class ModulesManager {
                 guard config.isTagManagementEnabled == true else {
                     return
                 }
-                self.eventDataManager?.tagManagementIsEnabled = true
+                self.eventDataManager.tagManagementIsEnabled = true
             }
             
             if knownDispatcher.contains("Collect") {
@@ -214,6 +222,10 @@ public class ModulesManager {
 
            addDispatcher(dispatcher)
         }
+        if dispatchers.isEmpty {
+            let logRequest = TealiumLogRequest(title: "Modules Manager", message: "No dispatchers are enabled. Please check remote publish settings.", info: nil, logLevel: .error, category: .`init`)
+            self.logger?.log(logRequest)
+        }
     }
     
 //     TODO: allow dispatch validators to be set up from config, replaces delegate
@@ -231,6 +243,9 @@ public class ModulesManager {
     }
 
     func sendTrack(_ request: TealiumTrackRequest) {
+        if self.config.shouldUseRemotePublishSettings == true {
+            self.remotePublishSettingsRetriever?.refresh()
+        }
         let requestData = gatherTrackData(for: request.trackDictionary)
         let newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
         dispatchManager?.processTrack(newRequest)
@@ -245,9 +260,7 @@ public class ModulesManager {
             allData.value += data
         }
         
-        if let eventData = eventDataManager?.allEventData {
-            allData.value += eventData
-        }
+        allData.value += eventDataManager.allEventData
 
         if let data = data {
             allData.value += data
@@ -299,13 +312,20 @@ extension ModulesManager: TealiumConnectivityDelegate {
     
     public func connectionRestored() {
         if self.dispatchers.isEmpty {
-            if let config = self.config {
-                self.setupDispatchers(config: config)
-            }
+            self.setupDispatchers(config: config)
         }
         self.requestReleaseQueue(reason: "Connection Restored")
         connectivityManager.cancelAutoStatusRefresh()
     }
     
     
+}
+
+extension ModulesManager: TealiumPublishSettingsDelegate {
+    func didUpdate(_ publishSettings: RemotePublishSettings) {
+        let newConfig = publishSettings.newConfig(with: self.originalConfig)
+        if newConfig != self.config {
+            self.config = newConfig
+        }
+    }
 }

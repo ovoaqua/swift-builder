@@ -89,7 +89,7 @@ class TealiumRemoteCommandsTests: XCTestCase {
 
         remoteCommands.remove(commandWithId: commandId)
 
-        XCTAssertTrue(remoteCommands.commands.count == 0)
+        XCTAssertTrue(remoteCommands.commands.isEmpty)
     }
 
     func testCommandForId() {

@@ -46,7 +46,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
         let module = TealiumRemoteCommandsModule(delegate: nil)
         module.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
 
-        XCTAssertTrue(module.remoteCommands?.commands.count == 0, "Unexpected number of reserve commands found: \(String(describing: module.remoteCommands?.commands))")
+        XCTAssertTrue(module.remoteCommands?.commands.isEmpty, "Unexpected number of reserve commands found: \(String(describing: module.remoteCommands?.commands))")
     }
 
     // Integration Test

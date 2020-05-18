@@ -58,7 +58,7 @@ struct RemotePublishSettings: Codable {
             case "prod":
                 self.overrideLog = .error
             default:
-                self.overrideLog = .none
+                self.overrideLog = .silent
             }
 
             self.wifiOnlySending = try v5.decode(String.self, forKey: .wifi_only_sending) == "true" ? true : false
