@@ -22,7 +22,6 @@ protocol DispatchManagerProtocol {
          dispatchValidators: [DispatchValidator]?,
          dispatchListeners: [DispatchListener]?,
          connectivityManager: TealiumConnectivity,
-         logger: TealiumLoggerProtocol?,
          config: TealiumConfig)
     
     func processTrack(_ request: TealiumTrackRequest)
@@ -106,11 +105,20 @@ class DispatchManager: DispatchManagerProtocol {
     }
     #endif
     
+    convenience init (dispatchers: [Dispatcher]?,
+                        dispatchValidators: [DispatchValidator]?,
+                        dispatchListeners: [DispatchListener]?,
+                        connectivityManager: TealiumConnectivity,
+                        config: TealiumConfig,
+                        diskStorage: TealiumDiskStorageProtocol? = nil) {
+        self.init(dispatchers: dispatchers, dispatchValidators: dispatchValidators, dispatchListeners: dispatchListeners, connectivityManager: connectivityManager, config: config)
+        self.diskStorage = diskStorage
+    }
+    
     required init(dispatchers: [Dispatcher]?,
          dispatchValidators: [DispatchValidator]?,
          dispatchListeners: [DispatchListener]?,
          connectivityManager: TealiumConnectivity,
-         logger: TealiumLoggerProtocol?,
          config: TealiumConfig) {
         self.config = config
         self.connectivityManager = connectivityManager
@@ -119,11 +127,11 @@ class DispatchManager: DispatchManagerProtocol {
         
         self.dispatchListeners = dispatchListeners
         
-        if let logger = logger {
+        if let logger = config.logger {
             self.logger = logger
         }
         
-        // allows overriding for unit tests, independently of enable call
+        // allows overriding for unit tests
         if self.diskStorage == nil {
             self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: TealiumDispatchQueueConstants.moduleName)
         }

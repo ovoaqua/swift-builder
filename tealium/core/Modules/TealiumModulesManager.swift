@@ -100,7 +100,6 @@ public class ModulesManager {
                                                    dispatchValidators: self.dispatchValidators,
                                                    dispatchListeners: self.dispatchListeners,
                                                    connectivityManager: self.connectivityManager,
-                                                   logger: self.logger,
                                                    config: self.config)
             self.setupCollectors(config: self.config)
             let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:

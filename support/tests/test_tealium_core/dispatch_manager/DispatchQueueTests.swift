@@ -8,7 +8,6 @@
 
 import Foundation
 @testable import TealiumCore
-@testable import TealiumDispatchQueue
 import XCTest
 
 class TealiumPersistentQueueTests: XCTestCase {

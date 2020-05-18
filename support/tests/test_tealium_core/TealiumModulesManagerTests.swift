@@ -104,7 +104,7 @@ class TealiumModulesManagerTests: XCTestCase {
     func testDisableModule() {
         let modulesManager = self.modulesManager
 
-        modulesManager.eventDataManager = nil
+        modulesManager.eventDataManager = DummyDataManagerNoData()
         let collector = DummyCollector(config: testTealiumConfig, delegate: self, diskStorage: nil) { _ in
 
         }
@@ -120,7 +120,7 @@ class TealiumModulesManagerTests: XCTestCase {
     func testGatherTrackData() {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
-        modulesManager.eventDataManager = nil
+        modulesManager.eventDataManager = DummyDataManagerNoData()
         let collector = DummyCollector(config: testTealiumConfig, delegate: self, diskStorage: nil) { _ in
 
         }
@@ -137,7 +137,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = nil
+        modulesManager.eventDataManager = DummyDataManagerNoData()
 
         XCTAssertEqual(modulesManager.dispatchers.count, 0)
 
@@ -151,8 +151,8 @@ class TealiumModulesManagerTests: XCTestCase {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = nil
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), logger: nil, config: testTealiumConfig)
+        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
         modulesManager.sendTrack(track)
@@ -164,8 +164,8 @@ class TealiumModulesManagerTests: XCTestCase {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = nil
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), logger: nil, config: testTealiumConfig)
+        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
         modulesManager.sendTrack(track)
@@ -177,8 +177,8 @@ class TealiumModulesManagerTests: XCTestCase {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = nil
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), logger: nil, config: testTealiumConfig)
+        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
 
         modulesManager.requestReleaseQueue(reason: "test")
         wait(for: [TealiumModulesManagerTests.expectatations["releaseQueue"]!], timeout: 1.0)
@@ -227,11 +227,11 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = [collector]
         modulesManager.dispatchListeners = []
         modulesManager.dispatchValidators = []
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), logger: nil, config: testTealiumConfig)
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
         let config = testTealiumConfig
         config.logLevel = .info
         modulesManager.config = config
-        XCTAssertEqual(modulesManager.config!, modulesManager.dispatchManager!.config)
+        XCTAssertEqual(modulesManager.config, modulesManager.dispatchManager!.config)
         wait(for: [TealiumModulesManagerTests.expectatations["configPropertyUpdate"]!, TealiumModulesManagerTests.expectatations["configPropertyUpdateModule"]!], timeout: 1.0)
     }
 
@@ -395,7 +395,7 @@ class DummyDispatchManager: DispatchManagerProtocol {
         }
     }
 
-    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, logger: TealiumLoggerProtocol?, config: TealiumConfig) {
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
         self.dispatchers = dispatchers
         self.dispatchValidators = dispatchValidators
         self.dispatchListeners = dispatchListeners
@@ -411,6 +411,65 @@ class DummyDispatchManager: DispatchManagerProtocol {
 
     func handleReleaseRequest(reason: String) {
         TealiumModulesManagerTests.expectatations["releaseQueue"]?.fulfill()
+    }
+
+}
+
+class DummyDataManagerNoData: EventDataManagerProtocol {
+    var allEventData: [String: Any] = [:]
+
+    var allSessionData: [String: Any] = [:]
+
+    var minutesBetweenSessionIdentifier: TimeInterval = TimeInterval(floatLiteral: 0.0)
+
+    var secondsBetweenTrackEvents: TimeInterval = TimeInterval(floatLiteral: 0.0)
+
+    var sessionId: String?
+
+    var sessionData: [String: Any] = [:]
+
+    var sessionStarter: SessionStarterProtocol = SessionStarter(config: testTealiumConfig)
+
+    var tagManagementIsEnabled: Bool = true
+
+    func add(data: [String: Any], expiration: Expiration) {
+
+    }
+
+    func add(key: String, value: Any, expiration: Expiration) {
+
+    }
+
+    func addTrace(id: String) {
+
+    }
+
+    func delete(forKeys: [String]) {
+
+    }
+
+    func delete(forKey key: String) {
+
+    }
+
+    func deleteAll() {
+
+    }
+
+    func leaveTrace() {
+
+    }
+
+    func refreshSessionData() {
+
+    }
+
+    func sessionRefresh() {
+
+    }
+
+    func startNewSession(with sessionStarter: SessionStarterProtocol) {
+
     }
 
 }

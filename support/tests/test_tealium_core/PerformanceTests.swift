@@ -252,7 +252,7 @@ class PerformanceTests: XCTestCase {
         let dispatchers = [collect]
         let connecivity = TealiumConnectivity(config: defaultTealiumConfig)
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = DispatchManager(dispatchers: dispatchers, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connecivity, logger: nil, config: defaultTealiumConfig)
+            _ = DispatchManager(dispatchers: dispatchers, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connecivity, config: defaultTealiumConfig)
             self.stopMeasuring()
         }
     }

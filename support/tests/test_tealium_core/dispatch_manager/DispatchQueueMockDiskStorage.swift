@@ -8,7 +8,6 @@
 
 import Foundation
 @testable import TealiumCore
-@testable import TealiumDispatchQueue
 
 class DispatchQueueMockDiskStorage: TealiumDiskStorageProtocol {
     func append(_ data: [String: Any], fileName: String, completion: TealiumCompletion?) {
