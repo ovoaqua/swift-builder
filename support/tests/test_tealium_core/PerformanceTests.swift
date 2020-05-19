@@ -7,7 +7,6 @@
 //
 
 @testable import TealiumCollect
-@testable import TealiumConsentManager
 @testable import TealiumCore
 @testable import TealiumLifecycle
 @testable import TealiumVisitorService

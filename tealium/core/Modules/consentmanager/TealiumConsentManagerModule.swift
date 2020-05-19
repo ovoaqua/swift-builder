@@ -28,10 +28,6 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
             forModule: TealiumConsentConstants.moduleName,
             isCritical: true)
         self.delegate = delegate
-        guard config.enableConsentManager else {
-            self.consentManager = nil
-            return
-        }
         // start consent manager with completion block
         consentManager = TealiumConsentManager()
         consentManager?.start(config: config, delegate: delegate, diskStorage: self.diskStorage) {

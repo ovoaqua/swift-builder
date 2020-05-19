@@ -23,32 +23,8 @@ class ConsentManagerModuleUnitTests: XCTestCase {
     
     func testConsentManagerIsDisabledAutomatically() {
         let config2 = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
-        module =  TealiumConsentManagerModule(config: config2, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
-        XCTAssertNil(module.consentManager)
-        XCTAssertFalse(module.ready)
-    }
-    
-    func testConsentManagerDataNotInTrackWhenDisabled() {
-        let config2 = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
-        module =  TealiumConsentManagerModule(config: config2, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
-        config2.initialUserConsentStatus = .consented
-        let expected: [String: Any] = [
-            "test": "track"
-        ]
-        track = TealiumTrackRequest(data: ["test": "track"])
-        var trackWithConsentData = module.addConsentDataToTrack(track).trackDictionary
-        XCTAssertNotNil(trackWithConsentData[TealiumKey.requestUUID])
-        trackWithConsentData[TealiumKey.requestUUID] = nil
-        XCTAssertTrue(NSDictionary(dictionary: expected).isEqual(to: trackWithConsentData))
-    }
-    
-    func testShouldNotQueueTrackingWhenConsentMgrDisabled() {
-        let config2 = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
-        module = TealiumConsentManagerModule(config: config2, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
-        track = TealiumTrackRequest(data: ["test": "track"])
-        let queue = module.shouldQueue(request: track)
-        XCTAssertFalse(queue.0)
-        XCTAssertNil(queue.1)
+        let teal = Tealium(config: config2)
+        XCTAssertNil(teal.consentManager)
     }
 
     func testShouldQueueIsBatchTrackRequest() {
@@ -220,5 +196,6 @@ extension ConsentManagerModuleUnitTests: TealiumModuleDelegate {
     }
     
     func requestTrack(_ track: TealiumTrackRequest) {
+
     }
 }

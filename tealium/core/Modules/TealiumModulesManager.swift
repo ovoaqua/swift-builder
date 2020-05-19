@@ -12,8 +12,8 @@ public class ModulesManager {
     // must store a copy of the initial config to allow locally-overridden properties to take precedence over remote ones. These would otherwise be lost after the first update.
     var originalConfig: TealiumConfig
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
-    var coreCollectors: ContiguousArray<Collector.Type> = [TealiumAppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule"]
+    var coreCollectors: ContiguousArray<Collector.Type> = [TealiumAppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule"]
     var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
@@ -169,6 +169,9 @@ public class ModulesManager {
     
     func setupCollectors(config: TealiumConfig) {
         coreCollectors.forEach { coreCollector in
+            if coreCollector == TealiumConsentManagerModule.self && !config.enableConsentManager {
+                return
+            }
             let collector = coreCollector.init(config: config, delegate: self, diskStorage: nil) { result in
 
             }
