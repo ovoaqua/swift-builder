@@ -11,7 +11,12 @@ import Foundation
 
 class MockEventDataManager: EventDataManagerProtocol {
     var sessionDataBacking = [String: Any]()
-
+    var addSingleCount = 0
+    var addMultiCount = 0
+    var deleteSingleCount = 0
+    var deleteMultiCount = 0
+    var deleteAllCount = 0
+    
     var allEventData: [String: Any] {
         get {
             ["all": "eventdata"]
@@ -54,27 +59,27 @@ class MockEventDataManager: EventDataManagerProtocol {
     var tagManagementIsEnabled: Bool = true
 
     func add(data: [String: Any], expiration: Expiration) {
-
+        addMultiCount += 1
     }
 
     func add(key: String, value: Any, expiration: Expiration) {
-
+        addSingleCount += 1
     }
 
     func addTrace(id: String) {
-
+        
     }
 
     func delete(forKeys: [String]) {
-
+        deleteMultiCount += 1
     }
 
     func delete(forKey key: String) {
-
+        deleteSingleCount += 1
     }
 
     func deleteAll() {
-
+        deleteAllCount += 1
     }
 
     func leaveTrace() {
