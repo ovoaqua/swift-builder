@@ -16,8 +16,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     static var remoteAPIExpectation: XCTestExpectation?
     static var expiredDispatchesExpectation: XCTestExpectation?
     static var connectivity: TealiumConnectivity {
-        TealiumConnectivity.forceConnectionOverride = true
-        return TealiumConnectivity(config: defaultTealiumConfig)
+        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { result in }
+        connectivity.forceConnectionOverride = true
+        return connectivity
     }
     var dispatchManager: DispatchManager!
     var diskStorage = DispatchQueueMockDiskStorage()
@@ -105,7 +106,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     
     func testReleaseQueue() {
         let config = TestTealiumHelper().getConfig()
+        #if os(iOS)
         config.remoteAPIEnabled = true
+        #endif
         config.logLevel = .silent
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         dispatchManager.clearQueue()
@@ -119,7 +122,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     
     func testClearQueue() {
         let config = TestTealiumHelper().getConfig()
+        #if os(iOS)
         config.remoteAPIEnabled = true
+        #endif
         config.logLevel = .silent
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         dispatchManager.clearQueue()
@@ -134,7 +139,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
 
     func testCanQueueRequest() {
         let config = TestTealiumHelper().getConfig()
+        #if os(iOS)
         config.remoteAPIEnabled = true
+        #endif
         config.logLevel = .silent
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         XCTAssertFalse(dispatchManager.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "grant_full_consent"], completion: nil)))

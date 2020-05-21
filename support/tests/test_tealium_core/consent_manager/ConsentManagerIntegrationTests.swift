@@ -82,7 +82,7 @@ class ConsentManagerTests: XCTestCase {
                 XCTAssertTrue(self.consentManager?.getUserConsentPreferences()?.consentStatus == .consented, "Consent Manager Test: \(#function) -  Incorrect initial consent status from config")
             }
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testInitialConsentCategoriesFromConfig() {
@@ -98,7 +98,7 @@ class ConsentManagerTests: XCTestCase {
                 XCTAssertTrue(self.consentManager?.getUserConsentPreferences()?.consentCategories == [.cdp, .analytics], "Consent Manager Test: \(#function) -  Incorrect initial consent categories from config.")
             }
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     // note: in some cases this test fails due to slow clearing of persistent data
@@ -114,7 +114,7 @@ class ConsentManagerTests: XCTestCase {
                 XCTAssertTrue(self.consentManager?.getUserConsentStatus() == .unknown, "Consent Manager Test: \(#function) - Incorrect initial state: " + (self.consentManager?.getUserConsentStatus().rawValue ?? ""))
             }
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testUpdatePreferencesFromConfig() {
@@ -153,7 +153,7 @@ class ConsentManagerTests: XCTestCase {
             let consentPreferences = TealiumConsentUserPreferences(consentStatus: .consented, consentCategories: [.cdp])
             consentManager?.trackUserConsentPreferences(preferences: consentPreferences)
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testloadSavedPreferencesEmpty() {
@@ -182,7 +182,7 @@ class ConsentManagerTests: XCTestCase {
             }
         }
 
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     // note: can sometimes fail when run with other tests due to multiple resets being in queue
@@ -220,7 +220,7 @@ class ConsentManagerTests: XCTestCase {
                 XCTAssertTrue(self.consentManager?.getSavedPreferences()?.consentCategories == [.bigData])
             }
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testCanUpdateStatus() {
@@ -236,7 +236,7 @@ class ConsentManagerTests: XCTestCase {
                 XCTAssertTrue(self.consentManager?.getSavedPreferences()?.consentStatus == .notConsented)
             }
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testGetTrackingStatus() {
@@ -254,7 +254,7 @@ class ConsentManagerTests: XCTestCase {
             }
         }
 
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testSetConsentStatus() {
@@ -319,7 +319,7 @@ class ConsentManagerTests: XCTestCase {
             consentManager?.resetUserConsentPreferences()
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testResetUserConsentPreferencesTriggersConsentCategoriesChanged() {
@@ -332,7 +332,7 @@ class ConsentManagerTests: XCTestCase {
             consentManager?.resetUserConsentPreferences()
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     // MARK: Delegate Tests
@@ -347,7 +347,7 @@ class ConsentManagerTests: XCTestCase {
             consentManager?.setUserConsentStatus(.unknown)
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testDelegateUserOptedOutOfTracking() {
@@ -360,7 +360,7 @@ class ConsentManagerTests: XCTestCase {
             consentManager?.setUserConsentStatus(.notConsented)
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testDelegateUserConsentedToTracking() {
@@ -373,7 +373,7 @@ class ConsentManagerTests: XCTestCase {
             consentManager?.setUserConsentStatus(.consented)
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testDelegateUserChangedConsentCategories() {
@@ -386,7 +386,7 @@ class ConsentManagerTests: XCTestCase {
             consentManager?.setUserConsentCategories([.analytics, .bigData])
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testDelegateWillDropTrackingCall() {
@@ -406,7 +406,7 @@ class ConsentManagerTests: XCTestCase {
             XCTAssertTrue(shouldDrop)
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testDelegateWillQueueTrackingCall() {
@@ -426,7 +426,7 @@ class ConsentManagerTests: XCTestCase {
             XCTAssertTrue(queue.0)
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     func testDelegateWillSendTrackingCall() {
@@ -444,7 +444,7 @@ class ConsentManagerTests: XCTestCase {
             XCTAssertFalse(queue.0)
             currentTest = ""
         }
-        waiter.wait(for: expectations, timeout: 100)
+        waiter.wait(for: expectations, timeout: 2)
     }
 
     // MARK: Consent Convenience Methods
@@ -543,7 +543,6 @@ extension ConsentManagerTests: TealiumModuleDelegate {
     }
     
     func requestTrack(_ track: TealiumTrackRequest) {
-        if let track = track as? TealiumTrackRequest {
             trackData = track.trackDictionary
             if trackData?["tealium_event"] as? String == TealiumKey.updateConsentCookieEventName {
                 return
@@ -557,7 +556,6 @@ extension ConsentManagerTests: TealiumModuleDelegate {
                     testtrackUserConsentPreferencesExpectation.fulfill()
                 }
             }
-        }
     }
 
 }

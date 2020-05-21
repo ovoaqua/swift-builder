@@ -108,7 +108,7 @@ class TealiumAutotrackingModule: Collector {
     var config: TealiumConfig
     
     required init(config: TealiumConfig,
-                  delegate: TealiumModuleDelegate,
+                  delegate: TealiumModuleDelegate?,
                   diskStorage: TealiumDiskStorageProtocol?,
                   completion: ModuleCompletion) {
         self.delegate = delegate

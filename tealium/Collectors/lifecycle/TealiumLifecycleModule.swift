@@ -35,7 +35,7 @@ public class TealiumLifecycleModule: Collector {
     }
 
     public required init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate,
+                         delegate: TealiumModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.delegate = delegate

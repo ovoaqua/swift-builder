@@ -27,7 +27,7 @@ public class TealiumCrashModule: Collector {
     ///
     /// - Parameter crashReporter: Class instance conforming to `CrashReporterProtocol`
     convenience init (config: TealiumConfig,
-                      delegate: TealiumModuleDelegate,
+                      delegate: TealiumModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
         crashReporter: CrashReporterProtocol) {
         self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
@@ -35,7 +35,7 @@ public class TealiumCrashModule: Collector {
     }
     
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate,
+                         delegate: TealiumModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.delegate = delegate

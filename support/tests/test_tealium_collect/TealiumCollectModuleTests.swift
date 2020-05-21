@@ -129,7 +129,7 @@ class TealiumCollectModuleTests: XCTestCase {
         collectModule.dynamicTrack(track) { result in
             switch result.0 {
             case .failure(let error):
-                
+                return
             case .success(let success):
                 XCTAssertTrue(success)
                 expectation.fulfill()
@@ -207,9 +207,10 @@ class TealiumCollectModuleTests: XCTestCase {
     }
 
     func testUpdateCollectDispatcherInvalidURL() {
-        let collectModule = TealiumCollectModule(config: testTealiumConfig, delegate: self, completion: nil)
-        testTealiumConfig.collectOverrideURL = "tealium"
-        collectModule.updateCollectDispatcher(config: testTealiumConfig) { result in
+        let config = testTealiumConfig.copy
+        let collectModule = TealiumCollectModule(config: config, delegate: self, completion: nil)
+        config.collectOverrideURL = "tealium"
+        collectModule.updateCollectDispatcher(config: config) { result in
             switch result.0 {
             case .failure(let error):
                 XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.invalidDispatchURL)
@@ -220,13 +221,15 @@ class TealiumCollectModuleTests: XCTestCase {
     }
 
     func testOverrideCollectURL() {
-        testTealiumConfig.collectOverrideURL = "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile"
-        XCTAssertTrue(testTealiumConfig.optionalData[TealiumCollectKey.overrideCollectUrl] as! String == "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile&")
+        let config = testTealiumConfig.copy
+        config.collectOverrideURL = "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile"
+        XCTAssertTrue(config.optionalData[TealiumCollectKey.overrideCollectUrl] as! String == "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile&")
     }
 
     func testOverrideCollectProfile() {
-        testTealiumConfig.collectOverrideProfile = "hello"
-        XCTAssertTrue(testTealiumConfig.optionalData[TealiumCollectKey.overrideCollectProfile] as! String == "hello")
+        let config = testTealiumConfig.copy
+        config.collectOverrideProfile = "hello"
+        XCTAssertTrue(config.optionalData[TealiumCollectKey.overrideCollectProfile] as! String == "hello")
     }
 
 }

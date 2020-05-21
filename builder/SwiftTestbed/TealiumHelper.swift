@@ -15,7 +15,6 @@ import TealiumAttribution
 //import TealiumRemoteCommands
 import TealiumVisitorService
 import TealiumLifecycle
-import TealiumConsentManager
 import TealiumLocation
 
 extension String: Error {}
@@ -51,13 +50,14 @@ class TealiumHelper: NSObject {
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
+        config.enableConsentManager = false
         config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
-        config.shouldUseRemotePublishSettings = true
+        config.shouldUseRemotePublishSettings = false
         // config.batchSize = 5
         // config.dispatchAfter = 5
         // config.dispatchQueueLimit = 200
-        config.batchingEnabled = true
+        config.batchingEnabled = false
         // config.visitorServiceRefreshInterval = 0
         // config.visitorServiceOverrideProfile = "main"
         config.memoryReportingEnabled = true
@@ -113,7 +113,7 @@ class TealiumHelper: NSObject {
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
             teal.consentManager?.setUserConsentStatus(.consented)
-
+            teal.consentManager?.addConsentDelegate(self)
             dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
 
             persitence.add(data: ["some_key1": "some_val1"], expiration: .session)
@@ -186,6 +186,7 @@ class TealiumHelper: NSObject {
                         if self.enableHelperLogs == false {
                             return
                         }
+                        
                         
                         
         })

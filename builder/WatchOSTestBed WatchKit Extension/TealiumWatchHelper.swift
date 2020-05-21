@@ -9,16 +9,8 @@
 import Foundation
 import TealiumCore
 import TealiumCollect
-import TealiumConsentManager
-import TealiumDispatchQueue
-import TealiumDelegate
-import TealiumDeviceData
-import TealiumPersistentData
-import TealiumVolatileData
 import TealiumVisitorService
 import TealiumLifecycle
-import TealiumConnectivity
-import TealiumLogger
 
 //import WatchOS
 
@@ -50,21 +42,21 @@ class TealiumWatchHelper: NSObject {
 
         // OPTIONALLY set log level
 //        config.setConnectivityRefreshInterval(5)
-        config.setLogLevel(.verbose)
-        config.setConsentLoggingEnabled(true)
+        config.logLevel = .info
+//        config.setConsentLoggingEnabled(true)
 //        config.setSearchAdsEnabled(true)
         config.setInitialUserConsentStatus(.consented)
 //        config.setShouldUseLegacyWebview(true)
-        config.setBatchSize(5)
-        config.setDispatchAfter(numberOfEvents: 5)
+//        config.setBatchSize(5)
+//        config.setDispatchAfter(numberOfEvents: 5)
         config.setMaxQueueSize(200)
         config.optionalData["enable_visitor_profile"] = true
         config.setIsEventBatchingEnabled(true)
         // OPTIONALLY add an external delegate
-        config.addDelegate(self)
+//        config.addDelegate(self)
         config.setMemoryReportingEnabled(true)
-        config.setConnectivityRefreshEnabled(true)
-        config.setConnectivityRefreshInterval(30)
+//        config.setConnectivityRefreshEnabled(true)
+//        config.setConnectivityRefreshInterval(30)
         #if AUTOTRACKING
 //        print("*** TealiumWatchHelper: Autotracking enabled.")
         #else
@@ -72,19 +64,19 @@ class TealiumWatchHelper: NSObject {
         
         let list = TealiumModulesList(isWhitelist: false,
                                       moduleNames: ["autotracking"])
-        config.setModulesList(list)
+//        config.setModulesList(list)
         config.setDiskStorageEnabled(isEnabled: true)
-        config.addVisitorServiceDelegate(self)
+//        config.addVisitorServiceDelegate(self)
         #endif
 
         // REQUIRED Initialization
         tealium = Tealium(config: config) { response in
-        self.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
+//        self.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
             
-        self.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
+//        self.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
             
-                            self.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
-                            self.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
+//                            self.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
+//                            self.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
         }
     }
 
@@ -119,23 +111,6 @@ class TealiumWatchHelper: NSObject {
 
     }
 
-    func crash() {
-        NSException.raise(NSExceptionName(rawValue: "Exception"), format: "This is a test exception", arguments: getVaList(["nil"]))
-    }
-}
-
-extension TealiumWatchHelper: TealiumDelegate {
-
-    func tealiumShouldTrack(data: [String: Any]) -> Bool {
-        return true
-    }
-
-    func tealiumTrackCompleted(success: Bool, info: [String: Any]?, error: Error?) {
-        if enableHelperLogs == false {
-            return
-        }
-        print("\n*** Tealium Helper: Tealium Delegate : tealiumTrackCompleted *** Track finished. Was successful:\(success)\nInfo:\(info as AnyObject)\((error != nil) ? "\nError:\(String(describing: error))":"")")
-    }
 }
 
 extension TealiumWatchHelper: TealiumVisitorServiceDelegate {

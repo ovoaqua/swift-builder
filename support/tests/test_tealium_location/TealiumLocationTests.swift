@@ -428,6 +428,9 @@ class TealiumLocationTests: XCTestCase {
 // XCTAssertTrue((tealiumLocationModule?.tealiumLocationManager.geofences.isEmpty)!)
 
 extension TealiumLocationTests: TealiumModuleDelegate {
+    func requestReleaseQueue(reason: String) {
+
+    }
 
     func requestTrack(_ track: TealiumTrackRequest) {
         TealiumLocationTests.expectations
