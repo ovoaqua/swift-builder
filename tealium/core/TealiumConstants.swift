@@ -146,4 +146,5 @@ public struct TealiumConstants {
     static let defaultBatchSize = 10
     static let defaultLoggerType: TealiumLoggerType = .os
     static let defaultMinimumDiskSpace: Int32 = 20_000_000
+    static let connectionRestoredReason = "Connection Restored"
 }

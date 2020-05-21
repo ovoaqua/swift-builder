@@ -15,7 +15,6 @@ import TealiumAttribution
 //import TealiumRemoteCommands
 import TealiumVisitorService
 import TealiumLifecycle
-import TealiumConsentManager
 import TealiumLocation
 
 extension String: Error {}
@@ -51,6 +50,7 @@ class TealiumHelper: NSObject {
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
+        config.enableConsentManager = false
         config.initialUserConsentStatus = .consented
 //        config.shouldAddCookieObserver = false
         config.shouldUseRemotePublishSettings = true

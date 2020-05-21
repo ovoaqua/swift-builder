@@ -11,7 +11,7 @@ import Foundation
 public protocol Collector: TealiumModule {
     var data: [String: Any]? { get }
     init(config: TealiumConfig,
-         delegate: TealiumModuleDelegate,
+         delegate: TealiumModuleDelegate?,
          diskStorage: TealiumDiskStorageProtocol?,
          completion: ModuleCompletion)
 }

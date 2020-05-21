@@ -16,8 +16,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     static var remoteAPIExpectation: XCTestExpectation?
     static var expiredDispatchesExpectation: XCTestExpectation?
     static var connectivity: TealiumConnectivity {
-        TealiumConnectivity.forceConnectionOverride = true
-        return TealiumConnectivity(config: defaultTealiumConfig)
+        let connectivity = TealiumConnectivity(config: defaultTealiumConfig)
+        connectivity.forceConnectionOverride = true
+        return connectivity
     }
     var dispatchManager: DispatchManager!
     var diskStorage = DispatchQueueMockDiskStorage()

@@ -47,10 +47,6 @@ class DispatchManager: DispatchManagerProtocol {
         }
         return false
     }
-    
-    var isConnected: Bool {
-        self.connectivityManager.hasViableConnection
-    }
 
     // when to start trimming the queue (default 20) - e.g. if offline
     var maxQueueSize: Int {
@@ -150,7 +146,10 @@ class DispatchManager: DispatchManagerProtocol {
             handleReleaseRequest(reason: "Processing track request")
         }
         var newRequest = request
+        #if os(iOS)
         triggerRemoteAPIRequest(request)
+        #endif
+        
         if checkShouldQueue(request: &newRequest) {
             let enqueueRequest = TealiumEnqueueRequest(data: newRequest, completion: nil)
             queue(enqueueRequest)
@@ -166,21 +165,29 @@ class DispatchManager: DispatchManagerProtocol {
             return
         }
         
-        let shouldQueue = self.shouldQueue(request: newRequest)
-        if shouldQueue.0 == true {
-            let batchingReason = shouldQueue.1? ["queue_reason"] as? String ?? "batching_enabled"
-            
-            self.enqueue(request, reason: batchingReason)
-            // batch request and release if necessary
-            return
+        self.connectivityManager.checkIsConnected { result in
+            switch result {
+            case .success:
+                let shouldQueue = self.shouldQueue(request: newRequest)
+                if shouldQueue.0 == true {
+                    let batchingReason = shouldQueue.1? ["queue_reason"] as? String ?? "batching_enabled"
+                    
+                    self.enqueue(request, reason: batchingReason)
+                    // batch request and release if necessary
+                    return
+                }
+                
+                guard let dispatchers = self.dispatchers, !dispatchers.isEmpty else {
+                    self.enqueue(request, reason: "Dispatchers Not Ready")
+                    return
+                }
+                
+                self.runDispatchers(for: newRequest)
+            case .failure:
+                self.enqueue(request, reason: "connectivity")
+            }
         }
-        
-        guard let dispatchers = dispatchers, !dispatchers.isEmpty else {
-            self.enqueue(request, reason: "Dispatchers Not Ready")
-            return
-        }
-        
-        runDispatchers(for: newRequest)
+
     }
     
     func checkShouldQueue(request: inout TealiumTrackRequest) -> Bool {
@@ -382,35 +389,35 @@ class DispatchManager: DispatchManagerProtocol {
     }
     
     func handleReleaseRequest(reason: String) {
-        guard isConnected else {
-            return
-        }
-        
-        // dummy request to check if queueing active
-        var request = TealiumTrackRequest(data: ["release_request":true])
-        
-        guard let dispatchers = dispatchers, !dispatchers.isEmpty else {
-            return
-        }
-        
-        guard !checkShouldQueue(request: &request),
-            !checkShouldDrop(request: request),
-            !checkShouldPurge(request: request) else {
-                return
-        }
-        
-        if let count = persistentQueue.peek()?.count, count > 0 {
-            let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Releasing queued dispatches. Reason: \(reason)", info: nil, logLevel: .info, category: .track)
-                self.logger?.log(logRequest)
+        self.connectivityManager.checkIsConnected { result in
+            switch result {
+            case .success:
+            // dummy request to check if queueing active
+            var request = TealiumTrackRequest(data: ["release_request":true])
             
-                self.releaseQueue()
+            guard let dispatchers = self.dispatchers, !dispatchers.isEmpty else {
+                return
+            }
+            
+            guard !self.checkShouldQueue(request: &request),
+                !self.checkShouldDrop(request: request),
+                !self.checkShouldPurge(request: request) else {
+                    return
+            }
+            
+            if let count = self.persistentQueue.peek()?.count, count > 0 {
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Releasing queued dispatches. Reason: \(reason)", info: nil, logLevel: .info, category: .track)
+                    self.logger?.log(logRequest)
+                
+                    self.releaseQueue()
+            }
+            case .failure:
+                return
+            }
         }
     }
     
-    func releaseQueue() {
-        guard isConnected else {
-            return
-        }
+    fileprivate func releaseQueue() {
         if let queuedDispatches = persistentQueue.dequeueDispatches() {
             let batches: [[TealiumTrackRequest]] = queuedDispatches.chunks(maxDispatchSize)
 
@@ -475,10 +482,9 @@ extension DispatchManager {
         guard canWrite else {
             return (false, nil)
         }
-        
-        guard isConnected else {
-            return (true, ["queue_reason": "connectivity"])
-        }
+        #if os (watchOS)
+        return (true, ["queue_reason": "batching_enabled"])
+        #else
         
         guard hasSufficientBattery(track: request) else {
             enqueue(request, reason: TealiumDispatchQueueConstants.insufficientBatteryQueueReason)
@@ -510,6 +516,7 @@ extension DispatchManager {
         }
 
         return (true, ["queue_reason": "batching_enabled"])
+        #endif
     }
     
     
@@ -558,19 +565,4 @@ extension DispatchManager {
     }
     
     
-}
-
-extension DispatchManager {
-    func connectionTypeChanged(_ connectionType: String) {
-        logger?.log(TealiumLogRequest(title: "Dispatch Manager", message: "Connectivity type changed to \(connectionType)", info: nil, logLevel: .info, category: .general))
-    }
-    
-    func connectionLost() {
-        
-    }
-    
-    func connectionRestored() {
-        handleReleaseRequest(reason: "Connectivity Restored")
-        
-    }
 }

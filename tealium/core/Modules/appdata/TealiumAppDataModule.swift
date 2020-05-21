@@ -33,7 +33,7 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
     public var config: TealiumConfig
 
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate,
+                         delegate: TealiumModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.config = config

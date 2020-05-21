@@ -33,7 +33,7 @@ class TealiumLocationModule: Collector {
         return newData
     }
     
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
+    required init(config: TealiumConfig, delegate: TealiumModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
         self.delegate = delegate
         

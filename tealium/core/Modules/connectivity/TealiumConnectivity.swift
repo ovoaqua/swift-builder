@@ -7,104 +7,107 @@
 //
 
 import Foundation
-#if os(watchOS)
-#else
-import SystemConfiguration
-#endif
 
-class TealiumConnectivity {
+protocol TealiumConnectivityMonitorProtocol {
+        init(config: TealiumConfig,
+             completion: @escaping ((Result<Bool, Error>) -> Void))
+    var config: TealiumConfig { get set }
+    var currentConnnectionType: String? { get }
+    var isConnected: Bool? { get }
+    var isExpensive: Bool? { get }
+    var isCellular: Bool? { get }
+    var isWired: Bool? { get }
+    func checkIsConnected(completion: @escaping ((Result<Bool, Error>) -> Void))
+}
+
+class TealiumConnectivity: Collector, TealiumConnectivityDelegate {
+
+    var moduleId: String = "Connectivity"
     
-    static var connectionType: String?
-    static var isConnected: Atomic<Bool> = Atomic(value: true)
-    // used to simulate connection status for unit tests
-    static var forceConnectionOverride: Bool?
-    var timer: TealiumRepeatingTimer?
-    var connectivityDelegates = TealiumMulticastDelegate<TealiumConnectivityDelegate>()
-    var currentConnectivityType = ""
-    static var currentConnectionStatus: Bool?
-    var config: TealiumConfig
-    var hasViableConnection: Bool {
-        TealiumConnectivity.isConnectedToNetwork() == true || (self.config.wifiOnlySending == true && TealiumConnectivity.currentConnectionType() == TealiumConnectivityKey.connectionTypeWifi)
-    }
-    
-    
-    init (config: TealiumConfig) {
-        self.config = config
-        if let interval = config.connectivityRefreshInterval {
-            refreshConnectivityStatus(interval)
+    var data: [String : Any]? {
+        if let connectionType = self.connectivityMonitor?.currentConnnectionType {
+            return [TealiumConnectivityKey.connectionType: connectionType,
+             TealiumConnectivityKey.connectionTypeLegacy: connectionType,
+            ]
         } else {
-            if config.connectivityRefreshEnabled == false {
-                return
-            }
-            refreshConnectivityStatus()
+            return [TealiumConnectivityKey.connectionType: TealiumConnectivityKey.connectionTypeUnknown,
+                    TealiumConnectivityKey.connectionTypeLegacy: TealiumConnectivityKey.connectionTypeUnknown,
+            ]
         }
     }
     
+    var config: TealiumConfig {
+        willSet {
+            connectivityMonitor?.config = newValue
+        }
+    }
     
-    /// Retrieves the current connection type used by the device.
-    ///
-    /// - Returns: `String` containing the current connection type
-    public class func currentConnectionType() -> String {
-        let isConnected = TealiumConnectivity.isConnectedToNetwork()
-        if isConnected == true {
-            return connectionType!
-        }
-        return TealiumConnectivityKey.connectionTypeNone
-    }
+    // used to simulate connection status for unit tests
+    var forceConnectionOverride: Bool?
+    
+    var connectivityMonitor: TealiumConnectivityMonitorProtocol?
+    var connectivityDelegates = TealiumMulticastDelegate<TealiumConnectivityDelegate>()
+    
+    required init(config: TealiumConfig,
+                  delegate: TealiumModuleDelegate?,
+                  diskStorage: TealiumDiskStorageProtocol?,
+                  completion: (ModuleResult) -> Void) {
+            self.config = config
 
-    #if os(watchOS)
-    class func isConnectedToNetwork() -> Bool {
-        return isConnected.value
-    }
-    #else
-    // Credit: RAJAMOHAN-S: https://stackoverflow.com/questions/30743408/check-for-internet-connection-with-swift/39782859#39782859
-    /// Determines if the device has network connectivity.
-    ///
-    /// - Returns: `Bool` (true if device has connectivity)
-    class func isConnectedToNetwork() -> Bool {
-        // used only for unit testing
-        if forceConnectionOverride == true {
-            return true
-        }
-
-        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
-        zeroAddress.sin_family = sa_family_t(AF_INET)
-
-        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
-            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { zeroSockAddress in
-                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+        if #available(iOS 12.0, tvOS 12.0, watchOS 5.0, OSX 10.14, *) {
+            self.connectivityMonitor = TealiumNWPathMonitor(config: config) { result in
+                switch result {
+                case .success:
+                    self.connectionRestored()
+                case .failure:
+                    self.connectionLost()
+                }
             }
+        } else {
+            self.connectivityMonitor = LegacyConnectivityMonitor(config: config) { result in
+                            switch result {
+                            case .success:
+                                self.connectionRestored()
+                            case .failure:
+                                self.connectionLost()
+                            }
+                        }
         }
-
-        var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags()
-        SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags)
-        #if os(OSX)
-        connectionType = TealiumConnectivityKey.connectionTypeWifi
-        #else
-        if flags.contains(.isWWAN) == true {
-            connectionType = TealiumConnectivityKey.connectionTypeCell
-        } else if flags.contains(.connectionRequired) == false {
-            connectionType = TealiumConnectivityKey.connectionTypeWifi
-        }
-        #endif
-
-        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
-            return false
-        }
-
-        // Working for Cellular and WIFI
-        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
-        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
-        isConnected.value = (isReachable && !needsConnection)
-        if !isConnected.value {
-            connectionType = TealiumConnectivityKey.connectionTypeNone
-        }
-
-        return isConnected.value
     }
-    #endif
-    deinit {
-        timer = nil
+    
+    func checkIsConnected(completion: @escaping ((Result<Bool, Error>) -> Void)) {
+        guard forceConnectionOverride == false else {
+            completion(.success(true))
+            return
+        }
+        self.connectivityMonitor?.checkIsConnected(completion: completion)
+    }
+
+    /// Method to add new classes implementing the TealiumConnectivityDelegate to subscribe to connectivity updates￼.
+    ///
+    /// - Parameter delegate: `TealiumConnectivityDelegate`
+    func addConnectivityDelegate(delegate: TealiumConnectivityDelegate) {
+        connectivityDelegates.add(delegate)
+    }
+
+    /// Removes all connectivity delegates.
+    func removeAllConnectivityDelegates() {
+        connectivityDelegates.removeAll()
+    }
+
+    // MARK: Delegate Methods
+
+    /// Called when network connectivity is lost.
+    func connectionLost() {
+        connectivityDelegates.invoke {
+            $0.connectionLost()
+        }
+    }
+
+    /// Called when network connectivity is restored.
+    func connectionRestored() {
+        connectivityDelegates.invoke {
+            $0.connectionRestored()
+        }
     }
 }

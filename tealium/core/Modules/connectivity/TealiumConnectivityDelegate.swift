@@ -10,11 +10,6 @@ import Foundation
 
 public protocol TealiumConnectivityDelegate: class {
 
-    /// Called when network connection type has changed￼.
-    ///
-    /// - Parameter connectionType: `String` containing the current connection type (wifi, cellular)
-    func connectionTypeChanged(_ connectionType: String)
-
     /// Called when network connectivity is lost.
     func connectionLost()
 

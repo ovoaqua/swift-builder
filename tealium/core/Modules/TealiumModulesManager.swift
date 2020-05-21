@@ -12,8 +12,8 @@ public class ModulesManager {
     // must store a copy of the initial config to allow locally-overridden properties to take precedence over remote ones. These would otherwise be lost after the first update.
     var originalConfig: TealiumConfig
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
-    var coreCollectors: ContiguousArray<Collector.Type> = [TealiumAppDataModule.self, DeviceDataModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumConsentManager.TealiumConsentManagerModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule"]
+    var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
+    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule"]
     var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
@@ -60,6 +60,7 @@ public class ModulesManager {
     var config: TealiumConfig {
         willSet {
             self.dispatchManager?.config = newValue
+            self.connectivityManager.config = newValue
             self.logger?.config = newValue
             self.updateConfig(config: newValue)
             self.modules.forEach {
@@ -82,8 +83,9 @@ public class ModulesManager {
           eventDataManager: EventDataManagerProtocol?) {
             self.originalConfig = config.copy
             self.config = config
-            self.connectivityManager = TealiumConnectivity(config: self.config)
+            self.connectivityManager = TealiumConnectivity(config: self.config, delegate: nil, diskStorage: nil) {_ in}
             self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
+            self.addCollector(connectivityManager)
             connectivityManager.addConnectivityDelegate(delegate: self)
             if config.shouldUseRemotePublishSettings {
                 self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: self.config, delegate: self)
@@ -189,42 +191,50 @@ public class ModulesManager {
     }
     
     func setupDispatchers(config: TealiumConfig) {
-        guard TealiumConnectivity.isConnectedToNetwork() else {
-            return
-        }
-        knownDispatchers.forEach { knownDispatcher in
-            guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
+        self.connectivityManager.checkIsConnected { [weak self] result in
+            guard let self = self else {
                 return
             }
-            
-            if knownDispatcher.contains("TagManagement") {
-                guard config.isTagManagementEnabled == true else {
-                    return
-                }
-                self.eventDataManager.tagManagementIsEnabled = true
-            }
-            
-            if knownDispatcher.contains("Collect") {
-                guard config.isCollectEnabled == true else {
-                    return
-                }
-            }
-            
-            let dispatcher = moduleRef.init(config: config, delegate: self) { result in
-                switch result.0 {
-                case .failure:
-                    print("log error")
-                default:
-                    break
-                }
-            }
+            switch result {
+            case .success:
+                self.knownDispatchers.forEach { knownDispatcher in
+                    guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
+                        return
+                    }
+                    
+                    if knownDispatcher.contains("TagManagement") {
+                        guard config.isTagManagementEnabled == true else {
+                            return
+                        }
+                        self.eventDataManager.tagManagementIsEnabled = true
+                    }
+                    
+                    if knownDispatcher.contains("Collect") {
+                        guard config.isCollectEnabled == true else {
+                            return
+                        }
+                    }
+                    
+                    let dispatcher = moduleRef.init(config: config, delegate: self) { result in
+                        switch result.0 {
+                        case .failure:
+                            print("log error")
+                        default:
+                            break
+                        }
+                    }
 
-           addDispatcher(dispatcher)
+                    self.addDispatcher(dispatcher)
+                }
+                if self.dispatchers.isEmpty {
+                    let logRequest = TealiumLogRequest(title: "Modules Manager", message: "No dispatchers are enabled. Please check remote publish settings.", info: nil, logLevel: .error, category: .`init`)
+                    self.logger?.log(logRequest)
+                }
+            case .failure:
+                return
+            }
         }
-        if dispatchers.isEmpty {
-            let logRequest = TealiumLogRequest(title: "Modules Manager", message: "No dispatchers are enabled. Please check remote publish settings.", info: nil, logLevel: .error, category: .`init`)
-            self.logger?.log(logRequest)
-        }
+
     }
     
 //     TODO: allow dispatch validators to be set up from config, replaces delegate
@@ -299,13 +309,8 @@ extension ModulesManager: TealiumModuleDelegate {
     }
 }
 
-extension ModulesManager: TealiumConnectivityDelegate {
-    public func connectionTypeChanged(_ connectionType: String) {
-        logger?.log(TealiumLogRequest(title: "Modules Manager", message: "Connectivity changed to \(connectionType)", info: nil, logLevel: .info, category: .general))
-    }
-    
+extension ModulesManager: TealiumConnectivityDelegate {    
     public func connectionLost() {
-        connectivityManager.refreshConnectivityStatus()
         logger?.log(TealiumLogRequest(title: "Modules Manager", message: "Connectivity lost", info: nil, logLevel: .info, category: .general))
     }
     
@@ -313,8 +318,7 @@ extension ModulesManager: TealiumConnectivityDelegate {
         if self.dispatchers.isEmpty {
             self.setupDispatchers(config: config)
         }
-        self.requestReleaseQueue(reason: "Connection Restored")
-        connectivityManager.cancelAutoStatusRefresh()
+        self.requestReleaseQueue(reason: TealiumConstants.connectionRestoredReason)
     }
     
     
