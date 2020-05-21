@@ -16,7 +16,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     static var remoteAPIExpectation: XCTestExpectation?
     static var expiredDispatchesExpectation: XCTestExpectation?
     static var connectivity: TealiumConnectivity {
-        let connectivity = TealiumConnectivity(config: defaultTealiumConfig)
+        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { result in }
         connectivity.forceConnectionOverride = true
         return connectivity
     }

@@ -417,7 +417,7 @@ class DispatchManager: DispatchManagerProtocol {
         }
     }
     
-    fileprivate func releaseQueue() {
+    func releaseQueue() {
         if let queuedDispatches = persistentQueue.dequeueDispatches() {
             let batches: [[TealiumTrackRequest]] = queuedDispatches.chunks(maxDispatchSize)
 

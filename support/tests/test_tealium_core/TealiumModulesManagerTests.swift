@@ -152,7 +152,8 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = []
         modulesManager.dispatchers = []
         modulesManager.eventDataManager = DummyDataManagerNoData()
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
+        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
         modulesManager.sendTrack(track)
@@ -165,7 +166,8 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = []
         modulesManager.dispatchers = []
         modulesManager.eventDataManager = DummyDataManagerNoData()
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
+        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
         modulesManager.sendTrack(track)
@@ -178,7 +180,8 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = []
         modulesManager.dispatchers = []
         modulesManager.eventDataManager = DummyDataManagerNoData()
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
+        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         modulesManager.requestReleaseQueue(reason: "test")
         wait(for: [TealiumModulesManagerTests.expectatations["releaseQueue"]!], timeout: 1.0)
@@ -227,7 +230,8 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = [collector]
         modulesManager.dispatchListeners = []
         modulesManager.dispatchValidators = []
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumConnectivity(config: testTealiumConfig), config: testTealiumConfig)
+        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
         let config = testTealiumConfig
         config.logLevel = .info
         modulesManager.config = config
@@ -308,7 +312,7 @@ class DummyCollector: Collector, DispatchListener, DispatchValidator {
         ["dummy": true]
     }
 
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
+    required init(config: TealiumConfig, delegate: TealiumModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
         self.id = "Dummy"
     }
