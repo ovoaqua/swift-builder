@@ -6,7 +6,6 @@
 //  Copyright © 2017 Tealium, Inc. All rights reserved.
 //
 
-@testable import TealiumConnectivity
 @testable import TealiumCore
 import XCTest
 
@@ -27,28 +26,6 @@ class TealiumConnectivityModuleTests: XCTestCase {
         trackData = nil
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
-    }
-
-    func testForFailingRequests() {
-        let helper = TestTealiumHelper()
-        let module = TealiumConnectivityModule(delegate: nil)
-
-        let failing = helper.failingRequestsFor(module: module)
-        XCTAssert(failing.isEmpty, "Unexpected failing requests: \(failing)")
-    }
-
-    func testMinimumProtocolsReturn() {
-        let expectation = self.expectation(description: "allRequestsReturn")
-        let helper = TestTealiumHelper()
-        let module = TealiumConnectivityModule(delegate: nil)
-
-        helper.modulesReturnsMinimumProtocols(module: module) { _, failing in
-
-            expectation.fulfill()
-            XCTAssert(failing.isEmpty, "Unexpected failing requests: \(failing)")
-        }
-
-        self.waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     // Wifi and Cellular data should be disabled on the device/simulator before running the test or test will fail
@@ -78,39 +55,39 @@ class TealiumConnectivityModuleTests: XCTestCase {
     // this test should be run twice: once with wifi + cellular data disabled, once with it enabled.
     // Both test runs should pass with no errors
 
-    func testTrack() {
-        self.delegateExpectation = self.expectation(description: "connectivityTrack")
-        let module = TealiumConnectivityModule(delegate: self)
-        let request = TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil)
-        module.enable(request)
-        module.isEnabled = true
-
-        let track = TealiumTrackRequest(data: [:]) { _, _, _ in
-            guard let trackData = self.trackData else {
-                XCTFail("No track data detected from test.")
-                return
-            }
-
-            let expectedKeys = [
-                "was_queued",
-                "network_connection_type"
-            ]
-
-            for key in expectedKeys where trackData[key] != nil {
-                if key == "network_connection_type" {
-                    continue
-                }
-                XCTFail("\nKey:\(key) was unexpectedly included in tracking call. Tracking data: \(trackData)\n")
-            }
-
-            self.delegateExpectation?.fulfill()
-
-        }
-
-        module.track(track)
-
-        self.waitForExpectations(timeout: 3.0, handler: nil)
-    }
+//    func testTrack() {
+//        self.delegateExpectation = self.expectation(description: "connectivityTrack")
+//        let module = TealiumConnectivityModule(delegate: self)
+//        let request = TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil)
+//        module.enable(request)
+//        module.isEnabled = true
+//
+//        let track = TealiumTrackRequest(data: [:]) { _, _, _ in
+//            guard let trackData = self.trackData else {
+//                XCTFail("No track data detected from test.")
+//                return
+//            }
+//
+//            let expectedKeys = [
+//                "was_queued",
+//                "network_connection_type"
+//            ]
+//
+//            for key in expectedKeys where trackData[key] != nil {
+//                if key == "network_connection_type" {
+//                    continue
+//                }
+//                XCTFail("\nKey:\(key) was unexpectedly included in tracking call. Tracking data: \(trackData)\n")
+//            }
+//
+//            self.delegateExpectation?.fulfill()
+//
+//        }
+//
+//        module.track(track)
+//
+//        self.waitForExpectations(timeout: 3.0, handler: nil)
+//    }
 
     func testDefaultConnectivityInterval() {
         let module = TealiumConnectivityModule(delegate: nil)
@@ -132,34 +109,34 @@ class TealiumConnectivityModuleTests: XCTestCase {
     }
 
 }
-
-// delegate to handle callbacks from connectivity module
-extension TealiumConnectivityModuleTests: TealiumModuleDelegate {
-
-    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        if let process = process as? TealiumTrackRequest {
-            trackData = process.trackDictionary
-            process.completion?(true,
-                                nil,
-                                nil)
-        }
-    }
-
-    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-        // let expectation = self.delegateExpectation
-        if let req = process as? TealiumReportRequest {
-            if req.message.contains("Sending queued track") {
-                print("\n\(req.message)\n")
-                self.delegateExpectation2?.fulfill()
-                return
-            } else if req.message.contains("Queued track. No internet connection.") {
-                print("\n\(req.message)\n")
-                self.delegateExpectation?.fulfill()
-            } else {
-                // expectation will not be fulfilled
-                XCTFail("test failed")
-                print("Something went wrong in queuing module")
-            }
-        }
-    }
-}
+//
+//// delegate to handle callbacks from connectivity module
+//extension TealiumConnectivityModuleTests: TealiumModuleDelegate {
+//
+//    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
+//        if let process = process as? TealiumTrackRequest {
+//            trackData = process.trackDictionary
+//            process.completion?(true,
+//                                nil,
+//                                nil)
+//        }
+//    }
+//
+//    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
+//        // let expectation = self.delegateExpectation
+//        if let req = process as? TealiumReportRequest {
+//            if req.message.contains("Sending queued track") {
+//                print("\n\(req.message)\n")
+//                self.delegateExpectation2?.fulfill()
+//                return
+//            } else if req.message.contains("Queued track. No internet connection.") {
+//                print("\n\(req.message)\n")
+//                self.delegateExpectation?.fulfill()
+//            } else {
+//                // expectation will not be fulfilled
+//                XCTFail("test failed")
+//                print("Something went wrong in queuing module")
+//            }
+//        }
+//    }
+//}
