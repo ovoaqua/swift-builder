@@ -171,6 +171,9 @@ public class ModulesManager {
     
     func setupCollectors(config: TealiumConfig) {
         coreCollectors.forEach { coreCollector in
+            if coreCollector == TealiumConsentManagerModule.self && !config.enableConsentManager {
+                return
+            }
             let collector = coreCollector.init(config: config, delegate: self, diskStorage: nil) { result in
 
             }

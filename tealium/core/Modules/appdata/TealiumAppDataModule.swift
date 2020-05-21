@@ -31,6 +31,14 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
     }
     
     public var config: TealiumConfig
+    
+    convenience init(config: TealiumConfig,
+                  delegate: TealiumModuleDelegate,
+                  diskStorage: TealiumDiskStorageProtocol?,
+                  bundle: Bundle) {
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
+        self.bundle = bundle
+    }
 
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate?,

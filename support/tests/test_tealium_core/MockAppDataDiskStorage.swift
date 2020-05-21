@@ -1,16 +1,21 @@
 //
-//  AttributionMockDiskStorage.swift
+//  MockAppDataDiskStorage.swift
 //  tealium-swift
 //
-//  Created by Craig Rouse on 30/08/2019.
-//  Copyright © 2019 Tealium, Inc. All rights reserved.
+//  Created by Jonathan Wong on 1/19/18.
+//  Copyright © 2018 Tealium, Inc. All rights reserved.
 //
 
-import Foundation
 @testable import TealiumCore
-@testable import TealiumPersistentData
+import XCTest
 
-class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
+class MockAppDataDiskStorage: TealiumDiskStorageProtocol {
+
+    var saveCount = 0
+    var saveToDefaultsCount = 0
+    var retrieveCount = 0
+    var deleteCount = 0
+
     func append(_ data: [String: Any], fileName: String, completion: TealiumCompletion?) {
 
     }
@@ -19,25 +24,20 @@ class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
 
     }
 
-    var persistentData: TealiumPersistentDataStorage! = TealiumPersistentDataStorage()
-
     func save(_ data: AnyCodable, completion: TealiumCompletion?) {
 
     }
 
     func save(_ data: AnyCodable, fileName: String, completion: TealiumCompletion?) {
+
     }
 
     func save<T>(_ data: T, completion: TealiumCompletion?) where T: Encodable {
-        guard T.self == TealiumPersistentDataStorage.self,
-            let data = data as? TealiumPersistentDataStorage else {
-                return
-        }
-        persistentData = data
-        completion?(true, nil, nil)
+        saveCount += 1
     }
 
     func save<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Encodable {
+
     }
 
     func append<T>(_ data: T, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
@@ -46,15 +46,25 @@ class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
     func append<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
     }
 
+    func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+        guard T.self == PersistentAppData.self,
+            let completion = completion as? (Bool, PersistentAppData?, Error?) -> Void
+            else {
+                return
+        }
+        completion(true, PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID), nil)
+    }
+
+    func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
+
+    }
+
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
-        guard T.self == TealiumPersistentDataStorage.self else {
+        guard T.self == PersistentAppData.self else {
             return nil
         }
-        if let persistentData = self.persistentData {
-            return persistentData as? T
-        } else {
-            return nil
-        }
+        retrieveCount += 1
+        return PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID) as? T
     }
 
     func retrieve<T>(_ fileName: String, as type: T.Type) -> T? where T: Decodable {
@@ -70,8 +80,8 @@ class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
     }
 
     func delete(completion: TealiumCompletion?) {
-        persistentData = nil
         completion?(true, nil, nil)
+        deleteCount += 1
     }
 
     func totalSizeSavedData() -> String? {
@@ -87,7 +97,7 @@ class PersistentDataMockDiskStorage: TealiumDiskStorageProtocol {
     }
 
     func saveToDefaults(key: String, value: Any) {
-
+        saveToDefaultsCount += 1
     }
 
     func getFromDefaults(key: String) -> Any? {
