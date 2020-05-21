@@ -11,7 +11,7 @@ import Foundation
 @testable import TealiumLifecycle
 
 class LifecycleMockDiskStorage: TealiumDiskStorageProtocol {
-    
+
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
         guard T.self == TealiumLifecycle.self
             else {

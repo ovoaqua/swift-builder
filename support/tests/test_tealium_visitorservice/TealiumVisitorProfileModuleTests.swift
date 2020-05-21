@@ -78,6 +78,9 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
 }
 
 extension TealiumVisitorServiceModuleTests: TealiumModuleDelegate {
+    func requestReleaseQueue(reason: String) {
+
+    }
 
     func requestTrack(_ track: TealiumTrackRequest) {
 

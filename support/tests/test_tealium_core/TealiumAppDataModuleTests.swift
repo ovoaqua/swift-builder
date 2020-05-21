@@ -64,7 +64,13 @@ class TealiumAppDataModuleTests: XCTestCase {
             XCTFail("AppData should not be nil")
             return
         }
+        #if os(iOS)
         XCTAssertEqual(appData.name, "TealiumCoreTests-iOS")
+        #elseif os(macOS)
+        XCTAssertEqual(appData.name, "TealiumCoreTests-macOS")
+        #elseif os(tvOS)
+        XCTAssertEqual(appData.name, "TealiumCoreTests-tvOS")
+        #endif
         XCTAssertEqual(appData.rdns, "com.tealium.TealiumTests")
         XCTAssertEqual(appData.version, "1.0")
         XCTAssertEqual(appData.build, "1")

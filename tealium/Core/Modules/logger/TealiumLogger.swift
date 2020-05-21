@@ -9,7 +9,7 @@
 import Foundation
 import os.log
 
-@available (iOS 10.0, *)
+@available(iOS 10.0, tvOS 12.0, macOS 10.12, watchOS 4.0, *)
 extension OSLog {
     static let `init`: OSLog = OSLog(subsystem: "com.tealium.swift", category: "init")
     static let track: OSLog = OSLog(subsystem: "com.tealium.swift", category: "track")
@@ -49,7 +49,7 @@ public class TealiumLogger: TealiumLoggerProtocol {
     public func log(_ request: TealiumLogRequest) {
         switch loggerType {
         case .os:
-            if #available(iOS 10.0, *) {
+            if #available(iOS 10.0, tvOS 12.0, macOS 10.12, watchOS 4.0, *) {
                 osLog(request)
             } else {
                 textLog(request)
@@ -62,7 +62,7 @@ public class TealiumLogger: TealiumLoggerProtocol {
     }
     
     // set log level to default to hide info messages xcrun simctl spawn booted log config --mode "level:default" --subsystem com.tealium.swift
-    @available(iOS 10.0, *)
+    @available(iOS 10.0, tvOS 12.0, macOS 10.12, watchOS 4.0, *)
     func osLog(_ request: LogRequest){
         
         guard logThreshold > .silent else {
@@ -87,7 +87,7 @@ public class TealiumLogger: TealiumLoggerProtocol {
         os_log("%{public}@", log: getLogCategory(request: request), type: logLevel, message)
     }
     
-    @available(iOS 10.0, *)
+    @available(iOS 10.0, tvOS 12.0, macOS 10.12, watchOS 4.0, *)
     func getLogCategory(request: LogRequest) -> OSLog {
         switch request.logCategory {
         case .general:

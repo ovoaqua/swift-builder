@@ -57,20 +57,28 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
     
     var completion:  ((Result<Bool, Error>) -> Void)
     var config: TealiumConfig
+    var urlSession: URLSessionProtocol?
+    
+    convenience init (config: TealiumConfig,
+                      completion: @escaping ((Result<Bool, Error>) -> Void),
+                        urlSession: URLSessionProtocol) {
+        self.init(config: config, completion: completion)
+        self.urlSession = urlSession
+    }
     
     required init(config: TealiumConfig,
                   completion: @escaping ((Result<Bool, Error>) -> Void)) {
         self.config = config
+        self.urlSession = URLSession(configuration: .ephemeral)
         self.completion = completion
         if let interval = config.connectivityRefreshInterval {
-            refreshConnectivityStatus(interval)
+            self.refreshConnectivityStatus(interval)
         } else {
-            if config.connectivityRefreshEnabled == false {
-                return
+            if config.connectivityRefreshEnabled == true {
+                self.refreshConnectivityStatus()
             }
-            refreshConnectivityStatus()
         }
-        checkIsConnected(completion: completion)
+        self.checkIsConnected(completion: completion)
     }
 
     func checkIsConnected(completion: @escaping ((Result<Bool, Error>) -> Void)) {
@@ -82,20 +90,20 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
             self.connectionRestored()
             completion(.success(true))
         case false:
-            self.connectionLost()
             completion(.failure(TealiumConnectivityError.noConnection))
+            self.connectionLost()
         }
         #endif
     }
     
     func checkConnectionFromURLSessionTask(completion: @escaping ((Result<Bool, Error>) -> Void)) {
-        let session = URLSession(configuration: .ephemeral)
+        let session = self.urlSession ?? URLSession(configuration: .ephemeral)
         guard let testURL = URL(string: "https://tags.tiqcdn.com") else {
             return
         }
         var request = URLRequest(url: testURL)
         request.httpMethod = "HEAD"
-        let task = session.dataTask(with: request) { data, response, error in
+        let task = session.tealiumDataTask(with: request) { data, response, error in
             if let _ = error as? URLError {
                 self.connectionLost()
                 completion(.failure(TealiumConnectivityError.noConnection))
@@ -217,7 +225,8 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
     
     /// Stops scheduled checks for connectivity.
     func cancelAutoStatusRefresh() {
-        timer = nil
+//        timer = nil
+        timer?.suspend()
     }
     
     deinit {

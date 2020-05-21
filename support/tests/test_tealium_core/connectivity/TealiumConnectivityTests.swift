@@ -10,104 +10,159 @@
 import XCTest
 
 class TealiumConnectivityTests: XCTestCase {
-
-    var delegateExpectation: XCTestExpectation?
-    var delegateExpectation2: XCTestExpectation?
-    var trackData: [String: Any]?
-
+    
+    var legacyConnectivityRefreshEnabled: TealiumConnectivity {
+        let config = defaultTealiumConfig.copy
+        config.connectivityRefreshEnabled = true
+        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
+        connectivity.connectivityMonitor = LegacyConnectivityMonitor(config: config) { result in
+            
+        }
+        return connectivity
+    }
+    
+    var legacyConnectivityRefreshDisabled: TealiumConnectivity {
+        let config = defaultTealiumConfig.copy
+        config.connectivityRefreshEnabled = false
+        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
+        connectivity.connectivityMonitor = LegacyConnectivityMonitor(config: config) { result in
+            
+        }
+        return connectivity
+    }
+    
+    var nwPathConnectivity: TealiumConnectivity {
+        let config = defaultTealiumConfig.copy
+        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
+        return connectivity
+    }
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
     override func tearDown() {
-        trackData = nil
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
+    
+    // Legacy test only
     func testInitNoRefresh() {
-        let config = defaultTealiumConfig.copy
-        config.connectivityRefreshEnabled = false
-        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
-//        XCTAssertNil(connectivity.timer, "Timer unexpectedly enabled")
+        let connectivity = legacyConnectivityRefreshDisabled
+        XCTAssertNil((connectivity.connectivityMonitor as! LegacyConnectivityMonitor).timer, "Timer unexpectedly enabled")
     }
     
+    // Legacy test only
     func testInitWithRefresh() {
-        let config = defaultTealiumConfig.copy
-        config.connectivityRefreshEnabled = true
-        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
-//        XCTAssertNotNil(connectivity.timer, "Timer unexpectedly nil")
+        let connectivity = legacyConnectivityRefreshEnabled
+        XCTAssertNotNil((connectivity.connectivityMonitor as! LegacyConnectivityMonitor).timer, "Timer unexpectedly nil")
     }
     
     func testCurrentConnectionType() {
-        let config = defaultTealiumConfig.copy
-        config.connectivityRefreshEnabled = false
-        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
-        connectivity.forceConnectionOverride = true
-//        XCTAssertEqual(connectivity.connectionType!, TealiumConnectivityKey.connectionTypeWifi)
+        let expectation = self.expectation(description: "connection type")
+        let connectivity = nwPathConnectivity
+        // need to wait for NWPathMonitor callback to finish first
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let data = connectivity.data!
+            
+            XCTAssertEqual(data[TealiumConnectivityKey.connectionType] as! String, TealiumConnectivityKey.connectionTypeWifi)
+            expectation.fulfill()
+        }
+        self.wait(for: [expectation], timeout: 1.0)
     }
     
-    // Wifi and Cellular data should be disabled on the device/simulator before running the test or test will fail
-    // UNCOMMENT TO TEST
-    //    func testTrackWithNoConnection() {
-    //        self.delegateExpectation = self.expectation(description: "connectivityTrack queue test")
-    //        self.delegateExpectation2 = self.expectation(description: "expected 2nd track request")
-    //        let module = TealiumConnectivityModule(delegate: self)
-    //        let request = TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil)
-    //        module.enable(request)
-    //        module.isEnabled = true
-    //
-    //        TealiumConnectivityModule.setConnectionOverride(shouldOverride: false) // allow default state (offline since wifi disabled)
-    //        let track = TealiumTrackRequest(data: ["test_track": "no connection"], completion: nil)
-    //
-    //        module.track(track)
-    //        // override actual connection status to allow track to complete successfully despite no connection
-    //        TealiumConnectivityModule.setConnectionOverride(shouldOverride: true)
-    //        // fire new track to allow the 1st queued track to complete (should flush the queue)
-    //        let track2 = TealiumTrackRequest(data: [:], completion: nil)
-    //        module.track(track2)
-    //
-    //        self.waitForExpectations(timeout: 15, handler: nil)
-    //
-    //    }
+    func testCurrentConnectionTypeLegacy() {
+        let connectivity = legacyConnectivityRefreshEnabled
+        let data = connectivity.data!
+        XCTAssertEqual(data[TealiumConnectivityKey.connectionType] as! String, TealiumConnectivityKey.connectionTypeWifi)
+    }
+    
+    func testCheckIsConnected() {
+        let expectation = self.expectation(description: "isConnected")
+        let connectivity = nwPathConnectivity
+        // need to wait for NWPathMonitor callback to finish first
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            connectivity.checkIsConnected { result in
+                switch result {
+                case .success(let isConnected):
+                    XCTAssertTrue(isConnected)
+                    expectation.fulfill()
+                case .failure:
+                    XCTFail("Should be connected")
+                }
+            }
+        }
+        self.wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func testCheckIsConnectedLegacy() {
+        let connectivity = legacyConnectivityRefreshDisabled
+        connectivity.checkIsConnected { result in
+            switch result {
+            case .success(let isConnected):
+                XCTAssertTrue(isConnected)
+            case .failure:
+                XCTFail("Should be connected")
+            }
+        }
+    }
+    
+    func testCheckIsConnectedURLTask() {
+        let config = defaultTealiumConfig.copy
+        let connectivity = legacyConnectivityRefreshDisabled
+        let connectivityMonitor = LegacyConnectivityMonitor(config: config, completion: { result in
+            
+        }, urlSession: MockURLSessionConnectivityWithConnection())
+        
+        connectivity.connectivityMonitor = connectivityMonitor
+        
+        connectivityMonitor.checkConnectionFromURLSessionTask { result in
+            switch result {
+            case .success(let isConnected):
+                XCTAssertTrue(isConnected)
+            case .failure:
+                XCTFail("Should be connected")
+            }
+        }
+    }
+    
+    func testCheckIsConnectedNoConnectionURLTask() {
+        let config = defaultTealiumConfig.copy
+        let connectivity = legacyConnectivityRefreshDisabled
+        let connectivityMonitor = LegacyConnectivityMonitor(config: config, completion: { result in
+            
+        }, urlSession: MockURLSessionConnectivityNoConnection())
+        
+        connectivity.connectivityMonitor = connectivityMonitor
+        
+        connectivityMonitor.checkConnectionFromURLSessionTask { result in
+            switch result {
+            case .success:
+                XCTFail("Should not be connected")
+            case .failure(let error):
+                XCTAssertNotNil(error)
+            }
+        }
+    }
+    
+    // Legacy test only
+     func testDefaultConnectivityInterval() {
+         let connectivity = legacyConnectivityRefreshEnabled
+        XCTAssertEqual((connectivity.connectivityMonitor as! LegacyConnectivityMonitor).timer?.timeInterval, TimeInterval(exactly: TealiumConnectivityConstants.defaultInterval) ,"Unexpected default time interval")
+     }
+     
+     // Legacy test only
+     func testOverriddenConnectivityInterval() {
+        let config = defaultTealiumConfig.copy
+        config.connectivityRefreshInterval = 5
+        
+        let connectivity = LegacyConnectivityMonitor(config: config) { result in
+            
+        }
 
-    // this test should be run twice: once with wifi + cellular data disabled, once with it enabled.
-    // Both test runs should pass with no errors
-
-//    func testTrack() {
-//        self.delegateExpectation = self.expectation(description: "connectivityTrack")
-//        let module = TealiumConnectivityModule(delegate: self)
-//        let request = TealiumEnableRequest(config: TestTealiumHelper().getConfig(), enableCompletion: nil)
-//        module.enable(request)
-//        module.isEnabled = true
-//
-//        let track = TealiumTrackRequest(data: [:]) { _, _, _ in
-//            guard let trackData = self.trackData else {
-//                XCTFail("No track data detected from test.")
-//                return
-//            }
-//
-//            let expectedKeys = [
-//                "was_queued",
-//                "network_connection_type"
-//            ]
-//
-//            for key in expectedKeys where trackData[key] != nil {
-//                if key == "network_connection_type" {
-//                    continue
-//                }
-//                XCTFail("\nKey:\(key) was unexpectedly included in tracking call. Tracking data: \(trackData)\n")
-//            }
-//
-//            self.delegateExpectation?.fulfill()
-//
-//        }
-//
-//        module.track(track)
-//
-//        self.waitForExpectations(timeout: 3.0, handler: nil)
-//    }
+        XCTAssertEqual(connectivity.timer?.timeInterval, 5.0, "Unexpected default time interval")
+     }
 
 //    func testDefaultConnectivityInterval() {
 //        let module = TealiumConnectivityModule(delegate: nil)
@@ -129,34 +184,3 @@ class TealiumConnectivityTests: XCTestCase {
 //    }
 
 }
-//
-//// delegate to handle callbacks from connectivity module
-//extension TealiumConnectivityModuleTests: TealiumModuleDelegate {
-//
-//    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-//        if let process = process as? TealiumTrackRequest {
-//            trackData = process.trackDictionary
-//            process.completion?(true,
-//                                nil,
-//                                nil)
-//        }
-//    }
-//
-//    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-//        // let expectation = self.delegateExpectation
-//        if let req = process as? TealiumReportRequest {
-//            if req.message.contains("Sending queued track") {
-//                print("\n\(req.message)\n")
-//                self.delegateExpectation2?.fulfill()
-//                return
-//            } else if req.message.contains("Queued track. No internet connection.") {
-//                print("\n\(req.message)\n")
-//                self.delegateExpectation?.fulfill()
-//            } else {
-//                // expectation will not be fulfilled
-//                XCTFail("test failed")
-//                print("Something went wrong in queuing module")
-//            }
-//        }
-//    }
-//}

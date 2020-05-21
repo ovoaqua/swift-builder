@@ -76,7 +76,7 @@ class TealiumConnectivity: Collector, TealiumConnectivityDelegate {
     }
     
     func checkIsConnected(completion: @escaping ((Result<Bool, Error>) -> Void)) {
-        guard forceConnectionOverride == false else {
+        guard forceConnectionOverride == nil || forceConnectionOverride == false else {
             completion(.success(true))
             return
         }

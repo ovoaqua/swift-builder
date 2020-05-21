@@ -270,6 +270,9 @@ class TealiumLifecycleModuleTests: XCTestCase {
 }
 
 extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
+    func requestReleaseQueue(reason: String) {
+
+    }
 
     func requestTrack(_ track: TealiumTrackRequest) {
         expectationRequest?.fulfill()
