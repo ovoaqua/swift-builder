@@ -36,6 +36,41 @@ let keyTranslation = [
 
 class TealiumAttributionDataTests: XCTestCase {
 
+    func testVolatileData() {
+        let attributionData = TealiumAttributionData(diskStorage: AttributionMockDiskStorage(), isSearchAdsEnabled: false, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
+        let volatile = attributionData.volatileData
+        XCTAssertEqual(volatile[TealiumAttributionKey.idfa] as! String, TealiumTestValue.testIDFAString, "IDFA values were unexpectedly different")
+        XCTAssertEqual(volatile[TealiumAttributionKey.idfv] as! String, TealiumTestValue.testIDFVString, "IDFV values were unexpectedly different")
+        XCTAssertEqual(volatile[TealiumAttributionKey.isTrackingAllowed] as! String, "true", "isTrackingAllowed values were unexpectedly different")
+    }
+
+    func testAllAttributionData() {
+        let attributionData = TealiumAttributionData(diskStorage: AttributionMockDiskStorage(), isSearchAdsEnabled: true, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
+        let allData = attributionData.allAttributionData
+        XCTAssertNotNil(allData[TealiumAttributionKey.clickedDate])
+        XCTAssertNotNil(allData[TealiumAttributionKey.idfa])
+        XCTAssertNotNil(allData[TealiumAttributionKey.idfv])
+        XCTAssertNotNil(allData[TealiumAttributionKey.orgName])
+        XCTAssertNotNil(allData[TealiumAttributionKey.campaignName])
+        XCTAssertNotNil(allData[TealiumAttributionKey.creativeSetName])
+    }
+
+    func testSetPersistentAppDataWhenSearchAdsEnalbed() {
+        let mockDisk = AttributionMockDiskStorage()
+        let attributionData = TealiumAttributionData(diskStorage: mockDisk, isSearchAdsEnabled: true, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
+        attributionData.setPersistentAttributionData()
+        XCTAssertEqual(mockDisk.retrieveCount, 2)
+        XCTAssertNotNil(attributionData.persistentAttributionData)
+    }
+
+    func testSetPersistentAppDataWhenSearchAdNotEnalbed() {
+        let mockDisk = AttributionMockDiskStorage()
+        let attributionData = TealiumAttributionData(diskStorage: mockDisk, isSearchAdsEnabled: false, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
+        attributionData.setPersistentAttributionData()
+        XCTAssertEqual(mockDisk.retrieveCount, 1)
+        XCTAssertNotNil(attributionData.persistentAttributionData)
+    }
+
     func testIDFAAdTrackingEnabled() {
         let attributionData = TealiumAttributionData(diskStorage: AttributionMockDiskStorage(), isSearchAdsEnabled: false, identifierManager: TealiumASIdentifierManagerAdTrackingEnabled.shared)
         let idfa = attributionData.idfa
