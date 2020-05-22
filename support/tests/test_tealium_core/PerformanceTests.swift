@@ -70,8 +70,11 @@ class PerformanceTests: XCTestCase {
     func testModulesManagerInitPerformance() {
         let eventDataManager = EventDataManager(config: defaultTealiumConfig)
 
+        let config = defaultTealiumConfig.copy
+        //        config.loggerType = .custom(DummyLogger(config: config))
+
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = ModulesManager(defaultTealiumConfig, eventDataManager: eventDataManager)
+            _ = ModulesManager(config, eventDataManager: eventDataManager)
             self.stopMeasuring()
         }
     }
@@ -329,19 +332,29 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    //    func testLoggerWithOSLog() {
-    //        defaultTealiumConfig.loggerType = .os
-    //        let logger = TealiumLogger(config: defaultTealiumConfig)
-    //        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-    //            let logRequest = TealiumLogRequest(title: "Hello There", message: "This is a test message", info: ["info1": "one", "info2": 123], logLevel: .info, category: .general)
-    //            logger.log(logRequest)
-    //            self.stopMeasuring()
-    //        }
-    //    }
+    func testLoggerWithOSLog() {
+        defaultTealiumConfig.loggerType = .os
+        let logger = TealiumLogger(config: defaultTealiumConfig)
+        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
+            let logRequest = TealiumLogRequest(title: "Hello There", message: "This is a test message", info: ["info1": "one", "info2": 123], logLevel: .info, category: .general)
+            logger.log(logRequest)
+            self.stopMeasuring()
+        }
+    }
 
     func testLoggerWithPrintLog() {
         defaultTealiumConfig.loggerType = .print
         let logger = TealiumLogger(config: defaultTealiumConfig)
+        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
+            let logRequest = TealiumLogRequest(title: "Hello There", message: "This is a test message", info: ["info1": "one", "info2": 123], logLevel: .info, category: .general)
+            logger.log(logRequest)
+            self.stopMeasuring()
+        }
+    }
+
+    func testLoggerWithDummyLogger() {
+        defaultTealiumConfig.loggerType = .custom(DummyLogger(config: testTealiumConfig))
+        let logger = defaultTealiumConfig.logger!
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             let logRequest = TealiumLogRequest(title: "Hello There", message: "This is a test message", info: ["info1": "one", "info2": 123], logLevel: .info, category: .general)
             logger.log(logRequest)
@@ -383,6 +396,19 @@ extension XCTestCase {
         let bundle = Bundle(for: classForCoder)
         let url = bundle.url(forResource: file, withExtension: `extension`)
         return try! Data(contentsOf: url!)
+    }
+
+}
+
+class DummyLogger: TealiumLoggerProtocol {
+    var config: TealiumConfig
+
+    required init(config: TealiumConfig) {
+        self.config = config
+    }
+
+    func log(_ request: TealiumLogRequest) {
+
     }
 
 }
