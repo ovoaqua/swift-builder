@@ -272,6 +272,7 @@ public class ModulesManager {
             allData.value += data
         }
         
+        eventDataManager.sessionRefresh()
         allData.value += eventDataManager.allEventData
 
         if let data = data {

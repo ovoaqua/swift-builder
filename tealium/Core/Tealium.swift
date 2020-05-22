@@ -114,7 +114,7 @@ public class Tealium {
             guard let self = self else {
                 return
             }
-
+            
             self.zz_internal_modulesManager?.sendTrack(track)
         }
     }

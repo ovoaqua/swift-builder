@@ -13,6 +13,7 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
     var data = Set<EventDataItem>()
     var diskStorage: TealiumDiskStorageProtocol
     var restartData = [String: Any]()
+    var config: TealiumConfig
     public var lastTrackDate: Date?
     public var minutesBetweenSessionIdentifier: TimeInterval
     public var numberOfTracksBacking = 0
@@ -25,6 +26,7 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
     public init(config: TealiumConfig,
         diskStorage: TealiumDiskStorageProtocol? = nil,
         sessionStarter: SessionStarterProtocol? = nil) {
+        self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "eventdata")
         self.sessionStarter = sessionStarter ?? SessionStarter(config: config)
         self.minutesBetweenSessionIdentifier = TimeInterval(TealiumKey.defaultMinutesBetweenSession)

@@ -61,6 +61,7 @@ class TealiumHelper: NSObject {
         // config.visitorServiceRefreshInterval = 0
         // config.visitorServiceOverrideProfile = "main"
         config.memoryReportingEnabled = true
+        config.sessionHandlingEnabled = true
 
         #if AUTOTRACKING
 //        print("*** TealiumHelper: Autotracking enabled.")

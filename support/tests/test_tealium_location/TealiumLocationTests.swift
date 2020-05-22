@@ -424,9 +424,6 @@ class TealiumLocationTests: XCTestCase {
 
 }
 
-// XCTAssertTrue(tealiumLocationModule?.tealiumLocationManager.monitoredGeofences?.isEmpty)
-// XCTAssertTrue((tealiumLocationModule?.tealiumLocationManager.geofences.isEmpty)!)
-
 extension TealiumLocationTests: TealiumModuleDelegate {
     func requestReleaseQueue(reason: String) {
 
@@ -443,49 +440,27 @@ extension TealiumLocationTests: TealiumModuleDelegate {
             }
         .forEach { $0.fulfill() }
     }
-
-    //    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-    //        if let _ = process as? TealiumTrackRequest {
-    //            TealiumLocationTests.expectations
-    //                .filter {
-    //                    $0.description == "testTrackWhenEnabled" ||
-    //                        $0.description == "testTrackWhenDisabled"
-    //            }
-    //            .forEach { $0.fulfill() }
-    //        } else if let _ = process as? TealiumEnableRequest {
-    //            TealiumLocationTests.expectations
-    //                .filter { $0.description == "testEnable" }
-    //                .forEach { $0.fulfill() }
-    //        } else if let _ = process as? TealiumDisableRequest {
-    //            TealiumLocationTests.expectations
-    //                .filter { $0.description == "testDisable" }
-    //                .forEach { $0.fulfill() }
-    //        }
-    //    }
-    //
-    //    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-    //        if let _ = process as? TealiumTrackRequest {
-    //            TealiumLocationTests.expectations
-    //                .filter {
-    //                    $0.description == "testDidEnterGeofence" ||
-    //                        $0.description == "testDidExitGeofence" ||
-    //                        $0.description == "testSendGeofenceTrackingEvent"
-    //            }
-    //            .forEach { $0.fulfill() }
-    //        }
-    //    }
 }
 
 extension TealiumLocationTests: LocationListener {
 
     func didEnterGeofence(_ data: [String: Any]) {
+        let tz = TimeZone.current
+        var timestamp = ""
+        if tz.identifier.contains("London") {
+            timestamp = "2020-01-15 13:31:00 +0000"
+        } else if tz.identifier.contains("Phoenix") {
+            timestamp = "2020-01-15 05:31:00 +0000"
+        } else {
+            timestamp = "2020-01-15 06:31:00 +0000"
+        }
         let expected: [String: Any] = [TealiumKey.event: TealiumLocationKey.entered,
                                        TealiumLocationKey.accuracy: "low",
                                        TealiumLocationKey.geofenceName: "testRegion",
                                        TealiumLocationKey.geofenceTransition: TealiumLocationKey.entered,
                                        TealiumLocationKey.deviceLatitude: "37.3317",
                                        TealiumLocationKey.deviceLongitude: "-122.0325086",
-                                       TealiumLocationKey.timestamp: "2020-01-15 06:31:00 +0000",
+                                       TealiumLocationKey.timestamp: timestamp,
                                        TealiumLocationKey.speed: "40.0"]
         XCTAssertEqual(expected.keys.sorted(), data.keys.sorted())
         data.forEach {
