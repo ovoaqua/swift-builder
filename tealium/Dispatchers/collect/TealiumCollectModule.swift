@@ -9,9 +9,6 @@
 import Foundation
 import TealiumCore
 
-// TODO: Handle errors better
-// TODO: Handle break in connectivity - assume no track successful and resubmit track request (start queueing)
-
 /// Dispatch Service Module for sending track data to the Tealium Collect or custom endpoint.
 public class TealiumCollectModule: Dispatcher {    
     

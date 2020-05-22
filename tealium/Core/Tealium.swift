@@ -14,11 +14,8 @@ public typealias TealiumEnableCompletion = ((_ result: Result<Bool, Error>) -> V
 ///  Public interface for the Tealium library.
 public class Tealium {
 
-//    var config: TealiumConfig
-//    var originalConfig: TealiumConfig
     var enableCompletion: TealiumEnableCompletion?
     public static var lifecycleListeners = TealiumLifecycleListeners()
-//    var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     public var eventDataManager: EventDataManagerProtocol
     public var zz_internal_modulesManager: ModulesManager?
 
@@ -37,30 +34,15 @@ public class Tealium {
                 enableCompletion?(.success(true))
             }
         }
-//        self.config = config
-//        self.originalConfig = config.copy
+
         self.enableCompletion = enableCompletion
         self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
-//        if config.shouldUseRemotePublishSettings {
-//            self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, delegate: self)
-//            if let remoteConfig = self.remotePublishSettingsRetriever?.cachedSettings?.newConfig(with: config) {
-//                self.config = remoteConfig
-//            }
-//        }
+
         TealiumQueues.backgroundConcurrentQueue.write {
             self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: eventDataManager)
         }
         
-//        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
-//            guard let self = self else {
-//                return
-//            }
-//            guard self.config.isEnabled == nil || self.config.isEnabled == true else {
-//                return
-//            }
-            TealiumInstanceManager.shared.addInstance(self, config: config)
-//        }
-        // TODO: Return any init errors here
+        TealiumInstanceManager.shared.addInstance(self, config: config)
     }
 
     /// - Parameter config: `TealiumConfig` Object created with Tealium account, profile, environment, optional loglevel)

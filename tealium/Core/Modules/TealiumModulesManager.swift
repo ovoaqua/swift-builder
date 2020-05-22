@@ -141,7 +141,6 @@ public class ModulesManager {
         collectors.append(collector)
     }
     
-    // TODO: tidy this up. Need to update logic and remove duplication
     func addDispatchListener(_ listener: DispatchListener) {
         guard dispatchListeners.first(where: {
             type(of: $0) == type(of: listener)
@@ -240,14 +239,12 @@ public class ModulesManager {
 
     }
     
-//     TODO: allow dispatch validators to be set up from config, replaces delegate
     func setupDispatchValidators(config: TealiumConfig) {
         config.dispatchValidators?.forEach {
             self.addDispatchValidator($0)
         }
     }
     
-    // TODO: allow dispatch listeners to be set up from config
     func setupDispatchListeners(config: TealiumConfig) {
         config.dispatchListeners?.forEach {
             self.addDispatchListener($0)
