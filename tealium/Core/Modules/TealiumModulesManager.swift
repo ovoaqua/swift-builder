@@ -70,21 +70,16 @@ public class ModulesManager {
         }
     }
     
-    convenience init(_ conifg: TealiumConfig,
-                     eventDataManager: EventDataManagerProtocol?,
-                     optionalCollectors: [String],
-                     knownDispatchers: [String]) {
-        self.init(conifg, eventDataManager: eventDataManager)
-        self.optionalCollectors = optionalCollectors
-        self.knownDispatchers = knownDispatchers
-    }
-    
     init (_ config: TealiumConfig,
-          eventDataManager: EventDataManagerProtocol?) {
+          eventDataManager: EventDataManagerProtocol?,
+          optionalCollectors: [String]? = nil,
+          knownDispatchers: [String]? = nil) {
             self.originalConfig = config.copy
             self.config = config
             self.connectivityManager = TealiumConnectivity(config: self.config, delegate: nil, diskStorage: nil) {_ in}
             self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
+            self.optionalCollectors = optionalCollectors ?? self.optionalCollectors
+            self.knownDispatchers = knownDispatchers ?? self.knownDispatchers
             self.addCollector(connectivityManager)
             connectivityManager.addConnectivityDelegate(delegate: self)
             if config.shouldUseRemotePublishSettings {
