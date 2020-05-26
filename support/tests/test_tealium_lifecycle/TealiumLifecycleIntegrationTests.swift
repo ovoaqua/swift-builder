@@ -46,12 +46,19 @@ class TealiumLifecycleIntegrationTests: XCTestCase {
                 var overrideSession = TealiumLifecycleSession(launchDate: time)
                 overrideSession.appVersion = appVersion
                 returnedData = lifecycle.newLaunch(at: time, overrideSession: overrideSession)
+                if i == 0 {
+                    XCTAssertNotNil(returnedData["lifecycle_isfirstlaunch"])
+                } else {
+                    XCTAssertNil(returnedData["lifecycle_isfirstlaunch"])
+                }
             case "sleep":
                 returnedData = lifecycle.newSleep(at: time)
+                XCTAssertNil(returnedData["lifecycle_isfirstlaunch"])
             case "wake":
                 var overrideSession = TealiumLifecycleSession(wakeDate: time)
                 overrideSession.appVersion = appVersion
                 returnedData = lifecycle.newWake(at: time, overrideSession: overrideSession)
+                XCTAssertNil(returnedData["lifecycle_isfirstlaunch"])
             default:
                 XCTFail("Unexpected lifecycyle_type: \(type) for event:\(i)")
             }

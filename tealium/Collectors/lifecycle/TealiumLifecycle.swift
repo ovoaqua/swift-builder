@@ -160,6 +160,9 @@ public struct TealiumLifecycle: Codable {
         dict[LifecycleKey.autotracked] = autotracked
         if type == "launch" {
             dict[LifecycleKey.didDetectCrash] = crashDetected
+            if firstLaunch {
+                dict[LifecycleKey.isFirstLaunch] = "true"
+            }
         }
         dict[LifecycleKey.dayOfWeek] = dayOfWeekLocal(for: date)
         dict[LifecycleKey.daysSinceFirstLaunch] = daysFrom(earlierDate: firstSession?.wakeDate, laterDate: date)
@@ -168,9 +171,7 @@ public struct TealiumLifecycle: Codable {
         dict[LifecycleKey.firstLaunchDate] = firstSession?.wakeDate?.iso8601String
         dict[LifecycleKey.firstLaunchDateMMDDYYYY] = firstSession?.wakeDate?.mmDDYYYYString
         dict[LifecycleKey.hourOfDayLocal] = hourOfDayLocal(for: date)
-        if firstLaunch {
-            dict[LifecycleKey.isFirstLaunch] = "true"
-        }
+
         if firstLaunchAfterUpdate {
             dict[LifecycleKey.isFirstLaunchUpdate] = "true"
         }
