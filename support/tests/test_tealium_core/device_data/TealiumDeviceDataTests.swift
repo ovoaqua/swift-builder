@@ -22,18 +22,4 @@ class TealiumDeviceDataTests: XCTestCase {
         super.tearDown()
     }
 
-    func testMinimumProtocolsReturn() {
-        let expectation = self.expectation(description: "minimumProtocolsReturned")
-        let helper = TestTealiumHelper()
-        let module = TealiumDeviceDataModule(delegate: nil)
-        helper.modulesReturnsMinimumProtocols(module: module) { success, failingProtocols in
-
-            expectation.fulfill()
-            XCTAssertTrue(success, "Not all protocols returned. Failing protocols: \(failingProtocols)")
-
-        }
-
-        self.waitForExpectations(timeout: 1.0, handler: nil)
-    }
-
 }
