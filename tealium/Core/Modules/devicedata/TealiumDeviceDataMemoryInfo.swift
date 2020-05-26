@@ -45,7 +45,6 @@ extension TealiumDeviceData {
         }
 
         if kerr == KERN_SUCCESS {
-            // appMemoryUsed = String("\(info.resident_size/Unit.megabyte.rawValue)MB")
             appMemoryUsed = String(format: "%0.2fMB", Double(info.resident_size) / Unit.megabyte.rawValue)
         } else {
             appMemoryUsed = TealiumDeviceDataValue.unknown

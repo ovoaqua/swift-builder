@@ -34,11 +34,18 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
     class func isCharging() -> String {
         // only available on iOS
         #if os(iOS)
-        if UIDevice.current.batteryState == .charging {
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        let state = UIDevice.current.batteryState
+        switch state {
+        case .charging:
             return "true"
+        case .full:
+            return "false"
+        case .unplugged:
+            return "false"
+        default:
+            return TealiumDeviceDataValue.unknown
         }
-
-        return "false"
         #else
         return TealiumDeviceDataValue.unknown
         #endif

@@ -20,8 +20,6 @@ import CoreTelephony
 import WatchKit
 #endif
 
-import Darwin
-
 class DeviceDataModule: Collector {
     let moduleId: String = "Device Data"
     
@@ -47,8 +45,8 @@ class DeviceDataModule: Collector {
                   diskStorage: TealiumDiskStorageProtocol?,
                   completion: ModuleCompletion) {
         self.config = config
-        self.deviceDataCollection = TealiumDeviceData()
-        self.cachedData = enableTimeData()
+        deviceDataCollection = TealiumDeviceData()
+        cachedData = enableTimeData()
         completion((.success(true), nil))
     }
 

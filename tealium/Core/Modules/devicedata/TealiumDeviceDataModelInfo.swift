@@ -37,6 +37,13 @@ extension TealiumDeviceData {
     /// - Returns: `[String: String]` of model information
     public func model() -> [String: String] {
         let model = basicModel()
+        #if os(OSX)
+        return [TealiumKey.deviceType: model,
+        TealiumKey.simpleModel: "mac",
+        TealiumKey.device: "mac",
+        TealiumKey.fullModel: "mac"
+        ]
+        #else
         if let deviceInfo = retrieveModelNamesFromJSONFile() {
             if let currentModel = deviceInfo[model] as? [String: String],
                 let simpleModel = currentModel[TealiumKey.simpleModel],
@@ -48,9 +55,12 @@ extension TealiumDeviceData {
                 ]
             }
         }
+
         return [TealiumKey.deviceType: model,
                 TealiumKey.simpleModel: model,
+                TealiumKey.device: model,
                 TealiumKey.fullModel: ""
         ]
+        #endif
     }
 }
