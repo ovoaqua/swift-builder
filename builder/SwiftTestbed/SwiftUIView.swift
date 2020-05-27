@@ -18,7 +18,6 @@ struct SwiftUIView: View {
                     Spacer()
                     Button(action: {
                         print("Track View")
-//                        TealiumHelper.shared.resetConsentPreferences()
                         TealiumHelper.shared.trackView(title: "iOS View", data: nil)
                     },
                        label: {
@@ -27,7 +26,6 @@ struct SwiftUIView: View {
                     
                     Button(action: {
                          print("Track Event")
-//                        TealiumHelper.shared.updateConsentPreferences()
                         TealiumHelper.shared.track(title: "iOS Event", data: nil)
                     },
                     label: {

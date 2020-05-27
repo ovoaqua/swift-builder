@@ -28,7 +28,7 @@ class TealiumHelper: NSObject {
 
     static let shared = TealiumHelper()
     var tealium: Tealium?
-    var enableHelperLogs = true
+    var enableHelperLogs = false
     var traceId = "04136"
     var logger: TealiumLoggerProtocol?
 
@@ -69,7 +69,6 @@ class TealiumHelper: NSObject {
 //        let list = TealiumModulesList(isWhitelist: false,
 //                                      moduleNames: [.autotracking, .consentmanager])
 //        config.modulesList = list
-        config.consentManagerDelegate = self
         config.diskStorageEnabled = true
         config.visitorServiceDelegate = self
         config.remoteAPIEnabled = false
@@ -156,22 +155,6 @@ class TealiumHelper: NSObject {
             }
         }
     }
-    
-    
-    func updateConsentPreferences() {
-        let cats = ["analytics", "monitoring", "big_data", /*"mobile", "crm", "affiliates", "email", "search", */"engagement", "cdp"]
-        var dict = [String: Any]()
-        dict["consentStatus"] = "notConsented"
-        dict["consentCategories"] = cats
-        if let status = dict["consentStatus"] as? String {
-            var tealiumConsentCategories = [TealiumConsentCategories]()
-            let tealiumConsentStatus = (status == "consented") ? TealiumConsentStatus.consented : TealiumConsentStatus.notConsented
-            if let categories = dict["consentCategories"] as? [String] {
-                tealiumConsentCategories = TealiumConsentCategories.consentCategoriesStringArrayToEnum(categories)
-            }
-            self.tealium?.consentManager?.setUserConsentStatusWithCategories(status: tealiumConsentStatus, categories: tealiumConsentCategories)
-        }
-    }
 
     func track(title: String, data: [String: Any]?) {
 //        tealium?.lifecycle()?.launch(at: Date())
@@ -220,46 +203,13 @@ extension TealiumHelper: TealiumVisitorServiceDelegate {
     func didUpdate(visitorProfile: TealiumVisitorProfile) {
         if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             if self.enableHelperLogs {
-//                print(string)
+                print(string)
             }
         }
     }
 
 }
 
-extension TealiumHelper: TealiumConsentManagerDelegate {
-    
-    func willDropTrackingCall(_ request: TealiumTrackRequest) {
-        
-    }
-    
-    func willQueueTrackingCall(_ request: TealiumTrackRequest) {
-        
-    }
-    
-    func willSendTrackingCall(_ request: TealiumTrackRequest) {
-        
-    }
-    
-    func consentStatusChanged(_ status: TealiumConsentStatus) {
-        
-    }
-    
-    func userConsentedToTracking() {
-        
-    }
-    
-    func userOptedOutOfTracking() {
-        
-    }
-    
-    func userChangedConsentCategories(categories: [TealiumConsentCategories]) {
-        
-    }
-    
-    
-}
-//
 extension TealiumHelper: DispatchListener {
     public func willTrack(request: TealiumRequest) {
         print("helper - willtrack")
