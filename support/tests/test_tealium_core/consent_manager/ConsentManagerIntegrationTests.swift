@@ -277,7 +277,6 @@ extension ConsentManagerTests: TealiumModuleDelegate {
             if allTestsFinished {
                 testtrackUserConsentPreferencesExpectation.fulfill()
             }
-        }
     }
 
 }

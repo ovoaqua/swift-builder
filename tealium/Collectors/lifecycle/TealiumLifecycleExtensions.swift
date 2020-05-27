@@ -24,42 +24,6 @@ public extension Tealium {
 
 }
 
-public extension TealiumConfig {
-
-//    var lifecycleAutoTrackingEnabled: Bool {
-//        get {
-//            return optionalData[LifecycleKey.autotrackingEnabled] as? Bool ?? true
-//        }
-//
-//        set {
-//            optionalData[LifecycleKey.autotrackingEnabled] = newValue
-//        }
-//    }
-
-}
-
-//extension TealiumLifecycleModule: TealiumLifecycleEvents {
-//    public func sleep() {
-//        processDetected(type: .sleep)
-//    }
-//
-//    public func wake() {
-//        processDetected(type: .wake)
-//    }
-//
-//    public func launch(at date: Date) {
-//        processDetected(type: .launch, at: date)
-//    }
-//}
-
-//public func ==(lhs: TealiumLifecycle, rhs: TealiumLifecycle ) -> Bool {
-//    if lhs.countCrashTotal != rhs.countCrashTotal { return false }
-//    if lhs.countLaunchTotal != rhs.countLaunchTotal { return false }
-//    if lhs.countSleepTotal != rhs.countSleepTotal { return false }
-//    if lhs.countWakeTotal != rhs.countWakeTotal { return false }
-//
-//    return true
-//}
 
 extension Bundle {
     var version: String? {

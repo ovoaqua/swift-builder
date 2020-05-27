@@ -37,7 +37,7 @@ public class TealiumTagManagementModule: Dispatcher {
         completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate
-        self.tagManagement = TealiumTagManagementWKWebView()
+        self.tagManagement = TealiumTagManagementWKWebView(config: config)
         enableNotifications()
         self.tagManagement?.enable(webviewURL: config.webviewURL, shouldMigrateCookies: true, delegates: config.webViewDelegates, shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.rootView) { [weak self] _, error in
             guard let self = self else {

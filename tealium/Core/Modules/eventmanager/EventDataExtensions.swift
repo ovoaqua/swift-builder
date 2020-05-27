@@ -26,6 +26,20 @@ public extension Tealium {
 
 }
 
+public extension TealiumConfig {
+    
+    var sessionHandlingEnabled: Bool {
+        get {
+            return optionalData[TealiumKey.sessionHandlingEnabled] as? Bool ?? false
+        }
+
+        set {
+            optionalData[TealiumKey.sessionHandlingEnabled] = newValue
+        }
+    }
+    
+}
+
 public extension TealiumKey {
     static let timestampEpoch = "tealium_timestamp_epoch"
     static let timestamp = "timestamp"
@@ -34,6 +48,7 @@ public extension TealiumKey {
     static let defaultMinutesBetweenSession = 2
     static let defaultsSecondsBetweenTrackEvents = 30.0
     static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
+    static let sessionHandlingEnabled = "session_handling_enabled"
 }
 
 extension Date {

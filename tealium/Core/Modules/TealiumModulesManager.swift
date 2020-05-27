@@ -70,17 +70,10 @@ public class ModulesManager {
         }
     }
     
-    convenience init(_ conifg: TealiumConfig,
-                     eventDataManager: EventDataManagerProtocol?,
-                     optionalCollectors: [String],
-                     knownDispatchers: [String]) {
-        self.init(conifg, eventDataManager: eventDataManager)
-        self.optionalCollectors = optionalCollectors
-        self.knownDispatchers = knownDispatchers
-    }
-    
     init (_ config: TealiumConfig,
-          eventDataManager: EventDataManagerProtocol?) {
+          eventDataManager: EventDataManagerProtocol?,
+          optionalCollectors: [String]? = nil,
+          knownDispatchers: [String]? = nil) {
             self.originalConfig = config.copy
             self.config = config
             self.connectivityManager = TealiumConnectivity(config: self.config, delegate: nil, diskStorage: nil) {_ in}
@@ -269,6 +262,7 @@ public class ModulesManager {
             allData.value += data
         }
         
+        eventDataManager.sessionRefresh()
         allData.value += eventDataManager.allEventData
 
         if let data = data {

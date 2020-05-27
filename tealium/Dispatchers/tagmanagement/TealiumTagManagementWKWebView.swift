@@ -24,6 +24,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
 
     var webview: WKWebView?
     var webviewConfig: WKWebViewConfiguration?
+    var tealConfig: TealiumConfig
     var webviewDidFinishLoading = false
     var enableCompletion: ((_ success: Bool, _ error: Error?) -> Void)?
     // current view being used for WKWebView
@@ -33,6 +34,10 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     var currentState: AtomicInteger = AtomicInteger(value: WebViewState.notYetLoaded.rawValue)
 
     var delegates: TealiumMulticastDelegate<WKNavigationDelegate>? = TealiumMulticastDelegate<WKNavigationDelegate>()
+    
+    init(config: TealiumConfig) {
+        tealConfig = config
+    }
 
     /// Enables the webview. Called by the webview module at init time.
     ///
@@ -110,7 +115,9 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
                 WKWebsiteDataStore.default().httpCookieStore.add(self)
             }
             var config = WKWebViewConfiguration()
-            self.insertNoSessionString(config: &config)
+            if self.tealConfig.sessionHandlingEnabled {
+                self.insertNoSessionString(config: &config)
+            }
             self.webview = WKWebView(frame: .zero, configuration: config)
             self.webview?.navigationDelegate = self
             guard let webview = self.webview else {

@@ -19,13 +19,12 @@ extension EventDataManager {
         }
         set {
             let current = Date()
-            if let lastTrackDate = lastTrackDate {
+            if let lastTrackDate = lastTrackDate, config.sessionHandlingEnabled {
                 if let date = lastTrackDate.addSeconds(secondsBetweenTrackEvents),
                     date > current {
                     let tracks = numberOfTracksBacking + 1
                     if tracks == 2 {
                         startNewSession(with: sessionStarter)
-                        shouldTriggerSessionRequest = false
                         numberOfTracksBacking = 0
                         self.lastTrackDate = nil
                     }
@@ -76,7 +75,14 @@ extension EventDataManager {
     /// - Parameter sessionStarter: `SessionStarterProtocol`
     public func startNewSession(with sessionStarter: SessionStarterProtocol) {
         if tagManagementIsEnabled, shouldTriggerSessionRequest {
-            sessionStarter.sessionRequest { _ in }
+            sessionStarter.sessionRequest { [weak self] result in
+                switch result {
+                    case .success(_):
+                        self?.shouldTriggerSessionRequest = false
+                    default:
+                        break
+                }
+            }
         }
     }
 
