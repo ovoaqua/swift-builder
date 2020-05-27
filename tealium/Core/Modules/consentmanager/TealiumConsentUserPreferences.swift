@@ -8,19 +8,19 @@
 
 import Foundation
 
-public struct TealiumConsentUserPreferences: Codable {
+public struct TealiumConsentUserPreferences: Equatable, Codable {
 
     var consentCategories: [TealiumConsentCategories]?
-    var consentStatus: TealiumConsentStatus?
+    var consentStatus: TealiumConsentStatus
 
     /// Initializes preferences￼.
     ///
     /// - Parameters:
     ///     - consentStatus: `TealiumConsentStatus?` - The user's current consent status. Defaults to unknown if nil￼
     ///     - consentCategories: `[TealiumConsentCategories]?` - The user's selected consent categories, if any.
-    public init(consentStatus: TealiumConsentStatus?, consentCategories: [TealiumConsentCategories]?) {
+    public init(consentStatus: TealiumConsentStatus, consentCategories: [TealiumConsentCategories]?) {
         self.consentCategories = consentCategories
-        self.consentStatus = consentStatus != nil ? consentStatus : TealiumConsentStatus.unknown
+        self.consentStatus = consentStatus
     }
 
     /// Initializes `TealiumConsentPreferences` from a dictionary. Used for initialization from previously-stored preferences.￼
@@ -73,10 +73,8 @@ public struct TealiumConsentUserPreferences: Codable {
     public var dictionary:  [String: Any]? {
         var preferencesDictionary = [String: Any]()
 
-        if let status = self.consentStatus?.rawValue {
-            preferencesDictionary[TealiumConsentConstants.trackingConsentedKey] = status
-        }
-
+        preferencesDictionary[TealiumConsentConstants.trackingConsentedKey] = self.consentStatus.rawValue
+      
         if let categories = self.consentCategories, categories.count > 0 {
             preferencesDictionary[TealiumConsentConstants.consentCategoriesKey] = consentCategoriesEnumToStringArray(categories)
         } else {

@@ -77,6 +77,10 @@ public enum TealiumConsentCategories: String, Codable {
     }
 }
 
+public enum TealiumConsentPolicy: String {
+    case gdpr
+}
+
 public enum TealiumConsentStatus: String, Codable {
     case unknown
     case consented

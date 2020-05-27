@@ -47,8 +47,8 @@ class OSXTealiumHelper: NSObject {
         // OPTIONALLY set log level
         config.setConnectivityRefreshInterval(5)
         config.setLogLevel(.verbose)
-        config.setConsentLoggingEnabled(true)
-        config.setInitialUserConsentStatus(.consented)
+        config.consentLoggingEnabled = true
+        config.enableConsentManager = true
         //config.setBatchSize(5)
         //config.setDispatchAfter(numberOfEvents: 5)
         config.setMaxQueueSize(200)

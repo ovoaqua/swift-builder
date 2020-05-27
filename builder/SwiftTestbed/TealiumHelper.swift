@@ -50,8 +50,7 @@ class TealiumHelper: NSObject {
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
-        config.enableConsentManager = false
-        config.initialUserConsentStatus = .consented
+        config.enableConsentManager = true
 //        config.shouldAddCookieObserver = false
         config.shouldUseRemotePublishSettings = false
         // config.batchSize = 5
@@ -113,7 +112,6 @@ class TealiumHelper: NSObject {
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
             teal.consentManager?.setUserConsentStatus(.consented)
-            teal.consentManager?.addConsentDelegate(self)
             dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
 
             persitence.add(data: ["some_key1": "some_val1"], expiration: .session)

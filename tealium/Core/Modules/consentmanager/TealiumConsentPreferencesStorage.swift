@@ -44,7 +44,7 @@ class TealiumConsentPreferencesStorage {
     func retrieveConsentPreferencesFromUserDefaults() -> TealiumConsentUserPreferences? {
         var consentPreferences: TealiumConsentUserPreferences?
         if let data = UserDefaults.standard.dictionary(forKey: TealiumConsentPreferencesStorage.key) {
-            var temp = TealiumConsentUserPreferences(consentStatus: nil, consentCategories: nil)
+            var temp = TealiumConsentUserPreferences(consentStatus: .unknown, consentCategories: nil)
             temp.initWithDictionary(preferencesDictionary: data)
             consentPreferences = temp
             UserDefaults.standard.removeObject(forKey: TealiumConsentPreferencesStorage.key)

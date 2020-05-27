@@ -45,7 +45,7 @@ class TealiumWatchHelper: NSObject {
         config.logLevel = .info
 //        config.setConsentLoggingEnabled(true)
 //        config.setSearchAdsEnabled(true)
-        config.setInitialUserConsentStatus(.consented)
+       
 //        config.setShouldUseLegacyWebview(true)
 //        config.setBatchSize(5)
 //        config.setDispatchAfter(numberOfEvents: 5)
