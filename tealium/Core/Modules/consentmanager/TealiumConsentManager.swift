@@ -171,7 +171,6 @@ public extension TealiumConsentManager {
         }
         storeConsentUserPreferences()
         trackUserConsentPreferences(preferences: consentUserPreferences)
-        //consentStatusChanged(status)
     }
 
     /// Utility method to determine if consent categories have changed￼.

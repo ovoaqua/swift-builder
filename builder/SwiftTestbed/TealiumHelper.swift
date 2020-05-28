@@ -8,7 +8,6 @@
 
 import Foundation
 import TealiumCore
-//import TealiumCrash2
 import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
@@ -44,50 +43,31 @@ class TealiumHelper: NSObject {
                                    datasource: "test12",
                                    optionalData: nil)
         config.connectivityRefreshInterval = 5
-        config.loggerType = .os 
-//        config.logLevel = .info
+        config.loggerType = .os
+        config.logLevel = .info
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
-        config.enableConsentManager = true
-//        config.shouldAddCookieObserver = false
         config.shouldUseRemotePublishSettings = false
-        // config.batchSize = 5
-        // config.dispatchAfter = 5
-        // config.dispatchQueueLimit = 200
         config.batchingEnabled = false
-        // config.visitorServiceRefreshInterval = 0
-        // config.visitorServiceOverrideProfile = "main"
         config.memoryReportingEnabled = true
         config.sessionHandlingEnabled = true
-
-        #if AUTOTRACKING
-//        print("*** TealiumHelper: Autotracking enabled.")
-        #else
-        // OPTIONALLY disable a particular module by name
-        
-//        let list = TealiumModulesList(isWhitelist: false,
-//                                      moduleNames: [.autotracking, .consentmanager])
-//        config.modulesList = list
         config.diskStorageEnabled = true
         config.visitorServiceDelegate = self
         config.remoteAPIEnabled = false
-//        config.logLevel = .verbose
-        config.logLevel = .info
-        config.loggerType = .print
         config.shouldCollectTealiumData = true
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
         logger = config.logger
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
-        #endif
+
 //        #if os(iOS)
 //
 //        let remoteCommand = TealiumRemoteCommand(commandId: "hello",
 //                                                 description: "test") { response in
 //                                                    if TealiumHelper.shared.enableHelperLogs {
-////                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
+//                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
 //                                                    }
 //                                                    let dict = ["hello":"from helper"]
 //                                                    // set some JSON response data to be passed back to the webview
@@ -97,8 +77,6 @@ class TealiumHelper: NSObject {
 //        config.addRemoteCommand(remoteCommand)
 //        #endif
         
-        // REQUIRED Initialization
-//        tealium?.logger()
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self,
                 let teal = self.tealium else {
@@ -118,7 +96,7 @@ class TealiumHelper: NSObject {
 
             persitence.add(data: ["some_key_forever":"some_val_forever"]) // forever
 
-             persitence.add(data: ["until": "restart"], expiration: .untilRestart)
+            persitence.add(data: ["until": "restart"], expiration: .untilRestart)
 
             persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
 

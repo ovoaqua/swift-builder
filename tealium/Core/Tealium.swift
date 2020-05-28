@@ -39,7 +39,7 @@ public class Tealium {
         self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
 
 //        TealiumQueues.backgroundConcurrentQueue.write {
-            self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: eventDataManager)
+            self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: self.eventDataManager)
 //        }
         
         TealiumInstanceManager.shared.addInstance(self, config: config)

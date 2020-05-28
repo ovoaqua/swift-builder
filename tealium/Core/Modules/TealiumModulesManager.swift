@@ -14,7 +14,7 @@ public class ModulesManager {
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule", "TealiumAutotracking.TealiumAutotrackingModule", "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule", "TealiumLifecycle.TealiumLifecycleModule"]
-    var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
+    var knownDispatchers: [String] = [/*"TealiumCollect.TealiumCollectModule", */"TealiumTagManagement.TealiumTagManagementModule"]
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
         willSet {
@@ -33,7 +33,7 @@ public class ModulesManager {
                   self.dispatchManager?.dispatchListeners = newValue
               }
           }
-    var eventDataManager: EventDataManagerProtocol
+    var eventDataManager: EventDataManagerProtocol?
     var logger: TealiumLoggerProtocol?
     public var modules : [TealiumModule] {
         get {
@@ -77,7 +77,7 @@ public class ModulesManager {
             self.originalConfig = config.copy
             self.config = config
             self.connectivityManager = TealiumConnectivity(config: self.config, delegate: nil, diskStorage: nil) {_ in}
-            self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
+            self.eventDataManager = eventDataManager
             self.addCollector(connectivityManager)
             connectivityManager.addConnectivityDelegate(delegate: self)
             if config.shouldUseRemotePublishSettings {
@@ -201,7 +201,7 @@ public class ModulesManager {
                         guard config.isTagManagementEnabled == true else {
                             return
                         }
-                        self.eventDataManager.tagManagementIsEnabled = true
+                        self.eventDataManager?.tagManagementIsEnabled = true
                     }
                     
                     if knownDispatcher.contains("Collect") {
@@ -262,8 +262,10 @@ public class ModulesManager {
             allData.value += data
         }
         
-        eventDataManager.sessionRefresh()
-        allData.value += eventDataManager.allEventData
+        eventDataManager?.sessionRefresh()
+        if let eventData = eventDataManager?.allEventData {
+            allData.value += eventData
+        }
 
         if let data = data {
             allData.value += data
