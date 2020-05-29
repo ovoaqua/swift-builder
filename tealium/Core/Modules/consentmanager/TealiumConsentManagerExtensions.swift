@@ -23,6 +23,7 @@ public extension Tealium {
 
 public extension TealiumConfig {
     
+    /// Enables the `TealiumConsentManager` which is disabled by default
     var enableConsentManager: Bool {
         get {
             optionalData[TealiumConsentConstants.enableConsentManager] as? Bool ?? false

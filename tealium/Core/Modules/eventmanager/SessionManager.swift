@@ -19,25 +19,21 @@ extension EventDataManager {
         }
         set {
             let current = Date()
-            if let lastTrackDate = lastTrackDate {
+            if let lastTrackDate = lastTrackDate,
+                config.sessionHandlingEnabled {
                 if let date = lastTrackDate.addSeconds(secondsBetweenTrackEvents),
                     date > current {
                     let tracks = numberOfTracksBacking + 1
                     if tracks == 2 {
-                        if config.sessionHandlingEnabled {
-                            startNewSession(with: sessionStarter)
-                        }
-                        numberOfTracksBacking = 0
-                        self.lastTrackDate = nil
+                        startNewSession(with: sessionStarter)
                     }
                 } else {
                     self.lastTrackDate = Date()
                     numberOfTracksBacking = 0
                 }
-            } else {
-                self.lastTrackDate = Date()
-                numberOfTracksBacking += 1
             }
+            self.lastTrackDate = Date()
+            numberOfTracksBacking += 1
         }
     }
 
@@ -81,6 +77,8 @@ extension EventDataManager {
                 switch result {
                     case .success(_):
                         self?.shouldTriggerSessionRequest = false
+                        self?.numberOfTracksBacking = 0
+                        self?.lastTrackDate = nil
                     default:
                         break
                 }

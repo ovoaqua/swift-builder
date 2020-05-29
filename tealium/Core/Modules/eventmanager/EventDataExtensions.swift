@@ -28,6 +28,10 @@ public extension Tealium {
 
 public extension TealiumConfig {
     
+    /// Enables session handling through native code versus through the webview and utag.js
+    /// this prevents extra session counts from background events like push messages. This
+    /// is currently disabled by default
+    @available(*, deprecated, message: "Not currently released, for future use.")
     var sessionHandlingEnabled: Bool {
         get {
             return optionalData[TealiumKey.sessionHandlingEnabled] as? Bool ?? false
@@ -45,7 +49,7 @@ public extension TealiumKey {
     static let timestamp = "timestamp"
     static let timestampLocal = "timestamp_local"
     static let timestampOffset = "timestamp_offset"
-    static let defaultMinutesBetweenSession = 2
+    static let defaultMinutesBetweenSession = 30
     static let defaultsSecondsBetweenTrackEvents = 30.0
     static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
     static let sessionHandlingEnabled = "session_handling_enabled"
