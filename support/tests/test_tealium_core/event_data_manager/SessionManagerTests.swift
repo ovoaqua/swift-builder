@@ -48,7 +48,7 @@ class SessionManagerTests: XCTestCase {
         eventDataManager.tagManagementIsEnabled = true
         eventDataManager.shouldTriggerSessionRequest = true
         eventDataManager.lastTrackDate = timeTraveler.travel(by: 20)
-        eventDataManager.numberOfTracks += 1
+        eventDataManager.numberOfTracks = 0
         XCTAssertEqual(mockSessionStarter.sessionRequestCount, 1)
         XCTAssertFalse(eventDataManager.shouldTriggerSessionRequest)
         XCTAssertEqual(eventDataManager.numberOfTracksBacking, 0)

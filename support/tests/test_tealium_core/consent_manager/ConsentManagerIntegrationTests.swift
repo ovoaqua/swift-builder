@@ -53,7 +53,7 @@ class ConsentManagerTests: XCTestCase {
         }
         return nil
     }
-    
+
     // note: in some cases this test fails due to slow clearing of persistent data
     // to get around this, test has been renamed to make sure it runs first (always run in alphabetical order)
     // thoroughly tested, and comfortable that this is an issue with UserDefaults clearing slowly under test on the simulator
@@ -147,7 +147,7 @@ class ConsentManagerTests: XCTestCase {
             }
         }
     }
-    
+
     func testGetTrackingStatusWhenConsented() {
         consentManager = TealiumConsentManager(config: config, delegate: tealHelper, diskStorage: ConsentMockDiskStorage()) {
             self.consentManager?.setUserConsentCategories([.analytics, .cookieMatch])
@@ -177,7 +177,7 @@ class ConsentManagerTests: XCTestCase {
         XCTAssertTrue(consentManager?.getUserConsentStatus() == .unknown, "Consent Manager Test: \(#function) - unexpected status found")
         XCTAssertTrue(consentManager?.getUserConsentCategories() == nil, "Consent Manager Test: \(#function) - unexpected categories found")
     }
-    
+
     func testShouldDropTrackingCall() {
         let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
         config.enableConsentManager = true
@@ -232,27 +232,27 @@ class ConsentManagerTests: XCTestCase {
         consentManager?.setUserConsentCategories([.analytics])
         XCTAssertTrue(consentManager?.getUserConsentStatus() == .consented)
     }
-    
+
     func testConsentStatusIsUknownIfNoStatusSet() {
         XCTAssertTrue(consentManager?.getUserConsentStatus() == .unknown)
     }
-    
+
     func testGetUserConsentCategoriesOnceSet() {
         consentManager?.setUserConsentCategories([.analytics, .bigData])
         XCTAssertTrue(consentManager?.getUserConsentCategories() == [.analytics, .bigData])
     }
-    
+
     func testConsentCategoriesEqual() {
         var lhs: [TealiumConsentCategories] = [.analytics, .bigData]
         let rhs: [TealiumConsentCategories] = [.analytics, .bigData]
         var result = consentManager?.consentCategoriesEqual(lhs, rhs)
         XCTAssertTrue(result!)
-        
+
         lhs = [.affiliates, .email]
         result = consentManager?.consentCategoriesEqual(lhs, rhs)
         XCTAssertFalse(result!)
     }
-    
+
     func testSetUserConsentPreferences() {
         let expectedUserConsentPreferences = TealiumConsentUserPreferences(consentStatus: .consented, consentCategories: [.analytics, .engagement])
         consentManager?.setConsentUserPreferences(expectedUserConsentPreferences)
@@ -263,7 +263,7 @@ class ConsentManagerTests: XCTestCase {
 
 extension ConsentManagerTests: TealiumModuleDelegate {
     func requestReleaseQueue(reason: String) { }
-    
+
     func requestTrack(_ track: TealiumTrackRequest) {
         trackData = track.trackDictionary
         if trackData?["tealium_event"] as? String == TealiumKey.updateConsentCookieEventName {
@@ -277,6 +277,7 @@ extension ConsentManagerTests: TealiumModuleDelegate {
             if allTestsFinished {
                 testtrackUserConsentPreferencesExpectation.fulfill()
             }
+        }
     }
 
 }

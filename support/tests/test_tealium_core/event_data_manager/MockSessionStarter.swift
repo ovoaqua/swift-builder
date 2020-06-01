@@ -23,6 +23,9 @@ class MockTealiumSessionStarter: SessionStarterProtocol {
 
     func sessionRequest(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void) {
         sessionRequestCount += 1
+        let url = URL(string: sessionURL)!
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
+        completion(.success(urlResponse))
     }
 
 }
