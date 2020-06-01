@@ -51,18 +51,6 @@ class SessionManagerTests: XCTestCase {
         eventDataManager.numberOfTracks = 0
         XCTAssertEqual(mockSessionStarter.sessionRequestCount, 1)
         XCTAssertFalse(eventDataManager.shouldTriggerSessionRequest)
-        XCTAssertEqual(eventDataManager.numberOfTracksBacking, 0)
-        XCTAssertNil(eventDataManager.lastTrackDate)
-
-    }
-
-    func testTwoTracksGreaterThanSecondsBetweenTracksSetsNumberOfTracksBackingToZero() {
-        eventDataManager.config.sessionHandlingEnabled = true
-        eventDataManager.lastTrackDate = timeTraveler.travel(by: 40)
-        eventDataManager.numberOfTracks += 1
-        XCTAssertEqual(mockSessionStarter.sessionRequestCount, 0)
-        XCTAssertFalse(eventDataManager.shouldTriggerSessionRequest)
-        XCTAssertEqual(eventDataManager.numberOfTracksBacking, 0)
     }
 
     func testSessionIdReturnsFromPersistentStorage() {

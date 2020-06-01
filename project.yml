@@ -6,77 +6,6 @@ configs:
   Release: release
   Debug: debug  
 targets:
-  TealiumAppData:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/appdata
-        buildPhase: sources
-      - path: tealium/appdata
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumAppData-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: appdata
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: appdata DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumAppData-Info.plist
-  TealiumAppDataTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_appdata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""           
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumAppData
-  TealiumAppDataTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_appdata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources 
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""                
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumAppData
-  TealiumAppDataTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_appdata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""                 
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumAppData
   TealiumAttribution:
     type: framework
     platform: iOS
@@ -159,9 +88,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/collect
+      - path: tealium/Dispatchers/collect
         buildPhase: sources
-      - path: tealium/collect
+      - path: tealium/Dispatchers/collect
         buildPhase: headers
     settings:
       base:
@@ -230,9 +159,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/connectivity
+      - path: tealium/Core/Modules/connectivity
         buildPhase: sources
-      - path: tealium/connectivity
+      - path: tealium/Core/Modules/connectivity
         buildPhase: headers
     settings:
       base:
@@ -256,7 +185,7 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: support/tests/test_tealium_connectivity
+      - path: support/tests/test_tealium_core/connectivity
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
@@ -266,12 +195,11 @@ targets:
         DEVELOPMENT_TEAM: ""         
     dependencies:
       - target: TealiumCore
-      - target: TealiumConnectivity
   TealiumConnectivityTests-macOS:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: support/tests/test_tealium_connectivity
+      - path: support/tests/test_tealium_core/connectivity
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
@@ -280,13 +208,12 @@ targets:
         CODE_SIGN_STYLE: "Manual"
         DEVELOPMENT_TEAM: ""         
     dependencies:
-      - target: TealiumCore
-      - target: TealiumConnectivity
+      - target: TealiumCorey
   TealiumConnectivityTests-tvOS:
     type: bundle.unit-test
     platform: tvOS
     sources:
-      - path: support/tests/test_tealium_connectivity
+      - path: support/tests/test_tealium_core/connectivity
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
@@ -296,86 +223,14 @@ targets:
         DEVELOPMENT_TEAM: ""         
     dependencies:
       - target: TealiumCore
-      - target: TealiumConnectivity
-  TealiumConsentManager:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/consentmanager
-        buildPhase: sources
-      - path: tealium/consentmanager
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumConsentManager-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: consentmanager
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: consentmanager DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumConsentManager-Info.plist
-  TealiumConsentManagerTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_consentmanager
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumConsentManager
-  TealiumConsentManagerTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_consentmanager
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumConsentManager
-  TealiumConsentManagerTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_consentmanager
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumConsentManager
   TealiumCore:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/core
+      - path: tealium/Core
         buildPhase: sources
-      - path: tealium/core
-        buildPhase: headers
+      - path: tealium/Core
+        buildPhase: headers       
     settings:
       base:
           SDKROOT: ""
@@ -396,22 +251,21 @@ targets:
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
+      - path: support/tests/test_tealium_core/large-event-data.json
+        buildPhase: resources        
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
         DEVELOPMENT_TEAM: ""     
     dependencies:
+      - target: TealiumAttribution
+      - target: TealiumAutotracking
       - target: TealiumCore
       - target: TealiumCollect
-      - target: TealiumAppData
-      - target: TealiumDeviceData
-      - target: TealiumConsentManager
-      - target: TealiumDelegate
-      - target: TealiumDeviceData
-      - target: TealiumLogger
+      - target: TealiumTagManagement
+      - target: TealiumLifecycle
+      - target: TealiumLocation
       - target: TealiumVisitorService
-      - target: TealiumPersistentData
-      - target: TealiumVolatileData
   TealiumCoreTests-macOS:
     type: bundle.unit-test
     platform: macOS
@@ -420,6 +274,8 @@ targets:
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
+      - path: support/tests/test_tealium_core/large-event-data.json
+        buildPhase: resources        
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
@@ -427,15 +283,8 @@ targets:
     dependencies:
       - target: TealiumCore
       - target: TealiumCollect
-      - target: TealiumAppData
-      - target: TealiumDeviceData
-      - target: TealiumConsentManager
-      - target: TealiumDelegate
-      - target: TealiumDeviceData
-      - target: TealiumLogger
+      - target: TealiumLifecycle
       - target: TealiumVisitorService
-      - target: TealiumPersistentData
-      - target: TealiumVolatileData
   TealiumCoreTests-tvOS:
     type: bundle.unit-test
     platform: tvOS
@@ -444,29 +293,25 @@ targets:
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
+      - path: support/tests/test_tealium_core/large-event-data.json
+        buildPhase: resources            
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
         DEVELOPMENT_TEAM: ""          
     dependencies:
+      - target: TealiumAutotracking
       - target: TealiumCore
       - target: TealiumCollect
-      - target: TealiumAppData
-      - target: TealiumDeviceData
-      - target: TealiumConsentManager
-      - target: TealiumDelegate
-      - target: TealiumDeviceData
-      - target: TealiumLogger
-      - target: TealiumVisitorService
-      - target: TealiumPersistentData
-      - target: TealiumVolatileData      
+      - target: TealiumLifecycle
+      - target: TealiumVisitorService     
   TealiumCrash:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/crash
+      - path: tealium/Collectors/crash
         buildPhase: sources
-      - path: tealium/crash
+      - path: tealium/Collectors/crash
         buildPhase: headers
     settings:
       base:
@@ -482,9 +327,6 @@ targets:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash DEBUG
     dependencies:
       - target: TealiumCore
-      - target: TealiumAppData
-      - target: TealiumDeviceData
-      - target: TealiumVolatileData
       - carthage: TealiumCrashReporteriOS
     info:
       path: builder/TealiumCrash-Info.plist
@@ -504,234 +346,15 @@ targets:
         CODE_SIGN_STYLE: "Manual"
         DEVELOPMENT_TEAM: ""         
     dependencies:
-      - target: TealiumDeviceData
-        link: false
-      - target: TealiumAppData
-        link: false
-      - target: TealiumVolatileData
-        link: false
       - target: TealiumCrash
         link: false
-  TealiumDelegate:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/delegate
-        buildPhase: sources
-      - path: tealium/delegate
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumDelegate-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: delegate
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: delegate DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumDelegate-Info.plist
-  TealiumDelegateTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_delegate
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDelegate
-  TealiumDelegateTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_delegate
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDelegate
-  TealiumDelegateTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_delegate
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDelegate
-  TealiumDeviceData:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/devicedata
-        buildPhase: sources
-      - path: tealium/devicedata
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumDeviceData-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: devicedata
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: devicedata DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumDeviceData-Info.plist
-  TealiumDeviceDataTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_devicedata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDeviceData
-  TealiumDeviceDataTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_devicedata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDeviceData
-  TealiumDeviceDataTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_devicedata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDeviceData
-  TealiumDispatchQueue:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/dispatchqueue
-        buildPhase: sources
-      - path: tealium/dispatchqueue
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumDispatchQueue-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: dispatchqueue
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: dispatchqueue DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumDispatchQueue-Info.plist
-  TealiumDispatchQueueTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_dispatchqueue
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDispatchQueue
-  TealiumDispatchQueueTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_dispatchqueue
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDispatchQueue
-  TealiumDispatchQueueTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_dispatchqueue
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumDispatchQueue
   TealiumLifecycle:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/lifecycle
+      - path: tealium/Collectors/lifecycle
         buildPhase: sources
-      - path: tealium/lifecycle
+      - path: tealium/Collectors/lifecycle
         buildPhase: headers        
     settings:
       base:
@@ -812,9 +435,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/location
+      - path: tealium/Collectors/location
         buildPhase: sources
-      - path: tealium/location
+      - path: tealium/Collectors/location
         buildPhase: headers
     settings:
       base:
@@ -854,155 +477,13 @@ targets:
     dependencies:
       - target: TealiumCore
       - target: TealiumLocation
-  TealiumLogger:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/logger
-        buildPhase: sources
-      - path: tealium/logger
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumLogger-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: logger
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: logger DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumLogger-Info.plist
-  TealiumLoggerTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_logger
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumLogger
-  TealiumLoggerTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_logger
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumLogger
-  TealiumLoggerTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_logger
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumLogger
-  TealiumPersistentData:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/persistentdata
-        buildPhase: sources
-      - path: tealium/persistentdata
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumPersistentData-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: persistentdata
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: persistentdata DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumPersistentData-Info.plist
-  TealiumPersistentDataTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_persistentdata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumPersistentData
-  TealiumPersistentDataTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_persistentdata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumPersistentData
-  TealiumPersistentDataTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_persistentdata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumPersistentData
   TealiumRemoteCommands:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/remotecommands
+      - path: tealium/Dispatcher/remotecommands
         buildPhase: sources
-      - path: tealium/remotecommands
+      - path: tealium/Dispatcher/remotecommands
         buildPhase: headers
     settings:
       base:
@@ -1169,85 +650,8 @@ targets:
     dependencies:
       - target: TealiumCore
       - target: TealiumVisitorService
-  TealiumVolatileData:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/volatiledata
-        buildPhase: sources
-      - path: tealium/volatiledata
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumVolatileData-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: volatiledata
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          TVOS_DEPLOYMENT_TARGET: 9.0
-          WATCHOS_DEPLOYMENT_TARGET: 3.0
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          MACOSX_DEPLOYMENT_TARGET: 10.11
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: volatiledata DEBUG
-    dependencies:
-      - target: TealiumCore
-    info:
-      path: builder/TealiumVolatileData-Info.plist
-  TealiumVolatileDataTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: support/tests/test_tealium_volatiledata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumVolatileData
-  TealiumVolatileDataTests-macOS:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: support/tests/test_tealium_volatiledata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumVolatileData
-  TealiumVolatileDataTests-tvOS:
-    type: bundle.unit-test
-    platform: tvOS
-    sources:
-      - path: support/tests/test_tealium_volatiledata
-        buildPhase: sources
-      - path: support/tests/TestTealiumHelper.swift
-        buildPhase: sources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCore
-      - target: TealiumVolatileData
 schemes:
   # BUILD SCHEMES
-  TealiumAppData:
-    build:
-      targets:
-        TealiumAppData: all
-    run:
-      config: Release
   TealiumAttribution:
     build:
       targets:
@@ -1266,18 +670,6 @@ schemes:
         TealiumCollect: all
     run:
       config: Release
-  TealiumConnectivity:
-    build:
-      targets:
-        TealiumConnectivity: all
-    run:
-      config: Release
-  TealiumConsentManager:
-    build:
-      targets:
-        TealiumConsentManager: all
-    run:
-      config: Release
   TealiumCore:
     build:
       targets:
@@ -1290,24 +682,6 @@ schemes:
         TealiumCrash: all
     run:
       config: Release                                                
-  TealiumDelegate:
-    build:
-      targets:
-        TealiumDelegate: all
-    run:
-      config: Release
-  TealiumDeviceData:
-    build:
-      targets:
-        TealiumDeviceData: all
-    run:
-      config: Release                                    
-  TealiumDispatchQueue:
-    build:
-      targets:
-        TealiumDispatchQueue: all
-    run:
-      config: Release
   TealiumLifecycle:
     build:
       targets:
@@ -1318,18 +692,6 @@ schemes:
     build:
       targets:
         TealiumLocation: all
-    run:
-      config: Release
-  TealiumLogger:
-    build:
-      targets:
-        TealiumLogger: all
-    run:
-      config: Release                                    
-  TealiumPersistentData:
-    build:
-      targets:
-        TealiumPersistentData: all
     run:
       config: Release
   TealiumRemoteCommands:
@@ -1350,43 +712,7 @@ schemes:
         TealiumVisitorService: all
     run:
       config: Release                                    
-  TealiumVolatileData:
-    build:
-      targets:
-        TealiumVolatileData: all
-    run:
-      config: Release 
   # TEST SCHEMES                     
-  TealiumAppDataTests-iOS:
-    build:
-      targets:
-        TealiumAppDataTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumAppDataTests-iOS
-        - name: TealiumAppDataTests-iOS
-          parallelizable: true
-  TealiumAppDataTests-macOS:
-    build:
-      targets:
-        TealiumAppDataTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumAppDataTests-macOS
-        - name: TealiumAppDataTests-macOS
-          parallelizable: true
-  TealiumAppDataTests-tvOS:
-    build:
-      targets:
-        TealiumAppDataTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumAppDataTests-tvOS
-        - name: TealiumAppDataTests-tvOS
-          parallelizable: true
   TealiumAttributionTests-iOS:
     build:
       targets:
@@ -1467,36 +793,6 @@ schemes:
         - TealiumConnectivityTests-tvOS
         - name: TealiumConnectivityTests-tvOS
           parallelizable: true
-  TealiumConsentManagerTests-iOS:
-    build:
-      targets:
-        TealiumConsentManagerTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumConsentManagerTests-iOS
-        - name: TealiumConsentManagerTests-iOS
-          parallelizable: true
-  TealiumConsentManagerTests-macOS:
-    build:
-      targets:
-        TealiumConsentManagerTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumConsentManagerTests-macOS
-        - name: TealiumConsentManagerTests-macOS
-          parallelizable: true
-  TealiumConsentManagerTests-tvOS:
-    build:
-      targets:
-        TealiumConsentManagerTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumConsentManagerTests-tvOS
-        - name: TealiumConsentManagerTests-tvOS
-          parallelizable: true
   TealiumCoreTests-iOS:
     build:
       targets:
@@ -1537,96 +833,6 @@ schemes:
         - TealiumCrashTests-iOS
         - name: TealiumCrashTests-iOS
           parallelizable: true
-  TealiumDelegateTests-iOS:
-    build:
-      targets:
-        TealiumDelegateTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDelegateTests-iOS
-        - name: TealiumDelegateTests-iOS
-          parallelizable: true
-  TealiumDelegateTests-macOS:
-    build:
-      targets:
-        TealiumDelegateTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDelegateTests-macOS
-        - name: TealiumDelegateTests-macOS
-          parallelizable: true
-  TealiumDelegateTests-tvOS:
-    build:
-      targets:
-        TealiumDelegateTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDelegateTests-tvOS
-        - name: TealiumDelegateTests-tvOS
-          parallelizable: true
-  TealiumDeviceDataTests-iOS:
-    build:
-      targets:
-        TealiumDeviceDataTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDeviceDataTests-iOS
-        - name: TealiumDeviceDataTests-iOS
-          parallelizable: true
-  TealiumDeviceDataTests-tvOS:
-    build:
-      targets:
-        TealiumDeviceDataTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDeviceDataTests-tvOS
-        - name: TealiumDeviceDataTests-tvOS
-          parallelizable: true
-  TealiumDeviceDataTests-macOS:
-    build:
-      targets:
-        TealiumDeviceDataTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDeviceDataTests-macOS
-        - name: TealiumDeviceDataTests-macOS
-          parallelizable: true
-  TealiumDispatchQueueTests-iOS:
-    build:
-      targets:
-        TealiumDispatchQueueTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDispatchQueueTests-iOS
-        - name: TealiumDispatchQueueTests-iOS
-          parallelizable: true
-  TealiumDispatchQueueTests-tvOS:
-    build:
-      targets:
-        TealiumDispatchQueueTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDispatchQueueTests-tvOS
-        - name: TealiumDispatchQueueTests-tvOS
-          parallelizable: true
-  TealiumDispatchQueueTests-macOS:
-    build:
-      targets:
-        TealiumDispatchQueueTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumDispatchQueueTests-macOS
-        - name: TealiumDispatchQueueTests-macOS
-          parallelizable: true
   TealiumLifecycleTests-iOS:
     build:
       targets:
@@ -1666,66 +872,6 @@ schemes:
       targets:
         - TealiumLocationTests-iOS
         - name: TealiumLocationTests-iOS
-          parallelizable: true
-  TealiumLoggerTests-iOS:
-    build:
-      targets:
-        TealiumLoggerTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumLoggerTests-iOS
-        - name: TealiumLoggerTests-iOS
-          parallelizable: true
-  TealiumLoggerTests-tvOS:
-    build:
-      targets:
-        TealiumLoggerTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumLoggerTests-tvOS
-        - name: TealiumLoggerTests-tvOS
-          parallelizable: true
-  TealiumLoggerTests-macOS:
-    build:
-      targets:
-        TealiumLoggerTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumLoggerTests-macOS
-        - name: TealiumLoggerTests-macOS
-          parallelizable: true
-  TealiumPersistentDataTests-iOS:
-    build:
-      targets:
-        TealiumPersistentDataTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumPersistentDataTests-iOS
-        - name: TealiumPersistentDataTests-iOS
-          parallelizable: true
-  TealiumPersistentDataTests-macOS:
-    build:
-      targets:
-        TealiumPersistentDataTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumPersistentDataTests-macOS
-        - name: TealiumPersistentDataTests-macOS
-          parallelizable: true
-  TealiumPersistentDataTests-tvOS:
-    build:
-      targets:
-        TealiumPersistentDataTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumPersistentDataTests-tvOS
-        - name: TealiumPersistentDataTests-tvOS
           parallelizable: true
   TealiumRemoteCommandsTests-iOS:
     build:
@@ -1776,34 +922,3 @@ schemes:
       targets:
         - TealiumVisitorServiceTests-tvOS
         - name: TealiumVisitorServiceTests-tvOS
-          parallelizable: true
-  TealiumVolatileDataTests-iOS:
-    build:
-      targets:
-        TealiumVolatileDataTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumVolatileDataTests-iOS
-        - name: TealiumVolatileDataTests-iOS
-          parallelizable: true
-  TealiumVolatileDataTests-macOS:
-    build:
-      targets:
-        TealiumVolatileDataTests-macOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumVolatileDataTests-macOS
-        - name: TealiumVolatileDataTests-macOS
-          parallelizable: true
-  TealiumVolatileDataTests-tvOS:
-    build:
-      targets:
-        TealiumVolatileDataTests-tvOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumVolatileDataTests-tvOS
-        - name: TealiumVolatileData
-          parallelizable: true

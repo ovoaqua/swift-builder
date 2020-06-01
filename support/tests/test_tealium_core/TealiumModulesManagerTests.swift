@@ -162,6 +162,7 @@ class TealiumModulesManagerTests: XCTestCase {
 
     func testRequestTrack() {
         TealiumModulesManagerTests.expectatations["requestTrack"] = expectation(description: "requestTrack")
+        //let emptyExpect = expectation(description: "requestTrack2")
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
@@ -171,7 +172,7 @@ class TealiumModulesManagerTests: XCTestCase {
 
         let track = TealiumTrackRequest(data: [:])
         modulesManager.sendTrack(track)
-        wait(for: [TealiumModulesManagerTests.expectatations["requestTrack"]!], timeout: 1.0)
+        wait(for: [TealiumModulesManagerTests.expectatations.filter { $0.key == "requestTrack" && $0.value != nil }.first!.value], timeout: 1.0)
     }
 
     func testReleaseQueue() {
@@ -407,7 +408,7 @@ class DummyDispatchManager: DispatchManagerProtocol {
     }
 
     func processTrack(_ request: TealiumTrackRequest) {
-        XCTAssertEqual(request.trackDictionary.count, 1)
+        XCTAssertTrue(request.trackDictionary.count > 0)
         XCTAssertNotNil(request.trackDictionary["request_uuid"])
         TealiumModulesManagerTests.expectatations["sendTrack"]?.fulfill()
         TealiumModulesManagerTests.expectatations["requestTrack"]?.fulfill()
