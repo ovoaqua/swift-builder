@@ -12,8 +12,9 @@ import TealiumCore
 #endif
 
 public extension Tealium {
+    
     /// Returns an instance of TealiumRemoteCommands to allow new commands to be registered.
-    func remoteCommands() -> TealiumRemoteCommands? {
+    func remoteCommands() -> TealiumRemoteCommandsManagerProtocol? {
         (zz_internal_modulesManager?.modules.first {
                 type(of: $0) == TealiumRemoteCommandsModule.self
             } as? TealiumRemoteCommandsModule)?.remoteCommands
@@ -74,7 +75,7 @@ public extension TealiumConfig {
 }
 
 extension Array where Element: TealiumRemoteCommand {
-
+    
     /// Retrieves a command for a specific command ID
     ///
     /// - Parameter commandId: `String`
@@ -82,7 +83,7 @@ extension Array where Element: TealiumRemoteCommand {
     func commandForId(_ commandId: String) -> TealiumRemoteCommand? {
         return self.first(where: { $0.commandId == commandId })
     }
-
+    
     /// Removes a command for a specific command ID
     ///
     /// - Parameter commandId: `String`
@@ -94,8 +95,27 @@ extension Array where Element: TealiumRemoteCommand {
 
 }
 
-public extension URL {
+public extension RemoteCommandArray {
+    subscript(_ id: String) -> TealiumRemoteCommandProtocol? {
+        return self.first {
+            $0.commandId == id
+        }
+    }
+    
+    
+    /// Removes a command by id from the RemoteCommandArray
+    /// - Parameter id: Parameter id: `String`
+    mutating func removeCommand(_ id: String) {
+        var copy = self
+        for (index, command) in copy.reversed().enumerated() where command.commandId == id {
+            copy.remove(at: index)
+        }
+        self = copy
+    }
+    
+}
 
+public extension URL {
     var queryItems: [String: Any] {
         var params = [String: Any]()
         return URLComponents(url: self, resolvingAgainstBaseURL: false)?
@@ -108,10 +128,8 @@ public extension URL {
 }
 
 extension URLRequest {
-
-    func asDictionary() -> [String: Any] {
+    var dictionary: [String: Any] {
         var result = [String: Any]()
-
         result["allowsCellularAccess"] = self.allowsCellularAccess ? "true" : "false"
         result["allHTTPHeaderFields"] = self.allHTTPHeaderFields
         result["cachePolicy"] = self.cachePolicy
@@ -120,11 +138,9 @@ extension URLRequest {
         result["httpMethod"] = self.httpMethod
         result["httpShouldHandleCookies"] = self.httpShouldHandleCookies
         result["httpShouldUsePipelining"] = self.httpShouldUsePipelining
-
         return result
     }
-
-    mutating func assignHeadersFrom(dictionary: [String: Any]) {
+    mutating func headersFrom(dictionary: [String: Any]) {
         let sortedKeys = Array(dictionary.keys).sorted(by: <)
         for key in sortedKeys {
             guard let value = dictionary[key] as? String else {
@@ -137,11 +153,11 @@ extension URLRequest {
 
 extension URLQueryItem {
 
-    var dictionaryRepresentation: [String: Any]? {
-        if let value = value {
-            return [name: value]
-        }
-        return nil
-    }
+//    var dictionaryRepresentation: [String: Any]? {
+//        if let value = value {
+//            return [name: value]
+//        }
+//        return nil
+//    }
 }
 #endif

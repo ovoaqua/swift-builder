@@ -5,57 +5,55 @@
 //  Created by Jason Koo on 3/13/17.
 //  Copyright © 2017 Tealium, Inc. All rights reserved.
 //
-//  See https://github.com/Tealium/tagbridge for spec reference.
+
 #if os(iOS)
 import Foundation
 #if remotecommands
 import TealiumCore
 #endif
 
-public class TealiumRemoteCommandsModule: TealiumModule {
-
-    public var remoteCommands: TealiumRemoteCommands?
+public class TealiumRemoteCommandsModule: Dispatcher {
+    
+    public var moduleId: String = "Remote Commands"
+    public var config: TealiumConfig
+    public var isReady: Bool = false
+    public var remoteCommands: TealiumRemoteCommandsManagerProtocol?
     var observer: NSObjectProtocol?
     var reservedCommandsAdded = false
 
-    override public class func moduleConfig() -> TealiumModuleConfig {
-        return TealiumModuleConfig(name: TealiumRemoteCommandsKey.moduleName,
-                                   priority: 1200,
-                                   build: 3,
-                                   enabled: true)
+    
+    /// Provided for unit testing￼.
+    ///
+    /// - Parameter remoteCommands: Class instance conforming to `TealiumRemoteCommandsManagerProtocol`
+    convenience init (config: TealiumConfig,
+                      delegate: TealiumModuleDelegate,
+                      remoteCommands: TealiumRemoteCommandsManagerProtocol? = nil) {
+        self.init(config: config, delegate: delegate){ result in }
+        self.remoteCommands = remoteCommands
     }
-
-    /// Enables the module.
-    ///￼
-    /// - Parameter request: `TealiumEnableRequest` from which to enable the module
-    override public func enable(_ request: TealiumEnableRequest) {
-        isEnabled = true
-        let config = request.config
-        remoteCommands = TealiumRemoteCommands()
-        remoteCommands?.enable()
+    
+    public required init(config: TealiumConfig, delegate: TealiumModuleDelegate, completion: ModuleCompletion?) {
+        self.config = config
+        remoteCommands = remoteCommands ?? TealiumRemoteCommandsManager()
         updateReservedCommands(config: config)
-        self.addCommandsFromConfig(config)
+        addCommandsFromConfig(config)
         enableNotifications()
-        if !request.bypassDidFinish {
-            didFinish(request)
-        }
     }
 
-    override public func updateConfig(_ request: TealiumUpdateConfigRequest) {
+    public func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
         if newConfig != self.config {
             self.config = newConfig
             let existingCommands = self.remoteCommands?.commands
             if let newCommands = newConfig.remoteCommands, newCommands.count > 0 {
                 existingCommands?.forEach {
-                    newConfig.addRemoteCommand($0)
+                    guard let remoteCommand = $0 as? TealiumRemoteCommand else {
+                        return
+                    }
+                    newConfig.addRemoteCommand(remoteCommand)
                 }
-                var enableRequest = TealiumEnableRequest(config: newConfig, enableCompletion: nil)
-                enableRequest.bypassDidFinish = true
-                enable(enableRequest)
             }
         }
-        didFinish(request)
     }
 
     /// Allows Remote Commands to be added from the TealiumConfig object.
@@ -94,28 +92,17 @@ public class TealiumRemoteCommandsModule: TealiumModule {
         }
 
         if shouldDisable == true {
-            remoteCommands?.remove(commandWithId: TealiumRemoteHTTPCommandKey.commandId)
-        } else if remoteCommands?.commands.commandForId(TealiumRemoteHTTPCommandKey.commandId) == nil {
-            let httpCommand = TealiumRemoteHTTPCommand.httpCommand()
+            remoteCommands?.remove(commandWithId: TealiumRemoteCommandsKey.commandId)
+        } else if remoteCommands?.commands[TealiumRemoteCommandsKey.commandId] == nil {
+            let httpCommand = TealiumRemoteHTTPCommand.create()
             remoteCommands?.add(httpCommand)
         }
         reservedCommandsAdded = true
         // No further processing required - HTTP remote command already up.
     }
-
-    /// Disables the Remote Commands module.
-    ///￼
-    /// - Parameter request: `TealiumDisableRequest` indicating that the module should be disabled
-    override public func disable(_ request: TealiumDisableRequest) {
-        isEnabled = false
-        remoteCommands?.disable()
-        remoteCommands = nil
-        reservedCommandsAdded = false
-        if let observer = self.observer {
-            NotificationCenter.default.removeObserver(observer)
-            self.observer = nil
-        }
-        didFinish(request)
+    
+    public func dynamicTrack(_ request: TealiumRequest,
+                             completion: ModuleCompletion?) {
     }
 
     deinit {

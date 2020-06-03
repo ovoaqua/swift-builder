@@ -13,6 +13,20 @@ enum TealiumRemoteCommandsKey {
     static let disable = "disable_remote_commands"
     static let disableHTTP = "disable_remote_command_http"
     static let allCommands = "remote_commands"
+    static let authenticate = "authenticate"
+    static let headers = "headers"
+    static let method = "method"
+    static let parameters = "parameters"
+    static let url = "url"
+    static let body = "body"
+    static let payload = "payload"
+    static let config = "config"
+    static let request = "request"
+    static let username = "username"
+    static let password = "password"
+    static let responseId = "response_id"
+    static let commandId = "_http"
+    static let jsCommand = "js"
 }
 
 enum TealiumRemoteCommandStatusCode: Int {
@@ -23,21 +37,12 @@ enum TealiumRemoteCommandStatusCode: Int {
     case failure = 404
 }
 
-enum TealiumRemoteHTTPCommandKey {
-    static let commandId = "_http"
-    static let jsCommand = "js"
-}
-
-enum TealiumRemoteCommandsHTTPKey {
-    static let authenticate = "authenticate"
-    static let body = "body"
-    static let headers = "headers"
-    static let method = "method"
-    static let parameters = "parameters"
-    static let password = "password"
-    static let responseId = "response_id"
-    static let url = "url"
-    static let username = "username"
+public enum TealiumRemoteCommandsError: Error {
+    case invalidScheme
+    case noCommandIdFound
+    case noCommandForCommandIdFound
+    case remoteCommandsDisabled
+    case requestNotProperlyFormatted
 }
 
 enum TealiumRemoteCommandResponseError: Error {

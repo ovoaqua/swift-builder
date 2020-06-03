@@ -14,7 +14,7 @@ public class ModulesManager {
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
     var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule",/* "TealiumAutotracking.TealiumAutotrackingModule",*/ "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule", "TealiumLifecycle.TealiumLifecycleModule"]
-    var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule"]
+    var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule","TealiumRemoteCommands.TealiumRemoteCommandsModule"]
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
         willSet {

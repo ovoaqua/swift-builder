@@ -4,35 +4,33 @@
 //
 //  Created by Jonathan Wong on 1/31/18.
 //  Copyright © 2018 Tealium, Inc. All rights reserved.
-//
+
 #if os(iOS)
 import Foundation
 #if remotecommands
 import TealiumCore
 #endif
 
-// Not sure if needed
-protocol TealiumRemoteCommandsProtocol {
-    
-}
+public typealias RemoteCommandArray = [TealiumRemoteCommandProtocol]
 
 /// Manages instances of TealiumRemoteCommand
-public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsProtocol {
-
+public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManagerProtocol {
+    
     weak var queue = TealiumQueues.backgroundSerialQueue
-    var commands = [TealiumRemoteCommand]()
+    public var commands = RemoteCommandArray()
     var isEnabled = false
     static var pendingResponses = Atomic<[String: Bool]>(value: [String: Bool]())
 
-    public init() {
+    public override init() {
         isEnabled = true
     }
     
     /// Adds a remote command for later execution.
     ///
     /// - Parameter remoteCommand: `TealiumRemoteCommand` to be added for later execution
-    public func add(_ remoteCommand: TealiumRemoteCommand) {
+    public func add(_ remoteCommand: TealiumRemoteCommandProtocol) {
         // NOTE: Multiple commands with the same command id are possible - OK
+        var remoteCommand = remoteCommand
         remoteCommand.delegate = self
         commands.append(remoteCommand)
     }
@@ -41,15 +39,16 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsProtoc
     ///
     /// - Parameter commandId: `String` containing the command ID to be removed
     public func remove(commandWithId: String) {
-        commands.removeCommandForId(commandWithId)
+        commands.removeCommand(commandWithId)
     }
 
     /// Disables Remote Commands and removes all previously-added Remote Commands so they can no longer be executed.
-    func disable() {
+    public func disable() {
         commands.removeAll()
         isEnabled = false
     }
 
+    //❓Can we remove this? not being used
     /// Trigger an associated remote command from a string representation of a url request. Function
     ///     will presume the string is escaped, if not, will attempt to escape string
     ///     with .urlQueryAllowed. NOTE: using .urlHostAllowed for escaping will not work.
@@ -96,7 +95,7 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsProtoc
             return TealiumRemoteCommandsError.noCommandIdFound
         }
 
-        guard let command = commands.commandForId(commandId) else {
+        guard let command = commands[commandId] else {
             return TealiumRemoteCommandsError.noCommandForCommandIdFound
         }
 
@@ -109,7 +108,7 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsProtoc
             return nil
         }
 
-        if let responseId = response.responseId() {
+        if let responseId = response.responseId {
             TealiumRemoteCommandsManager.pendingResponses.value[responseId] = true
         }
         command.completeWith(response: response)
@@ -126,13 +125,13 @@ extension TealiumRemoteCommandsManager: TealiumRemoteCommandDelegate {
     ///     - command: `TealiumRemoteCommand` to be executed
     ///     - response: `TealiumRemoteCommandResponse` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
     ///      it must set the "hasCustomCompletionHandler" flag, otherwise the completion notification will be sent automatically
-    func tealiumRemoteCommandRequestsExecution(_ command: TealiumRemoteCommand,
-                                               response: TealiumRemoteCommandResponse) {
+    public func tealiumRemoteCommandRequestsExecution(_ command: TealiumRemoteCommandProtocol,
+                                               response: TealiumRemoteCommandResponseProtocol) {
         self.queue?.async {
             command.remoteCommandCompletion(response)
             // this will send the completion notification, if it wasn't explictly handled by the command
             if !response.hasCustomCompletionHandler {
-                TealiumRemoteCommand.sendCompletionNotification(for: command.commandId, response: response)
+                command.sendCompletionNotification(for: command.commandId, response: response)
             }
         }
     }

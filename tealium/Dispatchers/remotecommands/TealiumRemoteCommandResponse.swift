@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumRemoteCommandResponse: CustomStringConvertible {
+public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol, CustomStringConvertible {
 
     public var status: Int = TealiumRemoteCommandStatusCode.noContent.rawValue
     public var urlRequest: URLRequest
@@ -22,7 +22,7 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
 
     public var description: String {
         return """
-        <TealiumRemoteCommandResponse: config:\(config()),
+        <TealiumRemoteCommandResponse: config:\(config),
         status:\(status),
         payload:\(payload()),
         response: \(String(describing: urlResponse)),
@@ -50,13 +50,13 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     public init?(request: URLRequest) {
         self.urlRequest = request
 
-        guard let requestData = requestDataFrom(request: request) else {
+        guard let requestData = requestData(from: request) else {
             return nil
         }
-        guard configFrom(requestData: requestData) != nil else {
+        guard configData(from: requestData) != nil else {
             return nil
         }
-        guard payloadFrom(requestData: requestData) != nil else {
+        guard payload(from: requestData) != nil else {
             return nil
         }
     }
@@ -65,17 +65,17 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     ///￼
     /// - Parameter request: `URLRequest` containing valid data with which to form a RemoteCommandResponse
     /// - Returns: `[String: Any]?` containing key-value pairs to add to the RemoteCommandResponse
-    func requestDataFrom(request: URLRequest) -> [String: Any]? {
-        guard let paramData = TealiumRemoteCommandResponse.paramDataFrom(request) else {
+    func requestData(from request: URLRequest) -> [String: Any]? {
+        guard let parameters = parameters(from: request) else {
             return nil
         }
-        guard let requestDataString = paramData["request"] as? String else {
+        guard let requestString = parameters[TealiumRemoteCommandsKey.request] as? String else {
             return nil
         }
-        guard let requestData = TealiumRemoteCommandResponse.convertToDictionary(text: requestDataString) else {
+        guard let dictionary = dictionary(from: requestString) else {
             return nil
         }
-        return requestData
+        return dictionary
     }
 
     /// Extracts the config data from requestData.
@@ -83,8 +83,8 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     ///￼
     /// - Parameter requestData: `[String: Any]` representation of a Remote Command response coming from the WebView/Tag Management module
     /// - Returns: `[String: Any]?` containing config data for this Remote Command
-    public func configFrom(requestData: [String: Any]) -> [String: Any]? {
-        guard let config = requestData["config"] as? [String: Any] else {
+    public func configData(from requestData: [String: Any]) -> [String: Any]? {
+        guard let config = requestData[TealiumRemoteCommandsKey.config] as? [String: Any] else {
             return nil
         }
         return config
@@ -95,8 +95,8 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     ///￼
     /// - Parameter requestData: `[String: Any]` representation of a Remote Command response coming from the WebView/Tag Management module
     /// - Returns: `[String: Any]?` containing payload data for this Remote Command
-    public func payloadFrom(requestData: [String: Any]) -> [String: Any]? {
-        guard let payload = requestData["payload"] as? [String: Any] else {
+    public func payload(from requestData: [String: Any]) -> [String: Any]? {
+        guard let payload = requestData[TealiumRemoteCommandsKey.payload] as? [String: Any] else {
             return nil
         }
         return payload
@@ -105,8 +105,9 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     /// Gets the config dictionary from an already-instantiated Remote Command
     ///
     /// - Returns: `[String: Any] `containing the config for this Remote Command
-    public func config() -> [String: Any] {
-        guard let requestData = requestDataFrom(request: self.urlRequest), let config = configFrom(requestData: requestData) else {
+    public var config: [String: Any] {
+        guard let requestData = requestData(from: self.urlRequest),
+            let config = configData(from: requestData) else {
             // Return an empty dictionary in case of failure. Should not get here, as the initializer would have failed earlier on.
             return [String: Any]()
         }
@@ -117,19 +118,31 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     ///
     /// - Returns: `[String: Any]` containing the payload for this Remote Command
     public func payload() -> [String: Any] {
-        guard let requestData = requestDataFrom(request: self.urlRequest), let payload = payloadFrom(requestData: requestData) else {
+        guard let requestData = requestData(from: self.urlRequest),
+            let payload = payload(from: requestData) else {
             // Return an empty dictionary in case of failure. Should not get here, as the initializer would have failed earlier on.
             return [String: Any]()
         }
         return payload
     }
+    
+    /// Gets the Response ID from the original remote command invocation.
+    /// This is used to call back to the WebView/Tag Management module
+    ///
+    /// - Returns: `String?` containing the Response ID
+    public var responseId: String? {
+        guard let responseId = config[TealiumRemoteCommandsKey.responseId] as? String else {
+            return nil
+        }
+        return responseId
+    }
 
     /// Converts a JSON string into a dictionary
     ///￼
-    /// - Parameter text: `String` representing a JSON object
+    /// - Parameter string: `String` representing a JSON object
     /// - Returns: `[String: Any]?`
-    class func convertToDictionary(text: String) -> [String: Any]? {
-        guard let data = text.data(using: .utf8) else {
+    func dictionary(from string: String) -> [String: Any]? {
+        guard let data = string.data(using: .utf8) else {
             return nil
         }
         do {
@@ -143,36 +156,12 @@ public class TealiumRemoteCommandResponse: CustomStringConvertible {
     ///￼
     /// - Parameter request: `URLRequest`
     /// - Returns: `[String: Any]?` containing query parameters, if present.
-    class func paramDataFrom(_ request: URLRequest) -> [String: Any]? {
+    func parameters(from request: URLRequest) -> [String: Any]? {
         guard let url = request.url else {
             return nil
         }
 
         return url.queryItems
-    }
-}
-
-public extension TealiumRemoteCommandResponse {
-
-    /// Gets the Response ID from the original remote command invocation.
-    /// This is used to call back to the WebView/Tag Management module
-    ///
-    /// - Returns: `String?` containing the Response ID
-    func responseId() -> String? {
-        guard let responseId = config()["response_id"] as? String else {
-            return nil
-        }
-        return responseId
-    }
-
-    /// Gets the body field for an HTTP Remote Command
-    ///
-    /// - Returns: `String?` containing the body field for the Remote Command
-    func body() -> String? {
-        if let body = payload()["body"] as? String {
-            return body
-        }
-        return nil
     }
 }
 #endif

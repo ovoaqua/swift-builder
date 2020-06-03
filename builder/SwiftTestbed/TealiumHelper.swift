@@ -11,8 +11,8 @@ import TealiumCore
 import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
-//import TealiumRemoteCommands
-import TealiumVisitorService
+import TealiumRemoteCommands
+//import TealiumVisitorService
 import TealiumLifecycle
 import TealiumLocation
 
@@ -27,7 +27,7 @@ class TealiumHelper: NSObject {
 
     static let shared = TealiumHelper()
     var tealium: Tealium?
-    var enableHelperLogs = false
+    var enableHelperLogs = true
     var traceId = "04136"
     var logger: TealiumLoggerProtocol?
 
@@ -54,7 +54,7 @@ class TealiumHelper: NSObject {
         config.memoryReportingEnabled = true
         config.sessionHandlingEnabled = true
         config.diskStorageEnabled = true
-        config.visitorServiceDelegate = self
+        //config.visitorServiceDelegate = self
         config.remoteAPIEnabled = false
         config.shouldCollectTealiumData = true
         config.memoryReportingEnabled = true
@@ -62,10 +62,11 @@ class TealiumHelper: NSObject {
         logger = config.logger
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
-//        #if os(iOS)
+        #if os(iOS)
 //
-//        let remoteCommand = TealiumRemoteCommand(commandId: "hello",
+//        let remoteCommand = TealiumRemoteCommand(commandId: "display",
 //                                                 description: "test") { response in
+//                                                    var response = response
 //                                                    if TealiumHelper.shared.enableHelperLogs {
 //                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
 //                                                    }
@@ -75,7 +76,7 @@ class TealiumHelper: NSObject {
 //                                                    response.data = myJson
 //        }
 //        config.addRemoteCommand(remoteCommand)
-//        #endif
+        #endif
         
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self,
@@ -117,6 +118,22 @@ class TealiumHelper: NSObject {
         }
         tealium?.track(title: "hello")
         
+        #if os(iOS)
+        guard let remoteCommands = tealium?.remoteCommands() else {
+            return
+        }
+        let remoteCommand = TealiumRemoteCommand(commandId: "display", description: "Test") { response in
+            let payload = response.payload()
+            guard let hello = payload["hello"] as? String,
+                let key = payload["key"] as? String,
+                let tealium = payload["tealium"] as? String else {
+                print("Remote Command didnt work 👎 \(payload)")
+                return
+            }
+            print("Remote Command data: hello = \(hello), key = \(key), tealium = \(tealium) 🎉🎊")
+        }
+        remoteCommands.add(remoteCommand)
+        #endif
     }
     
     func resetConsentPreferences() {
@@ -178,16 +195,16 @@ class TealiumHelper: NSObject {
     }
 }
 
-extension TealiumHelper: TealiumVisitorServiceDelegate {
-    func didUpdate(visitorProfile: TealiumVisitorProfile) {
-        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
-            if self.enableHelperLogs {
-                print(string)
-            }
-        }
-    }
-
-}
+//extension TealiumHelper: TealiumVisitorServiceDelegate {
+//    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+//        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
+//            if self.enableHelperLogs {
+//                print(string)
+//            }
+//        }
+//    }
+//
+//}
 
 extension TealiumHelper: DispatchListener {
     public func willTrack(request: TealiumRequest) {
