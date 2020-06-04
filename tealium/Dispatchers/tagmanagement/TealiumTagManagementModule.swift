@@ -152,8 +152,12 @@ public class TealiumTagManagementModule: Dispatcher {
             guard let self = self else {
                 return
             }
-            if let userInfo = notification.userInfo, let jsCommand = userInfo[TealiumKey.jsCommand] as? String {
+            if let userInfo = notification.userInfo, var jsCommand = userInfo[TealiumKey.jsCommand] as? String {
                 // Webview instance will ensure this is processed on the main thread
+                jsCommand = jsCommand
+                                .replacingOccurrences(of: "\\", with: "")
+                                .replacingOccurrences(of: "\n", with: "")
+                                .trimmingCharacters(in: .whitespaces)
                 self.tagManagement?.evaluateJavascript(jsCommand, nil)
             }
         }

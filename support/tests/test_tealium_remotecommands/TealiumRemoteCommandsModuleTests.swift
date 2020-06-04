@@ -12,28 +12,20 @@ import XCTest
 
 class TealiumRemoteCommandsModuleTests: XCTestCase {
 
+    let helper = TestTealiumHelper()
+    var config: TealiumConfig!
+    var module: TealiumRemoteCommandsModule!
+    var remoteCommandsManager = MockRemoteCommandsManager()
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        config = helper.getConfig()
+        module = TealiumRemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
     }
 
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
-    }
-
-    func testMinimumProtocolsReturn() {
-        let expectation = self.expectation(description: "minimumProtocolsReturned")
-        let helper = TestTealiumHelper()
-        let module = TealiumRemoteCommandsModule(delegate: nil)
-        helper.modulesReturnsMinimumProtocols(module: module) { success, failingProtocols in
-
-            expectation.fulfill()
-            XCTAssertTrue(success, "Not all protocols returned. Failing protocols: \(failingProtocols)")
-
-        }
-
-        self.waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     func testDisableHTTPCommandsViaConfig() {
@@ -43,10 +35,12 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
                                    datasource: "test",
                                    optionalData: nil)
         config.remoteHTTPCommandDisabled = true
-        let module = TealiumRemoteCommandsModule(delegate: nil)
-        module.enable(TealiumEnableRequest(config: config, enableCompletion: nil))
+        
+        guard let remoteCommands = module.remoteCommands else {
+            XCTFail("remoteCommands array should not be nil")
+        }
 
-        XCTAssertTrue(module.remoteCommands?.commands.isEmpty, "Unexpected number of reserve commands found: \(String(describing: module.remoteCommands?.commands))")
+        XCTAssertTrue((remoteCommands.commands.isEmpty), "Unexpected number of reserve commands found: \(String(describing: module.remoteCommands?.commands))")
     }
 
     // Integration Test
@@ -160,4 +154,14 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
         XCTAssertEqual(module.remoteCommands?.commands.count, 0)
     }
 
+}
+
+extension TealiumRemoteCommandsModuleTests: TealiumModuleDelegate {
+    func requestTrack(_ track: TealiumTrackRequest) {
+        
+    }
+    
+    func requestReleaseQueue(reason: String) {
+        
+    }
 }

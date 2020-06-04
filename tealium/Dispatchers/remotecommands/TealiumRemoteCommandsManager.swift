@@ -11,6 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
+// Track request type
 public typealias RemoteCommandArray = [TealiumRemoteCommandProtocol]
 
 /// Manages instances of TealiumRemoteCommand
@@ -131,7 +132,7 @@ extension TealiumRemoteCommandsManager: TealiumRemoteCommandDelegate {
             command.remoteCommandCompletion(response)
             // this will send the completion notification, if it wasn't explictly handled by the command
             if !response.hasCustomCompletionHandler {
-                command.sendCompletionNotification(for: command.commandId, response: response)
+                TealiumRemoteCommand.sendCompletionNotification(for: command.commandId, response: response)
             }
         }
     }

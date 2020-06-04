@@ -27,7 +27,7 @@ public protocol TealiumRemoteCommandProtocol {
     var delegate: TealiumRemoteCommandDelegate? { get set }
     var description: String? { get set }
     func completeWith(response: TealiumRemoteCommandResponseProtocol)
-    func sendCompletionNotification(for commandId: String,
+    static func sendCompletionNotification(for commandId: String,
         response: TealiumRemoteCommandResponseProtocol)
 }
 

@@ -54,7 +54,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
     /// - Parameters:
     ///     - commandId: `String` identifier for the Remote Command
     ///     - response: `TealiumRemoteCommandResponse` from the remote command to be passed back to the TiQ webview
-    public func sendCompletionNotification(for commandId: String,
+    public class func sendCompletionNotification(for commandId: String,
                                                  response: TealiumRemoteCommandResponseProtocol) {
         guard let responseId = response.responseId else {
             return
@@ -84,7 +84,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
 
         var responseStr: String
         if let responseData = response.data {
-            responseStr = String(data: responseData, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!
+            responseStr = String(data: responseData, encoding: .utf8)!
         } else {
             // keep previous behavior from obj-c library
             responseStr = "(null)"

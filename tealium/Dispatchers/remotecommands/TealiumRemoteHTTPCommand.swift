@@ -27,7 +27,7 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
 
             let task = TealiumRemoteCommand.urlSession.tealiumDataTask(with: request,
                 completionHandler: { data, urlResponse, error in
-                    // Legacy status reporting - do we still need this?
+                    // Legacy status reporting
                     if let err = error {
                         response.error = err
                         response.status = TealiumRemoteCommandStatusCode.failure.rawValue
@@ -42,7 +42,7 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
                     }
                     response.urlResponse = urlResponse
                     response.data = data
-                    TealiumRemoteHTTPCommand.sendCompletionNotification(for: TealiumRemoteCommandsKey.commandId,
+                    TealiumRemoteCommand.sendCompletionNotification(for: TealiumRemoteCommandsKey.commandId,
                         response: response)
                 })
 
@@ -123,25 +123,6 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
 
     override func completeWith(response: TealiumRemoteCommandResponseProtocol) {
         self.remoteCommandCompletion(response)
-    }
-    
-    public class func sendCompletionNotification(for commandId: String,
-    response: TealiumRemoteCommandResponseProtocol) {
-        guard let response = response as? TealiumRemoteCommandResponse else {
-            return
-        }
-        guard let responseId = response.responseId else {
-            return
-        }
-        guard TealiumRemoteCommandsManager.pendingResponses.value[responseId] == true else {
-            return
-        }
-        TealiumRemoteCommandsManager.pendingResponses.value[responseId] = nil
-        guard let notification = TealiumRemoteCommand.completionNotification(for: commandId,
-            response: response) else {
-            return
-        }
-        NotificationCenter.default.post(notification)
     }
 
 }

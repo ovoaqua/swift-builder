@@ -150,14 +150,4 @@ extension URLRequest {
         }
     }
 }
-
-extension URLQueryItem {
-
-//    var dictionaryRepresentation: [String: Any]? {
-//        if let value = value {
-//            return [name: value]
-//        }
-//        return nil
-//    }
-}
 #endif

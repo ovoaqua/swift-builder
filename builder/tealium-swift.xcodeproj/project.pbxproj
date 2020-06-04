@@ -46,6 +46,7 @@
 		CF75E5412486D3EE0086FF26 /* TealiumRemoteCommandResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D724D856223022CC00883C1E /* TealiumRemoteCommandResponse.swift */; };
 		CF75E5422486D3F40086FF26 /* TealiumRemoteCommandsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73B4B962236BAE60039AEB9 /* TealiumRemoteCommandsExtensions.swift */; };
 		CF75E5462486FB830086FF26 /* TealiumRemoteCommandProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF75E5442486FB0B0086FF26 /* TealiumRemoteCommandProtocols.swift */; };
+		CF75E54B248827430086FF26 /* MockRemoteCommandsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF75E549248827210086FF26 /* MockRemoteCommandsManager.swift */; };
 		CF782CF32475DB9E009D974C /* MockAppDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE69B0E20126B91000759D8 /* MockAppDataDiskStorage.swift */; };
 		CF782CF42475DB9F009D974C /* MockAppDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE69B0E20126B91000759D8 /* MockAppDataDiskStorage.swift */; };
 		CF782CF52475DBA0009D974C /* MockAppDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE69B0E20126B91000759D8 /* MockAppDataDiskStorage.swift */; };
@@ -1395,6 +1396,7 @@
 		CF237C62245B30480017ECF8 /* TealiumLifecycleModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumLifecycleModule.swift; sourceTree = "<group>"; };
 		CF64A136246B515700FA456E /* large-event-data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "large-event-data.json"; sourceTree = "<group>"; };
 		CF75E5442486FB0B0086FF26 /* TealiumRemoteCommandProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumRemoteCommandProtocols.swift; sourceTree = "<group>"; };
+		CF75E549248827210086FF26 /* MockRemoteCommandsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRemoteCommandsManager.swift; sourceTree = "<group>"; };
 		CF7AF2D32437ED5500D9294C /* script-release */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "script-release"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF7AF2D52437ED5500D9294C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF7AF2DF243B94B300D9294C /* TestHost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestHost.entitlements; sourceTree = "<group>"; };
@@ -2523,6 +2525,7 @@
 				71F63A571E79B073006A723F /* TealiumRemoteCommandsModuleTests.swift */,
 				71F63A591E79B07D006A723F /* TealiumRemoteCommandsTests.swift */,
 				71BAF2C91E8DA56D00071239 /* TealiumRemoteHTTPCommandTests.swift */,
+				CF75E549248827210086FF26 /* MockRemoteCommandsManager.swift */,
 			);
 			path = test_tealium_remotecommands;
 			sourceTree = "<group>";
@@ -5412,6 +5415,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF75E54B248827430086FF26 /* MockRemoteCommandsManager.swift in Sources */,
 				D788A55623198A0C00BC6D60 /* TealiumRemoteCommandsModuleTests.swift in Sources */,
 				D788A55723198A0C00BC6D60 /* TealiumRemoteCommandsTests.swift in Sources */,
 				D788A55823198A0C00BC6D60 /* TealiumRemoteHTTPCommandTests.swift in Sources */,
