@@ -45,7 +45,7 @@ class TealiumHelper: NSObject {
         // REQUIRED Config object for lib
         let config = TealiumConfig(account: "tealiummobile",
                                    profile: "demo",
-                                   environment: "qa",
+                                   environment: "dev",
                                    datasource: "test12",
                                    optionalData: nil)
 

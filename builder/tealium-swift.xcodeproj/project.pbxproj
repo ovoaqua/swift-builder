@@ -1152,6 +1152,13 @@
 			remoteGlobalIDString = D755DC9821945E41003C6BA1;
 			remoteInfo = TealiumCore;
 		};
+		D75DEC1A2488F0FF00D09656 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DC9821945E41003C6BA1;
+			remoteInfo = TealiumCore;
+		};
 		D762FC34232F97EF00CBC4D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
@@ -4802,6 +4809,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D75DEC1B2488F0FF00D09656 /* PBXTargetDependency */,
 			);
 			name = TealiumLocation;
 			productName = TealiumLocation;
@@ -9338,6 +9346,11 @@
 			isa = PBXTargetDependency;
 			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
 			targetProxy = D755DD8821946213003C6BA1 /* PBXContainerItemProxy */;
+		};
+		D75DEC1B2488F0FF00D09656 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
+			targetProxy = D75DEC1A2488F0FF00D09656 /* PBXContainerItemProxy */;
 		};
 		D762FC33232F97EF00CBC4D0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
