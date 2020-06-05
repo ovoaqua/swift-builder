@@ -101,9 +101,4 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
         XCTAssertTrue(expectedQueryItems == queryItems, "Unexpected query items returned: \(queryItems), expected: \(expectedQueryItems)")
     }
 
-    func testSuccessfulHttpRemoteCommand() {
-        TealiumRemoteCommand.urlSession = MockURLSessionHTTPRemoteCommand()
-        let httpCommand = TealiumRemoteHTTPCommand.create()
-    }
-
 }
