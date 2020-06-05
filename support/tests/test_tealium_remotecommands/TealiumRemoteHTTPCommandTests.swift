@@ -43,7 +43,7 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
                                       "parameters": params,
                                       "body": body,
                                       "method": method]
-        let result = TealiumRemoteHTTPCommand.httpRequest(payload: payload)
+        let result = TealiumRemoteHTTPCommand.httpRequest(from: payload)
         XCTAssertTrue(result.error == nil, "Unexpected error: \(String(describing: result.error))")
 
         guard let request = result.request else {
@@ -88,7 +88,7 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
                                      "array": ["x", "y", "z"]
         ]
 
-        let queryItems = TealiumRemoteHTTPCommand.paramItemsFrom(dictionary: params)
+        let queryItems = TealiumRemoteHTTPCommand.queryItems(from: params)
 
         let itemA = URLQueryItem(name: "1", value: "2")
         let itemB = URLQueryItem(name: "a", value: "b")
@@ -99,6 +99,11 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
                                   itemC]
 
         XCTAssertTrue(expectedQueryItems == queryItems, "Unexpected query items returned: \(queryItems), expected: \(expectedQueryItems)")
+    }
+
+    func testSuccessfulHttpRemoteCommand() {
+        TealiumRemoteCommand.urlSession = MockURLSessionHTTPRemoteCommand()
+        let httpCommand = TealiumRemoteHTTPCommand.create()
     }
 
 }

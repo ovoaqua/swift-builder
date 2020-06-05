@@ -32,13 +32,12 @@ class TealiumRemoteCommandsTests: XCTestCase {
 
         }
 
-        let remoteCommands = TealiumRemoteCommands()
-        remoteCommands.queue = OperationQueue.current?.underlyingQueue
-        remoteCommands.enable()
-        remoteCommands.add(command)
+        let remoteCommandsManager = TealiumRemoteCommandsManager()
+        remoteCommandsManager.queue = OperationQueue.current?.underlyingQueue
+        remoteCommandsManager.add(command)
 
         let urlString = "tealium://\(commandId)?request={\"config\":{},\"payload\":{}}"
-        let error = remoteCommands.triggerCommandFrom(urlString: urlString)
+        let error = remoteCommandsManager.triggerCommandFrom(urlString: urlString)
         if error != nil {
             XCTFail("Error detected: \(String(describing: error))")
         }
@@ -55,16 +54,15 @@ class TealiumRemoteCommandsTests: XCTestCase {
                                             testExpectation.fulfill()
         }
 
-        let remoteCommands = TealiumRemoteCommands()
-        remoteCommands.queue = OperationQueue.current?.underlyingQueue
-        remoteCommands.enable()
-        remoteCommands.add(command)
+        let remoteCommandsManager = TealiumRemoteCommandsManager()
+        remoteCommandsManager.queue = OperationQueue.current?.underlyingQueue
+        remoteCommandsManager.add(command)
 
         let urlString = "tealium://\(commandId)?request={\"config\":{},\"payload\":{}}"
         let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         XCTAssertTrue(escapedString != nil, "Could not escape test string.")
 
-        let error = remoteCommands.triggerCommandFrom(urlString: escapedString!)
+        let error = remoteCommandsManager.triggerCommandFrom(urlString: escapedString!)
         if error != nil {
             XCTFail("Error detected: \(String(describing: error))")
         }
@@ -80,16 +78,15 @@ class TealiumRemoteCommandsTests: XCTestCase {
                                             // Unused
         }
 
-        let remoteCommands = TealiumRemoteCommands()
-        remoteCommands.queue = OperationQueue.current?.underlyingQueue
-        remoteCommands.enable()
-        remoteCommands.add(command)
+        let remoteCommandsManager = TealiumRemoteCommandsManager()
+        remoteCommandsManager.queue = OperationQueue.current?.underlyingQueue
+        remoteCommandsManager.add(command)
 
-        XCTAssertTrue(remoteCommands.commands.count == 1)
+        XCTAssertTrue(remoteCommandsManager.commands.count == 1)
 
-        remoteCommands.remove(commandWithId: commandId)
+        remoteCommandsManager.remove(commandWithId: commandId)
 
-        XCTAssertTrue(remoteCommands.commands.isEmpty)
+        XCTAssertTrue(remoteCommandsManager.commands.isEmpty)
     }
 
     func testCommandForId() {

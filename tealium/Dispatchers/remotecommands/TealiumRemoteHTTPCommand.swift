@@ -121,9 +121,5 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
         return queryItems
     }
 
-    override func completeWith(response: TealiumRemoteCommandResponseProtocol) {
-        self.remoteCommandCompletion(response)
-    }
-
 }
 #endif

@@ -49,8 +49,8 @@ public extension TealiumConfig {
     /// Registers a Remote Command for later execution
     ///
     /// - Parameter command: `TealiumRemoteCommand` instance
-    func addRemoteCommand(_ command: TealiumRemoteCommand) {
-        var commands = remoteCommands ?? [TealiumRemoteCommand]()
+    func addRemoteCommand(_ command: TealiumRemoteCommandProtocol) {
+        var commands = remoteCommands ?? RemoteCommandArray()
         commands.append(command)
         remoteCommands = commands
     }
@@ -59,13 +59,13 @@ public extension TealiumConfig {
     ///
     /// - Returns: `[TealiumRemoteCommand]`
     @available(*, deprecated, message: "Please switch to config.remoteCommands")
-    func getRemoteCommands() -> [TealiumRemoteCommand]? {
+    func getRemoteCommands() -> RemoteCommandArray? {
         remoteCommands
     }
 
-    var remoteCommands: [TealiumRemoteCommand]? {
+    var remoteCommands: RemoteCommandArray? {
         get {
-            optionalData[TealiumRemoteCommandsKey.allCommands] as? [TealiumRemoteCommand]
+            optionalData[TealiumRemoteCommandsKey.allCommands] as? RemoteCommandArray
         }
 
         set {

@@ -11,24 +11,24 @@ import Foundation
 
 class MockRemoteCommandsManager: TealiumRemoteCommandsManagerProtocol {
     var commands = RemoteCommandArray()
-    
+
     func add(_ remoteCommand: TealiumRemoteCommandProtocol) {
-        
+
     }
-    
+
     func disable() {
-        
+
     }
-    
+
     func remove(commandWithId: String) {
-        
+
     }
-    
+
     func triggerCommandFrom(request: URLRequest) -> TealiumRemoteCommandsError? {
         return TealiumRemoteCommandsError.invalidScheme
     }
-    
+
     func triggerCommandFrom(notification: Notification) {
-        
+
     }
 }
