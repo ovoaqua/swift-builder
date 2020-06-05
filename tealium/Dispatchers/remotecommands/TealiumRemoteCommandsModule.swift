@@ -47,10 +47,7 @@ public class TealiumRemoteCommandsModule: Dispatcher {
             let existingCommands = self.remoteCommands?.commands
             if let newCommands = newConfig.remoteCommands, newCommands.count > 0 {
                 existingCommands?.forEach {
-                    guard let remoteCommand = $0 as? TealiumRemoteCommand else {
-                        return
-                    }
-                    newConfig.addRemoteCommand(remoteCommand)
+                    newConfig.addRemoteCommand($0)
                 }
             }
         }

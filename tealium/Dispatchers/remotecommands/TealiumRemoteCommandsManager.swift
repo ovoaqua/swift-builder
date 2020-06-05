@@ -11,7 +11,6 @@ import Foundation
 import TealiumCore
 #endif
 
-// Track request type
 public typealias RemoteCommandArray = [TealiumRemoteCommandProtocol]
 
 /// Manages instances of TealiumRemoteCommand
