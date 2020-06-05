@@ -101,6 +101,7 @@ public class TealiumRemoteCommandsModule: Dispatcher {
         // No further processing required - HTTP remote command already up.
     }
     
+    @available(*, deprecated, message: "Reserved for future use.")
     public func dynamicTrack(_ request: TealiumRequest,
                              completion: ModuleCompletion?) {
     }

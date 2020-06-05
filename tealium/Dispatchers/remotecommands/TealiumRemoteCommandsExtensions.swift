@@ -23,18 +23,6 @@ public extension Tealium {
 
 public extension TealiumConfig {
 
-    /// Disables the built-in HTTP command
-    @available(*, deprecated, message: "Please switch to config.remoteHTTPCommandDisabled")
-    func disableRemoteHTTPCommand() {
-        remoteHTTPCommandDisabled = true
-    }
-
-    /// Re-enables the built-in HTTP command
-    @available(*, deprecated, message: "Please switch to config.remoteHTTPCommandDisabled")
-    func enableRemoteHTTPCommand() {
-        remoteHTTPCommandDisabled = false
-    }
-
     /// Enables or disables the built-in HTTP command. Default `false` (command is ENABLED). Set to `true` to disable
     var remoteHTTPCommandDisabled: Bool {
         get {
@@ -53,14 +41,6 @@ public extension TealiumConfig {
         var commands = remoteCommands ?? RemoteCommandArray()
         commands.append(command)
         remoteCommands = commands
-    }
-
-    /// Retrieves all currently-registered Remote Commands
-    ///
-    /// - Returns: `[TealiumRemoteCommand]`
-    @available(*, deprecated, message: "Please switch to config.remoteCommands")
-    func getRemoteCommands() -> RemoteCommandArray? {
-        remoteCommands
     }
 
     var remoteCommands: RemoteCommandArray? {
@@ -115,7 +95,7 @@ public extension RemoteCommandArray {
     
 }
 
-public extension URL {
+extension URL {
     var queryItems: [String: Any] {
         var params = [String: Any]()
         return URLComponents(url: self, resolvingAgainstBaseURL: false)?

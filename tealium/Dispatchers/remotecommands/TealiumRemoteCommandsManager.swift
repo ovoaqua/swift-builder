@@ -48,31 +48,10 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
         commands.removeAll()
         isEnabled = false
     }
-
-    //❓Can we remove this? not being used
-    /// Trigger an associated remote command from a string representation of a url request. Function
-    ///     will presume the string is escaped, if not, will attempt to escape string
-    ///     with .urlQueryAllowed. NOTE: using .urlHostAllowed for escaping will not work.
-    ///￼
-    /// - Parameter urlString:`String` containing a URL including host, ie: tealium://commandId?request={}...
-    /// - Returns: Error if unable to trigger a remote command. Can ignore if the url was not
-    ///     intended for a remote command.
-    public func triggerCommandFrom(urlString: String) -> TealiumRemoteCommandsError? {
-        var urlInitial = URL(string: urlString)
-        if urlInitial == nil {
-            guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-                return TealiumRemoteCommandsError.requestNotProperlyFormatted
-            }
-            urlInitial = URL(string: escapedString)
-        }
-        guard let url = urlInitial else {
-            return TealiumRemoteCommandsError.requestNotProperlyFormatted
-        }
-        let request = URLRequest(url: url)
-
-        return triggerCommandFrom(request: request)
-    }
-
+    
+    /// Trigger an associated remote command from a `Notification`
+    ///
+    /// - Parameter notification: `Notification`
     public func triggerCommandFrom(notification: Notification) {
         guard let request = notification.userInfo?[TealiumKey.tagmanagementNotification] as? URLRequest else {
             return
