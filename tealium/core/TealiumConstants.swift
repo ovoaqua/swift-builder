@@ -24,8 +24,8 @@ public enum TealiumValue {
 
 // MARK: ENUMS
 #if os(iOS)
-extension Notification.Name {
-    public static let tagmanagement = Notification.Name(TealiumKey.tagmanagementNotification)
+public extension Notification.Name {
+     static let tagmanagement = Notification.Name(TealiumKey.tagmanagementNotification)
 }
 #endif
 
