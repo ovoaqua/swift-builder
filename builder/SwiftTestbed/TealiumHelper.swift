@@ -45,7 +45,7 @@ class TealiumHelper: NSObject {
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .info
-        config.enableConsentManager = false
+        config.enableConsentManager = true
         config.consentPolicy = .gdpr
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
@@ -93,7 +93,7 @@ class TealiumHelper: NSObject {
             let persitence = teal.persistentData()
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
-            teal.consentManager?.setUserConsentStatus(.consented)
+            teal.consentManager?.userConsentStatus = .consented
             
             dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
 
@@ -146,12 +146,12 @@ class TealiumHelper: NSObject {
     
     
     func toggleConsentStatus() {
-        if let consentStatus = tealium?.consentManager?.consentStatus {
+        if let consentStatus = tealium?.consentManager?.userConsentStatus {
             switch consentStatus {
             case .consented:
-                TealiumHelper.shared.tealium?.consentManager?.setUserConsentStatus(.notConsented)
+                TealiumHelper.shared.tealium?.consentManager?.userConsentStatus = .notConsented
             default:
-                TealiumHelper.shared.tealium?.consentManager?.setUserConsentStatus(.consented)
+                TealiumHelper.shared.tealium?.consentManager?.userConsentStatus = .consented
             }
         }
     }

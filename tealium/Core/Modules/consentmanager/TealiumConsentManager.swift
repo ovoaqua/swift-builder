@@ -20,13 +20,30 @@ public class TealiumConsentManager {
     var currentPolicy: ConsentPolicy
     
     /// Returns current consent status
-    public var consentStatus: TealiumConsentStatus {
-        currentPolicy.preferences.consentStatus
+    public var userConsentStatus: TealiumConsentStatus {
+        get {
+            currentPolicy.preferences.consentStatus
+        }
+        
+        set {
+            let status = newValue
+            var categories = [TealiumConsentCategories]()
+            if status == .consented {
+                categories = TealiumConsentCategories.allCategories
+            }
+            setUserConsentStatusWithCategories(status: status, categories: categories)
+        }
     }
     
     /// Returns current consent categories, if applicable
-    public var consentCateogries: [TealiumConsentCategories]? {
-        currentPolicy.preferences.consentCategories
+    public var userConsentCategories: [TealiumConsentCategories]? {
+        get {
+            currentPolicy.preferences.consentCategories
+        }
+        
+        set {
+            setUserConsentStatusWithCategories(status: .consented, categories: newValue)
+        }
     }
     
     /// Used by the Consent Manager module to determine if tracking calls can be sent.
@@ -103,30 +120,7 @@ public class TealiumConsentManager {
         // store data
         consentPreferencesStorage?.preferences = preferences
     }
-
-}
-
-// MARK: Public API
-public extension TealiumConsentManager {
-
-    /// Sets consent status only. Will set the full list of consent categories if the status is `.consented`.￼
-    ///
-    /// - Parameter status: `TealiumConsentStatus?`
-    func setUserConsentStatus(_ status: TealiumConsentStatus) {
-        var categories = [TealiumConsentCategories]()
-        if status == .consented {
-            categories = TealiumConsentCategories.allCategories
-        }
-        setUserConsentStatusWithCategories(status: status, categories: categories)
-    }
-
-    /// Sets consent categories (implies `TealiumConsentStatus = .consented`.
-    ///
-    /// - Parameter status: `[TealiumConsentCategories]`
-    func setUserConsentCategories(_ categories: [TealiumConsentCategories]) {
-        setUserConsentStatusWithCategories(status: .consented, categories: categories)
-    }
-
+    
     /// Can set both Consent Status and Consent Categories in a single call￼.
     ///
     /// - Parameters:
@@ -143,6 +137,11 @@ public extension TealiumConsentManager {
         trackUserConsentPreferences(currentPolicy.preferences)
     }
 
+}
+
+// MARK: Public API
+public extension TealiumConsentManager {
+    
     /// Resets all consent preferences in memory and in persistent storage.
     func resetUserConsentPreferences() {
         consentPreferencesStorage?.preferences = nil

@@ -64,7 +64,7 @@ class ConsentManagerTests: XCTestCase {
     // thoroughly tested, and comfortable that this is an issue with UserDefaults clearing slowly under test on the simulator
     func testAStartDefault() {
         let consentManager = consentManagerEmptyDelegate
-        XCTAssertTrue(consentManager.consentStatus == .unknown, "Consent Manager Test: \(#function) - Incorrect initial state: " + (self.consentManager.consentStatus.rawValue))
+        XCTAssertTrue(consentManager.userConsentStatus == .unknown, "Consent Manager Test: \(#function) - Incorrect initial state: " + (self.consentManager.userConsentStatus.rawValue))
     }
 
     func testConsentStoreConfigFromDictionary() {
@@ -98,8 +98,8 @@ class ConsentManagerTests: XCTestCase {
     // check that persistent saved preferences contains values passed in config object
     func testloadSavedPreferencesExistingPersistentData() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentStatus(.consented)
-        consentManager.setUserConsentCategories([.cdp, .analytics])
+        consentManager.userConsentStatus = .consented
+        consentManager.userConsentCategories = [.cdp, .analytics]
         if let savedConfig = consentManager.consentPreferencesStorage?.preferences {
             let categories = savedConfig.consentCategories, status = savedConfig.consentStatus
             XCTAssertTrue(categories == [.cdp, .analytics], "Consent Manager Test: \(#function) -Incorrect array members found for categories")
@@ -126,23 +126,23 @@ class ConsentManagerTests: XCTestCase {
     func testCanUpdateCategories() {
         let consentManager = consentManagerEmptyDelegate
         consentManager.resetUserConsentPreferences()
-        consentManager.setUserConsentCategories([.cdp, .analytics])
+        consentManager.userConsentCategories = [.cdp, .analytics]
         XCTAssertTrue(consentManager.consentPreferencesStorage?.preferences?.consentCategories == [.cdp, .analytics])
-        consentManager.setUserConsentCategories([.bigData])
+        consentManager.userConsentCategories = [.bigData]
         XCTAssertTrue(consentManager.consentPreferencesStorage?.preferences?.consentCategories == [.bigData])
     }
 
     func testCanUpdateStatus() {
         let consentManager = consentManagerEmptyDelegate
         consentManager.resetUserConsentPreferences()
-        consentManager.setUserConsentStatus(.consented)
-        consentManager.setUserConsentStatus(.notConsented)
+        consentManager.userConsentStatus = .consented
+        consentManager.userConsentStatus = .notConsented
         XCTAssertTrue(consentManager.consentPreferencesStorage?.preferences?.consentStatus == .notConsented)
     }
 
     func testGetTrackingStatusWhenNotConsented() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentStatus(.notConsented)
+        consentManager.userConsentStatus = .notConsented
         if let _ = consentManager.consentPreferencesStorage?.preferences {
             XCTAssertTrue(consentManager.trackingStatus == .trackingForbidden, "Consent Manager Test: \(#function) - getTrackingStatus returned unexpected value")
         }
@@ -150,7 +150,7 @@ class ConsentManagerTests: XCTestCase {
     
     func testGetTrackingStatusWhenNotConsentedCCPA() {
         let consentManager = consentManagerCCPA
-        consentManager.setUserConsentStatus(.notConsented)
+        consentManager.userConsentStatus = .notConsented
         if let _ = consentManager.consentPreferencesStorage?.preferences {
             XCTAssertTrue(consentManager.trackingStatus == .trackingAllowed, "Consent Manager Test: \(#function) - getTrackingStatus returned unexpected value")
         }
@@ -158,7 +158,7 @@ class ConsentManagerTests: XCTestCase {
 
     func testGetTrackingStatusWhenConsented() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentCategories([.analytics, .cookieMatch])
+        consentManager.userConsentCategories = [.analytics, .cookieMatch]
         if let _ = consentManager.consentPreferencesStorage?.preferences {
             XCTAssertTrue(consentManager.trackingStatus == .trackingAllowed, "Consent Manager Test: \(#function) - getTrackingStatus returned unexpected value")
         }
@@ -166,25 +166,25 @@ class ConsentManagerTests: XCTestCase {
 
     func testSetConsentStatus() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentStatus(.notConsented)
-        XCTAssertTrue(consentManager.consentStatus == .notConsented, "Consent Manager Test: \(#function) - unexpected consent status")
+        consentManager.userConsentStatus = .notConsented
+        XCTAssertTrue(consentManager.userConsentStatus == .notConsented, "Consent Manager Test: \(#function) - unexpected consent status")
         XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories! == [TealiumConsentCategories](), "Consent Manager Test: \(#function) - unexpectedly found consent categories")
     }
 
     func testSetConsentCategories() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentCategories([.affiliates])
-        XCTAssertTrue(consentManager.consentStatus == .consented, "Consent Manager Test: \(#function) - unexpected consent status")
+        consentManager.userConsentCategories = [.affiliates]
+        XCTAssertTrue(consentManager.userConsentStatus == .consented, "Consent Manager Test: \(#function) - unexpected consent status")
         XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories! == [.affiliates], "Consent Manager Test: \(#function) -  unexpected consent categories found")
     }
 
     func testResetUserConsentPreferences() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentStatus(.consented)
-        consentManager.setUserConsentCategories([.cdp])
+        consentManager.userConsentStatus = .consented
+        consentManager.userConsentCategories = [.cdp]
         consentManager.resetUserConsentPreferences()
         XCTAssertTrue(consentManager.consentPreferencesStorage?.preferences == nil, "Consent Manager Test: \(#function) - unexpected config found")
-        XCTAssertTrue(consentManager.consentStatus == .unknown, "Consent Manager Test: \(#function) - unexpected status found")
+        XCTAssertTrue(consentManager.userConsentStatus == .unknown, "Consent Manager Test: \(#function) - unexpected status found")
         XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories == nil, "Consent Manager Test: \(#function) - unexpected categories found")
     }
 
@@ -193,7 +193,7 @@ class ConsentManagerTests: XCTestCase {
         config.enableConsentManager = true
         let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerEmptyDelegate
-        consentManagerModule.consentManager?.setUserConsentStatus(.notConsented)
+        consentManagerModule.consentManager?.userConsentStatus = .notConsented
         let shouldDrop = consentManagerModule.shouldDrop(request: track)
         XCTAssertTrue(shouldDrop)
     }
@@ -203,7 +203,7 @@ class ConsentManagerTests: XCTestCase {
         config.enableConsentManager = true
         let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerCCPA
-        consentManagerModule.consentManager?.setUserConsentStatus(.notConsented)
+        consentManagerModule.consentManager?.userConsentStatus = .notConsented
         let shouldDrop = consentManagerModule.shouldDrop(request: track)
         XCTAssertFalse(shouldDrop)
     }
@@ -214,7 +214,7 @@ class ConsentManagerTests: XCTestCase {
         let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerCCPA
         let localConsentManager = consentManagerModule.consentManager
-        localConsentManager?.setUserConsentStatus(.unknown)
+        localConsentManager?.userConsentStatus = .unknown
         let queue = consentManagerModule.shouldQueue(request: track)
         XCTAssertFalse(queue.0)
     }
@@ -224,7 +224,7 @@ class ConsentManagerTests: XCTestCase {
         let consentManagerModule = TealiumConsentManagerModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerEmptyDelegate
         let localConsentManager = consentManagerModule.consentManager
-        localConsentManager?.setUserConsentStatus(.consented)
+        localConsentManager?.userConsentStatus = .consented
         let queue = consentManagerModule.shouldQueue(request: track)
         XCTAssertFalse(queue.0)
     }
@@ -232,15 +232,15 @@ class ConsentManagerTests: XCTestCase {
     // MARK: Consent Convenience Methods
     func testConsentStatusConsentedSetsAllCategoryNames() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentStatus(.consented)
+        consentManager.userConsentStatus = .consented
         XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories! == TealiumConsentCategories.allCategories)
         XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories!.count == TealiumConsentCategories.allCategories.count)
     }
 
     func testNotConsentedRemovesAllCategoryNames() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentStatus(.consented)
-        consentManager.setUserConsentStatus(.notConsented)
+        consentManager.userConsentStatus = .consented
+        consentManager.userConsentStatus = .notConsented
         guard let categories = consentManager.currentPolicy.preferences.consentCategories else {
             XCTFail("Categories should return at least empty array")
             return
@@ -250,19 +250,19 @@ class ConsentManagerTests: XCTestCase {
 
     func testConsentStatusIsConsentedIfCategoriesAreSet() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentStatus(.notConsented)
-        consentManager.setUserConsentCategories([.analytics])
-        XCTAssertTrue(consentManager.consentStatus == .consented)
+        consentManager.userConsentStatus = .notConsented
+        consentManager.userConsentCategories = [.analytics]
+        XCTAssertTrue(consentManager.userConsentStatus == .consented)
     }
 
     func testConsentStatusIsUknownIfNoStatusSet() {
         let consentManager = consentManagerEmptyDelegate
-        XCTAssertTrue(consentManager.consentStatus == .unknown)
+        XCTAssertTrue(consentManager.userConsentStatus == .unknown)
     }
 
     func testGetUserConsentCategoriesOnceSet() {
         let consentManager = consentManagerEmptyDelegate
-        consentManager.setUserConsentCategories([.analytics, .bigData])
+        consentManager.userConsentCategories = [.analytics, .bigData]
         XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories! == [.analytics, .bigData])
     }
 
@@ -301,7 +301,14 @@ extension ConsentManagerTests: TealiumModuleDelegate {
 }
 
 class ConsentManagerDelegate: TealiumModuleDelegate {
-    func requestReleaseQueue(reason: String) { }
+    func requestDequeue(reason: String) {
+        
+    }
+    
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+        
+    }
+    
 
     func requestTrack(_ track: TealiumTrackRequest) {
         
