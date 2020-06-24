@@ -29,9 +29,7 @@ public class TealiumTagManagementModule: Dispatcher {
                      tagManagement: TealiumTagManagementProtocol) {
         self.init(config: config, delegate: delegate) { result in
         }
-        defer {
-            self.tagManagement = tagManagement
-        }
+        self.tagManagement = tagManagement
     }
 
     public required init(config: TealiumConfig,
