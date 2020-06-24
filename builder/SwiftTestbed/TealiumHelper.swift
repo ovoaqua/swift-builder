@@ -59,6 +59,7 @@ class TealiumHelper: NSObject {
         config.shouldCollectTealiumData = true
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
+        config.remoteAPIEnabled = true
         logger = config.logger
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 

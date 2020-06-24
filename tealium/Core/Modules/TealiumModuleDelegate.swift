@@ -15,5 +15,7 @@ public protocol TealiumModuleDelegate: class {
     /// - Parameter track: TealiumTrackRequest
     func requestTrack(_ track: TealiumTrackRequest)
     
-    func requestReleaseQueue(reason: String)
+    func requestDequeue(reason: String)
+    
+    func processRemoteCommandRequest(_ request: TealiumRequest)
 }

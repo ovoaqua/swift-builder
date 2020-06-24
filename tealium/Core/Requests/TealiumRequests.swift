@@ -99,6 +99,38 @@ public struct TealiumRemoteAPIRequest: TealiumRequest {
 
 }
 
+// MARK: Remote Notification Request
+public struct TealiumRemoteCommandRequest: TealiumRequest {
+    public var typeId = TealiumRemoteCommandRequest.instanceTypeId()
+    public var completion: TealiumCompletion?
+    public var data: [String: Any]
+    
+    public init(data: [String: Any]) {
+        self.data = data
+    }
+
+    public static func instanceTypeId() -> String {
+        return "remote_command_request"
+    }
+
+}
+
+// MARK: Remote Notification Response
+public struct TealiumRemoteCommandRequestResponse: TealiumRequest {
+    public var typeId = TealiumRemoteCommandRequestResponse.instanceTypeId()
+    public var completion: TealiumCompletion?
+    public var data: [String: Any]
+    
+    public init(data: [String: Any]) {
+        self.data = data
+    }
+
+    public static func instanceTypeId() -> String {
+        return "remote_command_response"
+    }
+
+}
+
 // MARK: Track Request
 /// Request to deliver data.
 public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {

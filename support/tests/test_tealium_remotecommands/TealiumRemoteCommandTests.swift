@@ -13,10 +13,8 @@ import XCTest
 class TealiumRemoteCommandTests: XCTestCase {
 
     var remoteCommand: TealiumRemoteCommand!
-    // compiler automatically flips to `weak`
-    // you need to manually change to strong in order for tests to pass
-    weak var mockDelegate = MockRemoteCommandDelegate()
     var helper = TestTealiumHelper()
+    var processRemoteCommandRequestCounter = 0
 
     override func setUpWithError() throws {
         remoteCommand = TealiumRemoteCommand(commandId: "test", description: "Test", completion: { _ in
@@ -30,7 +28,7 @@ class TealiumRemoteCommandTests: XCTestCase {
 
     func testDelegateMethod() {
         let expect = expectation(description: "delegate method is executed via the complete method")
-
+        let mockDelegate = MockRemoteCommandDelegate()
         TealiumRemoteCommandsManager.pendingResponses.value["123"] = true
         let urlString = "tealium://test?request={\"config\":{\"response_id\":\"123\"}, \"payload\":{}}"
         guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
@@ -47,16 +45,16 @@ class TealiumRemoteCommandTests: XCTestCase {
             return
         }
         remoteCommand.delegate = mockDelegate
-        mockDelegate?.asyncExpectation = expect
+        mockDelegate.asyncExpectation = expect
 
-        remoteCommand.completeWith(response: response)
+        remoteCommand.complete(with: response)
 
         waitForExpectations(timeout: 2) { error in
             if let error = error {
                 XCTFail("waitForExpectationsWithTimeout errored: \(error)")
             }
 
-            guard let result = self.mockDelegate?.remoteCommandResult else {
+            guard let result = mockDelegate.remoteCommandResult else {
                 XCTFail("Expected delegate to be called")
                 return
             }
@@ -64,8 +62,7 @@ class TealiumRemoteCommandTests: XCTestCase {
         }
     }
 
-    func testSendCompletionNotification() {
-
+    func testSendRemoteCommandResponse() {
         TealiumRemoteCommandsManager.pendingResponses.value["123"] = true
         let urlString = "tealium://test?request={\"config\":{\"response_id\":\"123\"}, \"payload\":{}}"
         guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
@@ -81,15 +78,62 @@ class TealiumRemoteCommandTests: XCTestCase {
         guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
             return
         }
-        TealiumRemoteCommand.sendCompletionNotification(for: "test", response: response)
+        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: response, delegate: self)
         XCTAssertNil(TealiumRemoteCommandsManager.pendingResponses.value["123"])
     }
 
-    func testCompletionNotification() {
+    func testSendRemoteCommandResponseReturns() {
+        // Returns when response is not expected type of `TealiumRemoteCommandResponse`
+        let mockResponse = MockTealiumRemoteCommandResponse()
+        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: mockResponse, delegate: self)
+        XCTAssertEqual(self.processRemoteCommandRequestCounter, 0)
+
+        // Returns when responseId is nil
+        let urlString = "tealium://test?request={\"config\":{\"something\":\"123\"}, \"payload\":{}}"
+        guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            XCTFail("Could not encode url string: \(urlString)")
+            return
+        }
+        guard let url = URL(string: escapedString) else {
+            XCTFail("Could not create URL from string: \(urlString)")
+            return
+        }
+        let urlRequest = URLRequest(url: url)
+
+        guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
+            return
+        }
+
+        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: response, delegate: self)
+        XCTAssertEqual(self.processRemoteCommandRequestCounter, 0)
+
+        // Returns when pendingResponse is false
+        let urlString2 = "tealium://test?request={\"config\":{\"response_id\":\"123\"}, \"payload\":{}}"
+        guard let escapedString2 = urlString2.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            XCTFail("Could not encode url string: \(urlString2)")
+            return
+        }
+        guard let url2 = URL(string: escapedString2) else {
+            XCTFail("Could not create URL from string: \(urlString)")
+            return
+        }
+        let urlRequest2 = URLRequest(url: url2)
+
+        guard let response2 = TealiumRemoteCommandResponse(request: urlRequest2) else {
+            return
+        }
+
+        TealiumRemoteCommandsManager.pendingResponses.value["123"] = false
+        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: response2, delegate: self)
+        XCTAssertNotNil(TealiumRemoteCommandsManager.pendingResponses.value["123"])
+        XCTAssertEqual(self.processRemoteCommandRequestCounter, 0)
+
+    }
+
+    func testRemoteCommandResponse() {
         let commandId = "test"
         let responseId = "123"
-        let notificationName = Notification.Name(rawValue: TealiumKey.jsNotificationName)
-        let expected = Notification(name: notificationName, object: remoteCommand, userInfo: [TealiumRemoteCommandsKey.jsCommand: "try { utag.mobile.remote_api.response[\'\(commandId)\'][\'\(responseId)\'](\'204\',\'{\"hello\":\"world\"}\')} catch(err){ console.error(err)}"])
+        let expectedJSKey = "try { utag.mobile.remote_api.response[\'\(commandId)\'][\'\(responseId)\']('204',\'{\"hello\":\"world\"}\')}catch(err){console.error(err)}".replacingOccurrences(of: " ", with: "")
 
         let urlString = "tealium://\(commandId)?request={\"config\":{\"response_id\":\"\(responseId)\"}, \"payload\":{\"tealium_event\": \"launch\"}}"
         guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
@@ -113,14 +157,49 @@ class TealiumRemoteCommandTests: XCTestCase {
             print(error)
         }
 
-        var notification = TealiumRemoteCommand.completionNotification(for: commandId, response: response)
-        guard let jsResultString = notification?.userInfo?[TealiumRemoteCommandsKey.jsCommand] as? String else {
-            return
-        }
-        notification?.userInfo?[TealiumRemoteCommandsKey.jsCommand] = jsResultString
-        let expectedDesc = expected.description.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: " ", with: "")
-        let notificationDesc = notification!.description.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: " ", with: "")
-        XCTAssertEqual(expectedDesc, notificationDesc)
+        let commandResponseDict = TealiumRemoteCommand.remoteCommandResponse(for: commandId, response: response)!
+        let actualJSKey = (commandResponseDict[TealiumRemoteCommandsKey.jsCommand] as! String).replacingOccurrences(of: " ", with: "")
+
+        XCTAssertEqual(actualJSKey, expectedJSKey)
     }
 
+    func testRemoteCommandResponseReturnsWhenResponseIdNil() {
+
+        let urlString = "tealium://test?request={\"config\":{\"something\":\"123\"}, \"payload\":{}}"
+        guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            XCTFail("Could not encode url string: \(urlString)")
+            return
+        }
+        guard let url = URL(string: escapedString) else {
+            XCTFail("Could not create URL from string: \(urlString)")
+            return
+        }
+        let urlRequest = URLRequest(url: url)
+
+        guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
+            return
+        }
+
+        let result = TealiumRemoteCommand.remoteCommandResponse(for: "test", response: response)
+
+        XCTAssertNil(result)
+
+    }
+
+}
+
+extension TealiumRemoteCommandTests: TealiumModuleDelegate {
+    func requestTrack(_ track: TealiumTrackRequest) {
+
+    }
+
+    func requestDequeue(reason: String) {
+
+    }
+
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+        if request is TealiumRemoteCommandRequestResponse {
+            self.processRemoteCommandRequestCounter += 1
+        }
+    }
 }

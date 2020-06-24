@@ -120,11 +120,15 @@ class TealiumAppDataModuleTests: XCTestCase {
 }
 
 extension TealiumAppDataModuleTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }
 
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

@@ -378,8 +378,6 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    // TODO: Remote Command Module
-
     func testTagManagementModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = TealiumTagManagementModule(config: defaultTealiumConfig, delegate: self, completion: { _ in })
@@ -402,6 +400,10 @@ extension PerformanceTests: TealiumModuleDelegate {
     }
 
     func requestReleaseQueue(reason: String) {
+
+    }
+
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }
 }

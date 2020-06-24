@@ -161,11 +161,15 @@ class MockPersistentQueue: TealiumPersistentDispatchQueue {
 }
 
 extension TealiumDispatchQueueModuleTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+        
+    }
+    
     func requestTrack(_ track: TealiumTrackRequest) {
         
     }
     
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
         
     }
     

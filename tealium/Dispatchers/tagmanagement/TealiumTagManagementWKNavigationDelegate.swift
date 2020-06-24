@@ -70,9 +70,8 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
         let urlRequest = navigationAction.request
         var decisionAction: WKNavigationActionPolicy?
         if let urlString = urlRequest.url?.absoluteString, urlString.hasPrefix(TealiumKey.tealiumURLScheme) {
-            // notifies Remote Commands module of a remote command requesting execution
-            let notification = Notification(name: Notification.Name.tagmanagement, object: webView, userInfo: [TealiumKey.tagmanagementNotification: urlRequest])
-            NotificationCenter.default.post(notification)
+            let request = TealiumRemoteCommandRequest(data: [TealiumKey.tagmanagementNotification: urlRequest])
+            moduleDelegate?.processRemoteCommandRequest(request)
             // prevents errors in webview by canceling load
             decisionHandler(.cancel)
             return

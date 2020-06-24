@@ -13,12 +13,13 @@ import TealiumCore
 #endif
 
 public protocol TealiumRemoteCommandsManagerProtocol {
+    var moduleDelegate: TealiumModuleDelegate? { get set }
     var commands: RemoteCommandArray { get set }
     func add(_ remoteCommand: TealiumRemoteCommandProtocol)
-    func disable()
     func remove(commandWithId: String)
-    func triggerCommandFrom(request: URLRequest) -> TealiumRemoteCommandsError?
-    func triggerCommandFrom(notification: Notification)
+    func removeAll()
+    func triggerCommand(from request: URLRequest) -> TealiumRemoteCommandsError?
+    func triggerCommand(with data: [String: Any])
 }
 
 public protocol TealiumRemoteCommandProtocol {
@@ -26,9 +27,10 @@ public protocol TealiumRemoteCommandProtocol {
     var remoteCommandCompletion: TealiumRemoteCommandCompletion { get set }
     var delegate: TealiumRemoteCommandDelegate? { get set }
     var description: String? { get set }
-    func completeWith(response: TealiumRemoteCommandResponseProtocol)
-    static func sendCompletionNotification(for commandId: String,
-        response: TealiumRemoteCommandResponseProtocol)
+    func complete(with response: TealiumRemoteCommandResponseProtocol)
+    static func sendRemoteCommandResponse(for commandId: String,
+                                          response: TealiumRemoteCommandResponseProtocol,
+                                          delegate: TealiumModuleDelegate?)
 }
 
 public protocol TealiumRemoteCommandResponseProtocol {

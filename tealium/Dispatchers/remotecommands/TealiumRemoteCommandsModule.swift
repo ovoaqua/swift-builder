@@ -18,7 +18,6 @@ public class TealiumRemoteCommandsModule: Dispatcher {
     public var config: TealiumConfig
     public var isReady: Bool = false
     public var remoteCommands: TealiumRemoteCommandsManagerProtocol?
-    var observer: NSObjectProtocol?
     var reservedCommandsAdded = false
 
     
@@ -34,10 +33,9 @@ public class TealiumRemoteCommandsModule: Dispatcher {
     
     public required init(config: TealiumConfig, delegate: TealiumModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
-        remoteCommands = remoteCommands ?? TealiumRemoteCommandsManager()
+        remoteCommands = remoteCommands ?? TealiumRemoteCommandsManager(delegate: delegate)
         updateReservedCommands(config: config)
         addCommandsFromConfig(config)
-        enableNotifications()
     }
 
     public func updateConfig(_ request: TealiumUpdateConfigRequest) {
@@ -64,16 +62,6 @@ public class TealiumRemoteCommandsModule: Dispatcher {
         }
     }
 
-    /// Enables listeners for notifications from the Tag Management module (WebView).
-    func enableNotifications() {
-        guard observer == nil else {
-            return
-        }
-        observer = NotificationCenter.default.addObserver(forName: Notification.Name.tagmanagement, object: nil, queue: OperationQueue.main) {
-            self.remoteCommands?.triggerCommandFrom(notification: $0)
-        }
-    }
-
     /// Identifies if any built-in Remote Commands should be disabled.
     ///￼
     /// - Parameter config: `TealiumConfig` object containing flags indicating which built-in commands should be disabled.
@@ -91,7 +79,7 @@ public class TealiumRemoteCommandsModule: Dispatcher {
         if shouldDisable == true {
             remoteCommands?.remove(commandWithId: TealiumRemoteCommandsKey.commandId)
         } else if remoteCommands?.commands[TealiumRemoteCommandsKey.commandId] == nil {
-            let httpCommand = TealiumRemoteHTTPCommand.create()
+            let httpCommand = TealiumRemoteHTTPCommand.create(with: remoteCommands?.moduleDelegate)
             remoteCommands?.add(httpCommand)
         }
         reservedCommandsAdded = true
@@ -101,12 +89,11 @@ public class TealiumRemoteCommandsModule: Dispatcher {
     @available(*, deprecated, message: "Reserved for future use.")
     public func dynamicTrack(_ request: TealiumRequest,
                              completion: ModuleCompletion?) {
+        guard let incoming = request as? TealiumRemoteCommandRequest else {
+            return
+        }
+        self.remoteCommands?.triggerCommand(with: incoming.data)
     }
 
-    deinit {
-        if let observer = self.observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
 }
 #endif

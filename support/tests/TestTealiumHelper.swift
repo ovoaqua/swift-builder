@@ -323,7 +323,11 @@ class TestTealiumHelper {
 }
 
 extension TestTealiumHelper: TealiumModuleDelegate {
-    func requestReleaseQueue(reason: String) {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+        
+    }
+    
+    func requestDequeue(reason: String) {
         
     }
     

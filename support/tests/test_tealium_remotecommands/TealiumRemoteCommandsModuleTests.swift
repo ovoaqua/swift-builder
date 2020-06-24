@@ -17,6 +17,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
     var module: TealiumRemoteCommandsModule!
     var remoteCommandsManager = MockRemoteCommandsManager()
     let remoteCommand = MockRemoteCommand()
+    var processExpectation: XCTestExpectation?
 
     override func setUp() {
         super.setUp()
@@ -40,8 +41,8 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
     }
 
     // Integration Test
-    func testMockTriggerFromNotification() {
-        let testExpectation = expectation(description: "triggerTest")
+    func testMockProcessTealiumRemoteCommandRequest() {
+        processExpectation = expectation(description: "testMockProcessTealiumRemoteCommandRequest")
         config.remoteHTTPCommandDisabled = false
 
         module = TealiumRemoteCommandsModule(config: config, delegate: self, completion: { _ in })
@@ -49,7 +50,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
         let commandId = "test"
         let remoteCommand = TealiumRemoteCommand(commandId: commandId,
                                                  description: "") { _ in
-                                                    testExpectation.fulfill()
+                                                    // self.processExpectation?.fulfill()
         }
         module.remoteCommands?.add(remoteCommand)
 
@@ -64,10 +65,8 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
             return
         }
         let urlRequest = URLRequest(url: url)
-        let notification = Notification(name: Notification.Name.tagmanagement,
-                                        object: nil,
-                                        userInfo: [TealiumKey.tagmanagementNotification: urlRequest])
-        module.remoteCommands?.triggerCommandFrom(notification: notification)
+        let request = TealiumRemoteCommandRequest(data: [TealiumKey.tagmanagementNotification: urlRequest])
+        module.remoteCommands?.moduleDelegate?.processRemoteCommandRequest(request)
 
         waitForExpectations(timeout: 5.0, handler: nil)
 
@@ -97,6 +96,13 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
         XCTAssertEqual(module.remoteCommands?.commands.count, 1)
     }
 
+    func testUpdateReservedCommandsWhenAlreadyAdded() {
+        module = TealiumRemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
+        module.reservedCommandsAdded = true
+        XCTAssertEqual(remoteCommandsManager.addCount, 0)
+        XCTAssertEqual(remoteCommandsManager.removeCommandWithIdCount, 0)
+    }
+
     func testInitializeWithDefaultCommands() {
         config.remoteHTTPCommandDisabled = false
         module = TealiumRemoteCommandsModule(config: config, delegate: self, completion: { _ in })
@@ -112,11 +118,17 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
 }
 
 extension TealiumRemoteCommandsModuleTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+        if let _ = request as? TealiumRemoteCommandRequest {
+            self.processExpectation?.fulfill()
+        }
+    }
+
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }
 
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 }

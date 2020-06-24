@@ -19,10 +19,11 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
     weak var queue = TealiumQueues.backgroundSerialQueue
     public var commands = RemoteCommandArray()
     var isEnabled = false
+    weak public var moduleDelegate: TealiumModuleDelegate?
     static var pendingResponses = Atomic<[String: Bool]>(value: [String: Bool]())
 
-    public override init() {
-        isEnabled = true
+    public init(delegate: TealiumModuleDelegate?) {
+        moduleDelegate = delegate
     }
     
     /// Adds a remote command for later execution.
@@ -43,19 +44,15 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
     }
 
     /// Disables Remote Commands and removes all previously-added Remote Commands so they can no longer be executed.
-    public func disable() {
+    public func removeAll() {
         commands.removeAll()
-        isEnabled = false
     }
     
-    /// Trigger an associated remote command from a `Notification`
-    ///
-    /// - Parameter notification: `Notification`
-    public func triggerCommandFrom(notification: Notification) {
-        guard let request = notification.userInfo?[TealiumKey.tagmanagementNotification] as? URLRequest else {
+    public func triggerCommand(with data: [String: Any]) {
+        guard let request = data[TealiumKey.tagmanagementNotification] as? URLRequest else {
             return
         }
-        triggerCommandFrom(request: request)
+        triggerCommand(from: request)
     }
 
     /// Trigger an associated remote command from a url request.
@@ -64,34 +61,23 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
     /// - Returns: `TealiumRemoteCommandsError` if unable to trigger a remote command. If nil is returned,
     ///     then call was a successfully triggered remote command.
     @discardableResult
-    public func triggerCommandFrom(request: URLRequest) -> TealiumRemoteCommandsError? {
-
+    public func triggerCommand(from request: URLRequest) -> TealiumRemoteCommandsError? {
         if request.url?.scheme != TealiumKey.tealiumURLScheme {
             return TealiumRemoteCommandsError.invalidScheme
         }
-
         guard let commandId = request.url?.host else {
             return TealiumRemoteCommandsError.noCommandIdFound
         }
-
         guard let command = commands[commandId] else {
             return TealiumRemoteCommandsError.noCommandForCommandIdFound
         }
-
         guard let response = TealiumRemoteCommandResponse(request: request) else {
             return TealiumRemoteCommandsError.requestNotProperlyFormatted
         }
-
-        if isEnabled == false {
-            // Was valid remote command, but we're disabled at the moment.
-            return nil
-        }
-
         if let responseId = response.responseId {
             TealiumRemoteCommandsManager.pendingResponses.value[responseId] = true
         }
-        command.completeWith(response: response)
-
+        command.complete(with: response)
         return nil
     }
 }
@@ -110,7 +96,9 @@ extension TealiumRemoteCommandsManager: TealiumRemoteCommandDelegate {
             command.remoteCommandCompletion(response)
             // this will send the completion notification, if it wasn't explictly handled by the command
             if !response.hasCustomCompletionHandler {
-                TealiumRemoteCommand.sendCompletionNotification(for: command.commandId, response: response)
+                TealiumRemoteCommand.sendRemoteCommandResponse(for: command.commandId,
+                                                               response: response,
+                                                               delegate: self.moduleDelegate)
             }
         }
     }

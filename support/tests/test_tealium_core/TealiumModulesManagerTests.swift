@@ -183,7 +183,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
-        modulesManager.requestReleaseQueue(reason: "test")
+        modulesManager.requestDequeue(reason: "test")
         wait(for: [TealiumModulesManagerTests.expectatations["releaseQueue"]!], timeout: 1.0)
     }
 
@@ -279,11 +279,15 @@ class TealiumModulesManagerTests: XCTestCase {
 }
 
 extension TealiumModulesManagerTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }
 
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

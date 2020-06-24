@@ -16,7 +16,6 @@ public class TealiumTagManagementModule: Dispatcher {
     public var config: TealiumConfig
     var errorState = AtomicInteger(value: 0)
     var pendingTrackRequests = [(TealiumRequest, ModuleCompletion?)]()
-    var remoteCommandResponseObserver: NSObjectProtocol?
     var tagManagement: TealiumTagManagementProtocol?
     var webViewState: Atomic<TealiumWebViewState>?
     weak var delegate: TealiumModuleDelegate?
@@ -28,8 +27,11 @@ public class TealiumTagManagementModule: Dispatcher {
     convenience init(config: TealiumConfig,
                      delegate: TealiumModuleDelegate,
                      tagManagement: TealiumTagManagementProtocol) {
-        self.init(config: config, delegate: delegate) { result in }
-        self.tagManagement = tagManagement
+        self.init(config: config, delegate: delegate) { result in
+        }
+        defer {
+            self.tagManagement = tagManagement
+        }
     }
 
     public required init(config: TealiumConfig,
@@ -37,8 +39,7 @@ public class TealiumTagManagementModule: Dispatcher {
         completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate
-        self.tagManagement = TealiumTagManagementWKWebView(config: config)
-        enableNotifications()
+        self.tagManagement = tagManagement ?? TealiumTagManagementWKWebView(config: config, delegate: delegate)
         self.tagManagement?.enable(webviewURL: config.webviewURL, shouldMigrateCookies: true, delegates: config.webViewDelegates, shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.rootView) { [weak self] _, error in
             guard let self = self else {
                 return
@@ -141,18 +142,8 @@ public class TealiumTagManagementModule: Dispatcher {
 //            let reportRequest = TealiumReportRequest(message: "Processing remote_api request.")
 //            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
             return
-        default:
-            return
-        }
-    }
-
-    /// Listens for notifications from the Remote Commands module. Typically these will be responses from a Remote Command that has finished executing.
-    func enableNotifications() {
-        remoteCommandResponseObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name(TealiumKey.jsNotificationName), object: nil, queue: OperationQueue.main) { [weak self] notification in
-            guard let self = self else {
-                return
-            }
-            if let userInfo = notification.userInfo, var jsCommand = userInfo[TealiumKey.jsCommand] as? String {
+        case let command as TealiumRemoteCommandRequestResponse:
+            if var jsCommand = command.data[TealiumKey.jsCommand] as? String {
                 // Webview instance will ensure this is processed on the main thread
                 jsCommand = jsCommand
                                 .replacingOccurrences(of: "\\", with: "")
@@ -160,6 +151,9 @@ public class TealiumTagManagementModule: Dispatcher {
                                 .trimmingCharacters(in: .whitespaces)
                 self.tagManagement?.evaluateJavascript(jsCommand, nil)
             }
+            return
+        default:
+            return
         }
     }
 
@@ -212,10 +206,6 @@ public class TealiumTagManagementModule: Dispatcher {
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self.remoteCommandResponseObserver as Any)
     }
 
 }

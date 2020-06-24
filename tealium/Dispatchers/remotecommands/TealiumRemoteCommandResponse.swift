@@ -14,7 +14,7 @@ import TealiumCore
 public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol, CustomStringConvertible {
 
     public var status: Int = TealiumRemoteCommandStatusCode.noContent.rawValue
-    public var urlRequest: URLRequest
+    public var urlRequest: URLRequest?
     public var urlResponse: URLResponse?
     public var data: Data?
     public var error: Error?
@@ -23,8 +23,8 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     public var description: String {
         return """
         <TealiumRemoteCommandResponse: config:\(config),
-        status:\(status),
-        payload:\(payload()),
+        status:\(String(describing: status)),
+        payload:\(String(describing: payload())),
         response: \(String(describing: urlResponse)),
         data:\(String(describing: data))
         error:\(String(describing: error))>
@@ -35,7 +35,6 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     ///￼
     /// - Parameter urlString: `String` representing a valid URL with which to initialize a RemoteCommandResponse
     public convenience init?(urlString: String) {
-        // Convert string to url request then process as usual
         guard let url = URL(string: urlString) else {
             return nil
         }
@@ -49,14 +48,9 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     /// - Parameter request: `URLRequest` object with which to initialize a RemoteCommandResponse
     public init?(request: URLRequest) {
         self.urlRequest = request
-
-        guard let requestData = requestData(from: request) else {
-            return nil
-        }
-        guard configData(from: requestData) != nil else {
-            return nil
-        }
-        guard payload(from: requestData) != nil else {
+        guard let requestData = requestData(from: request),
+            let _ =  configData(from: requestData),
+            let _ = payload(from: requestData) else {
             return nil
         }
     }
@@ -66,13 +60,9 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     /// - Parameter request: `URLRequest` containing valid data with which to form a RemoteCommandResponse
     /// - Returns: `[String: Any]?` containing key-value pairs to add to the RemoteCommandResponse
     func requestData(from request: URLRequest) -> [String: Any]? {
-        guard let parameters = parameters(from: request) else {
-            return nil
-        }
-        guard let requestString = parameters[TealiumRemoteCommandsKey.request] as? String else {
-            return nil
-        }
-        guard let dictionary = dictionary(from: requestString) else {
+        guard let parameters = parameters(from: request),
+            let requestString = parameters[TealiumRemoteCommandsKey.request] as? String,
+            let dictionary = dictionary(from: requestString) else {
             return nil
         }
         return dictionary
@@ -105,25 +95,14 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     /// Gets the config dictionary from an already-instantiated Remote Command
     ///
     /// - Returns: `[String: Any] `containing the config for this Remote Command
+    ///  or an empty dictionary
     public var config: [String: Any] {
-        guard let requestData = requestData(from: self.urlRequest),
+        guard let request = self.urlRequest,
+            let requestData = requestData(from: request),
             let config = configData(from: requestData) else {
-            // Return an empty dictionary in case of failure. Should not get here, as the initializer would have failed earlier on.
             return [String: Any]()
         }
         return config
-    }
-
-    /// Gets the payload dictionary from an already-instantiated Remote Command
-    ///
-    /// - Returns: `[String: Any]` containing the payload for this Remote Command
-    public func payload() -> [String: Any] {
-        guard let requestData = requestData(from: self.urlRequest),
-            let payload = payload(from: requestData) else {
-            // Return an empty dictionary in case of failure. Should not get here, as the initializer would have failed earlier on.
-            return [String: Any]()
-        }
-        return payload
     }
     
     /// Gets the Response ID from the original remote command invocation.
@@ -136,20 +115,29 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
         }
         return responseId
     }
+    
+    /// Gets the payload dictionary from an already-instantiated Remote Command
+    ///
+    /// - Returns: `[String: Any]` containing the payload for this Remote Command
+    ///  or an empty dictionary
+    public func payload() -> [String: Any] {
+        guard let urlRequest = self.urlRequest,
+            let requestData = requestData(from: urlRequest),
+            let payload = payload(from: requestData) else {
+            return [String: Any]()
+        }
+        return payload
+    }
 
     /// Converts a JSON string into a dictionary
     ///￼
     /// - Parameter string: `String` representing a JSON object
     /// - Returns: `[String: Any]?`
     func dictionary(from string: String) -> [String: Any]? {
-        guard let data = string.data(using: .utf8) else {
+        guard let data = string.data(using: .utf8), let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
             return nil
         }
-        do {
-            return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-        } catch {
-            return nil
-        }
+        return dictionary
     }
 
     /// Gets the query parameters from a URLRequest
@@ -157,11 +145,7 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     /// - Parameter request: `URLRequest`
     /// - Returns: `[String: Any]?` containing query parameters, if present.
     func parameters(from request: URLRequest) -> [String: Any]? {
-        guard let url = request.url else {
-            return nil
-        }
-
-        return url.queryItems
+        request.url?.queryItems
     }
 }
 #endif

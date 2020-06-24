@@ -13,8 +13,8 @@ public class ModulesManager {
     var originalConfig: TealiumConfig
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
-    var optionalCollectors: [String] = ["TealiumAttributionModule", "TealiumAttribution.TealiumAttributionModule", "TealiumLifecycle.LifecycleModule",/* "TealiumAutotracking.TealiumAutotrackingModule",*/ "TealiumVisitorService.TealiumVisitorServiceModule", "TealiumLocation.TealiumLocationModule", "TealiumCrash.TealiumCrashModule", "TealiumLifecycle.TealiumLifecycleModule"]
-    var knownDispatchers: [String] = ["TealiumCollect.TealiumCollectModule", "TealiumTagManagement.TealiumTagManagementModule","TealiumRemoteCommands.TealiumRemoteCommandsModule"]
+    var optionalCollectors: [String] = TealiumValue.optionalCollectors
+    var knownDispatchers: [String] = TealiumValue.knownDispatchers
     public var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
         willSet {
@@ -300,8 +300,14 @@ extension ModulesManager: TealiumModuleDelegate {
         }
     }
     
-    public func requestReleaseQueue(reason: String) {
+    public func requestDequeue(reason: String) {
         self.dispatchManager?.handleReleaseRequest(reason: reason)
+    }
+    
+    public func processRemoteCommandRequest(_ request: TealiumRequest) {
+        self.dispatchers.forEach {
+            $0.dynamicTrack(request, completion: nil)
+        }
     }
 }
 
@@ -314,7 +320,7 @@ extension ModulesManager: TealiumConnectivityDelegate {
         if self.dispatchers.isEmpty {
             self.setupDispatchers(config: config)
         }
-        self.requestReleaseQueue(reason: TealiumConstants.connectionRestoredReason)
+        self.requestDequeue(reason: TealiumConstants.connectionRestoredReason)
     }
     
     

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@testable import TealiumCore
 @testable import TealiumRemoteCommands
 
 class MockRemoteCommand: TealiumRemoteCommandProtocol {
@@ -25,12 +26,12 @@ class MockRemoteCommand: TealiumRemoteCommandProtocol {
         }
     }
 
-    func completeWith(response: TealiumRemoteCommandResponseProtocol) {
+    func complete(with response: TealiumRemoteCommandResponseProtocol) {
 
     }
-
-    static func sendCompletionNotification(for commandId: String, response: TealiumRemoteCommandResponseProtocol) {
-
+    
+    static func sendRemoteCommandResponse(for commandId: String, response: TealiumRemoteCommandResponseProtocol, delegate: TealiumModuleDelegate?) {
+        
     }
 
 }

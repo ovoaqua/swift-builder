@@ -42,7 +42,6 @@ public class TealiumLifecycleModule: Collector {
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
                                                              forModule: "lifecycle",
                                                              isCritical: true)
-        self.delegate = delegate
         self.config = config
         if config.lifecycleAutoTrackingEnabled {
             Tealium.lifecycleListeners.addDelegate(delegate: self)

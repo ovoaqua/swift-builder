@@ -101,4 +101,12 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
         XCTAssertTrue(expectedQueryItems == queryItems, "Unexpected query items returned: \(queryItems), expected: \(expectedQueryItems)")
     }
 
+    func testHTTPCommand() {
+        let expected = TealiumRemoteCommand(commandId: "_http", description: "For processing tag-triggered HTTP requests") { _ in
+            // ....
+        }
+        let actual = TealiumRemoteHTTPCommand.create(with: nil)
+        XCTAssertEqual(expected.description, actual.description)
+    }
+
 }

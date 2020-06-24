@@ -14,7 +14,7 @@ import TealiumCore
 class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
 
     /// - Returns:`TealiumRemoteHTTPCommand`
-    class func create() -> TealiumRemoteCommandProtocol {
+    class func create(with delegate: TealiumModuleDelegate?) -> TealiumRemoteCommandProtocol {
         return TealiumRemoteCommand(commandId: TealiumRemoteCommandsKey.commandId,
             description: "For processing tag-triggered HTTP requests") { response in
             var response = response
@@ -42,8 +42,7 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
                     }
                     response.urlResponse = urlResponse
                     response.data = data
-                    TealiumRemoteCommand.sendCompletionNotification(for: TealiumRemoteCommandsKey.commandId,
-                        response: response)
+                    TealiumRemoteCommand.sendRemoteCommandResponse(for: TealiumRemoteCommandsKey.commandId, response: response, delegate: delegate)
                 })
 
             task.resume()
