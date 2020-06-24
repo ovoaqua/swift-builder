@@ -33,7 +33,6 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         newConfig.enableConsentManager = false
         var updateRequest = TealiumUpdateConfigRequest(config: newConfig)
         module.updateConfig(updateRequest)
-        XCTAssertFalse(module.ready)
         XCTAssertNil(module.consentManager)
         let expect = expectation(description: "consent mgr init")
         newConfig = TealiumConfig(account: "testAccount2", profile: "testProfile2", environment: "testEnvironment")
@@ -41,7 +40,6 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         updateRequest = TealiumUpdateConfigRequest(config: newConfig)
         module.updateConfig(updateRequest)
         expect.fulfill()
-        XCTAssertTrue(module.ready)
         XCTAssertNotNil(module.consentManager)
         wait(for: [expect], timeout: 2.0)
     }
@@ -61,7 +59,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
             TealiumConsentConstants.consentPartialEventName,
             TealiumConsentConstants.consentGrantedEventName,
             TealiumConsentConstants.consentDeclinedEventName,
-            TealiumKey.updateConsentCookieEventName
+            TealiumConsentConstants.gdprConsentCookieEventName
         ]
         auditingEvents.forEach {
             track = TealiumTrackRequest(data: [TealiumKey.event: $0])
@@ -79,11 +77,6 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         XCTAssertTrue(queue.0)
         XCTAssertTrue(queue.1?["queue_reason"] as? String == "consentmanager", "Consent Manager Module: \(#function) - Track call contained unexpected value")
         XCTAssertTrue(queue.1?["tracking_consented"] as? String == "unknown", "Consent Manager Module: \(#function) - Track call contained unexpected value")
-        guard let categories = queue.1?["consent_categories"] as? [String] else {
-            XCTFail("Consent categories should be present in dictionary")
-            return
-        }
-        XCTAssertEqual(categories.count, 0)
     }
 
     func testShouldQueueTrackingStatusTrackingAllowed() {
@@ -168,7 +161,8 @@ class ConsentManagerModuleUnitTests: XCTestCase {
                                                            "cdp",
                                                            "cookiematch",
                                                            "misc"],
-            "test": "track"
+            "test": "track",
+            "policy": "gdpr"
         ]
         track = TealiumTrackRequest(data: ["test": "track"])
         var trackWithConsentData = module.addConsentDataToTrack(track).trackDictionary
@@ -184,7 +178,8 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         let expected: [String: Any] = [
             TealiumConsentConstants.trackingConsentedKey: "notConsented",
             TealiumConsentConstants.consentCategoriesKey: [],
-            "test": "track"
+            "test": "track",
+            "policy": "gdpr"
         ]
         track = TealiumTrackRequest(data: ["test": "track"])
         var trackWithConsentData = module.addConsentDataToTrack(track).trackDictionary
@@ -201,7 +196,8 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         let expected: [String: Any] = [
             TealiumConsentConstants.trackingConsentedKey: "unknown",
             TealiumConsentConstants.consentCategoriesKey: [],
-            "test": "track"
+            "test": "track",
+            "policy": "gdpr"
         ]
         track = TealiumTrackRequest(data: ["test": "track"])
         var trackWithConsentData = module.addConsentDataToTrack(track).trackDictionary

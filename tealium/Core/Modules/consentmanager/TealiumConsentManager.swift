@@ -11,13 +11,29 @@ import Foundation
 public class TealiumConsentManager {
 
     private weak var delegate: TealiumModuleDelegate?
-    private var tealiumConfig: TealiumConfig?
-    private var consentUserPreferences: TealiumConsentUserPreferences!
-    private var consentPreferencesStorage: TealiumConsentPreferencesStorage?
-    var consentLoggingEnabled = false
-    weak var consentManagerModuleInstance: TealiumConsentManagerModule?
+    var config: TealiumConfig
+    var consentPreferencesStorage: TealiumConsentPreferencesStorage?
+    var consentLoggingEnabled: Bool {
+        config.consentLoggingEnabled
+    }
     var diskStorage: TealiumDiskStorageProtocol?
-
+    var currentPolicy: ConsentPolicy
+    
+    /// Returns current consent status
+    public var consentStatus: TealiumConsentStatus {
+        currentPolicy.preferences.consentStatus
+    }
+    
+    /// Returns current consent categories, if applicable
+    public var consentCateogries: [TealiumConsentCategories]? {
+        currentPolicy.preferences.consentCategories
+    }
+    
+    /// Used by the Consent Manager module to determine if tracking calls can be sent.
+    var trackingStatus: TealiumConsentTrackAction {
+        currentPolicy.trackAction
+    }
+    
     /// Initialize consent manager￼.
     ///
     /// - Parameters:
@@ -26,108 +42,68 @@ public class TealiumConsentManager {
     ///     - diskStorage: `TealiumDiskStorageProtocol` instance to allow overriding for unit testing￼
     ///     - completion: Optional completion block, called when fully initialized
     public init(config: TealiumConfig,
-                      delegate: TealiumModuleDelegate?,
-                      diskStorage: TealiumDiskStorageProtocol,
-                      _ completion: (() -> Void)?) {
+                delegate: TealiumModuleDelegate?,
+                diskStorage: TealiumDiskStorageProtocol) {
         self.diskStorage = diskStorage
         consentPreferencesStorage = TealiumConsentPreferencesStorage(diskStorage: diskStorage)
-        tealiumConfig = config
-        consentLoggingEnabled = config.consentLoggingEnabled
+        self.config = config
         self.delegate = delegate
         // try to load config from persistent storage first
-        if let preferences = getSavedPreferences() {
-            consentUserPreferences = preferences
-            // always need to update the consent cookie in TiQ, so this will trigger update_consent_cookie
-            trackUserConsentPreferences(preferences: consentUserPreferences)
-        } else {
-            // not yet determined state.
-            consentUserPreferences = TealiumConsentUserPreferences(consentStatus: .unknown, consentCategories: nil)
+        let preferences = consentPreferencesStorage?.preferences ?? TealiumUserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
+        
+        switch config.consentPolicy {
+        case .ccpa:
+            self.currentPolicy = CCPAConsentPolicy(preferences)
+        case .gdpr:
+            self.currentPolicy = GDPRConsentPolicy(preferences)
         }
-        completion?()
-    }
-
-    /// Sets the module delegate￼.
-    ///
-    /// - Parameter delegate: `TealiumModuleDelegate`
-    public func setModuleDelegate(delegate: TealiumModuleDelegate) {
-        self.delegate = delegate
+        
+        if preferences.consentStatus != .unknown {
+            // always need to update the consent cookie in TiQ, so this will trigger update_consent_cookie
+            trackUserConsentPreferences(preferences)
+        }
     }
 
     /// Sends a track call containing the consent settings if consent logging is enabled￼.
     ///
-    /// - Parameter preferences: `TealiumConsentUserPreferences?`
-    func trackUserConsentPreferences(preferences: TealiumConsentUserPreferences?) {
-        if let preferences = preferences, var consentData = preferences.dictionary {
-            
-            let policy = tealiumConfig?.consentPolicyOverride ?? TealiumConsentPolicy.gdpr
-            consentData[TealiumConsentConstants.policyKey] = policy.rawValue
-            
-            let totalCategories = TealiumConsentCategories.all().count
-            if preferences.consentStatus == .consented {
-                if let currentCategories = preferences.consentCategories?.count, currentCategories < totalCategories {
-                    consentData[TealiumKey.event] = TealiumConsentConstants.consentPartialEventName
-                } else {
-                    consentData[TealiumKey.event] = TealiumConsentConstants.consentGrantedEventName
-                }
-            } else {
-                consentData[TealiumKey.event] = TealiumConsentConstants.consentDeclinedEventName
-            }
-
+    /// - Parameter preferences: `TealiumUserConsentPreferences?`
+    func trackUserConsentPreferences(_ preferences: TealiumUserConsentPreferences?) {
+        if var consentData = currentPolicy.consentPolicyStatusInfo {
+            consentData[TealiumKey.event] = currentPolicy.consentTrackingEventName
             // this track call must only be sent if "Log Consent Changes" is enabled and user has consented
-            if consentLoggingEnabled {
+            if consentLoggingEnabled, currentPolicy.shouldLogConsentStatus {
                 // call type must be set to override "link" or "view"
                 consentData[TealiumKey.callType] = consentData[TealiumKey.event]
                 delegate?.requestTrack(TealiumTrackRequest(data: consentData, completion: nil))
             }
             // in all cases, update the cookie data in TiQ/webview
-            updateTIQCookie(consentData)
+            updateTIQCookie()
         }
     }
 
     /// Sends the track call to update TiQ cookie info. Ignored by Collect module.￼
     ///
     /// - Parameter consentData: `[String: Any]` containing the consent preferences
-    func updateTIQCookie(_ consentData: [String: Any]) {
-        var consentData = consentData
-        // may change: currently, a separate call is required to TiQ to set the relevant cookies in the webview
-        // collect module ignores this hit
-        consentData[TealiumKey.event] = TealiumKey.updateConsentCookieEventName
-        consentData[TealiumKey.callType] = TealiumKey.updateConsentCookieEventName
-        delegate?.requestTrack(TealiumTrackRequest(data: consentData, completion: nil))
-    }
-
-    /// - Returns: `TealiumConsentUserPreferences?` from persistent storage
-    func getSavedPreferences() -> TealiumConsentUserPreferences? {
-        consentPreferencesStorage?.retrieveConsentPreferences()
+    func updateTIQCookie() {
+        if currentPolicy.shouldUpdateConsentCookie {
+            var consentData = [String: Any]()
+            if let extraData = currentPolicy.consentPolicyStatusInfo {
+                consentData += extraData
+            }
+            // collect module ignores this hit
+            consentData[TealiumKey.event] = currentPolicy.updateConsentCookieEventName
+            consentData[TealiumKey.callType] = currentPolicy.updateConsentCookieEventName
+            delegate?.requestTrack(TealiumTrackRequest(data: consentData, completion: nil))
+        }
     }
 
     /// Saves current consent preferences to persistent storage.
-    func storeConsentUserPreferences() {
-        guard let consentUserPrefs = getUserConsentPreferences() else {
-            return
-        }
+    func storeUserConsentPreferences(_ preferences: TealiumUserConsentPreferences) {
+        currentPolicy.preferences = preferences
         // store data
-        consentPreferencesStorage?.storeConsentPreferences(consentUserPrefs)
+        consentPreferencesStorage?.preferences = preferences
     }
 
-    /// Sets the current consent preferences￼.
-    ///
-    /// - Parameter prefs: `TealiumConsentUserPreferences`
-    func setConsentUserPreferences(_ prefs: TealiumConsentUserPreferences) {
-        consentUserPreferences = prefs
-    }
-
-    /// Used by the Consent Manager module to determine if tracking calls can be sent.
-    ///
-    /// - Returns: `TealiumConsentTrackAction` indicating whether tracking is allowed or forbidden
-    public func getTrackingStatus() -> TealiumConsentTrackAction {
-        if getUserConsentPreferences()?.consentStatus == .consented {
-            return .trackingAllowed
-        } else if getUserConsentPreferences()?.consentStatus == .notConsented {
-            return .trackingForbidden
-        }
-        return .trackingQueued
-    }
 }
 
 // MARK: Public API
@@ -139,7 +115,7 @@ public extension TealiumConsentManager {
     func setUserConsentStatus(_ status: TealiumConsentStatus) {
         var categories = [TealiumConsentCategories]()
         if status == .consented {
-            categories = TealiumConsentCategories.all()
+            categories = TealiumConsentCategories.allCategories
         }
         setUserConsentStatusWithCategories(status: status, categories: categories)
     }
@@ -157,53 +133,21 @@ public extension TealiumConsentManager {
     ///     - status: `TealiumConsentStatus?`￼
     ///     - categories: `[TealiumConsentCategories]?`
     private func setUserConsentStatusWithCategories(status: TealiumConsentStatus?, categories: [TealiumConsentCategories]?) {
-        guard let _ = consentUserPreferences else {
-            consentUserPreferences = TealiumConsentUserPreferences(consentStatus: status ?? .unknown, consentCategories: categories)
-            trackUserConsentPreferences(preferences: consentUserPreferences)
-            storeConsentUserPreferences()
-            return
-        }
         if let status = status {
-            consentUserPreferences?.setConsentStatus(status)
+            currentPolicy.preferences.setConsentStatus(status)
         }
         if let categories = categories {
-            consentUserPreferences?.setConsentCategories(categories)
+            currentPolicy.preferences.setConsentCategories(categories)
         }
-        storeConsentUserPreferences()
-        trackUserConsentPreferences(preferences: consentUserPreferences)
-    }
-
-    /// Utility method to determine if consent categories have changed￼.
-    ///
-    /// - Parameters:
-    ///     - lhs: `[TealiumConsentCategories]`￼
-    ///     - rhs: `[TealiumConsentCategories]`
-    func consentCategoriesEqual(_ lhs: [TealiumConsentCategories], _ rhs: [TealiumConsentCategories]) -> Bool {
-        let lhs = lhs.sorted { $0.rawValue < $1.rawValue }
-        let rhs = rhs.sorted { $0.rawValue < $1.rawValue }
-        return lhs == rhs
-    }
-
-    /// - Returns: `TealiumConsentStatus`
-    func getUserConsentStatus() -> TealiumConsentStatus {
-        return consentUserPreferences?.consentStatus ?? TealiumConsentStatus.unknown
-    }
-
-    /// - Returns: `[TealiumConsentCategories]? `containing all current consent categories
-    func getUserConsentCategories() -> [TealiumConsentCategories]? {
-        return consentUserPreferences?.consentCategories
-    }
-
-    /// - Returns: `TealiumConsentUserPreferences?` containing all current consent preferences
-    func getUserConsentPreferences() -> TealiumConsentUserPreferences? {
-        return consentUserPreferences
+        storeUserConsentPreferences(currentPolicy.preferences)
+        trackUserConsentPreferences(currentPolicy.preferences)
     }
 
     /// Resets all consent preferences in memory and in persistent storage.
     func resetUserConsentPreferences() {
-        consentPreferencesStorage?.clearStoredPreferences()
-        consentUserPreferences?.resetConsentCategories()
-        consentUserPreferences?.setConsentStatus(.unknown)
-        trackUserConsentPreferences(preferences: consentUserPreferences)
+        consentPreferencesStorage?.preferences = nil
+        currentPolicy.preferences.resetConsentCategories()
+        currentPolicy.preferences.setConsentStatus(.unknown)
+        trackUserConsentPreferences(currentPolicy.preferences)
     }
 }

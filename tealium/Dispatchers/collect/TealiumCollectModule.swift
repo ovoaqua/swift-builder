@@ -46,7 +46,7 @@ public class TealiumCollectModule: Dispatcher {
 
         switch request {
         case let request as TealiumTrackRequest:
-            guard request.trackDictionary[TealiumKey.event] as? String != TealiumKey.updateConsentCookieEventName else {
+            guard !isConsentEvent(request.trackDictionary) else {
                 completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
                 return
             }
@@ -54,7 +54,7 @@ public class TealiumCollectModule: Dispatcher {
         case let request as TealiumBatchTrackRequest:
             var requests = request.trackRequests
             requests = requests.filter {
-                $0.trackDictionary[TealiumKey.event] as? String != TealiumKey.updateConsentCookieEventName
+                !isConsentEvent($0.trackDictionary)
             }.map {
                 prepareForDispatch($0)
             }
@@ -68,6 +68,13 @@ public class TealiumCollectModule: Dispatcher {
             completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
             return
         }
+    }
+    
+    func isConsentEvent(_ data: [String: Any]) -> Bool {
+        guard let event = data[TealiumKey.event] as? String else {
+            return false
+        }
+        return TealiumKey.updateConsentCookieEventNames.contains(event)
     }
 
     /// Adds required account information to the dispatch if missing￼.

@@ -34,22 +34,6 @@ public extension TealiumConfig {
     }
 
     /// Determines whether consent logging events should be sent to Tealium UDH￼.
-    ///
-    /// - Parameter enabled: `Bool` `true` if enabled
-    @available(*, deprecated, message: "Please switch to config.consentLoggingEnabled")
-    func setConsentLoggingEnabled(_ enabled: Bool) {
-        consentLoggingEnabled = enabled
-    }
-
-    /// Checks if consent logging is currently enabled.
-    ///
-    /// - Returns: `Bool` true if enabled
-    @available(*, deprecated, message: "Please switch to config.consentLoggingEnabled")
-    func isConsentLoggingEnabled() -> Bool {
-        consentLoggingEnabled
-    }
-
-    /// Determines whether consent logging events should be sent to Tealium UDH￼.
     var consentLoggingEnabled: Bool {
         get {
             optionalData[TealiumConsentConstants.consentLoggingEnabled] as? Bool ?? false
@@ -60,26 +44,10 @@ public extension TealiumConfig {
         }
     }
 
-    /// Overrides the consent policy (default GDPR)￼.
-    ///
-    /// - Parameter policy: `String` containing the policy (e.g. "CCPA)
-    @available(*, deprecated, message: "Please switch to config.consentPolicyOverride")
-    func setOverrideConsentPolicy(_ policy: TealiumConsentPolicy) {
-        consentPolicyOverride = policy
-    }
-
-    /// Retrieves the current overridden consent policy.
-    ///
-    /// - Returns: `String?` containing the consent policy
-    @available(*, deprecated, message: "Please switch to config.consentPolicyOverride")
-    func getOverrideConsentPolicy() -> TealiumConsentPolicy? {
-        consentPolicyOverride
-    }
-
-    /// Overrides the consent policy (defaults to GDPR)￼. e.g. CCPA
-    var consentPolicyOverride: TealiumConsentPolicy? {
+    /// Sets the consent policy (defaults to GDPR)￼. e.g. CCPA
+    var consentPolicy: TealiumConsentPolicy {
         get {
-            optionalData[TealiumConsentConstants.policyKey] as? TealiumConsentPolicy
+            optionalData[TealiumConsentConstants.policyKey] as? TealiumConsentPolicy ?? TealiumConsentPolicy.gdpr
         }
 
         set {

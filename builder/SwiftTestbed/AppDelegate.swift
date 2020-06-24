@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TealiumCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let cookieStore = HTTPCookieStorage.shared
             cookieStore.cookieAcceptPolicy = .always
         TealiumHelper.shared.start()
-
         return true
     }
     

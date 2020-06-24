@@ -153,7 +153,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.dispatchers = []
         modulesManager.eventDataManager = DummyDataManagerNoData()
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
+        modulesManager.dispatchManager = DummyDispatchManagerSendTrack(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
         modulesManager.sendTrack(track)
@@ -167,7 +167,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.dispatchers = []
         modulesManager.eventDataManager = DummyDataManagerNoData()
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
+        modulesManager.dispatchManager = DummyDispatchManagerRequestTrack(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
         modulesManager.sendTrack(track)
@@ -181,7 +181,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.dispatchers = []
         modulesManager.eventDataManager = DummyDataManagerNoData()
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
+        modulesManager.dispatchManager = DummyDispatchManagerReleaseQueue(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         modulesManager.requestDequeue(reason: "test")
         wait(for: [TealiumModulesManagerTests.expectatations["releaseQueue"]!], timeout: 1.0)
@@ -231,7 +231,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.dispatchListeners = []
         modulesManager.dispatchValidators = []
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
-        modulesManager.dispatchManager = DummyDispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
+        modulesManager.dispatchManager = DummyDispatchManagerConfigUpdate(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
         let config = testTealiumConfig
         config.logLevel = .info
         modulesManager.config = config
@@ -390,7 +390,98 @@ class DummyDataManager: EventDataManagerProtocol {
 
 }
 
-class DummyDispatchManager: DispatchManagerProtocol {
+class DummyDispatchManagerConfigUpdate: DispatchManagerProtocol {
+    var dispatchers: [Dispatcher]?
+
+    var dispatchListeners: [DispatchListener]?
+
+    var dispatchValidators: [DispatchValidator]?
+
+    var config: TealiumConfig {
+        willSet {
+            TealiumModulesManagerTests.expectatations["configPropertyUpdate"]?.fulfill()
+        }
+    }
+
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
+        self.dispatchers = dispatchers
+        self.dispatchValidators = dispatchValidators
+        self.dispatchListeners = dispatchListeners
+        self.config = config
+    }
+
+    func processTrack(_ request: TealiumTrackRequest) {
+
+    }
+
+    func handleReleaseRequest(reason: String) {
+
+    }
+
+}
+
+class DummyDispatchManagerReleaseQueue: DispatchManagerProtocol {
+    var dispatchers: [Dispatcher]?
+
+    var dispatchListeners: [DispatchListener]?
+
+    var dispatchValidators: [DispatchValidator]?
+
+    var config: TealiumConfig {
+        willSet {
+            TealiumModulesManagerTests.expectatations["configPropertyUpdate"]?.fulfill()
+        }
+    }
+
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
+        self.dispatchers = dispatchers
+        self.dispatchValidators = dispatchValidators
+        self.dispatchListeners = dispatchListeners
+        self.config = config
+    }
+
+    func processTrack(_ request: TealiumTrackRequest) {
+
+    }
+
+    func handleReleaseRequest(reason: String) {
+        TealiumModulesManagerTests.expectatations["releaseQueue"]?.fulfill()
+    }
+
+}
+
+class DummyDispatchManagerRequestTrack: DispatchManagerProtocol {
+    var dispatchers: [Dispatcher]?
+
+    var dispatchListeners: [DispatchListener]?
+
+    var dispatchValidators: [DispatchValidator]?
+
+    var config: TealiumConfig {
+        willSet {
+            TealiumModulesManagerTests.expectatations["configPropertyUpdate"]?.fulfill()
+        }
+    }
+
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
+        self.dispatchers = dispatchers
+        self.dispatchValidators = dispatchValidators
+        self.dispatchListeners = dispatchListeners
+        self.config = config
+    }
+
+    func processTrack(_ request: TealiumTrackRequest) {
+        XCTAssertTrue(request.trackDictionary.count > 0)
+        XCTAssertNotNil(request.trackDictionary["request_uuid"])
+        TealiumModulesManagerTests.expectatations["requestTrack"]?.fulfill()
+    }
+
+    func handleReleaseRequest(reason: String) {
+    }
+
+}
+
+class DummyDispatchManagerSendTrack: DispatchManagerProtocol {
     var dispatchers: [Dispatcher]?
 
     var dispatchListeners: [DispatchListener]?
@@ -414,11 +505,10 @@ class DummyDispatchManager: DispatchManagerProtocol {
         XCTAssertTrue(request.trackDictionary.count > 0)
         XCTAssertNotNil(request.trackDictionary["request_uuid"])
         TealiumModulesManagerTests.expectatations["sendTrack"]?.fulfill()
-        TealiumModulesManagerTests.expectatations["requestTrack"]?.fulfill()
     }
 
     func handleReleaseRequest(reason: String) {
-        TealiumModulesManagerTests.expectatations["releaseQueue"]?.fulfill()
+
     }
 
 }

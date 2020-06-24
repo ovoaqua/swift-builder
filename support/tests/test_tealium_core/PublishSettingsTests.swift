@@ -70,6 +70,22 @@ class PublishSettingsTests: XCTestCase {
         wait(for: [expectation], timeout: 5)
     }
 
+    func testGetRemoteSettingsExtraContent() {
+        let expectation = self.expectation(description: "publishsettings")
+        let config = testTealiumConfig.copy
+        config.shouldUseRemotePublishSettings = true
+
+        let publishSettingsRetriever = TealiumPublishSettingsRetriever(config: config, diskStorage: nil, urlSession: MockURLSessionPublishSettingsExtraContent(), delegate: self)
+        publishSettingsRetriever.getRemoteSettings(url: URL(string: "https://tags.tiqcdn.com/utag/tealiummobile/demo/dev/mobile.html")!, lastFetch: Date(timeIntervalSince1970: 0)) { settings in
+            guard settings != nil else {
+                XCTFail("Publish settings not returned")
+                return
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5)
+    }
+
     func testGetRemoteSettingsNoContent() {
         let expectation = self.expectation(description: "publishsettings")
         let config = testTealiumConfig.copy

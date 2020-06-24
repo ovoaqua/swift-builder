@@ -11,6 +11,7 @@ import Foundation
 public enum TealiumConsentConstants {
     static let enableConsentManager = "enable_consent_manager"
     static let consentCategoriesKey = "consent_categories"
+    static let doNotSellKey = "do_not_sell"
     static let trackingConsentedKey = "tracking_consented"
     static let consentGrantedEventName = "grant_full_consent"
     static let consentDeclinedEventName = "decline_consent"
@@ -21,6 +22,8 @@ public enum TealiumConsentConstants {
     static let policyKey = "policy"
     static let defaultPolicy = "gdpr"
     static let consentManagerDelegate = "consent_manager_delegate"
+    static let gdprConsentCookieEventName = "update_consent_cookie"
+    static let ccpaCookieEventName = "set_dns_state"
 }
 
 public enum TealiumConsentCategories: String, Codable {
@@ -56,7 +59,7 @@ public enum TealiumConsentCategories: String, Codable {
     }
 
     /// - Returns: `[TealiumConsentCategories]` -  all currently-implemented consent categories
-    public static func all() -> [TealiumConsentCategories] {
+    public static var allCategories: [TealiumConsentCategories] {
         return [
             .analytics,
             .affiliates,
@@ -78,6 +81,7 @@ public enum TealiumConsentCategories: String, Codable {
 }
 
 public enum TealiumConsentPolicy: String {
+    case ccpa
     case gdpr
 }
 

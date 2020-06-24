@@ -30,9 +30,9 @@ public class Tealium {
                 modulesManager: ModulesManager? = nil,
                 enableCompletion: TealiumEnableCompletion?) {
         defer {
-//            TealiumQueues.backgroundConcurrentQueue.write {
+            TealiumQueues.backgroundConcurrentQueue.write {
                 enableCompletion?(.success(true))
-//            }
+            }
         }
 
         self.enableCompletion = enableCompletion

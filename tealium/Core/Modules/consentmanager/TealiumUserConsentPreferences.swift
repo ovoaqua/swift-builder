@@ -1,5 +1,5 @@
 //
-//  TealiumConsentUserPreferences.swift
+//  TealiumUserConsentPreferences.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 4/25/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TealiumConsentUserPreferences: Equatable, Codable {
+public struct TealiumUserConsentPreferences: Equatable, Codable {
 
     var consentCategories: [TealiumConsentCategories]?
     var consentStatus: TealiumConsentStatus
@@ -69,7 +69,7 @@ public struct TealiumConsentUserPreferences: Equatable, Codable {
         return converted
     }
 
-    /// - Returns: `[String: Any]?` representation of TealiumConsentUserPreferences
+    /// - Returns: `[String: Any]?` representation of TealiumUserConsentPreferences
     public var dictionary:  [String: Any]? {
         var preferencesDictionary = [String: Any]()
 

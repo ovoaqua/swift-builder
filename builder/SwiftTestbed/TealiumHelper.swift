@@ -38,13 +38,15 @@ class TealiumHelper: NSObject {
     func start() {
         // REQUIRED Config object for lib
         let config = TealiumConfig(account: "tealiummobile",
-                                   profile: "demo",
+                                   profile: "ccpa-test",
                                    environment: "dev",
                                    datasource: "test12",
                                    optionalData: nil)
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .info
+        config.enableConsentManager = false
+        config.consentPolicy = .gdpr
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
@@ -52,7 +54,7 @@ class TealiumHelper: NSObject {
         config.shouldUseRemotePublishSettings = false
         config.batchingEnabled = false
         config.memoryReportingEnabled = true
-        config.sessionHandlingEnabled = true
+//        config.sessionHandlingEnabled = true
         config.diskStorageEnabled = true
         //config.visitorServiceDelegate = self
         config.remoteAPIEnabled = false
@@ -92,6 +94,7 @@ class TealiumHelper: NSObject {
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager
             teal.consentManager?.setUserConsentStatus(.consented)
+            
             dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
 
             persitence.add(data: ["some_key1": "some_val1"], expiration: .session)
@@ -143,7 +146,7 @@ class TealiumHelper: NSObject {
     
     
     func toggleConsentStatus() {
-        if let consentStatus = tealium?.consentManager?.getUserConsentStatus() {
+        if let consentStatus = tealium?.consentManager?.consentStatus {
             switch consentStatus {
             case .consented:
                 TealiumHelper.shared.tealium?.consentManager?.setUserConsentStatus(.notConsented)

@@ -74,7 +74,7 @@ public enum TealiumKey {
     public static let queueReason = "queue_reason"
     public static let wasQueued = "was_queued"
     public static let dispatchService = "dispatch_service"
-    public static let updateConsentCookieEventName = "update_consent_cookie"
+    public static let updateConsentCookieEventNames = ["update_consent_cookie", "set_dns_state"]
     public static let jsNotificationName = "com.tealium.tagmanagement.jscommand"
     public static let tagmanagementNotification = "com.tealium.tagmanagement.urlrequest"
     public static let jsCommand = "js"
