@@ -16,23 +16,8 @@ import TealiumCore
 // MARK: EXTENSIONS
 
 public extension TealiumConfig {
-
+    
     /// Adds optional delegates to the WebView instance.
-    ///￼
-    /// - Parameter delegates: `[WKNavigationDelegate]` Array of delegates.
-    @available(*, deprecated, message: "Please switch to config.webViewDelegates")
-    func setWebViewDelegates(_ delegates: [WKNavigationDelegate]) {
-        webViewDelegates = delegates
-    }
-
-    /// Gets array of optional webview delegates from the `TealiumConfig` instance.
-    ///
-    /// - Returns: `[WKNavigationDelegate]`
-    @available(*, deprecated, message: "Please switch to config.webViewDelegates")
-    func getWebViewDelegates() -> [WKNavigationDelegate]? {
-        webViewDelegates
-    }
-
     var webViewDelegates: [WKNavigationDelegate]? {
         get {
             options[TealiumTagManagementConfigKey.delegate] as? [WKNavigationDelegate]
@@ -44,13 +29,6 @@ public extension TealiumConfig {
     }
 
     /// Optional override for the tag management webview URL.
-    ///￼
-    /// - Parameter string: `String` representing the URL to be loaded by the webview. Must be a valid URL
-    @available(*, deprecated, message: "Please switch to config.tagManagementOverrideURL")
-    func setTagManagementOverrideURL(string: String) {
-        tagManagementOverrideURL = string
-    }
-
     var tagManagementOverrideURL: String? {
         get {
             options[TealiumTagManagementConfigKey.overrideURL] as? String
@@ -70,22 +48,6 @@ public extension TealiumConfig {
         } else {
             return URL(string: "\(TealiumTagManagementKey.defaultUrlStringPrefix)/\(self.account)/\(self.profile)/\(self.environment)/mobile.html")
         }
-    }
-
-    /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
-    ///￼
-    /// - Parameter view: `UIView` instance for `WKWebView` to be attached to
-    @available(*, deprecated, message: "Please switch to config.rootView")
-    func setRootView(_ view: UIView) {
-        rootView = view
-    }
-
-    /// Checks if a specific root view has been provided in the `TealiumConfig` instance.
-    ///
-    /// - Returns: `UIView?` to be used.
-    @available(*, deprecated, message: "Please switch to config.rootView")
-    func getRootView() -> UIView? {
-        rootView
     }
 
     /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
@@ -113,23 +75,23 @@ public extension TealiumConfig {
 
 #if TEST
 #else
-//extension Tealium {
-//
-//    /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
-//    func tagManagement() -> TealiumTagManagementProtocol? {
-//        guard let module = modulesManager?.getModule(forName: TealiumTagManagementKey.moduleName) as? TagManagementModule else {
-//            return nil
-//        }
-//
-//        return module.tagManagement
-//    }
-//
-//    /// Sets a new root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
-//    ///￼
-//    /// - Parameter view: `UIView` instance for `WKWebView` to be attached to
-//    public func updateRootView(_ view: UIView) {
-//        self.tagManagement()?.setRootView(view, completion: nil)
-//    }
-//}
+extension Tealium {
+
+    /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
+    var tagManagement: TealiumTagManagementProtocol? {
+            let module = zz_internal_modulesManager?.modules.filter {
+                $0 is TealiumTagManagementModule
+            }.first
+        
+            return (module as? TealiumTagManagementModule)?.tagManagement
+    }
+    
+    /// Sets a new root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
+    ///￼
+    /// - Parameter view: `UIView` instance for `WKWebView` to be attached to
+    public func updateRootView(_ view: UIView) {
+        self.tagManagement?.setRootView(view, completion: nil)
+    }
+}
 #endif
 #endif

@@ -14,13 +14,6 @@ import TealiumCore
 public extension TealiumConfig {
 
     /// Overrides the default Collect endpoint URL￼.
-    ///
-    /// - Parameter string: `String` representing the URL to which all Collect module dispatches should be sent
-    @available(*, deprecated, message: "Please switch to config.collectOverrideURL")
-    func setCollectOverrideURL(url: String) {
-        collectOverrideURL = url
-    }
-
     var collectOverrideURL: String? {
         get {
             options[TealiumCollectKey.overrideCollectUrl] as? String
@@ -46,13 +39,6 @@ public extension TealiumConfig {
     }
 
     /// Overrides the default Collect endpoint profile￼.
-    ///
-    /// - Parameter profile: `String` containing the name of the Tealium profile to which all Collect module dispatches should be sent
-    @available(*, deprecated, message: "Please switch to config.collectOverrideProfile")
-    func setCollectOverrideProfile(profile: String) {
-        collectOverrideProfile = profile
-    }
-
     var collectOverrideProfile: String? {
         get {
             options[TealiumCollectKey.overrideCollectProfile] as? String

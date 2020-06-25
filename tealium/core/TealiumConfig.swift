@@ -156,46 +156,6 @@ extension TealiumConfig: Equatable {
 
 public extension TealiumConfig {
 
-//    /// Get the existing modules list assigned to this config object.
-//    ///
-//    /// - Returns: TealiumModulesList as an optional.
-//    @available(*, deprecated, message: "Please switch to config.modulesList")
-//    func getModulesList() -> TealiumModulesList? {
-//        modulesList
-//    }
-//
-//    /// Set a net modules list to this config object.
-//    ///￼
-//    /// - Parameter list: The TealiumModulesList to assign.
-//    @available(*, deprecated, message: "Please switch to config.modulesList")
-//    func setModulesList(_ list: TealiumModulesList ) {
-//        modulesList = list
-//    }
-//
-//    var modulesList: TealiumModulesList? {
-//        get {
-//            options[TealiumModulesListKey.config] as? TealiumModulesList
-//        }
-//
-//        set {
-//            options[TealiumModulesListKey.config] = newValue
-//        }
-//    }
-}
-
-public extension TealiumConfig {
-    /// Sets a known visitor ID. Must be unique (i.e. UUID).
-    /// Should only be used in cases where the user has an existing visitor ID
-    @available(*, deprecated, message: "Please switch to config.existingVisitorId")
-    func setExistingVisitorId(_ visitorId: String) {
-        existingVisitorId = visitorId
-    }
-
-    @available(*, deprecated, message: "Please switch to config.existingVisitorId")
-    func getExistingVisitorId() -> String? {
-        existingVisitorId
-    }
-
     /// Sets a known visitor ID. Must be unique (i.e. UUID).
     /// Should only be used in cases where the user has an existing visitor ID
     var existingVisitorId: String? {

@@ -17,12 +17,6 @@ public class TealiumVolatileData {
     }
     
     /// `[String: Any]` containing all active session data.
-    @available(*, deprecated, message: "Please use volatileData().dictionary")
-    public func getData() -> [String: Any] {
-        dictionary
-    }
-    
-    /// `[String: Any]` containing all active session data.
     public var dictionary: [String: Any] {
         eventDataManager.allSessionData
     }

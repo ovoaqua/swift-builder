@@ -33,14 +33,6 @@ public extension TealiumConfig {
 
     /// Sets the default refresh interval for visitor profile retrieval. Default is 5 minutes
     /// Set to `0` if the profile should always be fetched following a track request.
-    /// - Parameter interval: `Int64` containing the refresh interval
-    @available(*, deprecated, message: "Please switch to config.visitorServiceRefreshInterval")
-    func setVisitorServiceRefresh(interval: Int64) {
-        visitorServiceRefreshInterval = interval
-    }
-
-    /// Sets the default refresh interval for visitor profile retrieval. Default is 5 minutes
-    /// Set to `0` if the profile should always be fetched following a track request.
     var visitorServiceRefreshInterval: Int64? {
         get {
             options[TealiumVisitorServiceConstants.refreshInterval] as? Int64
@@ -63,20 +55,6 @@ public extension TealiumConfig {
         }
     }
 
-    /// Overrides the default visitor service URL (visitor-service.tealiumiq.com).
-    /// Format: https://overridden-subdomain.yourdomain.com/
-    /// - Parameter url: `String` representing a valid URL. If an invalid URL is passed, the default is used instead.
-    @available(*, deprecated, message: "Please switch to config.visitorServiceOverrideURL")
-    func setVisitorServiceOverrideURL(_ url: String) {
-        visitorServiceOverrideURL = url
-    }
-
-    /// - Returns: `String?` containing the URL from which to retieve the visitor profile.
-    @available(*, deprecated, message: "Please switch to config.visitorServiceOverrideURL")
-    func getVisitorServiceOverrideURL() -> String? {
-        visitorServiceOverrideURL
-    }
-
     /// Overrides the default visitor service URL (visitor-service.tealiumiq.com).  If an invalid URL is passed, the default is used instead.
     /// Format: https://overridden-subdomain.yourdomain.com/
     var visitorServiceOverrideURL: String? {
@@ -87,19 +65,6 @@ public extension TealiumConfig {
         set {
             options[TealiumVisitorServiceConstants.visitorServiceOverrideURL] = newValue
         }
-    }
-
-    /// Sets a specific overridden profile from which to fetch the visitor profile.
-    /// - Parameter profile: `String` representing the profile name from which to retrieve the visitor profile.
-    @available(*, deprecated, message: "Please switch to config.visitorServiceOverrideProfile")
-    func setVisitorServiceOverrideProfile(_ profile: String) {
-        visitorServiceOverrideProfile = profile
-    }
-
-    /// - Returns: `String?` containing the profile name from which to retrieve the visitor profile
-    @available(*, deprecated, message: "Please switch to config.visitorServiceOverrideProfile")
-    func getVisitorServiceOverrideProfile() -> String? {
-        visitorServiceOverrideProfile
     }
 
     /// Sets a specific overridden profile from which to fetch the visitor profile.
