@@ -46,14 +46,6 @@ public extension TealiumConfig {
         diskStorageEnabled = isEnabled
     }
 
-    /// Checks whether Disk Storage is currently enabled
-    ///￼
-    /// - Returns:`Bool` indicating if disk storage is enabled (default) or disabled
-    @available(*, deprecated, message: "Please switch to config.diskStorageEnabled")
-    func isDiskStorageEnabled() -> Bool {
-        diskStorageEnabled
-    }
-
     /// Enables (default) or disables disk storage.
     /// If disabled, only critical data will be saved, and UserDefaults will be used in place of disk storage￼.
     var diskStorageEnabled: Bool {
@@ -64,16 +56,6 @@ public extension TealiumConfig {
         set {
             optionalData[TealiumKey.diskStorageEnabled] = newValue
         }
-    }
-
-    @available(*, deprecated, message: "Please switch to config.diskStorageDirectory")
-    func setOverrideDiskStorageDirectory(_ directory: Disk.Directory) {
-        diskStorageDirectory = directory
-    }
-
-    @available(*, deprecated, message: "Please switch to config.diskStorageDirectory")
-    func getOverrideDiskStorageDirectory() -> Disk.Directory? {
-        diskStorageDirectory
     }
 
     /// Sets the directory to be used for disk storage. Default `.caches`.
