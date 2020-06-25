@@ -21,11 +21,11 @@ public extension TealiumConfig {
     /// Sets the interval with which new connectivity checks will be carried out.
     var connectivityRefreshInterval: Int? {
         get {
-            optionalData[TealiumConnectivityKey.refreshIntervalKey] as? Int
+            options[TealiumConnectivityKey.refreshIntervalKey] as? Int
         }
 
         set {
-            optionalData[TealiumConnectivityKey.refreshIntervalKey] = newValue
+            options[TealiumConnectivityKey.refreshIntervalKey] = newValue
         }
     }
 
@@ -42,11 +42,11 @@ public extension TealiumConfig {
     /// If `true` (default), queued track calls will be flushed when connectivity is restored.
     var connectivityRefreshEnabled: Bool? {
         get {
-            optionalData[TealiumConnectivityKey.refreshEnabledKey] as? Bool
+            options[TealiumConnectivityKey.refreshEnabledKey] as? Bool
         }
 
         set {
-            optionalData[TealiumConnectivityKey.refreshEnabledKey] = newValue
+            options[TealiumConnectivityKey.refreshEnabledKey] = newValue
         }
     }
 }

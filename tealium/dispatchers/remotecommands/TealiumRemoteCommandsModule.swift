@@ -72,7 +72,7 @@ public class TealiumRemoteCommandsModule: Dispatcher {
         // Default option
         var shouldDisable = false
 
-        if let shouldDisableSetting = config.optionalData[TealiumRemoteCommandsKey.disableHTTP] as? Bool {
+        if let shouldDisableSetting = config.options[TealiumRemoteCommandsKey.disableHTTP] as? Bool {
             shouldDisable = shouldDisableSetting
         }
 

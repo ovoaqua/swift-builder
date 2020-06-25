@@ -31,11 +31,11 @@ public extension TealiumConfig {
 
     var searchAdsEnabled: Bool {
         get {
-            optionalData[TealiumAttributionKey.isSearchAdsEnabled] as? Bool ?? false
+            options[TealiumAttributionKey.isSearchAdsEnabled] as? Bool ?? false
         }
 
         set {
-            optionalData[TealiumAttributionKey.isSearchAdsEnabled] = newValue
+            options[TealiumAttributionKey.isSearchAdsEnabled] = newValue
         }
     }
 }

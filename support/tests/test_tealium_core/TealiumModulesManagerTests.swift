@@ -19,7 +19,7 @@ import XCTest
 var defaultTealiumConfig: TealiumConfig { TealiumConfig(account: "tealiummobile",
                                                         profile: "demo",
                                                         environment: "dev",
-                                                        optionalData: nil)
+                                                        options: nil)
 }
 
 class TealiumModulesManagerTests: XCTestCase {

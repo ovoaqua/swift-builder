@@ -90,7 +90,7 @@ class TealiumModulesTest: XCTestCase {
         //        let config = TealiumConfig(account: "tealiummobile",
         //                                   profile: "demo",
         //                                   environment: "dev",
-        //                                   optionalData: nil)
+        //                                   options: nil)
         //
         //        let modulesList = TealiumModulesList(isWhitelist: true,
         //                                             moduleNames: ["VisitorSerVice"])
@@ -119,7 +119,7 @@ class TealiumModulesTest: XCTestCase {
         let config = TealiumConfig(account: "tealiummobile",
                                    profile: "demo",
                                    environment: "dev",
-                                   optionalData: nil)
+                                   options: nil)
 
         //        let list = config.modulesList
         //
@@ -135,7 +135,7 @@ class TealiumModulesTest: XCTestCase {
         let config = TealiumConfig(account: "tealiummobile",
                                    profile: "demo",
                                    environment: "dev",
-                                   optionalData: nil)
+                                   options: nil)
 
         //        let modulesList = TealiumModulesList(isWhitelist: true,
         //                                             moduleNames: ["Logger", "lifecycle", "persistentData"])
@@ -155,7 +155,7 @@ class TealiumModulesTest: XCTestCase {
         let initialConfig = TealiumConfig(account: "tealiummobile",
                                           profile: "demo",
                                           environment: "dev",
-                                          optionalData: nil)
+                                          options: nil)
 
         let modulesList = TealiumModulesList(isWhitelist: false,
                                              moduleNames: Set<String>())
@@ -197,7 +197,7 @@ class TealiumModulesTest: XCTestCase {
         let initialConfig = TealiumConfig(account: "tealiummobile",
                                           profile: "demo",
                                           environment: "dev",
-                                          optionalData: nil)
+                                          options: nil)
 
         //        let modulesList = TealiumModulesList(isWhitelist: true,
         //                                             moduleNames: ["Logger", "lifecycle", "persistentData"])
@@ -233,7 +233,7 @@ class TealiumModulesTest: XCTestCase {
         //        let initialConfig = TealiumConfig(account: "tealiummobile",
         //                                          profile: "demo",
         //                                          environment: "dev",
-        //                                          optionalData: nil)
+        //                                          options: nil)
         //
         //        let modulesList = TealiumModulesList(isWhitelist: true,
         //                                             moduleNames: ["Logger"])
@@ -267,7 +267,7 @@ class TealiumModulesTest: XCTestCase {
         let initialConfig = TealiumConfig(account: "tealiummobile",
                                           profile: "demo",
                                           environment: "dev",
-                                          optionalData: nil)
+                                          options: nil)
         //
         //        let modulesList = TealiumModulesList(isWhitelist: true,
         //                                             moduleNames: ["delegate", "persistentData"])

@@ -61,7 +61,7 @@ class PerformanceTests: XCTestCase {
     func testTimeToInitializeTealiumConfigWithOptionalData() {
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", datasource: "testDatasource", optionalData: [TealiumCollectKey.overrideCollectUrl: "https://6372509c65ca83cb33983be9c6f8f204.m.pipedream.net",
+            config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", datasource: "testDatasource", options: [TealiumCollectKey.overrideCollectUrl: "https://6372509c65ca83cb33983be9c6f8f204.m.pipedream.net",
                                                                                                                                                                 TealiumVisitorServiceConstants.visitorServiceDelegate: self])
             self.stopMeasuring()
         }

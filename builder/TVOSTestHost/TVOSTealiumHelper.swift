@@ -42,7 +42,7 @@ class TVOSTealiumHelper: NSObject {
                                    profile: "demo",
                                    environment: "dev",
                                    datasource: "test12",
-                                   optionalData: nil)
+                                   options: nil)
 
         // OPTIONALLY set log level
         config.setConnectivityRefreshInterval(5)

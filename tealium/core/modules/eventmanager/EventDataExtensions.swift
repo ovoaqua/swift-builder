@@ -34,11 +34,11 @@ public extension TealiumConfig {
     @available(*, deprecated, message: "Not currently released, for future use.")
     var sessionHandlingEnabled: Bool {
         get {
-            return optionalData[TealiumKey.sessionHandlingEnabled] as? Bool ?? false
+            return options[TealiumKey.sessionHandlingEnabled] as? Bool ?? false
         }
 
         set {
-            optionalData[TealiumKey.sessionHandlingEnabled] = newValue
+            options[TealiumKey.sessionHandlingEnabled] = newValue
         }
     }
     

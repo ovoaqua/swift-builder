@@ -41,7 +41,7 @@ class TealiumHelper: NSObject {
                                    profile: "ccpa-test",
                                    environment: "dev",
                                    datasource: "test12",
-                                   optionalData: nil)
+                                   options: nil)
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .info

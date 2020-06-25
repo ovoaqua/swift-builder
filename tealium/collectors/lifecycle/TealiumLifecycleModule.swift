@@ -135,7 +135,7 @@ public class TealiumLifecycleModule: Collector {
             return
         }
         let trackData = Tealium.trackDataFor(title: title,
-                                             optionalData: data)
+                                             options: data)
         let track = TealiumTrackRequest(data: trackData,
                                         completion: nil)
         delegate?.requestTrack(track)

@@ -16,7 +16,7 @@ class TealiumVisitorServiceRetrieverTests: XCTestCase {
     var visitorServiceRetriever: TealiumVisitorServiceRetriever!
 
     override func setUp() {
-        tealConfig = TealiumConfig(account: "test", profile: "test", environment: "dev", datasource: nil, optionalData: [:])
+        tealConfig = TealiumConfig(account: "test", profile: "test", environment: "dev", datasource: nil, options: [:])
         visitorServiceRetriever = TealiumVisitorServiceRetriever(config: tealConfig, visitorId: "testVisitorId", urlSession: MockURLSession())
     }
 
@@ -144,7 +144,7 @@ class TealiumVisitorServiceRetrieverTests: XCTestCase {
     // Need MockURLSessionToWork
     func testDoNotFetchVisitorProfile() {
         let timeTraveler = TimeTraveler()
-        let config = TealiumConfig(account: "test", profile: "test", environment: "prod", datasource: nil, optionalData: [:])
+        let config = TealiumConfig(account: "test", profile: "test", environment: "prod", datasource: nil, options: [:])
         let retriever = TealiumVisitorServiceRetriever(config: config, visitorId: "test")
         let expect = expectation(description: "should not fetch")
         retriever.lastFetch = timeTraveler.travel(by: (60 * 5 + 1) * -1)

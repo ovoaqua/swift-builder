@@ -30,7 +30,7 @@ public class TealiumCollectModule: Dispatcher {
 
     func updateCollectDispatcher(config: TealiumConfig,
                                  completion: ModuleCompletion?) {
-        let urlString = config.optionalData[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL
+        let urlString = config.options[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL
         collect = TealiumCollectPostDispatcher(dispatchURL: urlString, completion: completion)
     }
 

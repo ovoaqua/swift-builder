@@ -23,7 +23,7 @@ public extension TealiumConfig {
 
     var collectOverrideURL: String? {
         get {
-            optionalData[TealiumCollectKey.overrideCollectUrl] as? String
+            options[TealiumCollectKey.overrideCollectUrl] as? String
         }
 
         set {
@@ -38,9 +38,9 @@ public extension TealiumConfig {
                 if lastChar != "&" {
                     urlString += "&"
                 }
-                optionalData[TealiumCollectKey.overrideCollectUrl] = urlString
+                options[TealiumCollectKey.overrideCollectUrl] = urlString
             } else {
-                optionalData[TealiumCollectKey.overrideCollectUrl] = newValue
+                options[TealiumCollectKey.overrideCollectUrl] = newValue
             }
         }
     }
@@ -55,11 +55,11 @@ public extension TealiumConfig {
 
     var collectOverrideProfile: String? {
         get {
-            optionalData[TealiumCollectKey.overrideCollectProfile] as? String
+            options[TealiumCollectKey.overrideCollectProfile] as? String
         }
 
         set {
-            optionalData[TealiumCollectKey.overrideCollectProfile] = newValue
+            options[TealiumCollectKey.overrideCollectProfile] = newValue
         }
     }
 }

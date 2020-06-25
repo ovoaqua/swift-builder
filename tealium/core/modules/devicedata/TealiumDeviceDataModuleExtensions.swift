@@ -28,11 +28,11 @@ public extension TealiumConfig {
 
     var memoryReportingEnabled: Bool {
         get {
-            return optionalData[TealiumDeviceDataModuleKey.isMemoryReportingEnabled] as? Bool ?? false
+            return options[TealiumDeviceDataModuleKey.isMemoryReportingEnabled] as? Bool ?? false
         }
 
         set {
-            optionalData[TealiumDeviceDataModuleKey.isMemoryReportingEnabled] = newValue
+            options[TealiumDeviceDataModuleKey.isMemoryReportingEnabled] = newValue
         }
     }
 

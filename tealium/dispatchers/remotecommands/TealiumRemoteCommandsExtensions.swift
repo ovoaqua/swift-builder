@@ -26,11 +26,11 @@ public extension TealiumConfig {
     /// Enables or disables the built-in HTTP command. Default `false` (command is ENABLED). Set to `true` to disable
     var remoteHTTPCommandDisabled: Bool {
         get {
-            optionalData[TealiumRemoteCommandsKey.disableHTTP] as? Bool ?? false
+            options[TealiumRemoteCommandsKey.disableHTTP] as? Bool ?? false
         }
 
         set {
-            optionalData[TealiumRemoteCommandsKey.disableHTTP] = newValue
+            options[TealiumRemoteCommandsKey.disableHTTP] = newValue
         }
     }
 
@@ -45,11 +45,11 @@ public extension TealiumConfig {
 
     var remoteCommands: RemoteCommandArray? {
         get {
-            optionalData[TealiumRemoteCommandsKey.allCommands] as? RemoteCommandArray
+            options[TealiumRemoteCommandsKey.allCommands] as? RemoteCommandArray
         }
 
         set {
-            optionalData[TealiumRemoteCommandsKey.allCommands]  = newValue
+            options[TealiumRemoteCommandsKey.allCommands]  = newValue
         }
     }
 }

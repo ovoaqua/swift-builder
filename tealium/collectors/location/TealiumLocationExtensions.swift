@@ -36,11 +36,11 @@ public extension TealiumConfig {
     /// or false if only significant location updates are desired (more battery friendly)
     var useHighAccuracy: Bool {
         get {
-            optionalData[TealiumLocationConfigKey.useHighAccuracy] as? Bool ?? false
+            options[TealiumLocationConfigKey.useHighAccuracy] as? Bool ?? false
         }
 
         set {
-            optionalData[TealiumLocationConfigKey.useHighAccuracy] = newValue
+            options[TealiumLocationConfigKey.useHighAccuracy] = newValue
         }
     }
 
@@ -50,11 +50,11 @@ public extension TealiumConfig {
     /// - `Double` distance in meters
     var updateDistance: Double {
         get {
-            optionalData[TealiumLocationConfigKey.updateDistance] as? Double ?? 500.0
+            options[TealiumLocationConfigKey.updateDistance] as? Double ?? 500.0
         }
 
         set {
-            optionalData[TealiumLocationConfigKey.updateDistance] = newValue
+            options[TealiumLocationConfigKey.updateDistance] = newValue
         }
     }
 
@@ -64,11 +64,11 @@ public extension TealiumConfig {
     /// - `String` name of local file to read
     var geofenceFileName: String? {
         get {
-            optionalData[TealiumLocationConfigKey.geofenceAssetName] as? String
+            options[TealiumLocationConfigKey.geofenceAssetName] as? String
         }
 
         set {
-            optionalData[TealiumLocationConfigKey.geofenceAssetName] = newValue
+            options[TealiumLocationConfigKey.geofenceAssetName] = newValue
         }
     }
 
@@ -78,11 +78,11 @@ public extension TealiumConfig {
     /// - `String` name of the url to read
     var geofenceUrl: String? {
         get {
-            optionalData[TealiumLocationConfigKey.geofenceJsonUrl] as? String
+            options[TealiumLocationConfigKey.geofenceJsonUrl] as? String
         }
 
         set {
-            optionalData[TealiumLocationConfigKey.geofenceJsonUrl] = newValue
+            options[TealiumLocationConfigKey.geofenceJsonUrl] = newValue
         }
     }
 

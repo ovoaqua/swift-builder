@@ -223,13 +223,13 @@ class TealiumCollectModuleTests: XCTestCase {
     func testOverrideCollectURL() {
         let config = testTealiumConfig.copy
         config.collectOverrideURL = "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile"
-        XCTAssertTrue(config.optionalData[TealiumCollectKey.overrideCollectUrl] as! String == "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile&")
+        XCTAssertTrue(config.options[TealiumCollectKey.overrideCollectUrl] as! String == "https://collect.tealiumiq.com/vdata/i.gif?tealium_account=tealiummobile&tealium_profile=someprofile&")
     }
 
     func testOverrideCollectProfile() {
         let config = testTealiumConfig.copy
         config.collectOverrideProfile = "hello"
-        XCTAssertTrue(config.optionalData[TealiumCollectKey.overrideCollectProfile] as! String == "hello")
+        XCTAssertTrue(config.options[TealiumCollectKey.overrideCollectProfile] as! String == "hello")
     }
 
 }

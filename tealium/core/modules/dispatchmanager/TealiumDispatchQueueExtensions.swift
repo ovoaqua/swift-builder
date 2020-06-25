@@ -48,11 +48,11 @@ public extension TealiumConfig {
     /// The number of events after which the queue will be flushed
     var dispatchAfter: Int {
         get {
-            optionalData[TealiumKey.eventLimit] as? Int ?? batchSize
+            options[TealiumKey.eventLimit] as? Int ?? batchSize
         }
 
         set {
-            optionalData[TealiumKey.eventLimit] = newValue
+            options[TealiumKey.eventLimit] = newValue
         }
     }
 
@@ -61,13 +61,13 @@ public extension TealiumConfig {
     /// - Parameter queueSize: `Int`
     @available(*, deprecated, message: "Please switch to config.dispatchQueueLimit")
     func setMaxQueueSize(_ queueSize: Int) {
-        optionalData[TealiumKey.queueSizeKey] = queueSize
+        options[TealiumKey.queueSizeKey] = queueSize
     }
 
     /// - Returns: `Int?` - the maximum queue size allowed to be stored on the device
     @available(*, deprecated, message: "Please switch to config.dispatchQueueLimit")
     func getMaxQueueSize() -> Int? {
-        return optionalData[TealiumKey.eventLimit] as? Int
+        return options[TealiumKey.eventLimit] as? Int
     }
 
     // config.dispatchQueueLimit in `Core` module, since it's required for remote publish settings
@@ -102,11 +102,11 @@ public extension TealiumConfig {
 
     var batchingBypassKeys: [String]? {
         get {
-            optionalData[TealiumDispatchQueueConstants.batchingBypassKeys] as? [String]
+            options[TealiumDispatchQueueConstants.batchingBypassKeys] as? [String]
         }
 
         set {
-            optionalData[TealiumDispatchQueueConstants.batchingBypassKeys] = newValue
+            options[TealiumDispatchQueueConstants.batchingBypassKeys] = newValue
         }
     }
 
@@ -143,22 +143,22 @@ public extension TealiumConfig {
 
     var remoteAPIEnabled: Bool? {
         get {
-        optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] as? Bool
+        options[TealiumDispatchQueueConstants.isRemoteAPIEnabled] as? Bool
         }
 
         set {
-        optionalData[TealiumDispatchQueueConstants.isRemoteAPIEnabled] = newValue
+        options[TealiumDispatchQueueConstants.isRemoteAPIEnabled] = newValue
         }
     }
     #endif
     
     var lifecycleAutoTrackingEnabled: Bool {
         get {
-            return optionalData[LifecycleKey.autotrackingEnabled] as? Bool ?? true
+            return options[LifecycleKey.autotrackingEnabled] as? Bool ?? true
         }
 
         set {
-            optionalData[LifecycleKey.autotrackingEnabled] = newValue
+            options[LifecycleKey.autotrackingEnabled] = newValue
         }
     }
 }

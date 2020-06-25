@@ -68,21 +68,21 @@ public enum TealiumLoggerType {
 public extension TealiumConfig {
     var loggerType: TealiumLoggerType {
         get {
-            optionalData[TealiumKey.loggerType] as? TealiumLoggerType ?? TealiumConstants.defaultLoggerType
+            options[TealiumKey.loggerType] as? TealiumLoggerType ?? TealiumConstants.defaultLoggerType
         }
         
         set {
-            optionalData[TealiumKey.loggerType] = newValue
+            options[TealiumKey.loggerType] = newValue
         }
     }
     
     var logLevel: TealiumLogLevel? {
         get {
-            optionalData[TealiumKey.logLevel] as? TealiumLogLevel
+            options[TealiumKey.logLevel] as? TealiumLogLevel
         }
         
         set {
-            optionalData[TealiumKey.logLevel] = newValue
+            options[TealiumKey.logLevel] = newValue
         }
     }
     

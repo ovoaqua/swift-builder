@@ -38,7 +38,7 @@ class TealiumWatchHelper: NSObject {
                                    profile: "demo",
                                    environment: "dev",
                                    datasource: "test12",
-                                   optionalData: nil)
+                                   options: nil)
 
         // OPTIONALLY set log level
 //        config.setConnectivityRefreshInterval(5)
@@ -50,7 +50,7 @@ class TealiumWatchHelper: NSObject {
 //        config.setBatchSize(5)
 //        config.setDispatchAfter(numberOfEvents: 5)
         config.setMaxQueueSize(200)
-        config.optionalData["enable_visitor_profile"] = true
+        config.options["enable_visitor_profile"] = true
         config.setIsEventBatchingEnabled(true)
         // OPTIONALLY add an external delegate
 //        config.addDelegate(self)

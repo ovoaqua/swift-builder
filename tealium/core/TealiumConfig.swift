@@ -15,45 +15,45 @@ open class TealiumConfig {
     public let profile: String
     public let environment: String
     public let datasource: String?
-    public lazy var optionalData = [String: Any]()
+    public lazy var options = [String: Any]()
     // Set to false to avoid collecting optional default data
     public var shouldCollectTealiumData: Bool {
         get {
-            optionalData[TealiumKey.shouldCollectTealiumData] as? Bool ?? true
+            options[TealiumKey.shouldCollectTealiumData] as? Bool ?? true
         }
         
         set {
-            optionalData[TealiumKey.shouldCollectTealiumData] = newValue
+            options[TealiumKey.shouldCollectTealiumData] = newValue
         }
     }
     
     public var logger: TealiumLoggerProtocol? {
         get {
-            optionalData[TealiumKey.logger] as? TealiumLoggerProtocol
+            options[TealiumKey.logger] as? TealiumLoggerProtocol
         }
         
         set {
-            optionalData[TealiumKey.logger] = newValue
+            options[TealiumKey.logger] = newValue
         }
     }
     
     public var dispatchValidators: [DispatchValidator]? {
            get {
-               optionalData[TealiumKey.dispatchValidators] as? [DispatchValidator]
+               options[TealiumKey.dispatchValidators] as? [DispatchValidator]
            }
            
            set {
-               optionalData[TealiumKey.dispatchValidators] = newValue
+               options[TealiumKey.dispatchValidators] = newValue
            }
    }
     
     public var dispatchListeners: [DispatchListener]? {
            get {
-               optionalData[TealiumKey.dispatchListeners] as? [DispatchListener]
+               options[TealiumKey.dispatchListeners] as? [DispatchListener]
            }
            
            set {
-               optionalData[TealiumKey.dispatchListeners] = newValue
+               options[TealiumKey.dispatchListeners] = newValue
            }
    }
 
@@ -62,7 +62,7 @@ open class TealiumConfig {
                              profile: self.profile,
                              environment: self.environment,
                              datasource: self.datasource,
-                             optionalData: optionalData)
+                             options: options)
     }
 
     /// Convenience constructor.
@@ -78,7 +78,7 @@ open class TealiumConfig {
                   profile: profile,
                   environment: environment,
                   datasource: nil,
-                  optionalData: nil)
+                  options: nil)
     }
 
     /// Convenience constructor.
@@ -96,7 +96,7 @@ open class TealiumConfig {
                   profile: profile,
                   environment: environment,
                   datasource: datasource,
-                  optionalData: nil)
+                  options: nil)
     }
 
     /// Primary constructor.
@@ -105,18 +105,18 @@ open class TealiumConfig {
     ///     - account: Tealium account name string to use.
     ///     - profile: Tealium profile string.
     ///     - environment: Tealium environment string.
-    ///     - optionalData: Optional [String:Any] dictionary meant primarily for module use.
+    ///     - options: Optional [String:Any] dictionary meant primarily for module use.
     public init(account: String,
                 profile: String,
                 environment: String,
                 datasource: String? = nil,
-                optionalData: [String: Any]?) {
+                options: [String: Any]?) {
         self.account = account
         self.environment = environment
         self.profile = profile
         self.datasource = datasource
-        if let optionalData = optionalData {
-            self.optionalData = optionalData
+        if let options = options {
+            self.options = options
         }
         self.logger = self.logger ?? getLogger()
     }
@@ -138,14 +138,14 @@ extension TealiumConfig: Equatable {
         if lhs.account != rhs.account { return false }
         if lhs.profile != rhs.profile { return false }
         if lhs.environment != rhs.environment { return false }
-        let lhsKeys = lhs.optionalData.keys.sorted()
-        let rhsKeys = rhs.optionalData.keys.sorted()
+        let lhsKeys = lhs.options.keys.sorted()
+        let rhsKeys = rhs.options.keys.sorted()
 //        if lhs.modulesList != rhs.modulesList { return false }
         if lhsKeys.count != rhsKeys.count { return false }
         for (index, key) in lhsKeys.enumerated() {
             if key != rhsKeys[index] { return false }
-            let lhsValue = String(describing: lhs.optionalData[key])
-            let rhsValue = String(describing: rhs.optionalData[key])
+            let lhsValue = String(describing: lhs.options[key])
+            let rhsValue = String(describing: rhs.options[key])
             if lhsValue != rhsValue { return false }
         }
 
@@ -174,11 +174,11 @@ public extension TealiumConfig {
 //
 //    var modulesList: TealiumModulesList? {
 //        get {
-//            optionalData[TealiumModulesListKey.config] as? TealiumModulesList
+//            options[TealiumModulesListKey.config] as? TealiumModulesList
 //        }
 //
 //        set {
-//            optionalData[TealiumModulesListKey.config] = newValue
+//            options[TealiumModulesListKey.config] = newValue
 //        }
 //    }
 }
@@ -200,11 +200,11 @@ public extension TealiumConfig {
     /// Should only be used in cases where the user has an existing visitor ID
     var existingVisitorId: String? {
         get {
-            optionalData[TealiumKey.visitorId] as? String
+            options[TealiumKey.visitorId] as? String
         }
 
         set {
-            optionalData[TealiumKey.visitorId] = newValue
+            options[TealiumKey.visitorId] = newValue
         }
     }
 
@@ -216,11 +216,11 @@ public extension TealiumConfig {
     /// Whether or not remote publish settings should be used. Default `true`.
     var shouldUseRemotePublishSettings: Bool {
         get {
-            optionalData[TealiumKey.publishSettings] as? Bool ?? true
+            options[TealiumKey.publishSettings] as? Bool ?? true
         }
 
         set {
-            optionalData[TealiumKey.publishSettings] = newValue
+            options[TealiumKey.publishSettings] = newValue
         }
     }
 
@@ -230,11 +230,11 @@ public extension TealiumConfig {
     /// Takes precendence over `publishSettingsProfile`
     var publishSettingsURL: String? {
         get {
-            optionalData[TealiumKey.publishSettingsURL] as? String
+            options[TealiumKey.publishSettingsURL] as? String
         }
 
         set {
-            optionalData[TealiumKey.publishSettingsURL] = newValue
+            options[TealiumKey.publishSettingsURL] = newValue
         }
     }
 
@@ -243,66 +243,66 @@ public extension TealiumConfig {
     /// Usage: `config.publishSettingsProfile = "myprofile"`
     var publishSettingsProfile: String? {
         get {
-            optionalData[TealiumKey.publishSettingsProfile] as? String
+            options[TealiumKey.publishSettingsProfile] as? String
         }
 
         set {
-            optionalData[TealiumKey.publishSettingsProfile] = newValue
+            options[TealiumKey.publishSettingsProfile] = newValue
         }
     }
 
     /// If `false`, the entire library is disabled, and no tracking calls are sent.
     var isEnabled: Bool? {
         get {
-            optionalData[TealiumKey.libraryEnabled] as? Bool
+            options[TealiumKey.libraryEnabled] as? Bool
         }
 
         set {
-            optionalData[TealiumKey.libraryEnabled] = newValue
+            options[TealiumKey.libraryEnabled] = newValue
         }
     }
     
     /// If `false`, the the tag management module is disabled and will not be used for dispatching events
     var isTagManagementEnabled: Bool {
         get {
-            optionalData[TealiumKey.tagManagementModuleName] as? Bool ?? true
+            options[TealiumKey.tagManagementModuleName] as? Bool ?? true
         }
 
         set {
-            optionalData[TealiumKey.tagManagementModuleName] = newValue
+            options[TealiumKey.tagManagementModuleName] = newValue
         }
     }
     
     /// If `false`, the the collect module is disabled and will not be used for dispatching events
     var isCollectEnabled: Bool {
         get {
-            optionalData[TealiumKey.collectModuleName] as? Bool ?? true
+            options[TealiumKey.collectModuleName] as? Bool ?? true
         }
 
         set {
-            optionalData[TealiumKey.collectModuleName] = newValue
+            options[TealiumKey.collectModuleName] = newValue
         }
     }
 
     /// If `true`, calls will only be sent if the device has sufficient battery levels (>20%).
     var batterySaverEnabled: Bool? {
         get {
-            optionalData[TealiumKey.batterySaver] as? Bool
+            options[TealiumKey.batterySaver] as? Bool
         }
 
         set {
-            optionalData[TealiumKey.batterySaver] = newValue
+            options[TealiumKey.batterySaver] = newValue
         }
     }
 
     /// How long the data persists in the app if no data has been sent back (`-1` = no dispatch expiration). Default value is `7` days.
     var dispatchExpiration: Int? {
         get {
-            optionalData[TealiumKey.batchExpirationDaysKey] as? Int
+            options[TealiumKey.batchExpirationDaysKey] as? Int
         }
 
         set {
-            optionalData[TealiumKey.batchExpirationDaysKey] = newValue
+            options[TealiumKey.batchExpirationDaysKey] = newValue
         }
     }
 
@@ -313,11 +313,11 @@ public extension TealiumConfig {
             guard diskStorageEnabled == true else {
                 return false
             }
-            return optionalData[TealiumKey.batchingEnabled] as? Bool
+            return options[TealiumKey.batchingEnabled] as? Bool
         }
 
         set {
-            optionalData[TealiumKey.batchingEnabled] = newValue
+            options[TealiumKey.batchingEnabled] = newValue
         }
     }
 
@@ -325,12 +325,12 @@ public extension TealiumConfig {
     /// If set to `1`, events will be sent individually
     var batchSize: Int {
         get {
-            optionalData[TealiumKey.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
+            options[TealiumKey.batchSizeKey] as? Int ?? TealiumValue.maxEventBatchSize
         }
 
         set {
             let size = newValue > TealiumValue.maxEventBatchSize ? TealiumValue.maxEventBatchSize: newValue
-            optionalData[TealiumKey.batchSizeKey] = size
+            options[TealiumKey.batchSizeKey] = size
         }
 
     }
@@ -339,11 +339,11 @@ public extension TealiumConfig {
     /// Oldest events are deleted to make way for new events if this limit is reached
     var dispatchQueueLimit: Int? {
         get {
-            optionalData[TealiumKey.queueSizeKey] as? Int
+            options[TealiumKey.queueSizeKey] as? Int
         }
 
         set {
-            optionalData[TealiumKey.queueSizeKey] = newValue
+            options[TealiumKey.queueSizeKey] = newValue
         }
     }
 
@@ -351,11 +351,11 @@ public extension TealiumConfig {
     /// Data will be queued if on cellular connection
     var wifiOnlySending: Bool? {
         get {
-            optionalData[TealiumKey.wifiOnlyKey] as? Bool
+            options[TealiumKey.wifiOnlyKey] as? Bool
         }
 
         set {
-            optionalData[TealiumKey.wifiOnlyKey] = newValue
+            options[TealiumKey.wifiOnlyKey] = newValue
         }
     }
 
@@ -363,11 +363,11 @@ public extension TealiumConfig {
     /// Usually set automatically by the response from the remote publish settings
     var minutesBetweenRefresh: Double? {
         get {
-            optionalData[TealiumKey.minutesBetweenRefresh] as? Double
+            options[TealiumKey.minutesBetweenRefresh] as? Double
         }
 
         set {
-            optionalData[TealiumKey.minutesBetweenRefresh] = newValue
+            options[TealiumKey.minutesBetweenRefresh] = newValue
         }
     }
     

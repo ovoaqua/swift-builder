@@ -43,11 +43,11 @@ public extension TealiumConfig {
     /// Set to `0` if the profile should always be fetched following a track request.
     var visitorServiceRefreshInterval: Int64? {
         get {
-            optionalData[TealiumVisitorServiceConstants.refreshInterval] as? Int64
+            options[TealiumVisitorServiceConstants.refreshInterval] as? Int64
         }
 
         set {
-            optionalData[TealiumVisitorServiceConstants.refreshInterval] = newValue
+            options[TealiumVisitorServiceConstants.refreshInterval] = newValue
         }
     }
 
@@ -55,11 +55,11 @@ public extension TealiumConfig {
     /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
     var visitorServiceDelegate: TealiumVisitorServiceDelegate? {
         get {
-            optionalData[TealiumVisitorServiceConstants.visitorServiceDelegate] as? TealiumVisitorServiceDelegate
+            options[TealiumVisitorServiceConstants.visitorServiceDelegate] as? TealiumVisitorServiceDelegate
         }
 
         set {
-            optionalData[TealiumVisitorServiceConstants.visitorServiceDelegate] = newValue
+            options[TealiumVisitorServiceConstants.visitorServiceDelegate] = newValue
         }
     }
 
@@ -81,11 +81,11 @@ public extension TealiumConfig {
     /// Format: https://overridden-subdomain.yourdomain.com/
     var visitorServiceOverrideURL: String? {
         get {
-            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideURL] as? String
+            options[TealiumVisitorServiceConstants.visitorServiceOverrideURL] as? String
         }
 
         set {
-            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideURL] = newValue
+            options[TealiumVisitorServiceConstants.visitorServiceOverrideURL] = newValue
         }
     }
 
@@ -105,11 +105,11 @@ public extension TealiumConfig {
     /// Sets a specific overridden profile from which to fetch the visitor profile.
     var visitorServiceOverrideProfile: String? {
         get {
-            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] as? String
+            options[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] as? String
         }
 
         set {
-            optionalData[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] = newValue
+            options[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] = newValue
         }
     }
 }

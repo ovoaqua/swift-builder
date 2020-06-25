@@ -82,7 +82,7 @@ public class Tealium {
                       data: [String: Any]?,
                       completion: ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)?) {
         let trackData = Tealium.trackDataFor(title: title,
-                                             optionalData: data)
+                                             options: data)
         let track = TealiumTrackRequest(data: trackData,
                                         completion: completion)
 
@@ -137,12 +137,12 @@ public class Tealium {
     /// - Parameters:
     ///     - type: TealiumTrackType to use.
     ///     - title: String description for track name.
-    ///     - optionalData: Optional key-values for TIQ variables / UDH attributes
+    ///     - options: Optional key-values for TIQ variables / UDH attributes
     ///     - Returns: Dictionary of type [String:Any]
     public class func trackDataFor(title: String,
-                                   optionalData: [String: Any]?) -> [String: Any] {
+                                   options: [String: Any]?) -> [String: Any] {
 
-        var trackData = optionalData ?? [String: Any]()
+        var trackData = options ?? [String: Any]()
         trackData[TealiumKey.event] = title
         return trackData
     }

@@ -35,11 +35,11 @@ public extension TealiumConfig {
 
     var webViewDelegates: [WKNavigationDelegate]? {
         get {
-            optionalData[TealiumTagManagementConfigKey.delegate] as? [WKNavigationDelegate]
+            options[TealiumTagManagementConfigKey.delegate] as? [WKNavigationDelegate]
         }
 
         set {
-            optionalData[TealiumTagManagementConfigKey.delegate] = newValue
+            options[TealiumTagManagementConfigKey.delegate] = newValue
         }
     }
 
@@ -53,11 +53,11 @@ public extension TealiumConfig {
 
     var tagManagementOverrideURL: String? {
         get {
-            optionalData[TealiumTagManagementConfigKey.overrideURL] as? String
+            options[TealiumTagManagementConfigKey.overrideURL] as? String
         }
 
         set {
-            optionalData[TealiumTagManagementConfigKey.overrideURL] = newValue
+            options[TealiumTagManagementConfigKey.overrideURL] = newValue
         }
     }
 
@@ -91,21 +91,21 @@ public extension TealiumConfig {
     /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
     var rootView: UIView? {
         get {
-            optionalData[TealiumTagManagementConfigKey.uiview] as? UIView
+            options[TealiumTagManagementConfigKey.uiview] as? UIView
         }
 
         set {
-            optionalData[TealiumTagManagementConfigKey.uiview] = newValue
+            options[TealiumTagManagementConfigKey.uiview] = newValue
         }
     }
 
     var shouldAddCookieObserver: Bool {
         get {
-            return optionalData[TealiumTagManagementConfigKey.cookieObserver] as? Bool ?? true
+            return options[TealiumTagManagementConfigKey.cookieObserver] as? Bool ?? true
         }
 
         set {
-            optionalData[TealiumTagManagementConfigKey.cookieObserver] = newValue
+            options[TealiumTagManagementConfigKey.cookieObserver] = newValue
         }
     }
 
