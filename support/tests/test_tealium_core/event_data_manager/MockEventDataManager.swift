@@ -66,7 +66,7 @@ class MockEventDataManager: EventDataManagerProtocol {
         addSingleCount += 1
     }
 
-    func addTrace(id: String) {
+    func joinTrace(id: String) {
         
     }
 

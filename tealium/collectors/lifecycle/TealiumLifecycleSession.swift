@@ -57,13 +57,13 @@ public struct TealiumLifecycleSession: Codable, Equatable {
         aCoder.encode(self.secondsElapsed, forKey: LifecycleKey.Session.secondsElapsed)
         aCoder.encode(self.wasLaunch, forKey: LifecycleKey.Session.wasLaunch)
     }
-    
+
     static var currentAppVersion: String {
         return Bundle.main.version ?? "(unknown)"
     }
 
     // Is this being used anywhere? Move to unit tests?
-    public static func ==(lhs: TealiumLifecycleSession, rhs: TealiumLifecycleSession ) -> Bool {
+    public static func == (lhs: TealiumLifecycleSession, rhs: TealiumLifecycleSession ) -> Bool {
         if lhs.wakeDate != rhs.wakeDate { return false }
         if lhs.sleepDate != rhs.sleepDate { return false }
         if lhs.secondsElapsed != rhs.secondsElapsed { return false }

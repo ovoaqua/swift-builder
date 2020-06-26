@@ -213,25 +213,25 @@ public class TealiumPLCrash: TealiumAppDataCollection {
     ///
     /// - Returns: [String: Any] containing all crash-related variables
     public func getData(truncateLibraries: Bool = false, truncateThreads: Bool = false) -> [String: Any] {
-            [TealiumKey.event: TealiumPLCrash.CrashEvent,
-                TealiumCrashKey.uuid: uuid,
-                TealiumCrashKey.deviceMemoryUsageLegacy: memoryUsage,
-                TealiumCrashKey.deviceMemoryUsage: memoryUsage,
-                TealiumCrashKey.deviceMemoryAvailableLegacy: deviceMemoryAvailable,
-                TealiumCrashKey.deviceMemoryAvailable: deviceMemoryAvailable,
-                TealiumCrashKey.deviceOsBuild: osBuild,
-                TealiumKey.appBuild: appBuild(),
-                TealiumCrashKey.processId: processIdentifier ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.processPath: processPath ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.parentProcess: parentProcessName ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.parentProcessId: parentProcessIdentifier ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.exceptionName: exceptionName ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.exceptionReason: exceptionReason ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.signalCode: signalCode ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.signalName: signalName ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.signalAddress: signalAddress ?? TealiumPLCrash.CrashDataUnknown,
-                TealiumCrashKey.libraries: libraries(truncate: truncateLibraries),
-                TealiumCrashKey.threads: threads(truncate: truncateThreads)
+        [TealiumKey.event: TealiumPLCrash.CrashEvent,
+         TealiumCrashKey.uuid: uuid,
+         TealiumCrashKey.deviceMemoryUsageLegacy: memoryUsage,
+         TealiumCrashKey.deviceMemoryUsage: memoryUsage,
+         TealiumCrashKey.deviceMemoryAvailableLegacy: deviceMemoryAvailable,
+         TealiumCrashKey.deviceMemoryAvailable: deviceMemoryAvailable,
+         TealiumCrashKey.deviceOsBuild: osBuild,
+         TealiumKey.appBuild: appBuild(),
+         TealiumCrashKey.processId: processIdentifier ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.processPath: processPath ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.parentProcess: parentProcessName ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.parentProcessId: parentProcessIdentifier ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.exceptionName: exceptionName ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.exceptionReason: exceptionReason ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.signalCode: signalCode ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.signalName: signalName ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.signalAddress: signalAddress ?? TealiumPLCrash.CrashDataUnknown,
+         TealiumCrashKey.libraries: libraries(truncate: truncateLibraries),
+         TealiumCrashKey.threads: threads(truncate: truncateThreads)
         ]
     }
 

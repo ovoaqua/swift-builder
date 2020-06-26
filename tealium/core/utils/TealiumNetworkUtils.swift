@@ -10,24 +10,22 @@ import Foundation
 
 public extension Dictionary where Key == String, Value == Any {
     var toJSONString: String? {
-        get {
-            return TealiumQueues.backgroundConcurrentQueue.read { () -> String? in
-                var writingOptions: JSONEncoder.OutputFormatting
+        return TealiumQueues.backgroundConcurrentQueue.read { () -> String? in
+            var writingOptions: JSONEncoder.OutputFormatting
 
-                if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, OSX 10.13, *) {
-                    writingOptions = [.prettyPrinted, .sortedKeys]
-                } else {
-                    writingOptions = [.prettyPrinted]
-                }
+            if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, OSX 10.13, *) {
+                writingOptions = [.prettyPrinted, .sortedKeys]
+            } else {
+                writingOptions = [.prettyPrinted]
+            }
 
-                let encoder = Tealium.jsonEncoder
-                encoder.outputFormatting = writingOptions
-                let encodable = self.encodable
-                if let jsonData = try? encoder.encode(encodable) {
-                    return String(data: jsonData, encoding: .utf8)
-                } else {
-                    return nil
-                }
+            let encoder = Tealium.jsonEncoder
+            encoder.outputFormatting = writingOptions
+            let encodable = self.encodable
+            if let jsonData = try? encoder.encode(encodable) {
+                return String(data: jsonData, encoding: .utf8)
+            } else {
+                return nil
             }
         }
     }
@@ -54,7 +52,7 @@ public func urlPOSTRequestWithJSONString(_ jsonString: String,
             return request
         }
         return nil
-   }
+    }
 }
 
 public enum NetworkError: Error {

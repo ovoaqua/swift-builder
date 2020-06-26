@@ -61,6 +61,27 @@ public enum TealiumKnownDispatchers {
     #endif
 }
 
+public enum TealiumModuleNames: String, CaseIterable {
+    case autotracking
+    case appdata
+    case attribution
+    case collect
+    case connectivity
+    case consentmanager
+    case crash
+    case delegate
+    case devicedata
+    case dispatchqueue
+    case lifecycle
+    case location
+    case logger
+    case persistentdata
+    case remotecommands
+    case tagmanagement
+    case visitorservice
+    case volatiledata
+}
+
 public enum TealiumKey {
     public static let account = "tealium_account"
     public static let profile = "tealium_profile"

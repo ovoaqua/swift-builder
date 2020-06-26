@@ -33,9 +33,9 @@ func +<Key, Value> (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
     return result
 }
 
-extension Date {
+public extension Date {
 
-    struct Formatter {
+    fileprivate struct Formatter {
         static let iso8601: DateFormatter = {
             let formatter = DateFormatter()
             formatter.calendar = Calendar(identifier: .iso8601)
@@ -70,37 +70,37 @@ extension Date {
         }()
     }
 
-    public var iso8601String: String {
+    var iso8601String: String {
         return Formatter.iso8601.string(from: self)
     }
-    
-    public var extendedIso8601String: String {
+
+    var extendedIso8601String: String {
         return Formatter.extendedIso8601.string(from: self).appending("Z")
     }
 
-    public var iso8601LocalString: String {
+    var iso8601LocalString: String {
         return Formatter.iso8601Local.string(from: self)
     }
 
-    public var mmDDYYYYString: String {
+    var mmDDYYYYString: String {
         return Formatter.MMDDYYYY.string(from: self)
     }
 
-    public var unixTimeMilliseconds: String {
+    var unixTimeMilliseconds: String {
         // must be forced to Int64 to avoid overflow on watchOS (32 bit)
         let time = Int64(self.timeIntervalSince1970 * 1000)
 
         return String(describing: time)
     }
 
-    public var unixTimeSeconds: String {
+    var unixTimeSeconds: String {
         // must be forced to Int64 to avoid overflow on watchOS (32 bit)
         let time = Int64(self.timeIntervalSince1970)
 
         return String(describing: time)
     }
 
-    public func millisecondsFrom(earlierDate: Date) -> Int64 {
+    func millisecondsFrom(earlierDate: Date) -> Int64 {
         return Int64(self.timeIntervalSince(earlierDate) * 1000)
     }
 }

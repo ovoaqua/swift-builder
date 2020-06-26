@@ -11,14 +11,14 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumCrashModule: Collector {   
+public class TealiumCrashModule: Collector {
 
     public let moduleId: String = "Crash"
     var crashReporter: CrashReporterProtocol?
     weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
     public var config: TealiumConfig
-    
+
     public var data: [String: Any]? {
         self.crashReporter?.getData()
     }
@@ -29,11 +29,11 @@ public class TealiumCrashModule: Collector {
     convenience init (config: TealiumConfig,
                       delegate: TealiumModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
-        crashReporter: CrashReporterProtocol) {
-        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
+                      crashReporter: CrashReporterProtocol) {
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
         self.crashReporter = crashReporter
     }
-    
+
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,

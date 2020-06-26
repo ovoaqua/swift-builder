@@ -21,41 +21,41 @@ open class TealiumConfig {
         get {
             options[TealiumKey.shouldCollectTealiumData] as? Bool ?? true
         }
-        
+
         set {
             options[TealiumKey.shouldCollectTealiumData] = newValue
         }
     }
-    
+
     public var logger: TealiumLoggerProtocol? {
         get {
             options[TealiumKey.logger] as? TealiumLoggerProtocol
         }
-        
+
         set {
             options[TealiumKey.logger] = newValue
         }
     }
-    
+
     public var dispatchValidators: [DispatchValidator]? {
-           get {
-               options[TealiumKey.dispatchValidators] as? [DispatchValidator]
-           }
-           
-           set {
-               options[TealiumKey.dispatchValidators] = newValue
-           }
-   }
-    
+        get {
+            options[TealiumKey.dispatchValidators] as? [DispatchValidator]
+        }
+
+        set {
+            options[TealiumKey.dispatchValidators] = newValue
+        }
+    }
+
     public var dispatchListeners: [DispatchListener]? {
-           get {
-               options[TealiumKey.dispatchListeners] as? [DispatchListener]
-           }
-           
-           set {
-               options[TealiumKey.dispatchListeners] = newValue
-           }
-   }
+        get {
+            options[TealiumKey.dispatchListeners] as? [DispatchListener]
+        }
+
+        set {
+            options[TealiumKey.dispatchListeners] = newValue
+        }
+    }
 
     public var copy: TealiumConfig {
         return TealiumConfig(account: self.account,
@@ -120,7 +120,7 @@ open class TealiumConfig {
         }
         self.logger = self.logger ?? getLogger()
     }
-    
+
     func getLogger() -> TealiumLoggerProtocol {
         switch loggerType {
         case .custom(let logger):
@@ -140,7 +140,7 @@ extension TealiumConfig: Equatable {
         if lhs.environment != rhs.environment { return false }
         let lhsKeys = lhs.options.keys.sorted()
         let rhsKeys = rhs.options.keys.sorted()
-//        if lhs.modulesList != rhs.modulesList { return false }
+        //        if lhs.modulesList != rhs.modulesList { return false }
         if lhsKeys.count != rhsKeys.count { return false }
         for (index, key) in lhsKeys.enumerated() {
             if key != rhsKeys[index] { return false }
@@ -221,7 +221,7 @@ public extension TealiumConfig {
             options[TealiumKey.libraryEnabled] = newValue
         }
     }
-    
+
     /// If `false`, the the tag management module is disabled and will not be used for dispatching events
     var isTagManagementEnabled: Bool {
         get {
@@ -232,7 +232,7 @@ public extension TealiumConfig {
             options[TealiumKey.tagManagementModuleName] = newValue
         }
     }
-    
+
     /// If `false`, the the collect module is disabled and will not be used for dispatching events
     var isCollectEnabled: Bool {
         get {
@@ -330,5 +330,5 @@ public extension TealiumConfig {
             options[TealiumKey.minutesBetweenRefresh] = newValue
         }
     }
-    
+
 }

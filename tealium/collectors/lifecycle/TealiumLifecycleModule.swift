@@ -29,7 +29,7 @@ public class TealiumLifecycleModule: Collector {
     var lastLifecycleEvent: LifecycleType?
     var diskStorage: TealiumDiskStorageProtocol!
     public var config: TealiumConfig
-    
+
     public var data: [String: Any]? {
         lifecycle?.asDictionary(type: nil, for: Date())
     }
@@ -48,7 +48,7 @@ public class TealiumLifecycleModule: Collector {
         }
         completion((.success(true), nil))
     }
-    
+
     var lifecycle: TealiumLifecycle? {
         get {
             guard let storedData = diskStorage.retrieve(as: TealiumLifecycle.self) else {
@@ -62,14 +62,14 @@ public class TealiumLifecycleModule: Collector {
             }
         }
     }
-    
+
     /// Determines if a lifecycle event should be triggered and requests a track.
     ///
     /// - Parameters:
     ///     - type: `TealiumLifecycleType`
     ///     - date: `Date` at which the event occurred
     public func process(type: LifecycleType,
-        at date: Date, autotracked: Bool = false) {
+                        at date: Date, autotracked: Bool = false) {
         guard var lifecycle = self.lifecycle else {
             return
         }
@@ -79,19 +79,19 @@ public class TealiumLifecycleModule: Collector {
             if enabledPrior == true { return }
             enabledPrior = true
             lifecycleData += lifecycle.newLaunch(at: date,
-                overrideSession: nil)
+                                                 overrideSession: nil)
         case .sleep:
             lifecycleData += lifecycle.newSleep(at: date)
         case .wake:
             lifecycleData += lifecycle.newWake(at: date,
-                overrideSession: nil)
+                                               overrideSession: nil)
         }
         self.lifecycle = lifecycle
 
         lifecycleData[LifecycleKey.autotracked] = autotracked
         requestTrack(data: lifecycleData)
     }
-    
+
     /// Prevent manual spanning of repeated lifecycle calls to system.
     ///
     /// - Parameter type: `TealiumLifecycleType`
@@ -113,20 +113,20 @@ public class TealiumLifecycleModule: Collector {
         }
         return true
     }
-    
+
     /// Lifecycle event detected.
     /// - Parameters:
     ///   - type: `TealiumLifecycleType` launch, sleep, wake
     ///   - date: `Date` of lifecycle event
     public func lifecycleDetected(type: LifecycleType,
-        at date: Date = Date()) {
+                                  at date: Date = Date()) {
         guard lifecycleAcceptable(type: type) else {
             return
         }
         lastLifecycleEvent = type
         self.process(type: type, at: date, autotracked: true)
     }
-    
+
     /// Sends a track request to the module delegate.
     ///
     /// - Parameter data: `[String: Any]` containing the lifecycle data to track
@@ -155,5 +155,3 @@ extension TealiumLifecycleModule: TealiumLifecycleEvents {
         lifecycleDetected(type: .launch, at: date)
     }
 }
-
-

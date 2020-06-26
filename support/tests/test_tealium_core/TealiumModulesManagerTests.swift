@@ -356,7 +356,7 @@ class DummyDataManager: EventDataManagerProtocol {
 
     }
 
-    func addTrace(id: String) {
+    func joinTrace(id: String) {
 
     }
 
@@ -538,7 +538,7 @@ class DummyDataManagerNoData: EventDataManagerProtocol {
 
     }
 
-    func addTrace(id: String) {
+    func joinTrace(id: String) {
 
     }
 

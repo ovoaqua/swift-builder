@@ -12,26 +12,26 @@ import TealiumCore
 #endif
 
 public class TealiumVisitorServiceModule: Collector, DispatchListener {
-    
+
     public let moduleId: String = "Visitor Service"
     public var config: TealiumConfig
-    public var data: [String : Any]? = nil
+    public var data: [String: Any]?
     var diskStorage: TealiumDiskStorageProtocol!
     var firstEventSent = false
     var visitorId: String?
     var visitorServiceManager: TealiumVisitorServiceManagerProtocol?
-    
+
     /// Provided for unit testing￼.
     ///
     /// - Parameter visitorServiceManager: Class instance conforming to `TealiumVisitorServiceManagerProtocol`
     convenience init (config: TealiumConfig,
                       delegate: TealiumModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
-        visitorServiceManager: TealiumVisitorServiceManagerProtocol) {
-        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
+                      visitorServiceManager: TealiumVisitorServiceManagerProtocol) {
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
         self.visitorServiceManager = visitorServiceManager
     }
-    
+
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
@@ -39,8 +39,8 @@ public class TealiumVisitorServiceModule: Collector, DispatchListener {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "visitorservice", isCritical: false)
         self.visitorServiceManager = TealiumVisitorServiceManager(config: config,
-        delegate: config.visitorServiceDelegate,
-        diskStorage: self.diskStorage)
+                                                                  delegate: config.visitorServiceDelegate,
+                                                                  diskStorage: self.diskStorage)
         completion((.success(true), nil))
     }
 
@@ -55,24 +55,24 @@ public class TealiumVisitorServiceModule: Collector, DispatchListener {
             self.visitorServiceManager?.requestVisitorProfile()
         }
     }
-    
+
     public func willTrack(request: TealiumRequest) {
         switch request {
-            case let request as TealiumTrackRequest:
-                guard let visitorId = request.visitorId else {
-                    return
-                }
-                retrieveProfile(visitorId: visitorId)
-            case let request as TealiumBatchTrackRequest:
-                guard let lastRequest = request.trackRequests.last,
-                    let visitorId = lastRequest.visitorId else {
-                    return
-                }
-                retrieveProfile(visitorId: visitorId)
+        case let request as TealiumTrackRequest:
+            guard let visitorId = request.visitorId else {
+                return
+            }
+            retrieveProfile(visitorId: visitorId)
+        case let request as TealiumBatchTrackRequest:
+            guard let lastRequest = request.trackRequests.last,
+                  let visitorId = lastRequest.visitorId else {
+                return
+            }
+            retrieveProfile(visitorId: visitorId)
         default:
             break
         }
 
     }
-    
+
 }

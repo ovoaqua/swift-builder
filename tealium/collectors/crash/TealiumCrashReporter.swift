@@ -30,7 +30,7 @@ public class TealiumCrashReporter: CrashReporterProtocol {
 
     var crashReporter = TEALPLCrashReporter()
     public var crashData: [String: Any]?
-    
+
     public init() {
         self.enable()
     }

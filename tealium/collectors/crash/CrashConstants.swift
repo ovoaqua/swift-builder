@@ -34,7 +34,7 @@ public enum TealiumCrashKey {
     public static let codeType = "codeType"
     public static let architecture = "arch"
     public static let typeEncoding = "typeEncoding"
-    
+
     enum ImageThread: String {
         case baseAddress = "baseAddress"
         case imageName = "imageName"
@@ -54,7 +54,5 @@ public enum TealiumCrashKey {
         case symbolName = "symbolName"
         case symbolStartAddress = "symbolStartAddr"
     }
-    
+
 }
-
-

@@ -17,7 +17,9 @@ public class Tealium {
     var enableCompletion: TealiumEnableCompletion?
     public static var lifecycleListeners = TealiumLifecycleListeners()
     public var eventDataManager: EventDataManagerProtocol
+    // swiftlint:disable identifier_name
     public var zz_internal_modulesManager: ModulesManager?
+    // swiftlint:enable identifier_name
 
     // MARK: PUBLIC
 
@@ -38,10 +40,10 @@ public class Tealium {
         self.enableCompletion = enableCompletion
         self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
 
-//        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundConcurrentQueue.write {
             self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: self.eventDataManager)
-//        }
-        
+        }
+
         TealiumInstanceManager.shared.addInstance(self, config: config)
     }
 
@@ -88,7 +90,7 @@ public class Tealium {
 
         self.sendTrack(track)
     }
-    
+
     /// Sends a track on the background queue
     /// Will not be executed until modules manager is ready (first work item in queue is to enable modules manager)
     func sendTrack(_ track: TealiumTrackRequest) {
@@ -96,7 +98,7 @@ public class Tealium {
             guard let self = self else {
                 return
             }
-            
+
             self.zz_internal_modulesManager?.sendTrack(track)
         }
     }

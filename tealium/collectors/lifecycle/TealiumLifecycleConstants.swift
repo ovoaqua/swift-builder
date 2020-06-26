@@ -13,7 +13,7 @@ import TealiumCore
 
 // MARK: ENUMS
 public enum LifecycleKey {
-    
+
     static let moduleName = "lifecycle"
     static let autotrackingEnabled = "enable_autotracking"
     static let defaultSessionsSize = 20
@@ -46,7 +46,7 @@ public enum LifecycleKey {
     static let totalSecondsAwake = "lifecycle_totalsecondsawake"
     static let updateLaunchDate = "lifecycle_updatelaunchdate"
     static let wakeCount = "lifecycle_wakecount"
-    
+
     enum Session {
         static let wakeDate = "wake"
         static let sleepDate = "sleep"
@@ -62,7 +62,7 @@ public enum LifecycleKey {
 
 public enum LifecycleType {
     case launch, sleep, wake
-    
+
     public var description: String {
         switch self {
         case .launch:

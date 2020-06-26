@@ -89,7 +89,6 @@ class TealiumHelper: NSObject {
             }
 
             self.track(title: "init", data: nil)
-
             let persitence = teal.persistentData()
             let sessionPersistence = teal.volatileData()
             let dataManager = teal.eventDataManager

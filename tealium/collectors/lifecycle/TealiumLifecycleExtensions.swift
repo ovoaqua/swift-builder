@@ -24,14 +24,12 @@ public extension Tealium {
 
 }
 
-
 extension Bundle {
     var version: String? {
-            return object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ??
-                object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        return object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ??
+            object(forInfoDictionaryKey: "CFBundleVersion") as? String
     }
 }
-
 
 extension Array where Element == TealiumLifecycleSession {
 

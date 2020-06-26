@@ -29,8 +29,8 @@ public struct TealiumLifecycle: Codable {
         didSet {
             // Limit size of sessions records
             while sessions.count > sessionsSize &&
-                sessionsSize > 1 {
-                    sessions.remove(at: 1)
+                    sessionsSize > 1 {
+                sessions.remove(at: 1)
             }
         }
     }
@@ -62,7 +62,7 @@ public struct TealiumLifecycle: Codable {
         self.sessions = try values.decode([TealiumLifecycleSession].self, forKey: .sessions)
         self.sessionsSize = LifecycleKey.defaultSessionsSize
     }
-    
+
     /// - Returns: `String?` `true` if crash was detected (new launch with no previous sleep event)
     var crashDetected: String? {
         // Still in first session, can't have crashed yet
@@ -76,14 +76,14 @@ public struct TealiumLifecycle: Codable {
         // No sleep recorded in session before current
         return "true"
     }
-    
+
     /// - Returns: `Bool` `true` if this is the first launch
     var firstLaunch: Bool {
         return countLaunchTotal == 1 &&
             countWakeTotal == 1 &&
             countSleepTotal == 0
     }
-    
+
     /// Check if we're launching for first time after an app version update.
     ///
     /// - Returns: `Bool` `true` if this is the first launch after an app version update.
@@ -93,7 +93,7 @@ public struct TealiumLifecycle: Codable {
 
         return prior?.appVersion != current?.appVersion
     }
-    
+
     /// - Returns: `Bool` `true` if this is the first wake this month
     var firstWakeThisMonth: Bool {
         // Wakes array has only 1 date - return true
@@ -127,7 +127,7 @@ public struct TealiumLifecycle: Codable {
         return  laterWake > earlierWake &&
             laterDay != earlierDay
     }
-    
+
     /// Seconds app was awake since last launch. Available only during launch calls.
     ///
     /// - Returns: String of Int Seconds elapsed
@@ -202,7 +202,7 @@ public struct TealiumLifecycle: Codable {
         }
         return dict
     }
-    
+
     /// Utility method to count the whole days between 2 dates.
     ///
     /// - Parameters:
@@ -308,7 +308,7 @@ public struct TealiumLifecycle: Codable {
         }
         return beforeLastSession.wakeDate
     }
-    
+
     /// Trigger a new launch and return data for it.
     ///
     /// - Parameters:
@@ -373,7 +373,7 @@ public struct TealiumLifecycle: Codable {
         return asDictionary(type: nil,
                             for: date)
     }
-    
+
     /// Trigger a new wake and return data for it.
     ///
     /// - Parameters:
@@ -391,7 +391,7 @@ public struct TealiumLifecycle: Codable {
         return asDictionary(type: LifecycleType.wake.description,
                             for: date)
     }
-    
+
     /// - Parameter date: `Date`
     mutating func resetCountsAfterUpdate(for date: Date) {
         countWake = 1
