@@ -16,7 +16,7 @@ public class Tealium {
 
     var enableCompletion: TealiumEnableCompletion?
     public static var lifecycleListeners = TealiumLifecycleListeners()
-    public var eventDataManager: DataLayerManagerProtocol
+    public var dataLayer: DataLayerManagerProtocol
     // swiftlint:disable identifier_name
     public var zz_internal_modulesManager: ModulesManager?
     // swiftlint:enable identifier_name
@@ -38,10 +38,10 @@ public class Tealium {
         }
 
         self.enableCompletion = enableCompletion
-        self.eventDataManager = eventDataManager ?? DataLayerManager(config: config)
+        self.dataLayer = eventDataManager ?? DataLayer(config: config)
 
         TealiumQueues.backgroundConcurrentQueue.write {
-            self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: self.eventDataManager)
+            self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: self.dataLayer)
         }
 
         TealiumInstanceManager.shared.addInstance(self, config: config)
@@ -54,10 +54,12 @@ public class Tealium {
 
     /// Suspends all library activity, may release internal objects.
     public func disable() {
-        if let config = self.zz_internal_modulesManager?.config {
-            TealiumInstanceManager.shared.removeInstance(config: config)
+        TealiumQueues.backgroundConcurrentQueue.write {
+            if let config = self.zz_internal_modulesManager?.config {
+                TealiumInstanceManager.shared.removeInstance(config: config)
+            }
+            self.zz_internal_modulesManager = nil
         }
-        self.zz_internal_modulesManager = nil
     }
 
     /// Convenience track method with only a title argument.

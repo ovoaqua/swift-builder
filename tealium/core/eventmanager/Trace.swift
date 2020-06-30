@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension DataLayerManager {
+public extension DataLayer {
 
     /// Adds traceId to the payload for debugging server side integrations.
     /// - Parameter id: `String` traceId from server side interface.
@@ -18,6 +18,6 @@ public extension DataLayerManager {
 
     /// Ends the trace for the current session.
     func leaveTrace() {
-        delete(forKey: TealiumKey.traceId)
+        delete(for: TealiumKey.traceId)
     }
 }

@@ -28,7 +28,7 @@ enum TealiumAutotrackingKey {
 
 public extension Tealium {
 
-    func autotracking() -> TealiumAutotracking? {
+    var autotracking: TealiumAutotracking? {
         (zz_internal_modulesManager?.modules.first {
             type(of: $0) == TealiumAutotrackingModule.self
         } as? TealiumAutotrackingModule)?.autotracking

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension DataLayerManager {
+public extension DataLayer {
 
     /// Calculates the number of track calls within the specified `secondsBetweenTrackEvents`
     /// property that will then determine if a new session shall be generated.

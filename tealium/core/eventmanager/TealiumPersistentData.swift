@@ -39,7 +39,7 @@ public class TealiumPersistentData {
     /// - Parameter key: `String` name of key to be added.
     /// - Parameter expiration: `Expiration` level.
     public func add(value: Any,
-                    forKey key: String,
+                    for key: String,
                     expiration: Expiration = .forever) {
         eventDataManager.add(key: key, value: value, expiration: expiration)
     }
@@ -48,13 +48,13 @@ public class TealiumPersistentData {
     ///￼
     /// - Parameter forKeys: `[String]` Array of keys to remove.
     public func delete(for keys: [String]) {
-        eventDataManager.delete(forKeys: keys)
+        eventDataManager.delete(for: keys)
     }
 
     /// Deletes persistent data for a specific key.
     /// - Parameter key: `String` to remove a specific value from the internal session data store.
     public func delete(for key: String) {
-        eventDataManager.delete(forKey: key)
+        eventDataManager.delete(for: key)
     }
 
     /// Deletes all custom persisted data for current library instance.

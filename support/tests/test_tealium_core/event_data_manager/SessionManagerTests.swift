@@ -12,7 +12,7 @@ import XCTest
 class SessionManagerTests: XCTestCase {
 
     var config: TealiumConfig!
-    var eventDataManager: DataLayerManager!
+    var eventDataManager: DataLayer!
     var mockSessionStarter = MockTealiumSessionStarter()
     var mockURLSession = MockURLSessionSessionStarter()
     var mockDiskStorage = MockEventDataDiskStorage()
@@ -22,7 +22,7 @@ class SessionManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
-        eventDataManager = DataLayerManager(config: config, diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
+        eventDataManager = DataLayer(config: config, diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
     }
 
     override func tearDownWithError() throws {
@@ -60,8 +60,8 @@ class SessionManagerTests: XCTestCase {
 
     func testSessionIdSavesToPersistentStorage() {
         eventDataManager.sessionId = "test123abc"
-        let eventDataItem = EventDataItem(key: "tealium_session_id", value: "test123abc", expires: .distantFuture)
-        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
+        let eventDataItem = DataLayerItem(key: "tealium_session_id", value: "test123abc", expires: .distantFuture)
+        let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
 

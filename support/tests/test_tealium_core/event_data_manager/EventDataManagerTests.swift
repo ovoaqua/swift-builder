@@ -12,7 +12,7 @@ import XCTest
 class EventDataManagerTests: XCTestCase {
 
     var config: TealiumConfig!
-    var eventDataManager: DataLayerManager!
+    var eventDataManager: DataLayer!
     var mockDiskStorage: TealiumDiskStorageProtocol!
     var mockSessionStarter: SessionStarter!
 
@@ -20,7 +20,7 @@ class EventDataManagerTests: XCTestCase {
         config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", datasource: "testDatasource")
         mockDiskStorage = MockEventDataDiskStorage()
         mockSessionStarter = SessionStarter(config: TestTealiumHelper().getConfig(), urlSession: MockURLSessionSessionStarter())
-        eventDataManager = DataLayerManager(config: TestTealiumHelper().getConfig(), diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
+        eventDataManager = DataLayer(config: TestTealiumHelper().getConfig(), diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
     }
 
     override func tearDownWithError() throws {
@@ -61,31 +61,31 @@ class EventDataManagerTests: XCTestCase {
 
     func testAddSessionData() {
         let sessionData: [String: Any] = ["hello": "session"]
-        let eventDataItem = EventDataItem(key: "hello", value: "session", expires: .distantFuture)
+        let eventDataItem = DataLayerItem(key: "hello", value: "session", expires: .distantFuture)
         eventDataManager.add(data: sessionData, expiration: .session)
         XCTAssertNotNil(eventDataManager.allEventData["hello"])
         XCTAssertEqual(eventDataManager.allEventData["hello"] as! String, "session")
-        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
+        let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
 
     func testAddRestartData() {
         let restartData: [String: Any] = ["hello": "restart"]
-        let eventDataItem = EventDataItem(key: "hello", value: "restart", expires: .init(timeIntervalSinceNow: 60 * 60 * 12))
+        let eventDataItem = DataLayerItem(key: "hello", value: "restart", expires: .init(timeIntervalSinceNow: 60 * 60 * 12))
         eventDataManager.add(data: restartData, expiration: .untilRestart)
         XCTAssertNotNil(eventDataManager.allEventData["hello"])
         XCTAssertEqual(eventDataManager.allEventData["hello"] as! String, "restart")
-        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
+        let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
 
     func testAddForeverData() {
         let foreverData: [String: Any] = ["hello": "forever"]
-        let eventDataItem = EventDataItem(key: "hello", value: "forever", expires: .distantFuture)
+        let eventDataItem = DataLayerItem(key: "hello", value: "forever", expires: .distantFuture)
         eventDataManager.add(data: foreverData, expiration: .forever)
         XCTAssertNotNil(eventDataManager.allEventData["hello"])
         XCTAssertEqual(eventDataManager.allEventData["hello"] as! String, "forever")
-        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
+        let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
 
@@ -100,20 +100,20 @@ class EventDataManagerTests: XCTestCase {
     }
 
     func testDeleteForKeys() {
-        eventDataManager.delete(forKeys: ["singleDataItemKey1", "singleDataItemKey2"])
-        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
+        eventDataManager.delete(for keys: ["singleDataItemKey1", "singleDataItemKey2"])
+        let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertEqual(retrieved?.count, 1)
     }
 
     func testDeleteForKey() {
-        eventDataManager.delete(forKey: "singleDataItemKey1")
-        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
+        eventDataManager.delete(for: "singleDataItemKey1")
+        let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertEqual(retrieved?.count, 2)
     }
 
     func testDeleteAll() {
         eventDataManager.deleteAll()
-        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
+        let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertEqual(retrieved?.count, 0)
     }
 

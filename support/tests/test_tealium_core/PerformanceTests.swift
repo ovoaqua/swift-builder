@@ -299,7 +299,7 @@ class PerformanceTests: XCTestCase {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-YYYY HH:MM:ss"
         decoder.dateDecodingStrategy = .formatted(dateFormatter)
-        guard let decoded = try? decoder.decode([EventDataItem].self, from: json) else {
+        guard let decoded = try? decoder.decode([DataLayerItem].self, from: json) else {
             return
         }
         decoded.forEach {

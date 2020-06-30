@@ -1,5 +1,5 @@
 //
-//  EventData.swift
+//  EventDataManager.swift
 //  TealiumSwift
 //
 //  Created by Craig Rouse on 4/21/20.
@@ -8,110 +8,169 @@
 
 import Foundation
 
-public typealias DataLayer = Set<EventDataItem>
+public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
 
-public extension DataLayer {
+    var data = Set<DataLayerItem>()
+    var diskStorage: TealiumDiskStorageProtocol
+    var restartData = [String: Any]()
+    var config: TealiumConfig
+    public var lastTrackDate: Date?
+    public var minutesBetweenSessionIdentifier: TimeInterval
+    public var numberOfTracksBacking = 0
+    public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
+    public var sessionData = [String: Any]()
+    public var sessionStarter: SessionStarterProtocol
+    public var shouldTriggerSessionRequest = false
+    public var isTagManagementEnabled = false
 
-    /// Inserts a new `EventDataItem` into the `EventData` store
-    /// If a value for that key already exists, it will be removed before
-    /// the new value is inserted.
-    /// - Parameters:
-    ///   - dictionary: `[String: Any]` values being inserted into the `EventData` store
-    ///   - expires: `Date` expiration date
-    mutating func insert(from dictionary: [String: Any], expires: Date) {
-        dictionary.forEach { item in
+    public init(config: TealiumConfig,
+                diskStorage: TealiumDiskStorageProtocol? = nil,
+                sessionStarter: SessionStarterProtocol? = nil) {
+        self.config = config
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "eventdata")
+        self.sessionStarter = sessionStarter ?? SessionStarter(config: config)
+        self.minutesBetweenSessionIdentifier = TimeInterval(TealiumKey.defaultMinutesBetweenSession)
+        var currentStaticData = [TealiumKey.account: config.account,
+                                 TealiumKey.profile: config.profile,
+                                 TealiumKey.environment: config.environment,
+                                 TealiumKey.libraryName: TealiumValue.libraryName,
+                                 TealiumKey.libraryVersion: TealiumValue.libraryVersion]
 
-            if let existing = self.first(where: { value -> Bool in
-                value.key == item.key
-            }) {
-                self.remove(existing)
+        if let dataSource = config.dataSource {
+            currentStaticData[TealiumKey.dataSource] = dataSource
+        }
+        add(data: currentStaticData, expiration: .untilRestart)
+        sessionRefresh()
+    }
+
+    /// - Returns: `[String: Any]` containing all stored event data.
+    public var allEventData: [String: Any] {
+        get {
+            var allData = [String: Any]()
+            if let persistentData = self.persistentDataStorage {
+                allData += persistentData.all
             }
-            let eventDataValue = EventDataItem(key: item.key, value: item.value, expires: expires)
-            self.insert(eventDataValue)
+            allData += self.restartData
+            allData += self.allSessionData
+            return allData
+        }
+        set {
+            self.add(data: newValue, expiration: .forever)
         }
     }
 
-    /// Inserts a new `EventDataItem` into the `EventData` store
-    /// If a value for that key already exists, it will be removed before
-    /// the new value is inserted.
+    /// - Returns: `[String: Any]` containing all data for the active session.
+    public var allSessionData: [String: Any] {
+        var allSessionData = [String: Any]()
+        if let persistentData = self.persistentDataStorage {
+            allSessionData += persistentData.all
+        }
+
+        allSessionData[TealiumKey.random] = "\(Int.random(in: 1...16))"
+        if !currentTimestampsExist(allSessionData) {
+            allSessionData.merge(currentTimeStamps) { _, new in new }
+            allSessionData[TealiumKey.timestampOffset] = timeZoneOffset
+        }
+        allSessionData += sessionData
+        return allSessionData
+    }
+
+    /// - Returns: `[String: Any]` containing all current timestamps in volatile data.
+    public var currentTimeStamps: [String: Any] {
+        let date = Date()
+        return [
+            TealiumKey.timestampEpoch: date.timestampInSeconds,
+            TealiumKey.timestamp: date.iso8601String,
+            TealiumKey.timestampLocal: date.iso8601LocalString,
+            TealiumKey.timestampUnixMilliseconds: date.unixTimeMilliseconds,
+            TealiumKey.timestampUnix: date.unixTimeSeconds
+        ]
+    }
+
+    /// - Returns: `EventData` containing all stored event data.
+    public var persistentDataStorage: DataLayerCollection? {
+        get {
+            guard let storedData = self.diskStorage.retrieve(as: DataLayerCollection.self) else {
+                return DataLayerCollection()
+            }
+            return storedData
+        }
+        set {
+            if let newData = newValue?.removeExpired() {
+                self.diskStorage.save(newData, completion: nil)
+            }
+        }
+    }
+
+    /// - Returns: `String` containing the offset from UTC in hours.
+    var timeZoneOffset: String {
+        let timezone = TimeZone.current
+        let offsetSeconds = timezone.secondsFromGMT()
+        let offsetHours = offsetSeconds / 3600
+        return String(format: "%i", offsetHours)
+    }
+
+    /// Adds data to be stored based on the `Expiraton`.
     /// - Parameters:
-    ///   - key: `String` name for the value
-    ///   - value: `Any` should be `String` or `[String]`
-    ///   - expires: `Date` expiration date
-    mutating func insert(key: String, value: Any, expires: Date) {
-        self.insert(from: [key: value], expires: expires)
+    ///   - key: `String` name of key to be stored.
+    ///   - value: `Any` should be `String` or `[String]`.
+    ///   - expiration: `Expiration` level.
+    public func add(key: String,
+                    value: Any,
+                    expiration: Expiration) {
+        self.add(data: [key: value], expiration: expiration)
     }
 
-    /// Removes the `EventDataItem` from the `EventData` store
-    /// - Parameter key: `String` name of key to remove
-    mutating func remove(key: String) {
-        self.filter {
-            $0.key == key
-        }.forEach {
-            remove($0)
+    /// Adds data to be stored based on the `Expiraton`.
+    /// - Parameters:
+    ///   - data: `[String: Any]` to be stored.
+    ///   - expiration: `Expiration` level.
+    public func add(data: [String: Any],
+                    expiration: Expiration) {
+        switch expiration {
+        case .session:
+            self.sessionData += data
+            self.persistentDataStorage?.insert(from: self.sessionData, expires: expiration.date)
+        case .untilRestart:
+            self.restartData += data
+            self.persistentDataStorage?.insert(from: self.restartData, expires: expiration.date)
+        default:
+            self.persistentDataStorage?.insert(from: data, expires: expiration.date)
+        }
+
+    }
+
+    /// Checks that the active session data contains all expected timestamps.
+    ///
+    /// - Parameter currentData: `[String: Any]` containing existing session data.
+    /// - Returns: `Bool` `true` if current timestamps exist in active session data.
+    func currentTimestampsExist(_ currentData: [String: Any]) -> Bool {
+        TealiumQueues.backgroundConcurrentQueue.read {
+            currentData[TealiumKey.timestampEpoch] != nil &&
+                currentData[TealiumKey.timestamp] != nil &&
+                currentData[TealiumKey.timestampLocal] != nil &&
+                currentData[TealiumKey.timestampOffset] != nil &&
+                currentData[TealiumKey.timestampUnix] != nil
         }
     }
 
-    /// Removes expired data from the `EventData` store
-    /// - Returns: `EventData` after removal
-    func removeExpired() -> DataLayer {
-        let currentDate = Date()
-        let newDataLayer = self.filter {
-            $0.expires > currentDate
+    /// Deletes specified values from storage.
+    /// - Parameter forKeys: `[String]` keys to delete.
+    public func delete(for keys: [String]) {
+        keys.forEach {
+            self.delete(for: $0)
         }
-        return newDataLayer
     }
 
-    /// - Returns: `[String: Any]` all the data currently in the `EventData` store
-    var all: [String: Any] {
-        var returnData = [String: Any]()
-        self.forEach { eventDataItem in
-            returnData[eventDataItem.key] = eventDataItem.value
-        }
-        return returnData
+    /// Deletes a value from storage.
+    /// - Parameter key: `String` to delete.
+    public func delete(for key: String) {
+        persistentDataStorage?.remove(key: key)
     }
 
-}
-
-public struct EventDataItem: Codable, Hashable {
-    public static func == (lhs: EventDataItem, rhs: EventDataItem) -> Bool {
-        lhs.key == rhs.key
+    /// Deletes all values from storage.
+    public func deleteAll() {
+        persistentDataStorage?.removeAll()
     }
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(key)
-    }
-
-    var key: String
-    var value: Any
-    var expires: Date
-
-    enum CodingKeys: String, CodingKey {
-        case key
-        case value
-        case expires
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(key, forKey: .key)
-        try container.encode(AnyCodable(value), forKey: .value)
-        try container.encode(expires, forKey: .expires)
-    }
-
-    public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        let decoded = try values.decode(AnyCodable.self, forKey: .value)
-        value = decoded.value
-        expires = try values.decode(Date.self, forKey: .expires)
-        key = try values.decode(String.self, forKey: .key)
-    }
-
-    public init(key: String,
-                value: Any,
-                expires: Date) {
-        self.key = key
-        self.value = value
-        self.expires = expires
-    }
 }

@@ -14,7 +14,7 @@ public extension Tealium {
     ///
     /// - Parameter id: String representing the Trace ID (usually 5-digit integer)
     func joinTrace(id: String) {
-        eventDataManager.joinTrace(id: id)
+        dataLayer.joinTrace(id: id)
     }
 
     /// Sends a request to modules to leave a trace, and end the trace session￼.
@@ -24,7 +24,7 @@ public extension Tealium {
         if killVisitorSession {
             self.killVisitorSession()
         }
-        eventDataManager.leaveTrace()
+        dataLayer.leaveTrace()
     }
 
     /// Ends the current visitor session. Trace remains active, but visitor session is terminated.

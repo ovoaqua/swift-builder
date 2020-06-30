@@ -31,7 +31,7 @@ class TealiumVolatileDataTests: XCTestCase {
     }
     
     func testAddSingleValue() {
-        volatileData?.add(value: "world", forKey: "hello")
+        volatileData?.add(value: "world", for: "hello")
         XCTAssertEqual(mockEventDataMgr.addSingleCount, 1)
     }
     
@@ -41,7 +41,7 @@ class TealiumVolatileDataTests: XCTestCase {
     }
     
     func testDeleteMultipleKeys() {
-        volatileData?.deleteData(forKeys: ["key", "anotherKey"])
+        volatileData?.delete(for: ["key", "anotherKey"])
         XCTAssertEqual(mockEventDataMgr.deleteMultiCount, 1)
     }
     

@@ -31,7 +31,7 @@ class TealiumPersistentDataTests: XCTestCase {
     }
     
     func testAddSingleValue() {
-        persistentData?.add(value: "world", forKey: "hello")
+        persistentData?.add(value: "world", for: "hello")
         XCTAssertEqual(mockEventDataMgr.addSingleCount, 1)
     }
     

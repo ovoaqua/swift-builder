@@ -40,7 +40,7 @@ class TealiumHelper: NSObject {
         let config = TealiumConfig(account: "tealiummobile",
                                    profile: "ccpa-test",
                                    environment: "dev",
-                                   datasource: "test12",
+                                   dataSource: "test12",
                                    options: nil)
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
@@ -92,7 +92,7 @@ class TealiumHelper: NSObject {
             self.track(title: "init", data: nil)
             let persitence = teal.persistentData
             let sessionPersistence = teal.volatileData
-            let dataManager = teal.eventDataManager
+            let dataManager = teal.dataLayer
             teal.consentManager?.userConsentStatus = .consented
             
             dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
@@ -105,15 +105,15 @@ class TealiumHelper: NSObject {
 
             persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
 
-            persitence.delete(for keys: ["myvarforever"])
+            persitence.delete(for: ["myvarforever"])
 
             sessionPersistence.add(data: ["hello": "world"]) // session
 
-            sessionPersistence.add(value: 123, forKey: "test") // session
+            sessionPersistence.add(value: 123, for: "test") // session
 
-            sessionPersistence.deleteData(forKeys: ["hello", "test"])
+            sessionPersistence.delete(for: ["hello", "test"])
 
-            persitence.add(value: "hello", forKey: "itsme", expiration: .afterCustom((.months, 1)))
+            persitence.add(value: "hello", for: "itsme", expiration: .afterCustom((.months, 1)))
 
             print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
 
@@ -121,9 +121,11 @@ class TealiumHelper: NSObject {
 
         }
         tealium?.track(title: "hello")
+        tealium?.disable()
+        tealium = nil
         
         #if os(iOS)
-        guard let remoteCommands = tealium?.remoteCommands() else {
+        guard let remoteCommands = tealium?.remoteCommands else {
             return
         }
         let remoteCommand = TealiumRemoteCommand(commandId: "display", description: "Test") { response in
@@ -157,9 +159,6 @@ class TealiumHelper: NSObject {
     }
 
     func track(title: String, data: [String: Any]?) {
-//        tealium?.lifecycle()?.launch(at: Date())
-//        tealium?.disable()
-//        self.tealium = nil
         tealium?.track(title: title,
                        data: data,
                        completion: { (success, info, error) in

@@ -11,12 +11,12 @@ import XCTest
 
 class EventDataTests: XCTestCase {
 
-    var mockEventDataItem: EventDataItem!
-    var eventData: DataLayer!
+    var mockDataLayerItem: DataLayerItem!
+    var eventData: DataLayerCollection!
 
     override func setUpWithError() throws {
-        mockEventDataItem = EventDataItem(key: "itemOne", value: "test1", expires: .distantFuture)
-        eventData = Set(arrayLiteral: mockEventDataItem)
+        mockDataLayerItem = DataLayerItem(key: "itemOne", value: "test1", expires: .distantFuture)
+        eventData = Set(arrayLiteral: mockDataLayerItem)
     }
 
     override func tearDownWithError() throws {
@@ -25,11 +25,11 @@ class EventDataTests: XCTestCase {
     func testInsertSingle() {
         eventData.insert(key: "itemTwo", value: "test2", expires: .distantFuture)
         XCTAssertEqual(eventData.count, 2)
-        XCTAssertTrue(eventData.isSubset(of: [mockEventDataItem, EventDataItem(key: "itemTwo", value: "test2", expires: .distantFuture)]))
+        XCTAssertTrue(eventData.isSubset(of: [mockDataLayerItem, DataLayerItem(key: "itemTwo", value: "test2", expires: .distantFuture)]))
     }
 
     func testInsertSingleExpires() {
-        eventData = DataLayer()
+        eventData = DataLayerCollection()
         eventData.insert(key: "itemOne", value: "test1", expires: .distantPast)
         let eventDataExpired = eventData.removeExpired()
         XCTAssertEqual(eventDataExpired.count, 0)
@@ -39,11 +39,11 @@ class EventDataTests: XCTestCase {
         let multi = ["itemTwo": "test2", "itemThree": "test3"]
         eventData.insert(from: multi, expires: .distantFuture)
         XCTAssertEqual(eventData.count, 3)
-        XCTAssertTrue(eventData.isSubset(of: [mockEventDataItem, EventDataItem(key: "itemTwo", value: "test2", expires: .distantFuture), EventDataItem(key: "itemThree", value: "test3", expires: .distantFuture)]))
+        XCTAssertTrue(eventData.isSubset(of: [mockDataLayerItem, DataLayerItem(key: "itemTwo", value: "test2", expires: .distantFuture), DataLayerItem(key: "itemThree", value: "test3", expires: .distantFuture)]))
     }
 
     func testInsertMultiExpires() {
-        eventData = DataLayer()
+        eventData = DataLayerCollection()
         let multi = ["itemTwo": "test2", "itemThree": "test3"]
         eventData.insert(from: multi, expires: .distantPast)
         let eventDataExpired = eventData.removeExpired()
