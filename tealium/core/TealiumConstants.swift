@@ -12,7 +12,7 @@ import UIKit
 
 public enum TealiumValue {
     public static let libraryName = "swift"
-    public static let libraryVersion = "1.10.0"
+    public static let libraryVersion = "2.0.0"
     // This is the current limit for performance reasons. May be increased in future
     public static let maxEventBatchSize = 10
     public static let defaultMinimumDiskSpace: Int32 = 20_000_000
@@ -155,27 +155,11 @@ public enum TealiumKey {
     public static let dispatchListeners = "dispatch_listeners"
 }
 
-public enum TealiumModulesManagerError: Error {
-    case isDisabled
-    case noModules
-    case noModuleConfigs
-    case duplicateModuleConfigs
-}
-
-public enum TealiumModuleError: Error {
-    case failedToEnable
-    case failedToDisable
-    case failedToTrack
-    case missingConfigData
-    case missingTrackData
-    case isDisabled
-}
-
 public enum TealiumTrackType {
     case view           // Whenever content is displayed to the user.
     case event
 
-    func description() -> String {
+    var description: String {
         switch self {
         case .view:
             return "view"
@@ -188,8 +172,7 @@ public enum TealiumTrackType {
 
 public typealias TealiumCompletion = ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)
 
-public struct TealiumConstants {
-    private init() {}
+public enum TealiumConstants {
     static let libraryVersion = "2.0.0"
     static let defaultBatchSize = 10
     static let defaultLoggerType: TealiumLoggerType = .os

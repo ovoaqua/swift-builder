@@ -9,7 +9,7 @@
 import Foundation
 @testable import TealiumCore
 
-class MockEventDataManager: EventDataManagerProtocol {
+class MockEventDataManager: DataLayerManagerProtocol {
     var sessionDataBacking = [String: Any]()
     var addSingleCount = 0
     var addMultiCount = 0
@@ -56,7 +56,7 @@ class MockEventDataManager: EventDataManagerProtocol {
         MockTealiumSessionStarter()
     }
 
-    var tagManagementIsEnabled: Bool = true
+    var isTagManagementEnabled: Bool = true
 
     func add(data: [String: Any], expiration: Expiration) {
         addMultiCount += 1

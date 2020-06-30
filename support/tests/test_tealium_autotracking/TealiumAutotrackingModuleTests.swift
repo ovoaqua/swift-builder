@@ -215,7 +215,7 @@ extension TealiumAutotrackingModuleTests: TealiumModuleDelegate {
         expectationRequest?.fulfill()
     }
 
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 }

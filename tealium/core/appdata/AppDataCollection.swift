@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol TealiumAppDataCollection {
+public protocol AppDataCollection {
     /// Retrieves app name from Bundle￼￼￼￼￼￼.
     ///
     /// - Parameter bundle: `Bundle`
@@ -34,7 +34,7 @@ public protocol TealiumAppDataCollection {
     func build(bundle: Bundle) -> String?
 }
 
-public extension TealiumAppDataCollection {
+public extension AppDataCollection {
 
     /// Retrieves app name from Bundle￼￼￼￼￼￼.
     ///

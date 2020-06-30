@@ -155,13 +155,13 @@ class PerformanceTests: XCTestCase {
     // MARK: Individual Module Performance Tests
     func testAppDataModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumAppDataModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+            _ = AppDataModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
             self.stopMeasuring()
         }
     }
 
     func testAppDataCollection() {
-        let module = TealiumAppDataModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+        let module = AppDataModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = module.data
             self.stopMeasuring()
@@ -399,7 +399,7 @@ extension PerformanceTests: TealiumModuleDelegate {
 
     }
 
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

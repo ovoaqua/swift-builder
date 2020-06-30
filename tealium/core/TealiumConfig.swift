@@ -14,7 +14,7 @@ open class TealiumConfig {
     public let account: String
     public let profile: String
     public let environment: String
-    public let datasource: String?
+    public let dataSource: String?
     public lazy var options = [String: Any]()
 
     // Set to false to avoid collecting optional default data (AppData, DeviceData)
@@ -62,7 +62,7 @@ open class TealiumConfig {
         return TealiumConfig(account: self.account,
                              profile: self.profile,
                              environment: self.environment,
-                             datasource: self.datasource,
+                             dataSource: self.dataSource,
                              options: options)
     }
 
@@ -78,7 +78,7 @@ open class TealiumConfig {
         self.init(account: account,
                   profile: profile,
                   environment: environment,
-                  datasource: nil,
+                  dataSource: nil,
                   options: nil)
     }
 
@@ -88,15 +88,15 @@ open class TealiumConfig {
     ///     - account: `String` Tealium Account.
     ///     - profile: `String` Tealium Profile.
     ///     - environment: `String` Tealium Environment. 'prod' recommended for release.
-    ///     - dataSource: `String?` Optional datasource obtained from UDH.
+    ///     - dataSource: `String?` Optional dataSource obtained from UDH.
     public convenience init(account: String,
                             profile: String,
                             environment: String,
-                            datasource: String?) {
+                            dataSource: String?) {
         self.init(account: account,
                   profile: profile,
                   environment: environment,
-                  datasource: datasource,
+                  dataSource: dataSource,
                   options: nil)
     }
 
@@ -110,12 +110,12 @@ open class TealiumConfig {
     public init(account: String,
                 profile: String,
                 environment: String,
-                datasource: String? = nil,
+                dataSource: String? = nil,
                 options: [String: Any]?) {
         self.account = account
         self.environment = environment
         self.profile = profile
-        self.datasource = datasource
+        self.dataSource = dataSource
         if let options = options {
             self.options = options
         }

@@ -10,9 +10,9 @@ import Foundation
 
 public class TealiumPersistentData {
 
-    var eventDataManager: EventDataManagerProtocol
+    var eventDataManager: DataLayerManagerProtocol
 
-    public init(eventDataManager: EventDataManagerProtocol) {
+    public init(eventDataManager: DataLayerManagerProtocol) {
         self.eventDataManager = eventDataManager
     }
 
@@ -47,13 +47,13 @@ public class TealiumPersistentData {
     /// Delete a saved value for a given key.
     ///￼
     /// - Parameter forKeys: `[String]` Array of keys to remove.
-    public func deleteData(forKeys: [String]) {
-        eventDataManager.delete(forKeys: forKeys)
+    public func delete(for keys: [String]) {
+        eventDataManager.delete(forKeys: keys)
     }
 
     /// Deletes persistent data for a specific key.
     /// - Parameter key: `String` to remove a specific value from the internal session data store.
-    public func delete(forKey key: String) {
+    public func delete(for key: String) {
         eventDataManager.delete(forKey: key)
     }
 

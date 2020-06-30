@@ -23,7 +23,7 @@ public class ModulesManager {
     // must store a copy of the initial config to allow locally-overridden properties to take precedence over remote ones. These would otherwise be lost after the first update.
     var originalConfig: TealiumConfig
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
-    var coreCollectors: [Collector.Type] = [TealiumAppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
+    var coreCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
     var optionalCollectors: [String] = TealiumValue.optionalCollectors
     var knownDispatchers: [String] = TealiumValue.knownDispatchers
     public var collectors = [Collector]()
@@ -44,7 +44,7 @@ public class ModulesManager {
             self.dispatchManager?.dispatchListeners = newValue
         }
     }
-    var eventDataManager: EventDataManagerProtocol?
+    var dataLayerManager: DataLayerManagerProtocol?
     var logger: TealiumLoggerProtocol?
     public var modules: [TealiumModule] {
         get {
@@ -82,13 +82,13 @@ public class ModulesManager {
     }
 
     init (_ config: TealiumConfig,
-          eventDataManager: EventDataManagerProtocol?,
+          eventDataManager: DataLayerManagerProtocol?,
           optionalCollectors: [String]? = nil,
           knownDispatchers: [String]? = nil) {
         self.originalConfig = config.copy
         self.config = config
         self.connectivityManager = TealiumConnectivity(config: self.config, delegate: nil, diskStorage: nil) { _ in }
-        self.eventDataManager = eventDataManager
+        self.dataLayerManager = eventDataManager
         self.addCollector(connectivityManager)
         connectivityManager.addConnectivityDelegate(delegate: self)
         if config.shouldUseRemotePublishSettings {
@@ -212,7 +212,7 @@ public class ModulesManager {
                        config.isTagManagementEnabled == false {
                         return
                     } else {
-                        self.eventDataManager?.tagManagementIsEnabled = true
+                        self.dataLayerManager?.isTagManagementEnabled = true
                     }
 
                     if knownDispatcher.contains(TealiumModuleNames.collect),
@@ -284,9 +284,9 @@ public class ModulesManager {
 
         allData.value[TealiumKey.enabledModules] = modules.sorted { $0.id < $1.id }.map { $0.id }
 
-        eventDataManager?.sessionRefresh()
-        if let eventData = eventDataManager?.allEventData {
-            allData.value += eventData
+        dataLayerManager?.sessionRefresh()
+        if let dataLayer = dataLayerManager?.allEventData {
+            allData.value += dataLayer
         }
 
         if let data = data {

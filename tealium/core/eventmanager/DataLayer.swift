@@ -8,9 +8,9 @@
 
 import Foundation
 
-public typealias EventData = Set<EventDataItem>
+public typealias DataLayer = Set<EventDataItem>
 
-public extension EventData {
+public extension DataLayer {
 
     /// Inserts a new `EventDataItem` into the `EventData` store
     /// If a value for that key already exists, it will be removed before
@@ -18,7 +18,7 @@ public extension EventData {
     /// - Parameters:
     ///   - dictionary: `[String: Any]` values being inserted into the `EventData` store
     ///   - expires: `Date` expiration date
-    mutating func insertNew(from dictionary: [String: Any], expires: Date) {
+    mutating func insert(from dictionary: [String: Any], expires: Date) {
         dictionary.forEach { item in
 
             if let existing = self.first(where: { value -> Bool in
@@ -38,8 +38,8 @@ public extension EventData {
     ///   - key: `String` name for the value
     ///   - value: `Any` should be `String` or `[String]`
     ///   - expires: `Date` expiration date
-    mutating func insertNew(key: String, value: Any, expires: Date) {
-        self.insertNew(from: [key: value], expires: expires)
+    mutating func insert(key: String, value: Any, expires: Date) {
+        self.insert(from: [key: value], expires: expires)
     }
 
     /// Removes the `EventDataItem` from the `EventData` store
@@ -54,16 +54,16 @@ public extension EventData {
 
     /// Removes expired data from the `EventData` store
     /// - Returns: `EventData` after removal
-    func removeExpired() -> EventData {
+    func removeExpired() -> DataLayer {
         let currentDate = Date()
-        let newEventData = self.filter {
+        let newDataLayer = self.filter {
             $0.expires > currentDate
         }
-        return newEventData
+        return newDataLayer
     }
 
     /// - Returns: `[String: Any]` all the data currently in the `EventData` store
-    var allData: [String: Any] {
+    var all: [String: Any] {
         var returnData = [String: Any]()
         self.forEach { eventDataItem in
             returnData[eventDataItem.key] = eventDataItem.value

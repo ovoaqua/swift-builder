@@ -10,7 +10,7 @@ import Foundation
 
 public protocol SessionStarterProtocol {
     var sessionURL: String { get }
-    func sessionRequest(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void)
+    func requestSession(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void)
 }
 
 public struct SessionStarter: SessionStarterProtocol {
@@ -33,7 +33,7 @@ public struct SessionStarter: SessionStarterProtocol {
 
     /// Makes a request to the Tealium CDN session registry.
     /// - Parameter completion: `Result<HTTPURLResponse, Error>` Optional completion handling if needed.
-    public func sessionRequest(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void = { _ in }) {
+    public func requestSession(_ completion: @escaping (Result<HTTPURLResponse, Error>) -> Void = { _ in }) {
         guard let url = URL(string: sessionURL) else {
             return
         }

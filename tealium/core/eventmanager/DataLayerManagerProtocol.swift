@@ -12,7 +12,7 @@ public protocol TimestampCollection {
     var currentTimeStamps: [String: Any] { get }
 }
 
-public protocol EventDataManagerProtocol {
+public protocol DataLayerManagerProtocol {
     var allEventData: [String: Any] { get set }
     var allSessionData: [String: Any] { get }
     var minutesBetweenSessionIdentifier: TimeInterval { get set }
@@ -20,7 +20,7 @@ public protocol EventDataManagerProtocol {
     var sessionId: String? { get set }
     var sessionData: [String: Any] { get set }
     var sessionStarter: SessionStarterProtocol { get }
-    var tagManagementIsEnabled: Bool { get set }
+    var isTagManagementEnabled: Bool { get set }
     func add(data: [String: Any], expiration: Expiration)
     func add(key: String, value: Any, expiration: Expiration)
     func joinTrace(id: String)

@@ -53,7 +53,7 @@ enum TealiumWebviewError: String, LocalizedError {
     case webviewURLMissing
     case invalidURL
     case webviewNotInitialized
-    
+
     public var errorDescription: String? {
         return self.rawValue
     }

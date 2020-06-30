@@ -17,7 +17,7 @@ import XCTest
 class TealiumCrashTests: XCTestCase {
 
     var mockTimestampCollection: TimestampCollection!
-    var mockAppDataCollection: TealiumAppDataCollection!
+    var mockAppDataCollection: AppDataCollection!
     var mockDeviceDataCollection: TealiumDeviceDataCollection!
 
     override func setUp() {
@@ -165,7 +165,7 @@ class MockTimestampCollection: TimestampCollection {
     }
 }
 
-class MockTealiumAppDataCollection: TealiumAppDataCollection {
+class MockTealiumAppDataCollection: AppDataCollection {
     var uuid: String?
     var appName: String?
     var appVersion: String?

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension EventDataManager {
+public extension DataLayerManager {
 
     /// Adds traceId to the payload for debugging server side integrations.
     /// - Parameter id: `String` traceId from server side interface.

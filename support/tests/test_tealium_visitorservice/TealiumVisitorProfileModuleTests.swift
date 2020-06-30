@@ -78,7 +78,7 @@ class TealiumVisitorServiceModuleTests: XCTestCase {
 }
 
 extension TealiumVisitorServiceModuleTests: TealiumModuleDelegate {
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

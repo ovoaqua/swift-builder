@@ -1,5 +1,5 @@
 //
-//  TealiumAppDataModuleTests.swift
+//  AppDataModuleTests.swift
 //  tealium-swift
 //
 //  Created by Christina S on 05/20/20.
@@ -9,13 +9,13 @@
 @testable import TealiumCore
 import XCTest
 
-class TealiumAppDataModuleTests: XCTestCase {
+class AppDataModuleTests: XCTestCase {
 
-    var appDataModule: TealiumAppDataModule?
+    var appDataModule: AppDataModule?
     let mockDiskStorage = MockAppDataDiskStorage()
 
     override func setUp() {
-        appDataModule = TealiumAppDataModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: mockDiskStorage, bundle: Bundle(for: type(of: self)))
+        appDataModule = AppDataModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: mockDiskStorage, bundle: Bundle(for: type(of: self)))
     }
 
     func testInitSetsExistingAppData() {
@@ -34,11 +34,11 @@ class TealiumAppDataModuleTests: XCTestCase {
 
     func testIsMissingPersistentKeys() {
         let missingUUID = [TealiumKey.visitorId: "someVisitorId"]
-        XCTAssertTrue(TealiumAppDataModule.isMissingPersistentKeys(data: missingUUID))
+        XCTAssertTrue(AppDataModule.isMissingPersistentKeys(data: missingUUID))
         let missingVisitorID = [TealiumKey.uuid: "someUUID"]
-        XCTAssertTrue(TealiumAppDataModule.isMissingPersistentKeys(data: missingVisitorID))
+        XCTAssertTrue(AppDataModule.isMissingPersistentKeys(data: missingVisitorID))
         let neitherMissing = [TealiumKey.visitorId: "someVisitorId", TealiumKey.uuid: "someUUID"]
-        XCTAssertFalse(TealiumAppDataModule.isMissingPersistentKeys(data: neitherMissing))
+        XCTAssertFalse(AppDataModule.isMissingPersistentKeys(data: neitherMissing))
     }
 
     func testVisitorIdFromUUID() {
@@ -87,7 +87,7 @@ class TealiumAppDataModuleTests: XCTestCase {
     func testSetLoadedAppData() {
         let config = TestTealiumHelper().getConfig()
         config.existingVisitorId = "someOtherVisitorId"
-        let module = TealiumAppDataModule(config: config, delegate: self, diskStorage: mockDiskStorage, bundle: Bundle(for: type(of: self)))
+        let module = AppDataModule(config: config, delegate: self, diskStorage: mockDiskStorage, bundle: Bundle(for: type(of: self)))
         let testPersistentData = PersistentAppData(visitorId: "someVisitorId", uuid: "someUUID")
         module.setLoadedAppData(data: testPersistentData)
         // 2x because of init in setUp
@@ -104,7 +104,7 @@ class TealiumAppDataModuleTests: XCTestCase {
 
     func testPersistentDataInitFromDictionary() {
         let data = [TealiumKey.visitorId: "someVisitorId", TealiumKey.uuid: "someUUID"]
-        let persistentData = PersistentAppData.initFromDictionary(data)
+        let persistentData = PersistentAppData.new(from: data)
         XCTAssertEqual(persistentData?.visitorId, "someVisitorId")
         XCTAssertEqual(persistentData?.uuid, "someUUID")
     }
@@ -119,7 +119,7 @@ class TealiumAppDataModuleTests: XCTestCase {
 
 }
 
-extension TealiumAppDataModuleTests: TealiumModuleDelegate {
+extension AppDataModuleTests: TealiumModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

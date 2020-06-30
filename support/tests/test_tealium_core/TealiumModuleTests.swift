@@ -108,7 +108,7 @@ extension TealiumModuleTests: TealiumModuleDelegate {
 
     }
 
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

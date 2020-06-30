@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension EventDataManager {
+public extension DataLayerManager {
 
     /// Calculates the number of track calls within the specified `secondsBetweenTrackEvents`
     /// property that will then determine if a new session shall be generated.
@@ -41,7 +41,7 @@ public extension EventDataManager {
     /// - Returns: `String` session id for the active session.
     var sessionId: String? {
         get {
-            persistentDataStorage?.removeExpired().allData[TealiumKey.sessionId] as? String
+            persistentDataStorage?.removeExpired().all[TealiumKey.sessionId] as? String
         }
         set {
             if let newValue = newValue {
@@ -73,8 +73,8 @@ public extension EventDataManager {
     /// If the tag management module is enabled and multiple tracks have been sent in given time, a new session is started.
     /// - Parameter sessionStarter: `SessionStarterProtocol`
     func startNewSession(with sessionStarter: SessionStarterProtocol) {
-        if tagManagementIsEnabled, shouldTriggerSessionRequest {
-            sessionStarter.sessionRequest { [weak self] result in
+        if isTagManagementEnabled, shouldTriggerSessionRequest {
+            sessionStarter.requestSession { [weak self] result in
                 switch result {
                 case .success:
                     self?.shouldTriggerSessionRequest = false

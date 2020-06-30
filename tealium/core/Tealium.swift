@@ -16,7 +16,7 @@ public class Tealium {
 
     var enableCompletion: TealiumEnableCompletion?
     public static var lifecycleListeners = TealiumLifecycleListeners()
-    public var eventDataManager: EventDataManagerProtocol
+    public var eventDataManager: DataLayerManagerProtocol
     // swiftlint:disable identifier_name
     public var zz_internal_modulesManager: ModulesManager?
     // swiftlint:enable identifier_name
@@ -28,7 +28,7 @@ public class Tealium {
     /// - Parameter config: `TealiumConfig` Object created with Tealium account, profile, environment, optional loglevel)
     /// - Parameter enableCompletion: `TealiumEnableCompletion` block to be called when library has finished initializing
     public init(config: TealiumConfig,
-                eventDataManager: EventDataManagerProtocol? = nil,
+                eventDataManager: DataLayerManagerProtocol? = nil,
                 modulesManager: ModulesManager? = nil,
                 enableCompletion: TealiumEnableCompletion?) {
         defer {
@@ -38,7 +38,7 @@ public class Tealium {
         }
 
         self.enableCompletion = enableCompletion
-        self.eventDataManager = eventDataManager ?? EventDataManager(config: config)
+        self.eventDataManager = eventDataManager ?? DataLayerManager(config: config)
 
         TealiumQueues.backgroundConcurrentQueue.write {
             self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: self.eventDataManager)
@@ -122,7 +122,7 @@ public class Tealium {
                 newData += data
             }
 
-            newData[TealiumKey.callType] = TealiumTrackType.view.description()
+            newData[TealiumKey.callType] = TealiumTrackType.view.description
             newData[TealiumKey.screenTitle] = title // added for backwards-compatibility
 
             self.track(title: title,

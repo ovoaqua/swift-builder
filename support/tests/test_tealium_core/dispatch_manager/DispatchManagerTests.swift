@@ -104,7 +104,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     }
     #endif
     
-    func testReleaseQueue() {
+    func testDequeue() {
         let config = TestTealiumHelper().getConfig()
         #if os(iOS)
         config.remoteAPIEnabled = true
@@ -116,7 +116,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         let batchTrack = TealiumBatchTrackRequest(trackRequests: [trackRequest, trackRequest], completion: nil)
         dispatchManager.queue(TealiumEnqueueRequest(data: batchTrack, completion: nil))
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 2)
-        dispatchManager.releaseQueue()
+        dispatchManager.dequeue()
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 0)
     }
     

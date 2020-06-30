@@ -40,7 +40,7 @@ class DispatchManager: DispatchManagerProtocol {
     var config: TealiumConfig
     var connectivityManager: TealiumConnectivity
 
-    var shouldRelease: Bool {
+    var shouldDequeue: Bool {
         if let dispatchers = dispatchers, !dispatchers.isEmpty {
             return persistentQueue.currentEvents >= eventsBeforeAutoDispatch &&
                 hasSufficientBattery(track: persistentQueue.peek()?.last)
@@ -134,7 +134,7 @@ class DispatchManager: DispatchManagerProtocol {
 
     func processTrack(_ request: TealiumTrackRequest) {
         // first release the queue if the dispatch limit has been reached
-        if shouldRelease {
+        if shouldDequeue {
             handleDequeueRequest(reason: "Processing track request")
         }
         var newRequest = request
@@ -248,7 +248,7 @@ class DispatchManager: DispatchManagerProtocol {
     func enqueue(_ request: TealiumTrackRequest,
                  reason: String?) {
         defer {
-            if shouldRelease {
+            if shouldDequeue {
                 handleDequeueRequest(reason: "Dispatch queue limit reached.")
             }
         }
@@ -292,7 +292,7 @@ class DispatchManager: DispatchManagerProtocol {
                                                        category: .track)
                     self.logger?.log(logRequest)
 
-                    self.releaseQueue()
+                    self.dequeue()
                 }
             case .failure:
                 return
@@ -300,7 +300,7 @@ class DispatchManager: DispatchManagerProtocol {
         }
     }
 
-    func releaseQueue() {
+    func dequeue() {
         if let queuedDispatches = persistentQueue.dequeueDispatches() {
             let batches: [[TealiumTrackRequest]] = queuedDispatches.chunks(maxDispatchSize)
 

@@ -63,6 +63,7 @@ class TealiumHelper: NSObject {
         config.batterySaverEnabled = true
         config.remoteAPIEnabled = true
         logger = config.logger
+//        tealium?.dataLayerManager
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
         #if os(iOS)
@@ -89,8 +90,8 @@ class TealiumHelper: NSObject {
             }
 
             self.track(title: "init", data: nil)
-            let persitence = teal.persistentData()
-            let sessionPersistence = teal.volatileData()
+            let persitence = teal.persistentData
+            let sessionPersistence = teal.volatileData
             let dataManager = teal.eventDataManager
             teal.consentManager?.userConsentStatus = .consented
             
@@ -104,7 +105,7 @@ class TealiumHelper: NSObject {
 
             persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
 
-            persitence.deleteData(forKeys: ["myvarforever"])
+            persitence.delete(for keys: ["myvarforever"])
 
             sessionPersistence.add(data: ["hello": "world"]) // session
 
@@ -186,7 +187,7 @@ class TealiumHelper: NSObject {
     }
     
     func joinTrace(_ traceID: String) {
-        self.tealium?.joinTrace(traceId: traceID)
+        self.tealium?.joinTrace(id: traceID)
     }
 
     func leaveTrace() {

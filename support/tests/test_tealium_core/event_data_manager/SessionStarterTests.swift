@@ -27,7 +27,7 @@ class SessionStarterTests: XCTestCase {
     }
 
     func testRequestSessionSuccessful() {
-        sessionStarter.sessionRequest { result in
+        sessionStarter.requestSession { result in
             switch result {
             case .failure(let error):
                 XCTFail("Did not receive successful response - error: \(error.localizedDescription)")
@@ -39,7 +39,7 @@ class SessionStarterTests: XCTestCase {
 
     func testRequestSessionErrorInResponse() {
         sessionStarter = SessionStarter(config: config, urlSession: MockURLSessionSessionStarterRequestError())
-        sessionStarter.sessionRequest { result in
+        sessionStarter.requestSession { result in
             switch result {
             case .failure(let error):
                 if case SessionError.errorInRequest = error {
@@ -53,7 +53,7 @@ class SessionStarterTests: XCTestCase {
 
     func testRequestSessionInvalidResponse() {
         sessionStarter = SessionStarter(config: config, urlSession: MockURLSessionSessionStarterInvalidResponse())
-        sessionStarter.sessionRequest { result in
+        sessionStarter.requestSession { result in
             switch result {
             case .failure(let error):
                 if case SessionError.invalidResponse = error {

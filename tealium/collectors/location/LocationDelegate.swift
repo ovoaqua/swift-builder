@@ -1,5 +1,5 @@
 //
-//  LocationListener.swift
+//  LocationDelegate.swift
 //  TealiumLocation
 //
 //  Created by Harry Cassell on 11/09/2019.
@@ -8,7 +8,7 @@
 #if os(iOS)
 import Foundation
 
-protocol LocationListener {
+protocol LocationDelegate: class {
     func didEnterGeofence(_ data: [String: Any])
     func didExitGeofence(_ data: [String: Any])
 }

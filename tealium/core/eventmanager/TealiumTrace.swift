@@ -12,9 +12,9 @@ public extension Tealium {
 
     /// Sends a request to modules to initiate a trace with a specific Trace ID￼.
     ///
-    /// - Parameter traceId: String representing the Trace ID (usually 5-digit integer)
-    func joinTrace(traceId: String) {
-        eventDataManager.joinTrace(id: traceId)
+    /// - Parameter id: String representing the Trace ID (usually 5-digit integer)
+    func joinTrace(id: String) {
+        eventDataManager.joinTrace(id: id)
     }
 
     /// Sends a request to modules to leave a trace, and end the trace session￼.

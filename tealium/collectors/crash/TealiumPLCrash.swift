@@ -12,7 +12,7 @@ import TealiumCore
 #endif
 import TealiumCrashReporteriOS
 
-public class TealiumPLCrash: TealiumAppDataCollection {
+public class TealiumPLCrash: AppDataCollection {
 
     static let CrashBuildUuid = "CrashBuildUuid"
     static let CrashDataUnknown = "unknown"

@@ -18,7 +18,7 @@ enum TealiumTestValue {
     static let account = "testAccount"
     static let profile = "testProfile"
     static let environment = "testEnvironment"
-    static let eventType = TealiumTrackType.event.description()
+    static let eventType = TealiumTrackType.event.description
     static let stringValue = "value"
     static let title = "testTitle"
     static let sessionId = "1234567890124"

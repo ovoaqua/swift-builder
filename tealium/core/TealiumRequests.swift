@@ -45,14 +45,24 @@ public struct TealiumEnqueueRequest: TealiumRequest {
     public var typeId = TealiumEnqueueRequest.instanceTypeId()
     public var completion: TealiumCompletion?
     public var data: [TealiumTrackRequest]
-    var queueReason: String?
+    var queueReason: String? {
+        willSet {
+            guard let newValue = newValue else {
+                return
+            }
+            self.data = data.map {
+                var data = $0.trackDictionary
+                data[TealiumKey.queueReason] = newValue
+                return TealiumTrackRequest(data: data, completion: $0.completion)
+            }
+        }
+    }
 
     public init(data: TealiumTrackRequest,
                 queueReason: String? = nil,
                 completion: TealiumCompletion?) {
         self.data = [data]
         self.queueReason = queueReason
-        setQueueReason()
         self.completion = completion
     }
 
@@ -61,19 +71,7 @@ public struct TealiumEnqueueRequest: TealiumRequest {
                 completion: TealiumCompletion?) {
         self.data = data.trackRequests
         self.queueReason = queueReason
-        setQueueReason()
         self.completion = completion
-    }
-
-    mutating func setQueueReason() {
-        guard let queueReason = queueReason else {
-            return
-        }
-        self.data = data.map {
-            var data = $0.trackDictionary
-            data[TealiumKey.queueReason] = queueReason
-            return TealiumTrackRequest(data: data, completion: $0.completion)
-        }
     }
 
     public static func instanceTypeId() -> String {

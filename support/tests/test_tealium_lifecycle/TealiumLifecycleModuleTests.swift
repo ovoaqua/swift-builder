@@ -270,7 +270,7 @@ class TealiumLifecycleModuleTests: XCTestCase {
 }
 
 extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

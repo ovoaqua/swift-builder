@@ -12,7 +12,7 @@ import XCTest
 class SessionManagerTests: XCTestCase {
 
     var config: TealiumConfig!
-    var eventDataManager: EventDataManager!
+    var eventDataManager: DataLayerManager!
     var mockSessionStarter = MockTealiumSessionStarter()
     var mockURLSession = MockURLSessionSessionStarter()
     var mockDiskStorage = MockEventDataDiskStorage()
@@ -22,7 +22,7 @@ class SessionManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
-        eventDataManager = EventDataManager(config: config, diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
+        eventDataManager = DataLayerManager(config: config, diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
     }
 
     override func tearDownWithError() throws {
@@ -45,7 +45,7 @@ class SessionManagerTests: XCTestCase {
 
     func testTwoTracksInSecondsBetweenTracksStartsNewSession() {
         eventDataManager.config.sessionHandlingEnabled = true
-        eventDataManager.tagManagementIsEnabled = true
+        eventDataManager.isTagManagementEnabled = true
         eventDataManager.shouldTriggerSessionRequest = true
         eventDataManager.lastTrackDate = timeTraveler.travel(by: 20)
         eventDataManager.numberOfTracks = 0
@@ -61,7 +61,7 @@ class SessionManagerTests: XCTestCase {
     func testSessionIdSavesToPersistentStorage() {
         eventDataManager.sessionId = "test123abc"
         let eventDataItem = EventDataItem(key: "tealium_session_id", value: "test123abc", expires: .distantFuture)
-        let retrieved = mockDiskStorage.retrieve(as: EventData.self)
+        let retrieved = mockDiskStorage.retrieve(as: DataLayer.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
 
@@ -85,21 +85,21 @@ class SessionManagerTests: XCTestCase {
     }
 
     func testStartNewSessionWhenTagManageMentEnabledTriggerNewSessionFalse() {
-        eventDataManager.tagManagementIsEnabled = true
+        eventDataManager.isTagManagementEnabled = true
         eventDataManager.shouldTriggerSessionRequest = false
         eventDataManager.startNewSession(with: mockSessionStarter)
         XCTAssertEqual(mockSessionStarter.sessionRequestCount, 0)
     }
 
     func testStartNewSessionWhenTagManageMentNotEnabledTriggerNewSessionTrue() {
-        eventDataManager.tagManagementIsEnabled = false
+        eventDataManager.isTagManagementEnabled = false
         eventDataManager.shouldTriggerSessionRequest = true
         eventDataManager.startNewSession(with: mockSessionStarter)
         XCTAssertEqual(mockSessionStarter.sessionRequestCount, 0)
     }
 
     func testStartNewSessionWhenTagManageMentEnabledTriggerNewSessionTrue() {
-        eventDataManager.tagManagementIsEnabled = true
+        eventDataManager.isTagManagementEnabled = true
         eventDataManager.shouldTriggerSessionRequest = true
         eventDataManager.startNewSession(with: mockSessionStarter)
         XCTAssertEqual(mockSessionStarter.sessionRequestCount, 1)

@@ -200,7 +200,7 @@ class TealiumLocationTests: XCTestCase {
         let expect = expectation(description: "testSendGeofenceTrackingEventEntered")
         TealiumLocationTests.expectations.append(expect)
 
-        let tealiumLocation = TealiumLocation(config: config, locationListener: self,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: self,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -226,7 +226,7 @@ class TealiumLocationTests: XCTestCase {
         let expect = expectation(description: "testSendGeofenceTrackingEventExited")
         TealiumLocationTests.expectations.append(expect)
 
-        let tealiumLocation = TealiumLocation(config: config, locationListener: self,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: self,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -241,7 +241,7 @@ class TealiumLocationTests: XCTestCase {
     }
 
     func testLatestLocationWhenLastLocationPopulated() {
-        let tealiumLocation = TealiumLocation(config: config, locationListener: self,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: self,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -259,7 +259,7 @@ class TealiumLocationTests: XCTestCase {
     }
 
     func testLatestLocationWhenLastLocationNotPopulated() {
-        let tealiumLocation = TealiumLocation(config: config, locationListener: self,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: self,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -270,7 +270,7 @@ class TealiumLocationTests: XCTestCase {
     }
 
     func testStartMonitoring() {
-        let tealiumLocation = TealiumLocation(config: config, locationListener: self,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: self,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -299,7 +299,7 @@ class TealiumLocationTests: XCTestCase {
     }
 
     func testStopMonitoring() {
-        let tealiumLocation = TealiumLocation(config: config, locationListener: self,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: self,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -389,12 +389,12 @@ class TealiumLocationTests: XCTestCase {
                                    TealiumLocationKey.geofenceTransition: TealiumLocationKey.entered,
                                    TealiumKey.event: TealiumLocationKey.entered]
 
-        let tealiumLocation = TealiumLocation(config: config, locationListener: tealiumLocationModule,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: tealiumLocationModule,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
 
-        tealiumLocation.locationListener?.didEnterGeofence(data)
+        tealiumLocation.locationDelegate?.didEnterGeofence(data)
 
         waitForExpectations(timeout: 3.0, handler: nil)
     }
@@ -412,12 +412,12 @@ class TealiumLocationTests: XCTestCase {
                                    TealiumLocationKey.geofenceTransition: TealiumLocationKey.exited,
                                    TealiumKey.event: TealiumLocationKey.exited]
 
-        let tealiumLocation = TealiumLocation(config: config, locationListener: tealiumLocationModule,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: tealiumLocationModule,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
 
-        tealiumLocation.locationListener?.didExitGeofence(data)
+        tealiumLocation.locationDelegate?.didExitGeofence(data)
 
         waitForExpectations(timeout: 3.0, handler: nil)
     }
@@ -425,7 +425,7 @@ class TealiumLocationTests: XCTestCase {
 }
 
 extension TealiumLocationTests: TealiumModuleDelegate {
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 
@@ -442,7 +442,7 @@ extension TealiumLocationTests: TealiumModuleDelegate {
     }
 }
 
-extension TealiumLocationTests: LocationListener {
+extension TealiumLocationTests: LocationDelegate {
 
     func didEnterGeofence(_ data: [String: Any]) {
         let tz = TimeZone.current

@@ -55,7 +55,7 @@ public func urlPOSTRequestWithJSONString(_ jsonString: String,
     }
 }
 
-public enum NetworkError: Error {
+public enum NetworkError: String, LocalizedError {
     case couldNotCreateSession
     case unknownResponseType
     case noInternet
@@ -64,4 +64,8 @@ public enum NetworkError: Error {
     case noDataToTrack
     case unknownIssueWithSend
     case invalidURL
+
+    public var errorDescription: String? {
+        return self.rawValue
+    }
 }

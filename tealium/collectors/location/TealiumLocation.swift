@@ -20,16 +20,16 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     var locationManager: LocationManager
     var lastLocation: CLLocation?
     var geofences = Geofences()
-    var locationListener: LocationListener?
+    weak var locationDelegate: LocationDelegate?
     var didEnterRegionWorking = false
     var locationAccuracy = TealiumLocationKey.lowAccuracy
 
     init(config: TealiumConfig,
          bundle: Bundle = Bundle.main,
-         locationListener: LocationListener? = nil,
+         locationDelegate: LocationDelegate? = nil,
          locationManager: LocationManager = CLLocationManager()) {
         self.config = config
-        self.locationListener = locationListener
+        self.locationDelegate = locationDelegate
         self.locationManager = locationManager
 
         super.init()
@@ -190,9 +190,9 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         }
 
         if triggeredTransition == TealiumLocationKey.exited {
-            locationListener?.didExitGeofence(data)
+            locationDelegate?.didExitGeofence(data)
         } else if triggeredTransition == TealiumLocationKey.entered {
-            locationListener?.didEnterGeofence(data)
+            locationDelegate?.didEnterGeofence(data)
         }
     }
 

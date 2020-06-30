@@ -77,12 +77,12 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
 
     /// - Returns:`[String: Any]` containing all attribution data
     public lazy var allAttributionData: [String: Any] = {
-        var allData = [String: Any]()
+        var all = [String: Any]()
         if let persistentAttributionData = persistentAttributionData {
-            allData += persistentAttributionData.toDictionary()
+            all += persistentAttributionData.toDictionary()
         }
-        allData += volatileData
-        return allData
+        all += volatileData
+        return all
     }()
 
     /// Requests Apple Search Ads data from AdClient API￼.

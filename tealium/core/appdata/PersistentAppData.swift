@@ -18,7 +18,7 @@ public struct PersistentAppData: Codable {
          TealiumKey.visitorId: visitorId]
     }
 
-    public static func initFromDictionary(_ existingData: [String: Any]) -> PersistentAppData? {
+    public static func new(from existingData: [String: Any]) -> PersistentAppData? {
         guard let uuid = existingData[TealiumKey.uuid] as? String,
               let visitorId = existingData[TealiumKey.visitorId] as? String else {
             return nil

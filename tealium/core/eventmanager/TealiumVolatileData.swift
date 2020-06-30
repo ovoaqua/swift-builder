@@ -10,9 +10,9 @@ import Foundation
 
 public class TealiumVolatileData {
 
-    var eventDataManager: EventDataManagerProtocol
+    var eventDataManager: DataLayerManagerProtocol
 
-    public init(eventDataManager: EventDataManagerProtocol) {
+    public init(eventDataManager: DataLayerManagerProtocol) {
         self.eventDataManager = eventDataManager
     }
 

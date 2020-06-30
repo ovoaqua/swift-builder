@@ -11,12 +11,12 @@ import Foundation
 
 class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
 
-    var mockEventData: EventData?
+    var mockEventData: DataLayer?
 
     init() {
         let dataItem1 = EventDataItem(key: "singleDataItemKey1", value: "singleDataItemValue1", expires: .distantFuture)
         let dataItem2 = EventDataItem(key: "singleDataItemKey2", value: "singleDataItemValue2", expires: .distantFuture)
-        mockEventData = EventData(arrayLiteral: dataItem1, dataItem2)
+        mockEventData = DataLayer(arrayLiteral: dataItem1, dataItem2)
     }
 
     func append(_ data: [String: Any], fileName: String, completion: TealiumCompletion?) { }
@@ -28,8 +28,8 @@ class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
     func save(_ data: AnyCodable, fileName: String, completion: TealiumCompletion?) { }
 
     func save<T>(_ data: T, completion: TealiumCompletion?) where T: Encodable {
-        guard T.self == EventData.self,
-            let data = data as? EventData else {
+        guard T.self == DataLayer.self,
+            let data = data as? DataLayer else {
                 return
         }
         mockEventData = data
@@ -43,7 +43,7 @@ class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
     func append<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Decodable, T: Encodable { }
 
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
-        guard T.self == EventData.self else {
+        guard T.self == DataLayer.self else {
             return nil
         }
         if let mockEventData = self.mockEventData {

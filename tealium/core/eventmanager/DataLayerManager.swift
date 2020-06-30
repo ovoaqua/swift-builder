@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
+public class DataLayerManager: DataLayerManagerProtocol, TimestampCollection {
 
     var data = Set<EventDataItem>()
     var diskStorage: TealiumDiskStorageProtocol
@@ -21,7 +21,7 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
     public var sessionData = [String: Any]()
     public var sessionStarter: SessionStarterProtocol
     public var shouldTriggerSessionRequest = false
-    public var tagManagementIsEnabled = false
+    public var isTagManagementEnabled = false
 
     public init(config: TealiumConfig,
                 diskStorage: TealiumDiskStorageProtocol? = nil,
@@ -36,7 +36,7 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
                                  TealiumKey.libraryName: TealiumValue.libraryName,
                                  TealiumKey.libraryVersion: TealiumValue.libraryVersion]
 
-        if let dataSource = config.datasource {
+        if let dataSource = config.dataSource {
             currentStaticData[TealiumKey.dataSource] = dataSource
         }
         add(data: currentStaticData, expiration: .untilRestart)
@@ -48,7 +48,7 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
         get {
             var allData = [String: Any]()
             if let persistentData = self.persistentDataStorage {
-                allData += persistentData.allData
+                allData += persistentData.all
             }
             allData += self.restartData
             allData += self.allSessionData
@@ -63,7 +63,7 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
     public var allSessionData: [String: Any] {
         var allSessionData = [String: Any]()
         if let persistentData = self.persistentDataStorage {
-            allSessionData += persistentData.allData
+            allSessionData += persistentData.all
         }
 
         allSessionData[TealiumKey.random] = "\(Int.random(in: 1...16))"
@@ -88,10 +88,10 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
     }
 
     /// - Returns: `EventData` containing all stored event data.
-    public var persistentDataStorage: EventData? {
+    public var persistentDataStorage: DataLayer? {
         get {
-            guard let storedData = self.diskStorage.retrieve(as: EventData.self) else {
-                return EventData()
+            guard let storedData = self.diskStorage.retrieve(as: DataLayer.self) else {
+                return DataLayer()
             }
             return storedData
         }
@@ -130,12 +130,12 @@ public class EventDataManager: EventDataManagerProtocol, TimestampCollection {
         switch expiration {
         case .session:
             self.sessionData += data
-            self.persistentDataStorage?.insertNew(from: self.sessionData, expires: expiration.date)
+            self.persistentDataStorage?.insert(from: self.sessionData, expires: expiration.date)
         case .untilRestart:
             self.restartData += data
-            self.persistentDataStorage?.insertNew(from: self.restartData, expires: expiration.date)
+            self.persistentDataStorage?.insert(from: self.restartData, expires: expiration.date)
         default:
-            self.persistentDataStorage?.insertNew(from: data, expires: expiration.date)
+            self.persistentDataStorage?.insert(from: data, expires: expiration.date)
         }
 
     }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
+public class AppDataModule: Collector, AppDataCollection {
 
     public let id: String = TealiumModuleNames.appdata
     private(set) var uuid: String?
@@ -24,12 +24,9 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
             return appData.persistentData?.dictionary
         }
     }
-
+    /// Optional override for visitor ID
     var existingVisitorId: String? {
         config.existingVisitorId
-    }
-    var logger: TealiumLoggerProtocol? {
-        config.logger
     }
 
     public var config: TealiumConfig
@@ -49,12 +46,12 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
         self.config = config
         self.bundle = Bundle.main
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "appdata", isCritical: true)
-        setExistingAppData()
+        fillCache()
         completion((.success(true), nil))
     }
 
     /// Retrieves existing data from persistent storage and stores in volatile memory.
-    func setExistingAppData() {
+    func fillCache() {
         guard let data = diskStorage.retrieve(as: PersistentAppData.self) else {
             setNewAppData()
             return
@@ -137,7 +134,7 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
     ///
     /// - Parameter data: `PersistentAppData` instance  containing existing AppData variables
     func setLoadedAppData(data: PersistentAppData) {
-        guard !TealiumAppDataModule.isMissingPersistentKeys(data: data.dictionary) else {
+        guard !AppDataModule.isMissingPersistentKeys(data: data.dictionary) else {
             setNewAppData()
             return
         }

@@ -104,7 +104,7 @@ class TealiumModulesManagerTests: XCTestCase {
     func testDisableModule() {
         let modulesManager = self.modulesManager
 
-        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dataLayerManager = DummyDataManagerNoData()
         let collector = DummyCollector(config: testTealiumConfig, delegate: self, diskStorage: nil) { _ in
 
         }
@@ -120,7 +120,7 @@ class TealiumModulesManagerTests: XCTestCase {
     func testGatherTrackData() {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
-        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dataLayerManager = DummyDataManagerNoData()
         let collector = DummyCollector(config: testTealiumConfig, delegate: self, diskStorage: nil) { _ in
 
         }
@@ -128,7 +128,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let data = modulesManager.gatherTrackData(for: ["testGatherTrackData": true]) as! [String: Bool]
 
         XCTAssertEqual(["testGatherTrackData": true, "dummy": true], data)
-        modulesManager.eventDataManager = DummyDataManager()
+        modulesManager.dataLayerManager = DummyDataManager()
         let dataWithEventData = modulesManager.gatherTrackData(for: ["testGatherTrackData": true]) as! [String: Bool]
         XCTAssertEqual(["testGatherTrackData": true, "dummy": true, "eventData": true, "sessionData": true], dataWithEventData)
     }
@@ -137,7 +137,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dataLayerManager = DummyDataManagerNoData()
 
         XCTAssertEqual(modulesManager.dispatchers.count, 0)
 
@@ -151,7 +151,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dataLayerManager = DummyDataManagerNoData()
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         modulesManager.dispatchManager = DummyDispatchManagerSendTrack(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
@@ -165,7 +165,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dataLayerManager = DummyDataManagerNoData()
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         modulesManager.dispatchManager = DummyDispatchManagerRequestTrack(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
@@ -174,17 +174,17 @@ class TealiumModulesManagerTests: XCTestCase {
         wait(for: [TealiumModulesManagerTests.expectatations["requestTrack"]!], timeout: 1.0)
     }
 
-    func testReleaseQueue() {
-        TealiumModulesManagerTests.expectatations["releaseQueue"] = expectation(description: "releaseQueue")
+    func testDequeue() {
+        TealiumModulesManagerTests.expectatations["dequeue"] = expectation(description: "dequeue")
         let modulesManager = self.modulesManager
         modulesManager.collectors = []
         modulesManager.dispatchers = []
-        modulesManager.eventDataManager = DummyDataManagerNoData()
+        modulesManager.dataLayerManager = DummyDataManagerNoData()
         let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
-        modulesManager.dispatchManager = DummyDispatchManagerReleaseQueue(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
+        modulesManager.dispatchManager = DummyDispatchManagerdequeue(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         modulesManager.requestDequeue(reason: "test")
-        wait(for: [TealiumModulesManagerTests.expectatations["releaseQueue"]!], timeout: 1.0)
+        wait(for: [TealiumModulesManagerTests.expectatations["dequeue"]!], timeout: 1.0)
     }
 
     func testSetupDispatchListeners() {
@@ -331,7 +331,7 @@ class DummyCollector: Collector, DispatchListener, DispatchValidator {
 
 }
 
-class DummyDataManager: EventDataManagerProtocol {
+class DummyDataManager: DataLayerManagerProtocol {
     var allEventData: [String: Any] = ["eventData": true, "sessionData": true]
 
     var allSessionData: [String: Any] = ["sessionData": true]
@@ -346,7 +346,7 @@ class DummyDataManager: EventDataManagerProtocol {
 
     var sessionStarter: SessionStarterProtocol = SessionStarter(config: testTealiumConfig)
 
-    var tagManagementIsEnabled: Bool = true
+    var isTagManagementEnabled: Bool = true
 
     func add(data: [String: Any], expiration: Expiration) {
 
@@ -420,7 +420,7 @@ class DummyDispatchManagerConfigUpdate: DispatchManagerProtocol {
 
 }
 
-class DummyDispatchManagerReleaseQueue: DispatchManagerProtocol {
+class DummyDispatchManagerdequeue: DispatchManagerProtocol {
     var dispatchers: [Dispatcher]?
 
     var dispatchListeners: [DispatchListener]?
@@ -445,7 +445,7 @@ class DummyDispatchManagerReleaseQueue: DispatchManagerProtocol {
     }
 
     func handleDequeueRequest(reason: String) {
-        TealiumModulesManagerTests.expectatations["releaseQueue"]?.fulfill()
+        TealiumModulesManagerTests.expectatations["dequeue"]?.fulfill()
     }
 
 }
@@ -513,7 +513,7 @@ class DummyDispatchManagerSendTrack: DispatchManagerProtocol {
 
 }
 
-class DummyDataManagerNoData: EventDataManagerProtocol {
+class DummyDataManagerNoData: DataLayerManagerProtocol {
     var allEventData: [String: Any] = [:]
 
     var allSessionData: [String: Any] = [:]
@@ -528,7 +528,7 @@ class DummyDataManagerNoData: EventDataManagerProtocol {
 
     var sessionStarter: SessionStarterProtocol = SessionStarter(config: testTealiumConfig)
 
-    var tagManagementIsEnabled: Bool = true
+    var isTagManagementEnabled: Bool = true
 
     func add(data: [String: Any], expiration: Expiration) {
 

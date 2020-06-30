@@ -315,7 +315,7 @@ extension TealiumModulesTest: TealiumModuleDelegate {
 
     }
 
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

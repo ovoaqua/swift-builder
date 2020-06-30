@@ -38,10 +38,10 @@ class TealiumLocationModule: Collector {
         self.delegate = delegate
 
         if Thread.isMainThread {
-            tealiumLocationManager = TealiumLocation(config: config, locationListener: self)
+            tealiumLocationManager = TealiumLocation(config: config, locationDelegate: self)
         } else {
             TealiumQueues.mainQueue.async {
-                self.tealiumLocationManager = TealiumLocation(config: config, locationListener: self)
+                self.tealiumLocationManager = TealiumLocation(config: config, locationDelegate: self)
             }
         }
 
@@ -54,7 +54,7 @@ class TealiumLocationModule: Collector {
 
 }
 
-extension TealiumLocationModule: LocationListener {
+extension TealiumLocationModule: LocationDelegate {
 
     func didEnterGeofence(_ data: [String: Any]) {
         let trackRequest = TealiumTrackRequest(data: data, completion: nil)

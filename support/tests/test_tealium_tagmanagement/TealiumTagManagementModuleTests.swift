@@ -181,7 +181,7 @@ class TealiumTagManagementModuleTests: XCTestCase {
 }
 
 extension TealiumTagManagementModuleTests: TealiumModuleDelegate {
-    func requestReleaseQueue(reason: String) {
+    func requestDequeue(reason: String) {
 
     }
 

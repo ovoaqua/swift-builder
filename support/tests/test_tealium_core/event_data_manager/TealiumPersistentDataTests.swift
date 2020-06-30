@@ -36,12 +36,12 @@ class TealiumPersistentDataTests: XCTestCase {
     }
     
     func testDeleteSingleValue() {
-        persistentData?.delete(forKey: "hello")
+        persistentData?.delete(for key: "hello")
         XCTAssertEqual(mockEventDataMgr.deleteSingleCount, 1)
     }
     
     func testDeleteMultipleKeys() {
-        persistentData?.deleteData(forKeys: ["key", "anotherKey"])
+        persistentData?.delete(for keys: ["key", "anotherKey"])
         XCTAssertEqual(mockEventDataMgr.deleteMultiCount, 1)
     }
     

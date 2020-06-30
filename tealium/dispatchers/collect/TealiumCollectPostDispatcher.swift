@@ -41,10 +41,10 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
                 self.singleEventDispatchURL = "https://\(baseURL)\(TealiumCollectPostDispatcher.singleEventPath)"
             } else {
                 // should never get here, as URL is already pre-validated
-                setDefaultURLs()
+                assignDefaultURLs()
             }
         } else {
-            setDefaultURLs()
+            assignDefaultURLs()
             completion?((.failure(TealiumCollectError.invalidDispatchURL), ["error": ""]))
             return
         }
@@ -59,7 +59,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
     }
 
     /// Sets dispatch URLs to default values
-    func setDefaultURLs() {
+    func assignDefaultURLs() {
         // should never get here, as URL is already pre-validated
         self.bulkEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.bulkEventPath)"
         self.singleEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.singleEventPath)"
