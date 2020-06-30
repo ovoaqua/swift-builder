@@ -31,13 +31,17 @@ enum TealiumTagManagementValue {
     static let defaultQueueSize = 100
 }
 
-enum TealiumTagManagementError: Error {
+enum TealiumTagManagementError: String, LocalizedError {
     case couldNotCreateURL
     case couldNotLoadURL
     case couldNotJSONEncodeData
     case noDataToTrack
     case webViewNotYetReady
     case unknownDispatchError
+
+    public var errorDescription: String? {
+        return self.rawValue
+    }
 }
 
 enum TealiumTagManagementNotificationKey {
@@ -45,10 +49,14 @@ enum TealiumTagManagementNotificationKey {
     static let jsCommand = "js"
 }
 
-enum TealiumWebviewError: Error {
+enum TealiumWebviewError: String, LocalizedError {
     case webviewURLMissing
     case invalidURL
     case webviewNotInitialized
+    
+    public var errorDescription: String? {
+        return self.rawValue
+    }
 }
 
 enum TealiumWebViewState {

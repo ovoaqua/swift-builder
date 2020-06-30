@@ -16,7 +16,8 @@ open class TealiumConfig {
     public let environment: String
     public let datasource: String?
     public lazy var options = [String: Any]()
-    // Set to false to avoid collecting optional default data
+
+    // Set to false to avoid collecting optional default data (AppData, DeviceData)
     public var shouldCollectTealiumData: Bool {
         get {
             options[TealiumKey.shouldCollectTealiumData] as? Bool ?? true

@@ -28,7 +28,7 @@ class TealiumAppDataModuleTests: XCTestCase {
     }
 
     func testDeleteAllData() {
-        appDataModule?.deleteAllData()
+        appDataModule?.deleteAll()
         XCTAssertEqual(mockDiskStorage.deleteCount, 1)
     }
 

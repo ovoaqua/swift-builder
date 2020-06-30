@@ -12,13 +12,11 @@ import TealiumCore
 #endif
 
 class TealiumAttributionModule: Collector {
-    let moduleId: String = "Attribution"
+    let id: String = TealiumModuleNames.attribution
 
     var data: [String: Any]? {
         self.attributionData.allAttributionData
     }
-
-    var collectorId = "Attribution"
 
     var attributionData: TealiumAttributionDataProtocol!
     var diskStorage: TealiumDiskStorageProtocol!
@@ -30,8 +28,8 @@ class TealiumAttributionModule: Collector {
     convenience init (config: TealiumConfig,
                       delegate: TealiumModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
-        attributionData: TealiumAttributionDataProtocol) {
-        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { result in }
+                      attributionData: TealiumAttributionDataProtocol) {
+        self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
         self.attributionData = attributionData
     }
 

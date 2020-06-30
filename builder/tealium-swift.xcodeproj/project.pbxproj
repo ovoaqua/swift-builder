@@ -4656,7 +4656,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../../../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
 		};
 		D7805832233A65FB00DAD90E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;

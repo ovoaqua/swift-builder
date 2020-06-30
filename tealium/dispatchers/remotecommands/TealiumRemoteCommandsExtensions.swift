@@ -12,12 +12,12 @@ import TealiumCore
 #endif
 
 public extension Tealium {
-    
+
     /// Returns an instance of TealiumRemoteCommands to allow new commands to be registered.
     func remoteCommands() -> TealiumRemoteCommandsManagerProtocol? {
         (zz_internal_modulesManager?.modules.first {
-                type(of: $0) == TealiumRemoteCommandsModule.self
-            } as? TealiumRemoteCommandsModule)?.remoteCommands
+            type(of: $0) == TealiumRemoteCommandsModule.self
+        } as? TealiumRemoteCommandsModule)?.remoteCommands
     }
 }
 
@@ -55,7 +55,7 @@ public extension TealiumConfig {
 }
 
 extension Array where Element: TealiumRemoteCommand {
-    
+
     /// Retrieves a command for a specific command ID
     ///
     /// - Parameter commandId: `String`
@@ -63,7 +63,7 @@ extension Array where Element: TealiumRemoteCommand {
     func commandForId(_ commandId: String) -> TealiumRemoteCommand? {
         return self.first(where: { $0.commandId == commandId })
     }
-    
+
     /// Removes a command for a specific command ID
     ///
     /// - Parameter commandId: `String`
@@ -81,8 +81,7 @@ public extension RemoteCommandArray {
             $0.commandId == id
         }
     }
-    
-    
+
     /// Removes a command by id from the RemoteCommandArray
     /// - Parameter id: Parameter id: `String`
     mutating func removeCommand(_ id: String) {
@@ -92,7 +91,7 @@ public extension RemoteCommandArray {
         }
         self = copy
     }
-    
+
 }
 
 extension URL {

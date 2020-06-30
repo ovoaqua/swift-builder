@@ -13,7 +13,7 @@ import TealiumCore
 
 public class TealiumVisitorServiceModule: Collector, DispatchListener {
 
-    public let moduleId: String = "Visitor Service"
+    public let id: String = TealiumModuleNames.visitorservice
     public var config: TealiumConfig
     public var data: [String: Any]?
     var diskStorage: TealiumDiskStorageProtocol!
@@ -37,7 +37,7 @@ public class TealiumVisitorServiceModule: Collector, DispatchListener {
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.config = config
-        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "visitorservice", isCritical: false)
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: TealiumModuleNames.visitorservice.lowercased(), isCritical: false)
         self.visitorServiceManager = TealiumVisitorServiceManager(config: config,
                                                                   delegate: config.visitorServiceDelegate,
                                                                   diskStorage: self.diskStorage)

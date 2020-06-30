@@ -31,7 +31,7 @@ class WKWebViewTests: XCTestCase {
 
     func testEnableWebView() {
         let expectation = self.expectation(description: "testEnableWebView")
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil) { _, _ in
+        tagManagementWKWebView.enable(webviewURL: testURL, delegates: nil, shouldAddCookieObserver: true, view: nil) { _, _ in
             XCTAssertNotNil(self.tagManagementWKWebView.webview, "Webview instance was unexpectedly nil")
             expectation.fulfill()
         }
@@ -39,7 +39,7 @@ class WKWebViewTests: XCTestCase {
     }
 
     func testDisableWebView() {
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil, completion: nil)
+        tagManagementWKWebView.enable(webviewURL: testURL, delegates: nil, shouldAddCookieObserver: true, view: nil, completion: nil)
         tagManagementWKWebView.disable()
         XCTAssertNil(tagManagementWKWebView.webview, "WKWebView instance did not successfully deinit")
     }
@@ -51,7 +51,7 @@ class WKWebViewTests: XCTestCase {
                         {\n  "test_track" : "track me"\n}
                         """
         let expectedJS = "utag.track(\'link\',\(dataString))"
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil, completion: nil)
+        tagManagementWKWebView.enable(webviewURL: testURL, delegates: nil, shouldAddCookieObserver: true, view: nil, completion: nil)
         tagManagementWKWebView.track(data) { _, info, error in
             XCTAssertNil(error, "Error returned from track call")
             if let jsFromInfoDictionary = info[TealiumTagManagementKey.jsCommand] as? String,
@@ -67,7 +67,7 @@ class WKWebViewTests: XCTestCase {
     func testWebViewStateDidChange() {
         let expectation = self.expectation(description: "testWebViewStateDidChange")
         XCTAssertFalse(tagManagementWKWebView.isWebViewReady, "Webview should not be ready yet; webview has not been enabled")
-        tagManagementWKWebView.enable(webviewURL: testURL, shouldMigrateCookies: false, delegates: nil, shouldAddCookieObserver: true, view: nil) { _, _ in
+        tagManagementWKWebView.enable(webviewURL: testURL, delegates: nil, shouldAddCookieObserver: true, view: nil) { _, _ in
             XCTAssertTrue(self.tagManagementWKWebView.isWebViewReady, "Webview should be ready, but was found to be nil")
             self.tagManagementWKWebView.webviewStateDidChange(.loadFailure, withError: nil)
             XCTAssertFalse(self.tagManagementWKWebView.isWebViewReady, "Webview should not be ready - failure condition expected")

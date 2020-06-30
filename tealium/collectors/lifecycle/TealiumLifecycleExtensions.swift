@@ -11,12 +11,9 @@ import Foundation
 import TealiumCore
 #endif
 
-// MARK: 
-// MARK: EXTENSIONS
-
 public extension Tealium {
 
-    func lifecycle() -> TealiumLifecycleModule? {
+    var lifecycle: TealiumLifecycleModule? {
         zz_internal_modulesManager?.modules.first {
             type(of: $0) == TealiumLifecycleModule.self
         } as? TealiumLifecycleModule

@@ -11,14 +11,6 @@ import Foundation
 import TealiumCore
 #endif
 
-// Can get rid of this file
-
-enum TealiumLifecyclePersistentDataError: Error {
-    case couldNotArchiveAsData
-    case couldNotUnarchiveData
-    case archivedDataMismatchWithOriginalData
-}
-
 open class TealiumLifecyclePersistentData {
 
     let diskStorage: TealiumDiskStorageProtocol
@@ -28,14 +20,6 @@ open class TealiumLifecyclePersistentData {
         self.diskStorage = diskStorage
     }
 
-    class func dataExists(forUniqueId: String) -> Bool {
-        guard UserDefaults.standard.object(forKey: forUniqueId) as? Data != nil else {
-            return false
-        }
-
-        return true
-    }
-
     func load() -> TealiumLifecycle? {
         return diskStorage.retrieve(as: TealiumLifecycle.self)
     }
@@ -43,20 +27,6 @@ open class TealiumLifecyclePersistentData {
     func save(_ lifecycle: TealiumLifecycle) -> (success: Bool, error: Error?) {
         diskStorage.save(lifecycle, completion: nil)
         return (true, nil)
-    }
-
-    class func deleteAllData(forUniqueId: String) -> Bool {
-        if !dataExists(forUniqueId: forUniqueId) {
-            return true
-        }
-
-        UserDefaults.standard.removeObject(forKey: forUniqueId)
-
-        if UserDefaults.standard.object(forKey: forUniqueId) == nil {
-            return true
-        }
-
-        return false
     }
 
 }

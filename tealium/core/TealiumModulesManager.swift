@@ -8,6 +8,17 @@
 
 import Foundation
 
+enum ModulesManagerLogMessages {
+    static let system = "Modules Manager"
+    static let modulesManagerInitialized = "Modules Manager Initialized"
+    static let collectorsInitialized = "Collectors Initialized"
+    static let dispatchValidatorsInitialized = "Dispatch Validators Initialized"
+    static let dispatchersInitialized = "Dispatchers Initialized"
+    static let noDispatchersEnabled = "No dispatchers are enabled. Please check remote publish settings."
+    static let noConnectionDispatchersDisabled = "Internet connection not available. Dispatchers could not be enabled. Will retry when connection available."
+    static let connectionLost = "Internet connection lost. Events will be queued until connection restored."
+}
+
 public class ModulesManager {
     // must store a copy of the initial config to allow locally-overridden properties to take precedence over remote ones. These would otherwise be lost after the first update.
     var originalConfig: TealiumConfig
@@ -97,21 +108,21 @@ public class ModulesManager {
                                                connectivityManager: self.connectivityManager,
                                                config: self.config)
         self.setupCollectors(config: self.config)
-        let logRequest = TealiumLogRequest(title: "Modules Manager Initialized", messages:
-                                            ["Collectors Initialized: \(self.collectors.map { $0.moduleId })",
-                                             "Dispatch Validators Initialized: \(self.dispatchValidators.map { $0.id })",
-                                             "Dispatchers Initialized: \(self.dispatchers.map { $0.moduleId })"
+        let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.modulesManagerInitialized, messages:
+                                            ["\(ModulesManagerLogMessages.collectorsInitialized): \(self.collectors.map { $0.id })",
+                                             "\(ModulesManagerLogMessages.dispatchValidatorsInitialized): \(self.dispatchValidators.map { $0.id })",
+                                             "\(ModulesManagerLogMessages.dispatchersInitialized): \(self.dispatchers.map { $0.id })"
                                             ], info: nil, logLevel: .info, category: .`init`)
         self.logger?.log(logRequest)
     }
 
     func updateConfig(config: TealiumConfig) {
         if config.isCollectEnabled == false {
-            disableModule(id: "Collect")
+            disableModule(id: TealiumModuleNames.collect)
         }
 
         if config.isTagManagementEnabled == false {
-            disableModule(id: "Tag Management")
+            disableModule(id: TealiumModuleNames.tagmanagement)
         }
 
         self.setupDispatchers(config: config)
@@ -197,17 +208,16 @@ public class ModulesManager {
                         return
                     }
 
-                    if knownDispatcher.contains("TagManagement") {
-                        guard config.isTagManagementEnabled == true else {
-                            return
-                        }
+                    if knownDispatcher.contains(TealiumModuleNames.tagmanagement),
+                       config.isTagManagementEnabled == false {
+                        return
+                    } else {
                         self.eventDataManager?.tagManagementIsEnabled = true
                     }
 
-                    if knownDispatcher.contains("Collect") {
-                        guard config.isCollectEnabled == true else {
-                            return
-                        }
+                    if knownDispatcher.contains(TealiumModuleNames.collect),
+                       config.isCollectEnabled == false {
+                        return
                     }
 
                     let dispatcher = moduleRef.init(config: config, delegate: self) { result in
@@ -222,14 +232,20 @@ public class ModulesManager {
                     self.addDispatcher(dispatcher)
                 }
                 if self.dispatchers.isEmpty {
-                    let logRequest = TealiumLogRequest(title: "Modules Manager",
-                                                       message: "No dispatchers are enabled. Please check remote publish settings.",
+                    let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.system,
+                                                       message: ModulesManagerLogMessages.noDispatchersEnabled,
                                                        info: nil,
                                                        logLevel: .error,
                                                        category: .`init`)
                     self.logger?.log(logRequest)
                 }
             case .failure:
+                let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.system,
+                                                   message: ModulesManagerLogMessages.noConnectionDispatchersDisabled,
+                                                   info: nil,
+                                                   logLevel: .error,
+                                                   category: .`init`)
+                self.logger?.log(logRequest)
                 return
             }
         }
@@ -266,6 +282,8 @@ public class ModulesManager {
             allData.value += data
         }
 
+        allData.value[TealiumKey.enabledModules] = modules.sorted { $0.id < $1.id }.map { $0.id }
+
         eventDataManager?.sessionRefresh()
         if let eventData = eventDataManager?.allEventData {
             allData.value += eventData
@@ -278,7 +296,7 @@ public class ModulesManager {
     }
 
     func disableModule(id: String) {
-        if let module = modules.first(where: { $0.moduleId == id }) {
+        if let module = modules.first(where: { $0.id == id }) {
             switch module {
             case let module as Collector:
                 self.collectors = self.collectors.filter { type(of: module) != type(of: $0) }
@@ -304,7 +322,7 @@ extension ModulesManager: TealiumModuleDelegate {
     }
 
     public func requestDequeue(reason: String) {
-        self.dispatchManager?.handleReleaseRequest(reason: reason)
+        self.dispatchManager?.handleDequeueRequest(reason: reason)
     }
 
     public func processRemoteCommandRequest(_ request: TealiumRequest) {
@@ -316,7 +334,7 @@ extension ModulesManager: TealiumModuleDelegate {
 
 extension ModulesManager: TealiumConnectivityDelegate {
     public func connectionLost() {
-        logger?.log(TealiumLogRequest(title: "Modules Manager", message: "Connectivity lost", info: nil, logLevel: .info, category: .general))
+        logger?.log(TealiumLogRequest(title: ModulesManagerLogMessages.system, message: ModulesManagerLogMessages.connectionLost, info: nil, logLevel: .info, category: .general))
     }
 
     public func connectionRestored() {

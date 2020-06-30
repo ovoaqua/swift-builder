@@ -35,7 +35,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     weak var moduleDelegate: TealiumModuleDelegate?
 
     var delegates: TealiumMulticastDelegate<WKNavigationDelegate>? = TealiumMulticastDelegate<WKNavigationDelegate>()
-    
+
     init(config: TealiumConfig, delegate: TealiumModuleDelegate?) {
         moduleDelegate = delegate
         tealConfig = config
@@ -45,17 +45,15 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     ///
     /// - Parameters:
     ///     - webviewURL: `URL?` (typically for "mobile.html") to be loaded by the webview
-    ///     - shouldMigrateCookies: `Bool` indicating whether cookies should be migrated from `HTTPCookieStore` (`UIWebView`).
     ///     - delegates: `[AnyObject]?` Array of delegates, downcast fromAnyObject to account for any future potential changes in WebView APIs
     ///     - shouldAddCookieObserver: `Bool` indicating whether the cookie observer should be added. Default `true`.
     ///     - view: `UIView? ` - required `WKWebView`, if one is not provided we attach to the window object
     ///     - completion: completion block to be called when the webview has finished loading
     func enable(webviewURL: URL?,
-                       shouldMigrateCookies: Bool,
-                       delegates: [WKNavigationDelegate]?,
-                       shouldAddCookieObserver: Bool,
-                       view: UIView?,
-                       completion: ((_ success: Bool, _ error: Error?) -> Void)?) {
+                delegates: [WKNavigationDelegate]?,
+                shouldAddCookieObserver: Bool,
+                view: UIView?,
+                completion: ((_ success: Bool, _ error: Error?) -> Void)?) {
         guard webview == nil else {
             // webview already enabled
             return
@@ -74,7 +72,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     ///     - view: `UIView` instance for WKWebView to be attached to
     ///     - completion: Completion block to be run when the operation has completed
     func setRootView(_ view: UIView,
-                            completion: ((_ success: Bool) -> Void)?) {
+                     completion: ((_ success: Bool) -> Void)?) {
         self.view = view
         // forward success/failure to optional completion
         self.attachToUIView(specificView: view) { success in
@@ -190,7 +188,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     ///     - data: `[String: Any]` representing a track request
     ///     - completion: Optional completion handler to call when call completes.
     func track(_ data: [String: Any],
-                      completion: ((Bool, [String: Any], Error?) -> Void)?) {
+               completion: ((Bool, [String: Any], Error?) -> Void)?) {
         guard let javascriptString = data.tealiumJavaScriptTrackCall else {
             completion?(false,
                         ["original_payload": data, "sanitized_payload": data],
@@ -222,7 +220,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     ///     - data: `[[String: Any]]` of requests
     ///     - completion: Optional completion handler to call when call completes.
     func trackMultiple(_ data: [[String: Any]],
-                              completion: ((Bool, [String: Any], Error?) -> Void)?) {
+                       completion: ((Bool, [String: Any], Error?) -> Void)?) {
         let totalSuccesses = AtomicInteger(value: 0)
         data.forEach {
             self.track($0) { success, _, _ in
@@ -273,7 +271,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     ///     - state: `TealiumWebViewState` -  The webview state after the state change
     ///     - error: `Error?`
     func webviewStateDidChange(_ state: TealiumWebViewState,
-                                      withError error: Error?) {
+                               withError error: Error?) {
         switch state {
         case .loadSuccess:
             self.currentState = AtomicInteger(value: WebViewState.isLoaded.rawValue)
@@ -306,11 +304,11 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     }
 
     /// Called when the module needs to disable the webview.
-      func disable() {
-          self.delegates = nil
-          // these methods MUST be called on the main thread. Cannot be async, or self will be deallocated before these run
-          if !Thread.isMainThread {
-              TealiumQueues.mainQueue.sync {
+    func disable() {
+        self.delegates = nil
+        // these methods MUST be called on the main thread. Cannot be async, or self will be deallocated before these run
+        if !Thread.isMainThread {
+            TealiumQueues.mainQueue.sync {
                 self.webview?.navigationDelegate = nil
                 // if this isn't run, the webview will remain attached in a kind of zombie state
                 self.webview?.removeFromSuperview()

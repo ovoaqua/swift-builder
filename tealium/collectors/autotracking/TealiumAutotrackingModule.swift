@@ -31,7 +31,7 @@ public extension Tealium {
     func autotracking() -> TealiumAutotracking? {
         (zz_internal_modulesManager?.modules.first {
             type(of: $0) == TealiumAutotrackingModule.self
-            } as? TealiumAutotrackingModule)?.autotracking
+        } as? TealiumAutotrackingModule)?.autotracking
     }
 
 }
@@ -102,11 +102,11 @@ public class TealiumAutotracking {
 }
 
 class TealiumAutotrackingModule: Collector {
-    
-    var data: [String : Any]? = nil
+
+    var data: [String: Any]?
     weak var delegate: TealiumModuleDelegate?
     var config: TealiumConfig
-    
+
     required init(config: TealiumConfig,
                   delegate: TealiumModuleDelegate?,
                   diskStorage: TealiumDiskStorageProtocol?,
@@ -122,11 +122,9 @@ class TealiumAutotrackingModule: Collector {
         notificationsEnabled = true
         completion((.success(true), nil))
     }
-    
-    let moduleId: String = TealiumAutotrackingKey.moduleName
-    
-    
-    
+
+    let id: String = TealiumAutotrackingKey.moduleName
+
     var notificationsEnabled = false
     let autotracking = TealiumAutotracking()
 
@@ -191,12 +189,9 @@ class TealiumAutotrackingModule: Collector {
         delegate?.requestTrack(track)
     }
 
-    
     deinit {
         if notificationsEnabled == true {
-            // swiftlint:disable notification_center_detachment
             NotificationCenter.default.removeObserver(self)
-            // swiftlint:enable notification_center_detachment
             notificationsEnabled = false
         }
     }

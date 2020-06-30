@@ -9,6 +9,14 @@
 import Foundation
 
 public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
+
+    public let id: String = TealiumModuleNames.appdata
+    private(set) var uuid: String?
+    private var diskStorage: TealiumDiskStorageProtocol!
+    private var bundle: Bundle
+    var appData = AppData()
+
+    /// Retrieves current appdata
     public var data: [String: Any]? {
         if self.config.shouldCollectTealiumData {
             return appData.dictionary
@@ -17,12 +25,6 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
         }
     }
 
-    public let moduleId: String = "App Data"
-
-    private(set) var uuid: String?
-    private var diskStorage: TealiumDiskStorageProtocol!
-    private var bundle: Bundle
-    var appData = AppData()
     var existingVisitorId: String? {
         config.existingVisitorId
     }
@@ -61,7 +63,7 @@ public class TealiumAppDataModule: Collector, TealiumAppDataCollection {
     }
 
     /// Deletes all app data, including persistent data.
-    func deleteAllData() {
+    func deleteAll() {
         appData.removeAll()
         diskStorage.delete(completion: nil)
     }

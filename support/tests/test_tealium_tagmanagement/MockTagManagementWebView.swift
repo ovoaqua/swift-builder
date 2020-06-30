@@ -20,7 +20,7 @@ class MockTagManagementWebView: TealiumTagManagementProtocol {
         self.success = success
     }
 
-    func enable(webviewURL: URL?, shouldMigrateCookies: Bool, delegates: [WKNavigationDelegate]?, shouldAddCookieObserver: Bool, view: UIView?, completion: ((Bool, Error?) -> Void)?) {
+    func enable(webviewURL: URL?, delegates: [WKNavigationDelegate]?, shouldAddCookieObserver: Bool, view: UIView?, completion: ((Bool, Error?) -> Void)?) {
 
     }
 

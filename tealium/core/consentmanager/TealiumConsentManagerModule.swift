@@ -10,8 +10,7 @@ import Foundation
 
 class TealiumConsentManagerModule: Collector, DispatchValidator {
 
-    public let moduleId: String = "Consent Manager"
-    var id: String = "ConsentManager"
+    public let id: String = TealiumModuleNames.consentmanager
     var config: TealiumConfig
     var consentManager: TealiumConsentManager?
     weak var delegate: TealiumModuleDelegate?

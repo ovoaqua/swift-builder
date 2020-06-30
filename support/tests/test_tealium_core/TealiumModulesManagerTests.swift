@@ -54,24 +54,24 @@ class TealiumModulesManagerTests: XCTestCase {
         XCTAssertTrue(testTealiumConfig.isCollectEnabled)
         XCTAssertTrue(testTealiumConfig.isTagManagementEnabled)
 
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.moduleId == "Tag Management" }))
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.moduleId == "Collect" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Collect" }))
 
         let config = testTealiumConfig
         config.shouldUseRemotePublishSettings = false
         config.isCollectEnabled = false
         config.isTagManagementEnabled = true
         modulesManager.updateConfig(config: config)
-        XCTAssertFalse(modulesManager.dispatchers.contains(where: { $0.moduleId == "Collect" }))
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.moduleId == "Tag Management" }))
+        XCTAssertFalse(modulesManager.dispatchers.contains(where: { $0.id == "Collect" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
         config.isTagManagementEnabled = false
         modulesManager.updateConfig(config: config)
-        XCTAssertFalse(modulesManager.dispatchers.contains(where: { $0.moduleId == "Tag Management" }))
+        XCTAssertFalse(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
         config.isTagManagementEnabled = true
         config.isCollectEnabled = true
         modulesManager.updateConfig(config: config)
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.moduleId == "Tag Management" }))
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.moduleId == "Collect" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Collect" }))
     }
 
     func testAddCollector() {
@@ -85,10 +85,10 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.dispatchValidators = []
 
         modulesManager.addCollector(collector)
-        XCTAssertTrue(modulesManager.collectors.contains(where: { $0.moduleId == "Dummy" }))
+        XCTAssertTrue(modulesManager.collectors.contains(where: { $0.id == "Dummy" }))
 
-        XCTAssertTrue(modulesManager.dispatchListeners.contains(where: { ($0 as! Collector).moduleId == "Dummy" }))
-        XCTAssertTrue(modulesManager.dispatchValidators.contains(where: { ($0 as! Collector).moduleId == "Dummy" }))
+        XCTAssertTrue(modulesManager.dispatchListeners.contains(where: { ($0 as! Collector).id == "Dummy" }))
+        XCTAssertTrue(modulesManager.dispatchValidators.contains(where: { ($0 as! Collector).id == "Dummy" }))
 
         XCTAssertEqual(modulesManager.collectors.count, 1)
         XCTAssertEqual(modulesManager.dispatchListeners.count, 1)
@@ -200,7 +200,7 @@ class TealiumModulesManagerTests: XCTestCase {
         config.dispatchListeners = [collector]
         modulesManager.setupDispatchListeners(config: config)
         XCTAssertEqual(modulesManager.dispatchListeners.count, 1)
-        XCTAssertTrue(modulesManager.dispatchListeners.contains(where: { ($0 as! Collector).moduleId == "Dummy" }))
+        XCTAssertTrue(modulesManager.dispatchListeners.contains(where: { ($0 as! Collector).id == "Dummy" }))
     }
 
     func testSetupDispatchValidators() {
@@ -216,7 +216,7 @@ class TealiumModulesManagerTests: XCTestCase {
         config.dispatchValidators = [collector]
         modulesManager.setupDispatchValidators(config: config)
         XCTAssertEqual(modulesManager.dispatchValidators.count, 1)
-        XCTAssertTrue(modulesManager.dispatchValidators.contains(where: { ($0 as! Collector).moduleId == "Dummy" }))
+        XCTAssertTrue(modulesManager.dispatchValidators.contains(where: { ($0 as! Collector).id == "Dummy" }))
     }
 
     func testConfigPropertyUpdate() {
@@ -321,7 +321,7 @@ class DummyCollector: Collector, DispatchListener, DispatchValidator {
         self.id = "Dummy"
     }
 
-    var moduleId: String = "Dummy"
+    var id: String = "Dummy"
 
     var config: TealiumConfig {
         willSet {
@@ -414,7 +414,7 @@ class DummyDispatchManagerConfigUpdate: DispatchManagerProtocol {
 
     }
 
-    func handleReleaseRequest(reason: String) {
+    func handleDequeueRequest(reason: String) {
 
     }
 
@@ -444,7 +444,7 @@ class DummyDispatchManagerReleaseQueue: DispatchManagerProtocol {
 
     }
 
-    func handleReleaseRequest(reason: String) {
+    func handleDequeueRequest(reason: String) {
         TealiumModulesManagerTests.expectatations["releaseQueue"]?.fulfill()
     }
 
@@ -476,7 +476,7 @@ class DummyDispatchManagerRequestTrack: DispatchManagerProtocol {
         TealiumModulesManagerTests.expectatations["requestTrack"]?.fulfill()
     }
 
-    func handleReleaseRequest(reason: String) {
+    func handleDequeueRequest(reason: String) {
     }
 
 }
@@ -507,7 +507,7 @@ class DummyDispatchManagerSendTrack: DispatchManagerProtocol {
         TealiumModulesManagerTests.expectatations["sendTrack"]?.fulfill()
     }
 
-    func handleReleaseRequest(reason: String) {
+    func handleDequeueRequest(reason: String) {
 
     }
 

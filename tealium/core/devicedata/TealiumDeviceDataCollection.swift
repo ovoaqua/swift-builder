@@ -9,15 +9,15 @@
 import Foundation
 
 public protocol TealiumDeviceDataCollection {
-    func getMemoryUsage() -> [String: String]
+    var memoryUsage: [String: String] { get }
 
-    func orientation() -> [String: String]
+    var orientation: [String: String] { get }
 
-    func model() -> [String: String]
+    var model: [String: String] { get }
 
-    func basicModel() -> String
+    var basicModel: String { get }
 
-    func cpuType() -> String
+    var cpuType: String { get }
 }
 
 public extension TealiumDeviceDataCollection {

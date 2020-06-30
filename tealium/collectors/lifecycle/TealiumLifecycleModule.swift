@@ -22,7 +22,7 @@ import TealiumCore
 
 public class TealiumLifecycleModule: Collector {
 
-    public let moduleId: String = "Lifecycle"
+    public let id: String = TealiumModuleNames.lifecycle
     weak var delegate: TealiumModuleDelegate?
     var enabledPrior = false
     var lifecycleData = [String: Any]()
@@ -40,7 +40,7 @@ public class TealiumLifecycleModule: Collector {
                          completion: ModuleCompletion) {
         self.delegate = delegate
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
-                                                             forModule: "lifecycle",
+                                                             forModule: TealiumModuleNames.lifecycle.lowercased(),
                                                              isCritical: true)
         self.config = config
         if config.lifecycleAutoTrackingEnabled {

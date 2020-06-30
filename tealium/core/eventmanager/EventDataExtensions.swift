@@ -86,14 +86,12 @@ public extension String {
     }
 }
 
-public enum SessionError: Error {
+public enum SessionError: LocalizedError {
     case errorInRequest
     case invalidResponse
     case invalidURL
-}
 
-extension SessionError: LocalizedError {
-    public var description: String {
+    public var errorDescription: String? {
         switch self {
         case .errorInRequest:
             return NSLocalizedString("Error when requesting a new session: ", comment: "errorInRequest")
@@ -103,4 +101,5 @@ extension SessionError: LocalizedError {
             return NSLocalizedString("The url is invalid.", comment: "invalidURL")
         }
     }
+
 }

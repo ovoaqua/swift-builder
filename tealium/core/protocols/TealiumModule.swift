@@ -9,6 +9,6 @@
 import Foundation
 
 public protocol TealiumModule {
-    var moduleId: String { get }
+    var id: String { get }
     var config: TealiumConfig { get set }
 }

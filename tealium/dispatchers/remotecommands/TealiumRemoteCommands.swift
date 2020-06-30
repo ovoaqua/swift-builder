@@ -13,7 +13,7 @@ import TealiumCore
 
 // Not sure if needed
 protocol TealiumRemoteCommandsProtocol {
-    
+
 }
 
 /// Manages instances of TealiumRemoteCommand
@@ -27,7 +27,7 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsProtoc
     public init() {
         isEnabled = true
     }
-    
+
     /// Adds a remote command for later execution.
     ///
     /// - Parameter remoteCommand: `TealiumRemoteCommand` to be added for later execution

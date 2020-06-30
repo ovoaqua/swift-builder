@@ -13,18 +13,15 @@ import TealiumCore
 
 // MARK: EXTENSIONS
 extension Tealium {
-//
-//    /// Get the Data Manager instance for accessing file persistence and auto data variable APIs.
-//    ///
-//    /// - Returns: `TealiumLocation?` instance (nil if disabled)
-//    func location() -> TealiumLocation? {
-//        guard let module = modulesManager?.getModule(forName: TealiumLocationKey.name) as? TealiumLocationModule else {
-//            return nil
-//        }
-//
-//        return module.tealiumLocationManager
-//    }
 
+    /// Returns a LocationManager instance
+    ///
+    /// - Returns: `TealiumLocation?` instance (nil if disabled)
+    var location: TealiumLocation? {
+        let module = (zz_internal_modulesManager?.modules.first { $0 is TealiumLocationModule }) as? TealiumLocationModule
+
+        return module?.tealiumLocationManager
+    }
 }
 
 public extension TealiumConfig {

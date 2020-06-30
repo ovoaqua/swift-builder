@@ -14,11 +14,13 @@ import TealiumCore
 
 public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     var config: TealiumConfig
+    var logger: TealiumLoggerProtocol? {
+        config.logger
+    }
     var locationManager: LocationManager
     var lastLocation: CLLocation?
     var geofences = Geofences()
     var locationListener: LocationListener?
-    var logger: TealiumLogger?
     var didEnterRegionWorking = false
     var locationAccuracy = TealiumLocationKey.lowAccuracy
 
@@ -30,20 +32,15 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         self.locationListener = locationListener
         self.locationManager = locationManager
 
-//        if let logLevel = config.logLevel {
-//            //self.logger = TealiumLogger(loggerId: TealiumLocationKey.name, logLevel: logLevel)
-//        }
-
         super.init()
 
         switch config.initializeGeofenceDataFrom {
         case .localFile(let file):
-            geofences = GeofenceData(file: file, bundle: bundle)?.geofences ?? Geofences()
+            geofences = GeofenceData(file: file, bundle: bundle, logger: config.logger)?.geofences ?? Geofences()
         case .customUrl(let url):
-            geofences = GeofenceData(url: url)?.geofences ?? Geofences()
+            geofences = GeofenceData(url: url, logger: config.logger)?.geofences ?? Geofences()
         default:
-            geofences = GeofenceData(url: geofencesUrl)?.geofences ?? Geofences()
-            break
+            geofences = GeofenceData(url: geofencesUrl, logger: config.logger)?.geofences ?? Geofences()
         }
 
         self.locationManager.distanceFilter = config.updateDistance
@@ -71,8 +68,8 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     public var locationServiceEnabled: Bool {
         let permissionStatus = type(of: locationManager).self.authorizationStatus()
         guard (permissionStatus == .authorizedAlways || permissionStatus == .authorizedWhenInUse),
-            type(of: locationManager).self.locationServicesEnabled() else {
-                return false
+              type(of: locationManager).self.locationServicesEnabled() else {
+            return false
         }
         return true
     }
@@ -130,9 +127,9 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             let geofenceLocation = CLLocation(latitude: $0.center.latitude, longitude: $0.center.longitude)
 
             guard let distance = lastLocation?.distance(from: geofenceLocation),
-                distance.isLess(than: TealiumLocationKey.additionRange) else {
-                    stopMonitoring(geofence: $0)
-                    return
+                  distance.isLess(than: TealiumLocationKey.additionRange) else {
+                stopMonitoring(geofence: $0)
+                return
             }
             startMonitoring(geofence: $0)
         }
@@ -145,8 +142,8 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     /// - parameter error: `error` an error that has occured
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = error as? CLError,
-            error.code == .denied {
-            //logger?.log(message: "🌎🌎 An error has occured: \(String(describing: error.localizedDescription)) 🌎🌎", logLevel: .errors)
+           error.code == .denied {
+            logError(message: "🌎🌎 An error has occured: \(String(describing: error.localizedDescription)) 🌎🌎")
             locationManager.stopUpdatingLocation()
         }
     }
@@ -294,10 +291,18 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         self.geofences = Geofences()
     }
 
+    /// Logs errors about events occuring in the `TealiumLocation` module
+    /// - Parameter message: `String` message to log to the console
+    func logError(message: String) {
+        let logRequest = TealiumLogRequest(title: "Tealium Location", message: message, info: nil, logLevel: .error, category: .general)
+        logger?.log(logRequest)
+    }
+
     /// Logs verbose information about events occuring in the `TealiumLocation` module
     /// - Parameter message: `String` message to log to the console
     func logInfo(message: String) {
-       // logger?.log(message: message, logLevel: .verbose)
+        let logRequest = TealiumLogRequest(title: "Tealium Location", message: message, info: nil, logLevel: .debug, category: .general)
+        logger?.log(logRequest)
     }
 
 }

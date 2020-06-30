@@ -10,18 +10,18 @@ import Foundation
 import TealiumCore
 
 /// Dispatch Service Module for sending track data to the Tealium Collect or custom endpoint.
-public class TealiumCollectModule: Dispatcher {    
-    
-    public let moduleId: String = "Collect"
+public class TealiumCollectModule: Dispatcher {
+
+    public let id: String = TealiumModuleNames.collect
     var collect: TealiumCollectProtocol?
     public var isReady = false
     weak var delegate: TealiumModuleDelegate?
     public var config: TealiumConfig
-    
+
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          completion: ModuleCompletion?) {
-        
+
         self.config = config
         self.delegate = delegate
         updateCollectDispatcher(config: config, completion: nil)
@@ -47,7 +47,7 @@ public class TealiumCollectModule: Dispatcher {
         switch request {
         case let request as TealiumTrackRequest:
             guard !isConsentEvent(request.trackDictionary) else {
-                completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
+                //                completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
                 return
             }
             self.track(prepareForDispatch(request), completion: completion)
@@ -59,7 +59,7 @@ public class TealiumCollectModule: Dispatcher {
                 prepareForDispatch($0)
             }
             guard !requests.isEmpty else {
-                completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
+                completion?((.failure(TealiumCollectError.invalidBatchRequest), nil))
                 return
             }
             let newRequest = TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion)
@@ -69,7 +69,7 @@ public class TealiumCollectModule: Dispatcher {
             return
         }
     }
-    
+
     func isConsentEvent(_ data: [String: Any]) -> Bool {
         guard let event = data[TealiumKey.event] as? String else {
             return false
@@ -84,7 +84,7 @@ public class TealiumCollectModule: Dispatcher {
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
         var newTrack = request.trackDictionary
         if newTrack[TealiumKey.account] == nil,
-            newTrack[TealiumKey.profile] == nil {
+           newTrack[TealiumKey.profile] == nil {
             newTrack[TealiumKey.account] = config.account
             newTrack[TealiumKey.profile] = config.profile
         }

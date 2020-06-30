@@ -46,7 +46,7 @@ class TealiumPersistentDataTests: XCTestCase {
     }
     
     func testDeleteAll() {
-        persistentData?.deleteAllData()
+        persistentData?.deleteAll()
         XCTAssertEqual(mockEventDataMgr.deleteAllCount, 1)
     }
 }

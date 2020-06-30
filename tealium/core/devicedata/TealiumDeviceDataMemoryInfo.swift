@@ -26,7 +26,7 @@ public extension TealiumDeviceData {
 
     // enabled/disabled via config object (default disabled)
     /// - Returns: `[String: String]` containing current memory usage info
-    func getMemoryUsage() -> [String: String] {
+    var memoryUsage: [String: String] {
         // total physical memory in megabytes
         let physical = Double(ProcessInfo.processInfo.physicalMemory) / Unit.megabyte.rawValue
 

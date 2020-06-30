@@ -19,7 +19,7 @@ public class TealiumTagManagementModule: Dispatcher {
     var tagManagement: TealiumTagManagementProtocol?
     var webViewState: Atomic<TealiumWebViewState>?
     weak var delegate: TealiumModuleDelegate?
-    public let moduleId: String = "Tag Management"
+    public let id: String = TealiumModuleNames.tagmanagement
 
     /// Provided for unit testing￼.
     ///
@@ -27,18 +27,21 @@ public class TealiumTagManagementModule: Dispatcher {
     convenience init(config: TealiumConfig,
                      delegate: TealiumModuleDelegate,
                      tagManagement: TealiumTagManagementProtocol) {
-        self.init(config: config, delegate: delegate) { result in
+        self.init(config: config, delegate: delegate) { _ in
         }
         self.tagManagement = tagManagement
     }
 
     public required init(config: TealiumConfig,
-        delegate: TealiumModuleDelegate,
-        completion: ModuleCompletion?) {
+                         delegate: TealiumModuleDelegate,
+                         completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate
         self.tagManagement = tagManagement ?? TealiumTagManagementWKWebView(config: config, delegate: delegate)
-        self.tagManagement?.enable(webviewURL: config.webviewURL, shouldMigrateCookies: true, delegates: config.webViewDelegates, shouldAddCookieObserver: config.shouldAddCookieObserver, view: config.rootView) { [weak self] _, error in
+        self.tagManagement?.enable(webviewURL: config.webviewURL,
+                                   delegates: config.webViewDelegates,
+                                   shouldAddCookieObserver: config.shouldAddCookieObserver,
+                                   view: config.rootView) { [weak self] _, error in
             guard let self = self else {
                 return
             }
@@ -61,7 +64,7 @@ public class TealiumTagManagementModule: Dispatcher {
     ///￼
     /// - Parameter track: `TealiumTrackRequest` to be sent to the webview
     func dispatchTrack(_ request: TealiumRequest,
-        completion: ModuleCompletion?) {
+                       completion: ModuleCompletion?) {
         switch request {
         case let track as TealiumBatchTrackRequest:
             let allTrackData = track.trackRequests.map {
@@ -69,36 +72,36 @@ public class TealiumTagManagementModule: Dispatcher {
             }
             #if TEST
             #else
-                self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write {
-                        track.completion?(success, info, error)
-                        guard error == nil else {
-                            if let error = error {
-                                completion?((.failure(error), nil))
-                            }
-                            return
+            self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
+                TealiumQueues.backgroundConcurrentQueue.write {
+                    track.completion?(success, info, error)
+                    guard error == nil else {
+                        if let error = error {
+                            completion?((.failure(error), nil))
                         }
-//                    self.didFinish(track,
-//                                   info: info)
-                        completion?((.success(true), nil))
+                        return
                     }
+                    //                    self.didFinish(track,
+                    //                                   info: info)
+                    completion?((.success(true), nil))
                 }
+            }
             #endif
         case let track as TealiumTrackRequest:
             #if TEST
             #else
-                self.tagManagement?.track(track.trackDictionary) { success, info, error in
-                    TealiumQueues.backgroundConcurrentQueue.write {
-                        track.completion?(success, info, error)
-                        guard error == nil else {
-                            if let error = error {
-                                completion?((.failure(error), nil))
-                            }
-                            return
+            self.tagManagement?.track(track.trackDictionary) { success, info, error in
+                TealiumQueues.backgroundConcurrentQueue.write {
+                    track.completion?(success, info, error)
+                    guard error == nil else {
+                        if let error = error {
+                            completion?((.failure(error), nil))
                         }
-                        completion?((.success(true), nil))
+                        return
                     }
+                    completion?((.success(true), nil))
                 }
+            }
             #endif
         default:
             return
@@ -109,7 +112,7 @@ public class TealiumTagManagementModule: Dispatcher {
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
     public func dynamicTrack(_ track: TealiumRequest,
-        completion: ModuleCompletion?) {
+                             completion: ModuleCompletion?) {
         if self.errorState.value > 0 {
             self.tagManagement?.reload { success, _, _ in
                 if success {
@@ -118,11 +121,13 @@ public class TealiumTagManagementModule: Dispatcher {
                 } else {
                     _ = self.errorState.incrementAndGet()
                     self.enqueue(track, completion: completion)
+                    completion?((.failure(TealiumTagManagementError.couldNotLoadURL), nil))
                 }
             }
             return
         } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
             self.enqueue(track, completion: completion)
+            completion?((.failure(TealiumTagManagementError.webViewNotYetReady), nil))
             return
         }
 
@@ -133,20 +138,20 @@ public class TealiumTagManagementModule: Dispatcher {
             self.dispatchTrack(prepareForDispatch(track), completion: completion)
         case let track as TealiumBatchTrackRequest:
             let newRequest = TealiumBatchTrackRequest(trackRequests: track.trackRequests.map { prepareForDispatch($0) },
-                completion: track.completion)
+                                                      completion: track.completion)
             self.dispatchTrack(newRequest, completion: completion)
         case let track as TealiumRemoteAPIRequest:
             self.dispatchTrack(prepareForDispatch(track.trackRequest), completion: completion)
-//            let reportRequest = TealiumReportRequest(message: "Processing remote_api request.")
-//            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
+            //            let reportRequest = TealiumReportRequest(message: "Processing remote_api request.")
+            //            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
             return
         case let command as TealiumRemoteCommandRequestResponse:
             if var jsCommand = command.data[TealiumKey.jsCommand] as? String {
                 // Webview instance will ensure this is processed on the main thread
                 jsCommand = jsCommand
-                                .replacingOccurrences(of: "\\", with: "")
-                                .replacingOccurrences(of: "\n", with: "")
-                                .trimmingCharacters(in: .whitespaces)
+                    .replacingOccurrences(of: "\\", with: "")
+                    .replacingOccurrences(of: "\n", with: "")
+                    .trimmingCharacters(in: .whitespaces)
                 self.tagManagement?.evaluateJavascript(jsCommand, nil)
             }
             return
@@ -159,7 +164,7 @@ public class TealiumTagManagementModule: Dispatcher {
     ///
     /// - Parameter request: `TealiumRequest` to be enqueued
     func enqueue(_ request: TealiumRequest,
-        completion: ModuleCompletion?) {
+                 completion: ModuleCompletion?) {
         guard request is TealiumTrackRequest || request is TealiumBatchTrackRequest || request is TealiumRemoteAPIRequest else {
             return
         }

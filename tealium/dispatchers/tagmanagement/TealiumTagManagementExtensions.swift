@@ -16,7 +16,7 @@ import TealiumCore
 // MARK: EXTENSIONS
 
 public extension TealiumConfig {
-    
+
     /// Adds optional delegates to the WebView instance.
     var webViewDelegates: [WKNavigationDelegate]? {
         get {
@@ -75,21 +75,21 @@ public extension TealiumConfig {
 
 #if TEST
 #else
-extension Tealium {
+public extension Tealium {
 
     /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
-    var tagManagement: TealiumTagManagementProtocol? {
-            let module = zz_internal_modulesManager?.modules.filter {
-                $0 is TealiumTagManagementModule
-            }.first
-        
-            return (module as? TealiumTagManagementModule)?.tagManagement
+    internal var tagManagement: TealiumTagManagementProtocol? {
+        let module = zz_internal_modulesManager?.modules.first {
+            $0 is TealiumTagManagementModule
+        }
+
+        return (module as? TealiumTagManagementModule)?.tagManagement
     }
-    
+
     /// Sets a new root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
     ///￼
     /// - Parameter view: `UIView` instance for `WKWebView` to be attached to
-    public func updateRootView(_ view: UIView) {
+    func updateRootView(_ view: UIView) {
         self.tagManagement?.setRootView(view, completion: nil)
     }
 }

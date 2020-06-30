@@ -70,7 +70,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
         let jsString = "try { utag.mobile.remote_api.response['\(commandId)']['\(responseId)']('\(String(describing: response.status))','\(responseStr)')} catch(err) {console.error(err)}"
         return [TealiumRemoteCommandsKey.jsCommand: jsString]
     }
-    
+
     /// Sends Remote Command response data to the TiQ webview when
     /// the remote command has finished executing.
     ///
@@ -90,7 +90,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
         TealiumRemoteCommandsManager.pendingResponses.value[responseId] = nil
         guard let response = remoteCommandResponse(for: commandId,
                                                    response: response) else {
-                                                    return
+            return
         }
         let request = TealiumRemoteCommandRequestResponse(data: response)
         delegate?.processRemoteCommandRequest(request)

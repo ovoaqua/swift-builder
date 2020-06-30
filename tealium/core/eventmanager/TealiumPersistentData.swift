@@ -58,7 +58,7 @@ public class TealiumPersistentData {
     }
 
     /// Deletes all custom persisted data for current library instance.
-    public func deleteAllData() {
+    public func deleteAll() {
         eventDataManager.deleteAll()
     }
 

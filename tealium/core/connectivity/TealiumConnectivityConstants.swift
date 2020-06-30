@@ -8,8 +8,9 @@
 
 import Foundation
 
-public enum TealiumConnectivityConstants {
-    public static let defaultInterval: Int = 30
+enum TealiumConnectivityConstants {
+    static let defaultInterval: Int = 30
+    static let connectivityTestURL = "https://tags.tiqcdn.com"
 }
 
 enum TealiumConnectivityKey {

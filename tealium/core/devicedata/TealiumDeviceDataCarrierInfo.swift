@@ -14,9 +14,8 @@ import CoreTelephony
 import Foundation
 
 extension TealiumDeviceData {
-    // swiftlint:disable function_body_length
     /// - Returns: `[String: String]` containing current network carrier info
-    class func carrierInfo() -> [String: String] {
+    class var carrierInfo: [String: String] {
         // only available on iOS
         var carrierInfo: [String: String]
         // avoiding direct assignment to suppress spurious compiler warning (never mutated)
@@ -75,5 +74,4 @@ extension TealiumDeviceData {
         #endif
         return carrierInfo
     }
-    // swiftlint:enable function_body_length
 }

@@ -50,7 +50,7 @@ public class TealiumVolatileData {
     }
 
     /// Deletes all session data.
-    public func deleteAllData() {
+    public func deleteAll() {
         self.eventDataManager.sessionData = [String: Any]()
     }
 

@@ -13,7 +13,7 @@ import TealiumCore
 
 public class TealiumCrashModule: Collector {
 
-    public let moduleId: String = "Crash"
+    public let id: String = TealiumModuleNames.crash
     var crashReporter: CrashReporterProtocol?
     weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!

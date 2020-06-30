@@ -13,24 +13,23 @@ import TealiumCore
 #endif
 
 public class TealiumRemoteCommandsModule: Dispatcher {
-    
-    public var moduleId: String = "Remote Commands"
+
+    public var id: String = TealiumModuleNames.remotecommands
     public var config: TealiumConfig
     public var isReady: Bool = false
     public var remoteCommands: TealiumRemoteCommandsManagerProtocol?
     var reservedCommandsAdded = false
 
-    
     /// Provided for unit testing￼.
     ///
     /// - Parameter remoteCommands: Class instance conforming to `TealiumRemoteCommandsManagerProtocol`
     convenience init (config: TealiumConfig,
                       delegate: TealiumModuleDelegate,
                       remoteCommands: TealiumRemoteCommandsManagerProtocol? = nil) {
-        self.init(config: config, delegate: delegate){ result in }
+        self.init(config: config, delegate: delegate) { _ in }
         self.remoteCommands = remoteCommands
     }
-    
+
     public required init(config: TealiumConfig, delegate: TealiumModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
         remoteCommands = remoteCommands ?? TealiumRemoteCommandsManager(delegate: delegate)
@@ -85,7 +84,7 @@ public class TealiumRemoteCommandsModule: Dispatcher {
         reservedCommandsAdded = true
         // No further processing required - HTTP remote command already up.
     }
-    
+
     @available(*, deprecated, message: "Reserved for future use.")
     public func dynamicTrack(_ request: TealiumRequest,
                              completion: ModuleCompletion?) {

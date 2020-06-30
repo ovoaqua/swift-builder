@@ -13,7 +13,7 @@ public extension TealiumDeviceData {
     /// Retrieves the Apple model name, e.g. iPhone11,2.
     ///
     /// - Returns: `String` containing Apple model name
-    func basicModel() -> String {
+    var basicModel: String {
         if ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] != nil {
             return "x86_64"
         }
@@ -35,8 +35,8 @@ public extension TealiumDeviceData {
     /// Retrieves the full consumer device name, e.g. iPhone SE, and other supplementary info.
     ///
     /// - Returns: `[String: String]` of model information
-    func model() -> [String: String] {
-        let model = basicModel()
+    var model: [String: String] {
+        let model = basicModel
         #if os(OSX)
         return [TealiumKey.deviceType: model,
                 TealiumKey.simpleModel: "mac",

@@ -46,7 +46,7 @@ class TealiumVolatileDataTests: XCTestCase {
     }
     
     func testDeleteAll() {
-        volatileData?.deleteAllData()
+        volatileData?.deleteAll()
         XCTAssertEqual(mockEventDataMgr.sessionDataBacking.count, 0)
     }
 

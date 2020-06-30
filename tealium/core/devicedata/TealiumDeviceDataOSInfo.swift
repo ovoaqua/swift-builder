@@ -18,7 +18,7 @@ import WatchKit
 
 // MARK: OS Info
 public extension TealiumDeviceData {
-    class func oSBuild() -> String {
+    class var oSBuild: String {
         guard let build = Bundle.main.infoDictionary?["DTSDKBuild"] as? String else {
             return TealiumDeviceDataValue.unknown
         }
@@ -26,7 +26,7 @@ public extension TealiumDeviceData {
 
     }
 
-    class func oSVersion() -> String {
+    class var oSVersion: String {
         // only available on iOS and tvOS
         #if os(iOS)
         return UIDevice.current.systemVersion
@@ -41,7 +41,7 @@ public extension TealiumDeviceData {
         #endif
     }
 
-    class func oSName() -> String {
+    class var oSName: String {
         // only available on iOS and tvOS
         #if os(iOS)
         return UIDevice.current.systemName

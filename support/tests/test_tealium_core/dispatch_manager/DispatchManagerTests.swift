@@ -190,7 +190,7 @@ class DummyDispatcher: Dispatcher {
         TealiumDispatchQueueModuleTests.remoteAPIExpectation!.fulfill()
     }
     
-    var moduleId: String = "DummyDispatcher"
+    var id: String = "DummyDispatcher"
     
     var config: TealiumConfig
     

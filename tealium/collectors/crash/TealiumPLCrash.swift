@@ -78,7 +78,7 @@ public class TealiumPLCrash: TealiumAppDataCollection {
 
     var memoryUsage: String {
         if deviceMemoryUsage == nil {
-            deviceMemoryUsage = deviceDataCollection.getMemoryUsage()
+            deviceMemoryUsage = deviceDataCollection.memoryUsage
         }
 
         guard let appMemoryUsage = deviceMemoryUsage?[TealiumDeviceDataKey.appMemoryUsage] else {
@@ -89,7 +89,7 @@ public class TealiumPLCrash: TealiumAppDataCollection {
 
     var deviceMemoryAvailable: String {
         if deviceMemoryUsage == nil {
-            deviceMemoryUsage = deviceDataCollection.getMemoryUsage()
+            deviceMemoryUsage = deviceDataCollection.memoryUsage
         }
         guard let memoryAvailable = deviceMemoryUsage?[TealiumDeviceDataKey.memoryFree] else {
             return TealiumDeviceDataValue.unknown
@@ -98,7 +98,7 @@ public class TealiumPLCrash: TealiumAppDataCollection {
     }
 
     var osBuild: String {
-        let build = TealiumDeviceData.oSBuild()
+        let build = TealiumDeviceData.oSBuild
         guard build != TealiumDeviceDataValue.unknown else {
             if let crashReportBuild = crashReport.systemInfo.operatingSystemBuild {
                 return crashReportBuild
@@ -143,30 +143,30 @@ public class TealiumPLCrash: TealiumAppDataCollection {
                     registerDictionary[register.registerName] = String(format: "0x%02x", register.registerValue)
                 }
             }
-            threadDictionary[.registers] = registerDictionary
-            threadDictionary[.crashed] = thread.crashed
-            threadDictionary[.threadId] = NSNull() // NR: null
-            threadDictionary[.priority] = NSNull() // NR: null
+            threadDictionary[TealiumCrashKey.ImageThread.registers] = registerDictionary
+            threadDictionary[TealiumCrashKey.ImageThread.crashed] = thread.crashed
+            threadDictionary[TealiumCrashKey.ImageThread.threadId] = NSNull() // NR: null
+            threadDictionary[TealiumCrashKey.ImageThread.priority] = NSNull() // NR: null
 
             var stackArray = [[String: Any]]()
             var stackDictionary = [String: Any]()
             if let stackFrames = thread.stackFrames, !thread.stackFrames.isEmpty {
                 for case let stack as TEALPLCrashReportStackFrameInfo in stackFrames {
-                    stackDictionary[.instructionPointer] = stack.instructionPointer
+                    stackDictionary[TealiumCrashKey.ImageThread.instructionPointer] = stack.instructionPointer
                     var symbolDictionary = [String: Any]()
                     if let symbolInfo = stack.symbolInfo {
-                        symbolDictionary[.symbolName] = symbolInfo.symbolName
-                        symbolDictionary[.symbolStartAddress] = symbolInfo.startAddress
+                        symbolDictionary[TealiumCrashKey.ImageThread.symbolName] = symbolInfo.symbolName
+                        symbolDictionary[TealiumCrashKey.ImageThread.symbolStartAddress] = symbolInfo.startAddress
                     } else {
                         // NR has these values and are required
-                        symbolDictionary[.symbolName] = NSNull()
-                        symbolDictionary[.symbolStartAddress] = 0
+                        symbolDictionary[TealiumCrashKey.ImageThread.symbolName] = NSNull()
+                        symbolDictionary[TealiumCrashKey.ImageThread.symbolStartAddress] = 0
                     }
-                    stackDictionary[.symbolInfo] = symbolDictionary
+                    stackDictionary[TealiumCrashKey.ImageThread.symbolInfo] = symbolDictionary
                     stackArray.append(stackDictionary)
                 }
             }
-            threadDictionary[.stack] = stackArray
+            threadDictionary[TealiumCrashKey.ImageThread.stack] = stackArray
 
             array.append(threadDictionary)
 
@@ -187,13 +187,13 @@ public class TealiumPLCrash: TealiumAppDataCollection {
         var codeTypeDictionary = [String: Any]()
         if let images = images {
             for image in images {
-                formatted[.baseAddress] = String(format: "0x%02x", image.imageBaseAddress)
-                codeTypeDictionary[.architecture] = deviceDataCollection.architecture()
-                codeTypeDictionary[.typeEncoding] = typeEncoding(image.codeType.typeEncoding)
-                formatted[.codeType] = codeTypeDictionary
-                formatted[.imageName] = image.imageName
-                formatted[.imageUuid] = image.imageUUID
-                formatted[.imageSize] = image.imageSize
+                formatted[TealiumCrashKey.ImageThread.baseAddress] = String(format: "0x%02x", image.imageBaseAddress)
+                codeTypeDictionary[TealiumCrashKey.ImageThread.architecture] = deviceDataCollection.architecture()
+                codeTypeDictionary[TealiumCrashKey.ImageThread.typeEncoding] = typeEncoding(image.codeType.typeEncoding)
+                formatted[TealiumCrashKey.ImageThread.codeType] = codeTypeDictionary
+                formatted[TealiumCrashKey.ImageThread.imageName] = image.imageName
+                formatted[TealiumCrashKey.ImageThread.imageUuid] = image.imageUUID
+                formatted[TealiumCrashKey.ImageThread.imageSize] = image.imageSize
 
                 array.append(formatted)
 
@@ -243,16 +243,5 @@ public class TealiumPLCrash: TealiumAppDataCollection {
     /// - Returns: [String: Any] containing all crash-related variables
     public func getData(truncate: Bool) -> [String: Any] {
         getData(truncateLibraries: truncate, truncateThreads: truncate)
-    }
-}
-
-fileprivate extension Dictionary where Key: ExpressibleByStringLiteral {
-    subscript(key: TealiumCrashKey.ImageThread) -> Value? {
-        get {
-            return self[key.rawValue as! Key]
-        }
-        set {
-            self[key.rawValue as! Key] = newValue
-        }
     }
 }

@@ -17,7 +17,9 @@ public protocol TealiumRegistration {
 
     // Optional
     @available(iOS 10.0, *)
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void)
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void)
 
     // Optional
     func pushAuthorization(fromUserNotificationCenter: Bool)
@@ -27,7 +29,9 @@ public extension TealiumRegistration {
 
     func pushAuthorization(fromUserNotificationCenter: Bool) { }
     @available(iOS 10.0, *)
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) { }
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) { }
 
 }
 #endif

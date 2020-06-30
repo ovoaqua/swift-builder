@@ -101,6 +101,10 @@ class TealiumNWPathMonitor: TealiumConnectivityMonitorProtocol {
 
 }
 
-enum TealiumConnectivityError: Error {
+enum TealiumConnectivityError: String, LocalizedError {
     case noConnection
+
+    public var errorDescription: String? {
+        return self.rawValue
+    }
 }

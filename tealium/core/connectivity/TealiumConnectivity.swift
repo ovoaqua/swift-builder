@@ -22,7 +22,7 @@ protocol TealiumConnectivityMonitorProtocol {
 
 class TealiumConnectivity: Collector, TealiumConnectivityDelegate {
 
-    var moduleId: String = "Connectivity"
+    var id: String = TealiumModuleNames.connectivity
 
     var data: [String: Any]? {
         if let connectionType = self.connectivityMonitor?.currentConnnectionType {

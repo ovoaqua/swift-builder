@@ -97,7 +97,7 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
 
     func checkConnectionFromURLSessionTask(completion: @escaping ((Result<Bool, Error>) -> Void)) {
         let session = self.urlSession ?? URLSession(configuration: .ephemeral)
-        guard let testURL = URL(string: "https://tags.tiqcdn.com") else {
+        guard let testURL = URL(string: TealiumConnectivityConstants.connectivityTestURL) else {
             return
         }
         var request = URLRequest(url: testURL)

@@ -19,7 +19,7 @@ import WatchKit
 // MARK: Screen Info
 public extension TealiumDeviceData {
     /// - Returns: `String` containing the device's resolution
-    class func resolution() -> String {
+    class var resolution: String {
         #if os(OSX)
         return TealiumDeviceDataValue.unknown
         #elseif os(watchOS)
@@ -40,7 +40,7 @@ public extension TealiumDeviceData {
     }
 
     /// - Returns: `[String: Stirng]` containing the device's physical and UI orientation
-    func orientation() -> [String: String] {
+    var orientation: [String: String] {
         // UIDevice.current.orientation is available on iOS only
         #if os(iOS)
         let orientation = UIDevice.current.orientation

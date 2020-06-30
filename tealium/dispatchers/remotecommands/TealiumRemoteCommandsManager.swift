@@ -15,7 +15,7 @@ public typealias RemoteCommandArray = [TealiumRemoteCommandProtocol]
 
 /// Manages instances of TealiumRemoteCommand
 public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManagerProtocol {
-    
+
     weak var queue = TealiumQueues.backgroundSerialQueue
     public var commands = RemoteCommandArray()
     var isEnabled = false
@@ -25,7 +25,7 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
     public init(delegate: TealiumModuleDelegate?) {
         moduleDelegate = delegate
     }
-    
+
     /// Adds a remote command for later execution.
     ///
     /// - Parameter remoteCommand: `TealiumRemoteCommand` to be added for later execution
@@ -47,7 +47,7 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
     public func removeAll() {
         commands.removeAll()
     }
-    
+
     public func triggerCommand(with data: [String: Any]) {
         guard let request = data[TealiumKey.tagmanagementNotification] as? URLRequest else {
             return
@@ -91,7 +91,7 @@ extension TealiumRemoteCommandsManager: TealiumRemoteCommandDelegate {
     ///     - response: `TealiumRemoteCommandResponse` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
     ///      it must set the "hasCustomCompletionHandler" flag, otherwise the completion notification will be sent automatically
     public func tealiumRemoteCommandRequestsExecution(_ command: TealiumRemoteCommandProtocol,
-                                               response: TealiumRemoteCommandResponseProtocol) {
+                                                      response: TealiumRemoteCommandResponseProtocol) {
         self.queue?.async {
             command.remoteCommandCompletion(response)
             // this will send the completion notification, if it wasn't explictly handled by the command

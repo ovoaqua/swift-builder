@@ -48,7 +48,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
             completion?((.failure(TealiumCollectError.invalidDispatchURL), ["error": ""]))
             return
         }
-        
+
         completion?((.success(true), nil))
     }
 
@@ -64,7 +64,7 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
         self.bulkEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.bulkEventPath)"
         self.singleEventDispatchURL = "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.singleEventPath)"
     }
-    
+
     /// Gets the hostname from a url￼.
     ///
     /// - Parameter url: `String` representation of a URL
@@ -104,8 +104,8 @@ class TealiumCollectPostDispatcher: TealiumCollectProtocol {
                   url: String? = nil,
                   completion: ModuleCompletion?) {
         if let jsonString = data.toJSONString,
-            let url = url ?? singleEventDispatchURL,
-            let urlRequest = urlPOSTRequestWithJSONString(jsonString, dispatchURL: url) {
+           let url = url ?? singleEventDispatchURL,
+           let urlRequest = urlPOSTRequestWithJSONString(jsonString, dispatchURL: url) {
             sendURLRequest(urlRequest, completion)
         } else {
             completion?((.failure(TealiumCollectError.noDataToTrack), nil))

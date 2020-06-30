@@ -25,7 +25,7 @@ protocol DispatchManagerProtocol {
          config: TealiumConfig)
 
     func processTrack(_ request: TealiumTrackRequest)
-    func handleReleaseRequest(reason: String)
+    func handleDequeueRequest(reason: String)
 
 }
 
@@ -94,13 +94,6 @@ class DispatchManager: DispatchManagerProtocol {
     var lowPowerModeEnabled = false
     var lowPowerNotificationObserver: NSObjectProtocol?
 
-    #if os(iOS)
-    class var sharedApplication: UIApplication? {
-        let selector = NSSelectorFromString("sharedApplication")
-        return UIApplication.perform(selector)?.takeUnretainedValue() as? UIApplication
-    }
-    #endif
-
     convenience init (dispatchers: [Dispatcher]?,
                       dispatchValidators: [DispatchValidator]?,
                       dispatchListeners: [DispatchListener]?,
@@ -142,7 +135,7 @@ class DispatchManager: DispatchManagerProtocol {
     func processTrack(_ request: TealiumTrackRequest) {
         // first release the queue if the dispatch limit has been reached
         if shouldRelease {
-            handleReleaseRequest(reason: "Processing track request")
+            handleDequeueRequest(reason: "Processing track request")
         }
         var newRequest = request
         #if os(iOS)
@@ -206,59 +199,6 @@ class DispatchManager: DispatchManagerProtocol {
         }.count > 0
     }
 
-    func checkShouldQueue(request: inout TealiumBatchTrackRequest) -> Bool {
-        guard let dispatchValidators = dispatchValidators else {
-            return false
-        }
-        let uuid = request.uuid
-        return dispatchValidators.filter {
-            let response = $0.shouldQueue(request: request)
-            if response.0 == true,
-               let data = response.1 {
-                request = TealiumBatchTrackRequest(trackRequests: request.trackRequests.map { request in
-                    let singleRequestUUID = request.uuid
-                    var newData = request.trackDictionary
-                    newData += data
-                    var newRequest = TealiumTrackRequest(data: newData, completion: request.completion)
-                    newRequest.uuid = singleRequestUUID
-                    return newRequest
-                }, completion: request.completion)
-                request.uuid = uuid
-                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
-                self.logger?.log(logRequest)
-            }
-            return response.0
-        }.count > 0
-    }
-
-    func checkShouldDrop(request: TealiumRequest) -> Bool {
-        guard let dispatchValidators = dispatchValidators else {
-            return false
-        }
-        return dispatchValidators.filter {
-            if $0.shouldDrop(request: request) == true {
-                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request dropped by Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
-                self.logger?.log(logRequest)
-                return true
-            }
-            return false
-        }.count > 0
-    }
-
-    func checkShouldPurge(request: TealiumRequest) -> Bool {
-        guard let dispatchValidators = dispatchValidators else {
-            return false
-        }
-        return dispatchValidators.filter {
-            if $0.shouldPurge(request: request) == true {
-                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Purge request received from Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
-                self.logger?.log(logRequest)
-                return true
-            }
-            return false
-        }.count > 0
-    }
-
     func runDispatchers (for request: TealiumRequest) {
         if request is TealiumTrackRequest || request is TealiumBatchTrackRequest {
             self.dispatchListeners?.forEach {
@@ -267,7 +207,7 @@ class DispatchManager: DispatchManagerProtocol {
         }
         self.logTrackSuccess([], request: request)
         dispatchers?.forEach { module in
-            let moduleId = module.moduleId
+            let moduleId = module.id
             module.dynamicTrack(request) { result in
                 switch result.0 {
                 case .failure(let error):
@@ -278,69 +218,6 @@ class DispatchManager: DispatchManagerProtocol {
 
             }
         }
-    }
-
-    func logModuleResponse (for module: String,
-                            request: TealiumRequest,
-                            info: [String: Any]?,
-                            success: Bool,
-                            error: Error?) {
-        let message = success ? "Successful Track": "Failed with error: \(error?.localizedDescription ?? "")"
-        let logLevel: TealiumLogLevel = success ? .info : .error
-        var uuid: String?
-        var event: String?
-        switch request {
-        case let request as TealiumBatchTrackRequest:
-            uuid = request.uuid
-            event = "batch"
-        case let request as TealiumTrackRequest:
-            uuid = request.uuid
-            event = request.event()
-        default:
-            uuid = nil
-        }
-        var messages = [String]()
-        if let uuid = uuid, let event = event {
-            messages.append("Event: \(event), Track UUID: \(uuid)")
-        }
-        messages.append(message)
-        let logRequest = TealiumLogRequest(title: module, messages: messages, info: nil, logLevel: logLevel, category: .track)
-        logger?.log(logRequest)
-    }
-
-    func logTrackSuccess(_ success: [String],
-                         request: TealiumRequest) {
-        var logInfo: [String: Any]? = [String: Any]()
-        switch request {
-        case let request as TealiumTrackRequest:
-            logInfo = request.trackDictionary
-        case let request as TealiumBatchTrackRequest:
-            logInfo = request.compressed()
-        default:
-            return
-        }
-
-        let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Sending dispatch", info: logInfo, logLevel: .info, category: .track)
-        logger?.log(logRequest)
-    }
-
-    func logTrackFailure(_ failures: [(module: String, error: Error)],
-                         request: TealiumRequest) {
-        var logInfo: [String: Any]? = [String: Any]()
-        switch request {
-        case let request as TealiumTrackRequest:
-            logInfo = request.trackDictionary
-        case let request as TealiumBatchTrackRequest:
-            logInfo = request.compressed()
-        default:
-            return
-        }
-        let logRequest = TealiumLogRequest(title: "Failed Track",
-                                           messages: failures.map { "\($0.module) Error -> \($0.error.localizedDescription)" },
-                                           info: logInfo,
-                                           logLevel: .error,
-                                           category: .track)
-        logger?.log(logRequest)
     }
 
     func removeOldDispatches() {
@@ -372,7 +249,7 @@ class DispatchManager: DispatchManagerProtocol {
                  reason: String?) {
         defer {
             if shouldRelease {
-                handleReleaseRequest(reason: "Dispatch queue limit reached.")
+                handleDequeueRequest(reason: "Dispatch queue limit reached.")
             }
         }
         // no conditions preventing queueing, so queue request
@@ -390,7 +267,7 @@ class DispatchManager: DispatchManagerProtocol {
         persistentQueue.clearQueue()
     }
 
-    func handleReleaseRequest(reason: String) {
+    func handleDequeueRequest(reason: String) {
         self.connectivityManager.checkIsConnected { result in
             switch result {
             case .success:
@@ -408,7 +285,11 @@ class DispatchManager: DispatchManagerProtocol {
                 }
 
                 if let count = self.persistentQueue.peek()?.count, count > 0 {
-                    let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Releasing queued dispatches. Reason: \(reason)", info: nil, logLevel: .info, category: .track)
+                    let logRequest = TealiumLogRequest(title: "Dispatch Manager",
+                                                       message: "Releasing queued dispatches. Reason: \(reason)",
+                                                       info: nil,
+                                                       logLevel: .info,
+                                                       category: .track)
                     self.logger?.log(logRequest)
 
                     self.releaseQueue()
@@ -452,21 +333,6 @@ class DispatchManager: DispatchManagerProtocol {
         }
         let request = TealiumRemoteAPIRequest(trackRequest: request)
         runDispatchers(for: request)
-    }
-
-    func logQueue(request: TealiumTrackRequest,
-                  reason: String?) {
-
-        let message = """
-        Event: \(request.trackDictionary[TealiumKey.event] as? String ?? "") queued for batch dispatch. Track UUID: \(request.uuid)
-        """
-        var messages = [message]
-        if let reason = reason {
-            messages.append("Queue Reason: \(reason)")
-        }
-        let logRequest = TealiumLogRequest(title: "Dispatch Manager", messages: messages, info: nil, logLevel: .info, category: .track)
-
-        logger?.log(logRequest)
     }
 
 }
@@ -537,7 +403,6 @@ extension DispatchManager {
             return true
         }
 
-        // simulator case
         guard batteryPercent != TealiumDispatchQueueConstants.simulatorBatteryConstant else {
             return true
         }
@@ -566,4 +431,144 @@ extension DispatchManager {
     }
 
 }
+
+// Dispatch Validator Checks
+extension DispatchManager {
+
+    func checkShouldQueue(request: inout TealiumBatchTrackRequest) -> Bool {
+        guard let dispatchValidators = dispatchValidators else {
+            return false
+        }
+        let uuid = request.uuid
+        return dispatchValidators.filter {
+            let response = $0.shouldQueue(request: request)
+            if response.0 == true,
+               let data = response.1 {
+                request = TealiumBatchTrackRequest(trackRequests: request.trackRequests.map { request in
+                    let singleRequestUUID = request.uuid
+                    var newData = request.trackDictionary
+                    newData += data
+                    var newRequest = TealiumTrackRequest(data: newData, completion: request.completion)
+                    newRequest.uuid = singleRequestUUID
+                    return newRequest
+                }, completion: request.completion)
+                request.uuid = uuid
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
+            }
+            return response.0
+        }.count > 0
+    }
+
+    func checkShouldDrop(request: TealiumRequest) -> Bool {
+        guard let dispatchValidators = dispatchValidators else {
+            return false
+        }
+        return dispatchValidators.filter {
+            if $0.shouldDrop(request: request) == true {
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request dropped by Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
+                return true
+            }
+            return false
+        }.count > 0
+    }
+
+    func checkShouldPurge(request: TealiumRequest) -> Bool {
+        guard let dispatchValidators = dispatchValidators else {
+            return false
+        }
+        return dispatchValidators.filter {
+            if $0.shouldPurge(request: request) == true {
+                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Purge request received from Dispatch Validator: \($0.id)", info: nil, logLevel: .info, category: .track)
+                self.logger?.log(logRequest)
+                return true
+            }
+            return false
+        }.count > 0
+    }
+}
+
+// Logging
+extension DispatchManager {
+
+    func logModuleResponse (for module: String,
+                            request: TealiumRequest,
+                            info: [String: Any]?,
+                            success: Bool,
+                            error: Error?) {
+        let message = success ? "Successful Track": "Failed with error: \(error?.localizedDescription ?? "")"
+        let logLevel: TealiumLogLevel = success ? .info : .error
+        var uuid: String?
+        var event: String?
+        switch request {
+        case let request as TealiumBatchTrackRequest:
+            uuid = request.uuid
+            event = "batch"
+        case let request as TealiumTrackRequest:
+            uuid = request.uuid
+            event = request.event()
+        default:
+            uuid = nil
+        }
+        var messages = [String]()
+        if let uuid = uuid, let event = event {
+            messages.append("Event: \(event), Track UUID: \(uuid)")
+        }
+        messages.append(message)
+        let logRequest = TealiumLogRequest(title: module, messages: messages, info: nil, logLevel: logLevel, category: .track)
+        logger?.log(logRequest)
+    }
+
+    func logTrackSuccess(_ success: [String],
+                         request: TealiumRequest) {
+        var logInfo: [String: Any]? = [String: Any]()
+        switch request {
+        case let request as TealiumTrackRequest:
+            logInfo = request.trackDictionary
+        case let request as TealiumBatchTrackRequest:
+            logInfo = request.compressed()
+        default:
+            return
+        }
+
+        let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Sending dispatch", info: logInfo, logLevel: .info, category: .track)
+        logger?.log(logRequest)
+    }
+
+    func logTrackFailure(_ failures: [(module: String, error: Error)],
+                         request: TealiumRequest) {
+        var logInfo: [String: Any]? = [String: Any]()
+        switch request {
+        case let request as TealiumTrackRequest:
+            logInfo = request.trackDictionary
+        case let request as TealiumBatchTrackRequest:
+            logInfo = request.compressed()
+        default:
+            return
+        }
+        let logRequest = TealiumLogRequest(title: "Failed Track",
+                                           messages: failures.map { "\($0.module) Error -> \($0.error.localizedDescription)" },
+                                           info: logInfo,
+                                           logLevel: .error,
+                                           category: .track)
+        logger?.log(logRequest)
+    }
+
+    func logQueue(request: TealiumTrackRequest,
+                  reason: String?) {
+
+        let message = """
+        Event: \(request.trackDictionary[TealiumKey.event] as? String ?? "") queued for batch dispatch. Track UUID: \(request.uuid)
+        """
+        var messages = [message]
+        if let reason = reason {
+            messages.append("Queue Reason: \(reason)")
+        }
+        let logRequest = TealiumLogRequest(title: "Dispatch Manager", messages: messages, info: nil, logLevel: .info, category: .track)
+
+        logger?.log(logRequest)
+    }
+}
+
 // swiftlint:enable file_length

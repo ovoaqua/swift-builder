@@ -8,13 +8,6 @@
 
 import Foundation
 
-//enum TealiumLifecycleSessionKey {
-//    static let wakeDate = "wake"
-//    static let sleepDate = "sleep"
-//    static let secondsElapsed = "seconds"
-//    static let wasLaunch = "wasLaunch"
-//}
-
 // Represents a serializable block of time between a given wake and a sleep
 public struct TealiumLifecycleSession: Codable, Equatable {
 

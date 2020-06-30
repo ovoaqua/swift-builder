@@ -16,9 +16,9 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
 
     /// Called when the WebView has finished loading a resource (DOM Complete)
     func webView(_ webView: WKWebView,
-                        didFinish navigation: WKNavigation!) {
+                 didFinish navigation: WKNavigation!) {
         if let url = webView.url,
-            url == self.url {
+           url == self.url {
             self.webviewStateDidChange(.loadSuccess, withError: nil)
         } else {
             self.webviewStateDidChange(.loadFailure, withError: TealiumTagManagementError.webViewNotYetReady)
@@ -40,12 +40,12 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
 
     /// Fix for server-side cookies not being set properly
     func webView(_ webView: WKWebView,
-                        decidePolicyFor navigationResponse: WKNavigationResponse,
-                        decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+                 decidePolicyFor navigationResponse: WKNavigationResponse,
+                 decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         guard let response = navigationResponse.response as? HTTPURLResponse,
-            let url = navigationResponse.response.url else {
-                decisionHandler(.cancel)
-                return
+              let url = navigationResponse.response.url else {
+            decisionHandler(.cancel)
+            return
         }
 
         /// Forces WKWebView to respect `Set-Cookie` response headers.
@@ -65,8 +65,8 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
     /// Decides whether or not a resource should load.
     /// Remote Commands are intercepted here, and do not need to load requests in the WebView.
     func webView(_ webView: WKWebView,
-                        decidePolicyFor navigationAction: WKNavigationAction,
-                        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let urlRequest = navigationAction.request
         var decisionAction: WKNavigationActionPolicy?
         if let urlString = urlRequest.url?.absoluteString, urlString.hasPrefix(TealiumKey.tealiumURLScheme) {

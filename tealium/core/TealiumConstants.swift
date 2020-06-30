@@ -61,25 +61,20 @@ public enum TealiumKnownDispatchers {
     #endif
 }
 
-public enum TealiumModuleNames: String, CaseIterable {
-    case autotracking
-    case appdata
-    case attribution
-    case collect
-    case connectivity
-    case consentmanager
-    case crash
-    case delegate
-    case devicedata
-    case dispatchqueue
-    case lifecycle
-    case location
-    case logger
-    case persistentdata
-    case remotecommands
-    case tagmanagement
-    case visitorservice
-    case volatiledata
+public enum TealiumModuleNames {
+    public static let autotracking = "AutoTracking"
+    public static let appdata = "AppData"
+    public static let attribution = "Attribution"
+    public static let collect = "Collect"
+    public static let connectivity = "Connectivity"
+    public static let consentmanager = "ConsentManager"
+    public static let crash = "Crash"
+    public static let devicedata = "DeviceData"
+    public static let lifecycle = "Lifecycle"
+    public static let location = "Location"
+    public static let remotecommands = "RemoteCommands"
+    public static let tagmanagement = "TagManagement"
+    public static let visitorservice = "VisitorService"
 }
 
 public enum TealiumKey {

@@ -44,7 +44,7 @@ class TealiumHelper: NSObject {
                                    options: nil)
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
-        config.logLevel = .info
+        config.logLevel = .debug
         config.enableConsentManager = true
         config.consentPolicy = .gdpr
         config.consentLoggingEnabled = true

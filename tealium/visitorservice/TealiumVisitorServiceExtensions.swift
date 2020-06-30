@@ -22,7 +22,7 @@ extension Int64 {
 public extension Tealium {
 
     /// - Returns: `VisitorServiceManager` instance
-    func visitorService() -> TealiumVisitorServiceManager? {
+    var visitorService:  TealiumVisitorServiceManager? {
         (zz_internal_modulesManager?.modules.first {
             type(of: $0) == TealiumVisitorServiceModule.self
         } as? TealiumVisitorServiceModule)?.visitorServiceManager as? TealiumVisitorServiceManager

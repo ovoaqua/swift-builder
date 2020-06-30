@@ -19,8 +19,8 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
     }
 
     // MARK: Battery
-    /// - Returns: `Int` battery percentage
-    class func batteryPercent() -> String {
+    /// - Returns: `String` battery percentage
+    class var batteryPercent: String {
         // only available on iOS
         #if os(iOS)
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -31,7 +31,7 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
     }
 
     /// - Returns: `String` true if charging
-    class func isCharging() -> String {
+    class var isCharging: String {
         // only available on iOS
         #if os(iOS)
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -52,9 +52,8 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
     }
 
     // MARK: CPU
-    // swiftlint:disable cyclomatic_complexity
     /// - Returns: `String` containing current CPU type
-    public func cpuType() -> String {
+    public var cpuType: String {
         var type = cpu_type_t()
         var cpuSize = MemoryLayout<cpu_type_t>.size
         sysctlbyname("hw.cputype", &type, &cpuSize, nil, 0)
@@ -96,10 +95,9 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
             return TealiumDeviceDataValue.unknown
         }
     }
-    // swiftlint:enable cyclomatic_complexity
 
     /// - Returns: `String ` of  main locale of the device
-    class func iso639Language() -> String {
+    class var iso639Language: String {
         return Locale.preferredLanguages[0]
     }
 
