@@ -13,8 +13,6 @@ import WebKit
 import TealiumCore
 #endif
 
-// MARK: EXTENSIONS
-
 public extension TealiumConfig {
 
     /// Adds optional delegates to the WebView instance.

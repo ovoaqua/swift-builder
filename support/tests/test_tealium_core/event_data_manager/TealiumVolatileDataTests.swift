@@ -17,7 +17,7 @@ class TealiumVolatileDataTests: XCTestCase {
                                         "anotherKey": "anotherValue"]
 
     override func setUp() {
-        volatileData = TealiumVolatileData(eventDataManager: mockEventDataMgr)
+        volatileData = TealiumVolatileData(dataLayer: mockEventDataMgr)
     }
     
     func testDicationary() {

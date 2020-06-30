@@ -17,7 +17,7 @@ class TealiumPersistentDataTests: XCTestCase {
                                      "anotherKey": "anotherValue"]
 
     override func setUp() {
-        persistentData = TealiumPersistentData(eventDataManager: mockEventDataMgr)
+        persistentData = TealiumPersistentData(dataLayer: mockEventDataMgr)
     }
     
     func testDicationary() {

@@ -121,8 +121,6 @@ class TealiumHelper: NSObject {
 
         }
         tealium?.track(title: "hello")
-        tealium?.disable()
-        tealium = nil
         
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
