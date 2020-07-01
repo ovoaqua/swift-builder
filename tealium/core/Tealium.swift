@@ -28,20 +28,20 @@ public class Tealium {
     /// - Parameter config: `TealiumConfig` Object created with Tealium account, profile, environment, optional loglevel)
     /// - Parameter enableCompletion: `TealiumEnableCompletion` block to be called when library has finished initializing
     public init(config: TealiumConfig,
-                eventDataManager: DataLayerManagerProtocol? = nil,
+                dataLayer: DataLayerManagerProtocol? = nil,
                 modulesManager: ModulesManager? = nil,
                 enableCompletion: TealiumEnableCompletion?) {
         defer {
-            TealiumQueues.backgroundConcurrentQueue.write {
+            TealiumQueues.backgroundSerialQueue.async {
                 enableCompletion?(.success(true))
             }
         }
 
         self.enableCompletion = enableCompletion
-        self.dataLayer = eventDataManager ?? DataLayer(config: config)
+        self.dataLayer = dataLayer ?? DataLayer(config: config)
 
-        TealiumQueues.backgroundConcurrentQueue.write {
-            self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, eventDataManager: self.dataLayer)
+        TealiumQueues.backgroundSerialQueue.async {
+            self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, dataLayer: self.dataLayer)
         }
 
         TealiumInstanceManager.shared.addInstance(self, config: config)
@@ -54,7 +54,7 @@ public class Tealium {
 
     /// Suspends all library activity, may release internal objects.
     public func disable() {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundSerialQueue.async {
             if let config = self.zz_internal_modulesManager?.config {
                 TealiumInstanceManager.shared.removeInstance(config: config)
             }
@@ -66,7 +66,7 @@ public class Tealium {
     ///￼
     /// - Parameter title: String name of the event. This converts to 'tealium_event'
     public func track(title: String) {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundSerialQueue.async {
             self.track(title: title,
                        data: nil,
                        completion: nil)
@@ -96,7 +96,7 @@ public class Tealium {
     /// Sends a track on the background queue
     /// Will not be executed until modules manager is ready (first work item in queue is to enable modules manager)
     func sendTrack(_ track: TealiumTrackRequest) {
-        TealiumQueues.backgroundConcurrentQueue.write { [weak self] in
+        TealiumQueues.backgroundSerialQueue.async { [weak self] in
             guard let self = self else {
                 return
             }
@@ -117,7 +117,7 @@ public class Tealium {
     public func trackView(title: String,
                           data: [String: Any]?,
                           completion: ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)?) {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundSerialQueue.async {
             var newData = [String: Any]()
 
             if let data = data {

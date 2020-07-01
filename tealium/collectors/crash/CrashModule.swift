@@ -11,9 +11,9 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumCrashModule: Collector {
+public class CrashModule: Collector {
 
-    public let id: String = TealiumModuleNames.crash
+    public let id: String = ModuleNames.crash
     var crashReporter: CrashReporterProtocol?
     weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!

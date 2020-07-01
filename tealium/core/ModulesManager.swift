@@ -1,5 +1,5 @@
 //
-//  NewModulesManager.swift
+//  ModulesManager.swift
 //  TealiumCore
 //
 //  Created by Craig Rouse on 21/04/2020.
@@ -23,17 +23,27 @@ public class ModulesManager {
     // must store a copy of the initial config to allow locally-overridden properties to take precedence over remote ones. These would otherwise be lost after the first update.
     var originalConfig: TealiumConfig
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
-    var coreCollectors: [Collector.Type] = [AppDataModule.self, DeviceDataModule.self, TealiumConsentManagerModule.self]
-    var optionalCollectors: [String] = TealiumValue.optionalCollectors
-    var knownDispatchers: [String] = TealiumValue.knownDispatchers
-    public var collectors = [Collector]()
+    var collectorTypes: [Collector.Type] {
+        if let optionalCollectors = config.collectors {
+            return [AppDataModule.self,
+                    TealiumConsentManagerModule.self,
+            ] + optionalCollectors
+        } else {
+            return [AppDataModule.self,
+                    DeviceDataModule.self,
+                    TealiumConsentManagerModule.self,
+                    ConnectivityModule.self,
+            ]
+        }
+    }
+    var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
         willSet {
             dispatchManager?.dispatchValidators = newValue
         }
     }
     var dispatchManager: DispatchManagerProtocol?
-    var connectivityManager: TealiumConnectivity
+    var connectivityManager: ConnectivityModule
     var dispatchers = [Dispatcher]() {
         willSet {
             self.dispatchManager?.dispatchers = newValue
@@ -82,14 +92,13 @@ public class ModulesManager {
     }
 
     init (_ config: TealiumConfig,
-          eventDataManager: DataLayerManagerProtocol?,
+          dataLayer: DataLayerManagerProtocol?,
           optionalCollectors: [String]? = nil,
           knownDispatchers: [String]? = nil) {
         self.originalConfig = config.copy
         self.config = config
-        self.connectivityManager = TealiumConnectivity(config: self.config, delegate: nil, diskStorage: nil) { _ in }
-        self.dataLayerManager = eventDataManager
-        self.addCollector(connectivityManager)
+        self.connectivityManager = ConnectivityModule(config: self.config, delegate: nil, diskStorage: nil) { _ in }
+        self.dataLayerManager = dataLayer
         connectivityManager.addConnectivityDelegate(delegate: self)
         if config.shouldUseRemotePublishSettings {
             self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: self.config, delegate: self)
@@ -118,11 +127,11 @@ public class ModulesManager {
 
     func updateConfig(config: TealiumConfig) {
         if config.isCollectEnabled == false {
-            disableModule(id: TealiumModuleNames.collect)
+            disableModule(id: ModuleNames.collect)
         }
 
         if config.isTagManagementEnabled == false {
-            disableModule(id: TealiumModuleNames.tagmanagement)
+            disableModule(id: ModuleNames.tagmanagement)
         }
 
         self.setupDispatchers(config: config)
@@ -173,25 +182,20 @@ public class ModulesManager {
     }
 
     func setupCollectors(config: TealiumConfig) {
-        coreCollectors.forEach { coreCollector in
-            if coreCollector == TealiumConsentManagerModule.self && !config.enableConsentManager {
-                return
-            }
-            let collector = coreCollector.init(config: config, delegate: self, diskStorage: nil) { _ in
-
-            }
-
-            addCollector(collector)
-        }
-
-        optionalCollectors.forEach { optionalCollector in
-            guard let moduleRef = objc_getClass(optionalCollector) as? Collector.Type else {
+        collectorTypes.forEach { collector in
+            if collector == TealiumConsentManagerModule.self && config.consentPolicy == nil {
                 return
             }
 
-            let collector = moduleRef.init(config: config, delegate: self, diskStorage: nil) { _ in
+            if collector == ConnectivityModule.self {
+                addCollector(connectivityManager)
+                return
+            }
+
+            let collector = collector.init(config: config, delegate: self, diskStorage: nil) { _ in
 
             }
+
             addCollector(collector)
         }
     }
@@ -203,24 +207,21 @@ public class ModulesManager {
             }
             switch result {
             case .success:
-                self.knownDispatchers.forEach { knownDispatcher in
-                    guard let moduleRef = objc_getClass(knownDispatcher) as? Dispatcher.Type else {
-                        return
-                    }
-
-                    if knownDispatcher.contains(TealiumModuleNames.tagmanagement),
+                self.config.dispatchers?.forEach { dispatcherType in
+                    let dispatcherTypeDescription = String(describing: dispatcherType)
+                    if dispatcherTypeDescription.contains(ModuleNames.tagmanagement),
                        config.isTagManagementEnabled == false {
                         return
                     } else {
                         self.dataLayerManager?.isTagManagementEnabled = true
                     }
 
-                    if knownDispatcher.contains(TealiumModuleNames.collect),
+                    if dispatcherTypeDescription.contains(ModuleNames.collect),
                        config.isCollectEnabled == false {
                         return
                     }
 
-                    let dispatcher = moduleRef.init(config: config, delegate: self) { result in
+                    let dispatcher = dispatcherType.init(config: config, delegate: self) { result in
                         switch result.0 {
                         case .failure:
                             print("log error")
@@ -316,7 +317,7 @@ public class ModulesManager {
 
 extension ModulesManager: TealiumModuleDelegate {
     public func requestTrack(_ track: TealiumTrackRequest) {
-        TealiumQueues.backgroundConcurrentQueue.write {
+        TealiumQueues.backgroundSerialQueue.async {
             self.sendTrack(track)
         }
     }

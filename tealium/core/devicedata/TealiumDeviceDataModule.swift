@@ -21,7 +21,7 @@ import WatchKit
 #endif
 
 class DeviceDataModule: Collector {
-    let id: String = TealiumModuleNames.devicedata
+    let id: String = ModuleNames.devicedata
 
     var data: [String: Any]? {
         guard config.shouldCollectTealiumData else {

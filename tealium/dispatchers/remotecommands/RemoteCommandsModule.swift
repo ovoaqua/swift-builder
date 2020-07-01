@@ -12,9 +12,9 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumRemoteCommandsModule: Dispatcher {
+public class RemoteCommandsModule: Dispatcher {
 
-    public var id: String = TealiumModuleNames.remotecommands
+    public var id: String = ModuleNames.remotecommands
     public var config: TealiumConfig
     public var isReady: Bool = false
     public var remoteCommands: TealiumRemoteCommandsManagerProtocol?

@@ -21,7 +21,7 @@ protocol DispatchManagerProtocol {
     init(dispatchers: [Dispatcher]?,
          dispatchValidators: [DispatchValidator]?,
          dispatchListeners: [DispatchListener]?,
-         connectivityManager: TealiumConnectivity,
+         connectivityManager: ConnectivityModule,
          config: TealiumConfig)
 
     func processTrack(_ request: TealiumTrackRequest)
@@ -38,7 +38,7 @@ class DispatchManager: DispatchManagerProtocol {
     var persistentQueue: TealiumPersistentDispatchQueue!
     var diskStorage: TealiumDiskStorageProtocol!
     var config: TealiumConfig
-    var connectivityManager: TealiumConnectivity
+    var connectivityManager: ConnectivityModule
 
     var shouldDequeue: Bool {
         if let dispatchers = dispatchers, !dispatchers.isEmpty {
@@ -97,7 +97,7 @@ class DispatchManager: DispatchManagerProtocol {
     convenience init (dispatchers: [Dispatcher]?,
                       dispatchValidators: [DispatchValidator]?,
                       dispatchListeners: [DispatchListener]?,
-                      connectivityManager: TealiumConnectivity,
+                      connectivityManager: ConnectivityModule,
                       config: TealiumConfig,
                       diskStorage: TealiumDiskStorageProtocol? = nil) {
         self.init(dispatchers: dispatchers, dispatchValidators: dispatchValidators, dispatchListeners: dispatchListeners, connectivityManager: connectivityManager, config: config)
@@ -107,7 +107,7 @@ class DispatchManager: DispatchManagerProtocol {
     required init(dispatchers: [Dispatcher]?,
                   dispatchValidators: [DispatchValidator]?,
                   dispatchListeners: [DispatchListener]?,
-                  connectivityManager: TealiumConnectivity,
+                  connectivityManager: ConnectivityModule,
                   config: TealiumConfig) {
         self.config = config
         self.connectivityManager = connectivityManager

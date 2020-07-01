@@ -30,8 +30,8 @@ public extension Tealium {
 
     var autotracking: TealiumAutotracking? {
         (zz_internal_modulesManager?.modules.first {
-            type(of: $0) == TealiumAutotrackingModule.self
-        } as? TealiumAutotrackingModule)?.autotracking
+            type(of: $0) == AutotrackingModule.self
+        } as? AutotrackingModule)?.autotracking
     }
 
 }
@@ -101,16 +101,17 @@ public class TealiumAutotracking {
     }
 }
 
-class TealiumAutotrackingModule: Collector {
+public class AutotrackingModule: Collector {
 
-    var data: [String: Any]?
+    public let id: String = TealiumAutotrackingKey.moduleName
+    public var data: [String: Any]?
     weak var delegate: TealiumModuleDelegate?
-    var config: TealiumConfig
+    public var config: TealiumConfig
 
-    required init(config: TealiumConfig,
-                  delegate: TealiumModuleDelegate?,
-                  diskStorage: TealiumDiskStorageProtocol?,
-                  completion: ModuleCompletion) {
+    required public init(config: TealiumConfig,
+                         delegate: TealiumModuleDelegate?,
+                         diskStorage: TealiumDiskStorageProtocol?,
+                         completion: ModuleCompletion) {
         self.delegate = delegate
         self.config = config
         let eventName = NSNotification.Name(TealiumAutotrackingKey.eventNotificationName)
@@ -122,8 +123,6 @@ class TealiumAutotrackingModule: Collector {
         notificationsEnabled = true
         completion((.success(true), nil))
     }
-
-    let id: String = TealiumAutotrackingKey.moduleName
 
     var notificationsEnabled = false
     let autotracking = TealiumAutotracking()

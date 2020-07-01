@@ -13,12 +13,16 @@ import TealiumCore
 
 public extension Tealium {
 
-    var lifecycle: TealiumLifecycleModule? {
+    var lifecycle: LifecycleModule? {
         zz_internal_modulesManager?.modules.first {
-            type(of: $0) == TealiumLifecycleModule.self
-        } as? TealiumLifecycleModule
+            type(of: $0) == LifecycleModule.self
+        } as? LifecycleModule
     }
 
+}
+
+public extension Collectors {
+    static let Lifecycle = LifecycleModule.self
 }
 
 extension Bundle {

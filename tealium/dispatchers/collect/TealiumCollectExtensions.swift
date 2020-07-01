@@ -49,3 +49,7 @@ public extension TealiumConfig {
         }
     }
 }
+
+public extension Dispatchers {
+    static let Collect = CollectModule.self
+}

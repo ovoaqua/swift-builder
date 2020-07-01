@@ -24,4 +24,9 @@ public extension TealiumConfig {
         }
     }
 }
+
+public extension Collectors {
+    static let Attribution = AttributionModule.self
+}
+
 #endif

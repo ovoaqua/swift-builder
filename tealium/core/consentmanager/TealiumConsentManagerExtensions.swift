@@ -23,16 +23,6 @@ public extension Tealium {
 
 public extension TealiumConfig {
 
-    /// Enables the `TealiumConsentManager` which is disabled by default
-    var enableConsentManager: Bool {
-        get {
-            options[TealiumConsentConstants.enableConsentManager] as? Bool ?? false
-        }
-        set {
-            options[TealiumConsentConstants.enableConsentManager] = newValue
-        }
-    }
-
     /// Determines whether consent logging events should be sent to Tealium UDH￼.
     var consentLoggingEnabled: Bool {
         get {
@@ -45,9 +35,9 @@ public extension TealiumConfig {
     }
 
     /// Sets the consent policy (defaults to GDPR)￼. e.g. CCPA
-    var consentPolicy: TealiumConsentPolicy {
+    var consentPolicy: TealiumConsentPolicy? {
         get {
-            options[TealiumConsentConstants.policyKey] as? TealiumConsentPolicy ?? TealiumConsentPolicy.gdpr
+            options[TealiumConsentConstants.policyKey] as? TealiumConsentPolicy
         }
 
         set {

@@ -10,7 +10,7 @@ import Foundation
 import TealiumCore
 
 /// Dispatch Service Module for sending track data to the Tealium Webview.
-public class TealiumTagManagementModule: Dispatcher {
+public class TagManagementModule: Dispatcher {
 
     public var isReady = false
     public var config: TealiumConfig
@@ -19,7 +19,7 @@ public class TealiumTagManagementModule: Dispatcher {
     var tagManagement: TealiumTagManagementProtocol?
     var webViewState: Atomic<TealiumWebViewState>?
     weak var delegate: TealiumModuleDelegate?
-    public let id: String = TealiumModuleNames.tagmanagement
+    public let id: String = ModuleNames.tagmanagement
 
     /// Provided for unit testing￼.
     ///

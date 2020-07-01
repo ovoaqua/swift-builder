@@ -20,11 +20,11 @@ protocol TealiumConnectivityMonitorProtocol {
     func checkIsConnected(completion: @escaping ((Result<Bool, Error>) -> Void))
 }
 
-class TealiumConnectivity: Collector, TealiumConnectivityDelegate {
+public class ConnectivityModule: Collector, TealiumConnectivityDelegate {
 
-    var id: String = TealiumModuleNames.connectivity
+    public var id: String = ModuleNames.connectivity
 
-    var data: [String: Any]? {
+    public var data: [String: Any]? {
         if let connectionType = self.connectivityMonitor?.currentConnnectionType {
             return [TealiumConnectivityKey.connectionType: connectionType,
                     TealiumConnectivityKey.connectionTypeLegacy: connectionType,
@@ -36,7 +36,7 @@ class TealiumConnectivity: Collector, TealiumConnectivityDelegate {
         }
     }
 
-    var config: TealiumConfig {
+    public var config: TealiumConfig {
         willSet {
             connectivityMonitor?.config = newValue
         }
@@ -48,10 +48,10 @@ class TealiumConnectivity: Collector, TealiumConnectivityDelegate {
     var connectivityMonitor: TealiumConnectivityMonitorProtocol?
     var connectivityDelegates = TealiumMulticastDelegate<TealiumConnectivityDelegate>()
 
-    required init(config: TealiumConfig,
-                  delegate: TealiumModuleDelegate?,
-                  diskStorage: TealiumDiskStorageProtocol?,
-                  completion: (ModuleResult) -> Void) {
+    required public init(config: TealiumConfig,
+                         delegate: TealiumModuleDelegate?,
+                         diskStorage: TealiumDiskStorageProtocol?,
+                         completion: (ModuleResult) -> Void) {
         self.config = config
 
         if #available(iOS 12.0, tvOS 12.0, watchOS 5.0, OSX 10.14, *) {
@@ -98,14 +98,14 @@ class TealiumConnectivity: Collector, TealiumConnectivityDelegate {
     // MARK: Delegate Methods
 
     /// Called when network connectivity is lost.
-    func connectionLost() {
+    public func connectionLost() {
         connectivityDelegates.invoke {
             $0.connectionLost()
         }
     }
 
     /// Called when network connectivity is restored.
-    func connectionRestored() {
+    public func connectionRestored() {
         connectivityDelegates.invoke {
             $0.connectionRestored()
         }

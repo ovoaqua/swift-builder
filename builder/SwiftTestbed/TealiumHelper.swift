@@ -12,7 +12,8 @@ import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
 import TealiumRemoteCommands
-//import TealiumVisitorService
+//import TealiumCrash
+import TealiumVisitorService
 import TealiumLifecycle
 import TealiumLocation
 
@@ -45,13 +46,12 @@ class TealiumHelper: NSObject {
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .debug
-        config.enableConsentManager = true
         config.consentPolicy = .gdpr
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
-        config.shouldUseRemotePublishSettings = false
+        config.shouldUseRemotePublishSettings = true
         config.batchingEnabled = false
         config.memoryReportingEnabled = true
 //        config.sessionHandlingEnabled = true
@@ -63,6 +63,17 @@ class TealiumHelper: NSObject {
         config.batterySaverEnabled = true
         config.remoteAPIEnabled = true
         logger = config.logger
+        config.collectors = [Collectors.Attribution,
+                             Collectors.Lifecycle,
+                             Collectors.Connectivity,
+//                             Collectors.Crash,
+                             Collectors.Location,
+                             Collectors.VisitorService,
+        ]
+        
+        config.dispatchers = [Dispatchers.Collect,
+                              Dispatchers.TagManagement,
+                              Dispatchers.RemoteCommands]
 //        tealium?.dataLayerManager
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 

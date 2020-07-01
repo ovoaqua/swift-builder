@@ -24,9 +24,13 @@ public extension Tealium {
     /// - Returns: `VisitorServiceManager` instance
     var visitorService:  TealiumVisitorServiceManager? {
         (zz_internal_modulesManager?.modules.first {
-            type(of: $0) == TealiumVisitorServiceModule.self
-        } as? TealiumVisitorServiceModule)?.visitorServiceManager as? TealiumVisitorServiceManager
+            type(of: $0) == VisitorServiceModule.self
+        } as? VisitorServiceModule)?.visitorServiceManager as? TealiumVisitorServiceManager
     }
+}
+
+public extension Collectors {
+    static let VisitorService = VisitorServiceModule.self
 }
 
 public extension TealiumConfig {

@@ -152,7 +152,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = []
         modulesManager.dispatchers = []
         modulesManager.dataLayerManager = DummyDataManagerNoData()
-        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        let connectivity = ConnectivityModule(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         modulesManager.dispatchManager = DummyDispatchManagerSendTrack(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
@@ -166,7 +166,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = []
         modulesManager.dispatchers = []
         modulesManager.dataLayerManager = DummyDataManagerNoData()
-        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        let connectivity = ConnectivityModule(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         modulesManager.dispatchManager = DummyDispatchManagerRequestTrack(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         let track = TealiumTrackRequest(data: [:])
@@ -180,7 +180,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = []
         modulesManager.dispatchers = []
         modulesManager.dataLayerManager = DummyDataManagerNoData()
-        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        let connectivity = ConnectivityModule(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         modulesManager.dispatchManager = DummyDispatchManagerdequeue(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
 
         modulesManager.requestDequeue(reason: "test")
@@ -230,7 +230,7 @@ class TealiumModulesManagerTests: XCTestCase {
         modulesManager.collectors = [collector]
         modulesManager.dispatchListeners = []
         modulesManager.dispatchValidators = []
-        let connectivity = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        let connectivity = ConnectivityModule(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         modulesManager.dispatchManager = DummyDispatchManagerConfigUpdate(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: testTealiumConfig)
         let config = testTealiumConfig
         config.logLevel = .info
@@ -403,7 +403,7 @@ class DummyDispatchManagerConfigUpdate: DispatchManagerProtocol {
         }
     }
 
-    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: ConnectivityModule, config: TealiumConfig) {
         self.dispatchers = dispatchers
         self.dispatchValidators = dispatchValidators
         self.dispatchListeners = dispatchListeners
@@ -433,7 +433,7 @@ class DummyDispatchManagerdequeue: DispatchManagerProtocol {
         }
     }
 
-    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: ConnectivityModule, config: TealiumConfig) {
         self.dispatchers = dispatchers
         self.dispatchValidators = dispatchValidators
         self.dispatchListeners = dispatchListeners
@@ -463,7 +463,7 @@ class DummyDispatchManagerRequestTrack: DispatchManagerProtocol {
         }
     }
 
-    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: ConnectivityModule, config: TealiumConfig) {
         self.dispatchers = dispatchers
         self.dispatchValidators = dispatchValidators
         self.dispatchListeners = dispatchListeners
@@ -494,7 +494,7 @@ class DummyDispatchManagerSendTrack: DispatchManagerProtocol {
         }
     }
 
-    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: TealiumConnectivity, config: TealiumConfig) {
+    required init(dispatchers: [Dispatcher]?, dispatchValidators: [DispatchValidator]?, dispatchListeners: [DispatchListener]?, connectivityManager: ConnectivityModule, config: TealiumConfig) {
         self.dispatchers = dispatchers
         self.dispatchValidators = dispatchValidators
         self.dispatchListeners = dispatchListeners

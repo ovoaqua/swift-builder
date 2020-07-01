@@ -68,7 +68,7 @@ public class TealiumConsentManager {
         // try to load config from persistent storage first
         let preferences = consentPreferencesStorage?.preferences ?? TealiumUserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
 
-        switch config.consentPolicy {
+        switch config.consentPolicy ?? .gdpr {
         case .ccpa:
             self.currentPolicy = CCPAConsentPolicy(preferences)
         case .gdpr:

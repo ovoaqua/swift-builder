@@ -10,7 +10,7 @@ import Foundation
 
 class TealiumConsentManagerModule: Collector, DispatchValidator {
 
-    public let id: String = TealiumModuleNames.consentmanager
+    public let id: String = ModuleNames.consentmanager
     var config: TealiumConfig
     var consentManager: TealiumConsentManager?
     weak var delegate: TealiumModuleDelegate?
@@ -32,7 +32,7 @@ class TealiumConsentManagerModule: Collector, DispatchValidator {
 
     func updateConfig(_ request: TealiumUpdateConfigRequest) {
         let newConfig = request.config.copy
-        guard newConfig.enableConsentManager else {
+        guard newConfig.consentPolicy != nil else {
             consentManager = nil
             return
         }

@@ -71,17 +71,15 @@ public extension TealiumConfig {
 
 }
 
-#if TEST
-#else
 public extension Tealium {
 
     /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
     internal var tagManagement: TealiumTagManagementProtocol? {
         let module = zz_internal_modulesManager?.modules.first {
-            $0 is TealiumTagManagementModule
+            $0 is TagManagementModule
         }
 
-        return (module as? TealiumTagManagementModule)?.tagManagement
+        return (module as? TagManagementModule)?.tagManagement
     }
 
     /// Sets a new root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
@@ -91,5 +89,9 @@ public extension Tealium {
         self.tagManagement?.setRootView(view, completion: nil)
     }
 }
-#endif
+
+public extension Dispatchers {
+    static let TagManagement = TagManagementModule.self
+}
+
 #endif

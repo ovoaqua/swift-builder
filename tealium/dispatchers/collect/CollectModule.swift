@@ -10,9 +10,9 @@ import Foundation
 import TealiumCore
 
 /// Dispatch Service Module for sending track data to the Tealium Collect or custom endpoint.
-public class TealiumCollectModule: Dispatcher {
+public class CollectModule: Dispatcher {
 
-    public let id: String = TealiumModuleNames.collect
+    public let id: String = ModuleNames.collect
     var collect: TealiumCollectProtocol?
     public var isReady = false
     weak var delegate: TealiumModuleDelegate?

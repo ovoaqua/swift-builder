@@ -11,10 +11,10 @@ import Foundation
 import TealiumCore
 #endif
 
-class TealiumAttributionModule: Collector {
-    let id: String = TealiumModuleNames.attribution
+public class AttributionModule: Collector {
+    public let id: String = ModuleNames.attribution
 
-    var data: [String: Any]? {
+    public var data: [String: Any]? {
         self.attributionData.allAttributionData
     }
 

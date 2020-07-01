@@ -10,6 +10,12 @@ import UIKit
 // MARK: VALUES
 #endif
 
+public enum Collectors {
+    static let AppData = AppDataModule.self
+}
+
+public enum Dispatchers {}
+
 public enum TealiumValue {
     public static let libraryName = "swift"
     public static let libraryVersion = "2.0.0"
@@ -20,18 +26,18 @@ public enum TealiumValue {
     public static let tiqURLSuffix = "mobile.html"
     public static let defaultBatchExpirationDays = 7
     public static let defaultMaxQueueSize = 40
-    public static let optionalCollectors = [TealiumOptionalCollectors.attribution,
+    public static let optionalCollectors = [OptionalCollectors.attribution,
                                             // TealiumOptionalCollectors.autotracking,
-                                            TealiumOptionalCollectors.crash,
-                                            TealiumOptionalCollectors.lifecycle,
-                                            TealiumOptionalCollectors.location,
-                                            TealiumOptionalCollectors.visitorservice]
-    public static let knownDispatchers = [TealiumKnownDispatchers.collect,
-                                          TealiumKnownDispatchers.tagmanagement,
-                                          TealiumKnownDispatchers.remotecommands]
+                                            OptionalCollectors.crash,
+                                            OptionalCollectors.lifecycle,
+                                            OptionalCollectors.location,
+                                            OptionalCollectors.visitorservice]
+    public static let knownDispatchers = [KnownDispatchers.collect,
+                                          KnownDispatchers.tagmanagement,
+                                          KnownDispatchers.remotecommands]
 }
 
-public enum TealiumOptionalCollectors {
+public enum OptionalCollectors {
     #if COCOAPODS
     public static let attribution = "TealiumSwift.TealiumAttributionModule"
     public static let autotracking = "TealiumSwift.TealiumAutotrackingModule"
@@ -49,7 +55,7 @@ public enum TealiumOptionalCollectors {
     #endif
 }
 
-public enum TealiumKnownDispatchers {
+public enum KnownDispatchers {
     #if COCOAPODS
     public static let collect = "TealiumSwift.TealiumCollectModule"
     public static let tagmanagement = "TealiumSwift.TealiumTagManagementModule"
@@ -61,7 +67,7 @@ public enum TealiumKnownDispatchers {
     #endif
 }
 
-public enum TealiumModuleNames {
+public enum ModuleNames {
     public static let autotracking = "AutoTracking"
     public static let appdata = "AppData"
     public static let attribution = "Attribution"

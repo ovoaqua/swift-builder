@@ -145,13 +145,11 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
     /// - Parameter currentData: `[String: Any]` containing existing session data.
     /// - Returns: `Bool` `true` if current timestamps exist in active session data.
     func currentTimestampsExist(_ currentData: [String: Any]) -> Bool {
-        TealiumQueues.backgroundConcurrentQueue.read {
-            currentData[TealiumKey.timestampEpoch] != nil &&
-                currentData[TealiumKey.timestamp] != nil &&
-                currentData[TealiumKey.timestampLocal] != nil &&
-                currentData[TealiumKey.timestampOffset] != nil &&
-                currentData[TealiumKey.timestampUnix] != nil
-        }
+        currentData[TealiumKey.timestampEpoch] != nil &&
+            currentData[TealiumKey.timestamp] != nil &&
+            currentData[TealiumKey.timestampLocal] != nil &&
+            currentData[TealiumKey.timestampOffset] != nil &&
+            currentData[TealiumKey.timestampUnix] != nil
     }
 
     /// Deletes specified values from storage.

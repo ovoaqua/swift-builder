@@ -12,14 +12,14 @@ import TealiumCore
 #endif
 
 /// Module to add app related data to track calls.
-class TealiumLocationModule: Collector {
+public class LocationModule: Collector {
 
-    public let id: String = TealiumModuleNames.location
-    var config: TealiumConfig
+    public let id: String = ModuleNames.location
+    public var config: TealiumConfig
     weak var delegate: TealiumModuleDelegate?
     var tealiumLocationManager: TealiumLocation?
 
-    var data: [String: Any]? {
+    public var data: [String: Any]? {
         var newData = [String: Any]()
         guard let tealiumLocationManager = tealiumLocationManager else {
             return nil
@@ -33,7 +33,7 @@ class TealiumLocationModule: Collector {
         return newData
     }
 
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
+    required public init(config: TealiumConfig, delegate: TealiumModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
         self.delegate = delegate
 
@@ -54,7 +54,7 @@ class TealiumLocationModule: Collector {
 
 }
 
-extension TealiumLocationModule: LocationDelegate {
+extension LocationModule: LocationDelegate {
 
     func didEnterGeofence(_ data: [String: Any]) {
         let trackRequest = TealiumTrackRequest(data: data, completion: nil)

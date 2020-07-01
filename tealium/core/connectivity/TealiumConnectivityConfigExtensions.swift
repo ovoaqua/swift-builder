@@ -33,3 +33,7 @@ public extension TealiumConfig {
         }
     }
 }
+
+public extension Collectors {
+    static let Connectivity = ConnectivityModule.self
+}

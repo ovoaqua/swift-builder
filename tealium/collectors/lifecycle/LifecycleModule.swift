@@ -20,9 +20,9 @@ import UIKit
 import TealiumCore
 #endif
 
-public class TealiumLifecycleModule: Collector {
+public class LifecycleModule: Collector {
 
-    public let id: String = TealiumModuleNames.lifecycle
+    public let id: String = ModuleNames.lifecycle
     weak var delegate: TealiumModuleDelegate?
     var enabledPrior = false
     var lifecycleData = [String: Any]()
@@ -40,7 +40,7 @@ public class TealiumLifecycleModule: Collector {
                          completion: ModuleCompletion) {
         self.delegate = delegate
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
-                                                             forModule: TealiumModuleNames.lifecycle.lowercased(),
+                                                             forModule: ModuleNames.lifecycle.lowercased(),
                                                              isCritical: true)
         self.config = config
         if config.lifecycleAutoTrackingEnabled {
@@ -142,7 +142,7 @@ public class TealiumLifecycleModule: Collector {
     }
 }
 
-extension TealiumLifecycleModule: TealiumLifecycleEvents {
+extension LifecycleModule: TealiumLifecycleEvents {
     public func sleep() {
         lifecycleDetected(type: .sleep)
     }

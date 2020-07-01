@@ -57,20 +57,20 @@ open class TealiumConfig {
             options[TealiumKey.dispatchListeners] = newValue
         }
     }
-    
-    public var collectors: [Collector]? {
+
+    public var collectors: [Collector.Type]? {
         get {
-            options[TealiumKey.collectors] as? [Collector]
+            options[TealiumKey.collectors] as? [Collector.Type]
         }
 
         set {
             options[TealiumKey.collectors] = newValue
         }
     }
-    
-    public var dispatchers: [Dispatcher]? {
+
+    public var dispatchers: [Dispatcher.Type]? {
         get {
-            options[TealiumKey.dispatchers] as? [Dispatcher]
+            options[TealiumKey.dispatchers] as? [Dispatcher.Type]
         }
 
         set {

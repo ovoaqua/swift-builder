@@ -10,7 +10,7 @@ import Foundation
 
 public class AppDataModule: Collector, AppDataCollection {
 
-    public let id: String = TealiumModuleNames.appdata
+    public let id: String = ModuleNames.appdata
     private(set) var uuid: String?
     private var diskStorage: TealiumDiskStorageProtocol!
     private var bundle: Bundle

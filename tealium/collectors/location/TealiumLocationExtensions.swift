@@ -18,10 +18,14 @@ extension Tealium {
     ///
     /// - Returns: `TealiumLocation?` instance (nil if disabled)
     var location: TealiumLocation? {
-        let module = (zz_internal_modulesManager?.modules.first { $0 is TealiumLocationModule }) as? TealiumLocationModule
+        let module = (zz_internal_modulesManager?.modules.first { $0 is LocationModule }) as? LocationModule
 
         return module?.tealiumLocationManager
     }
+}
+
+public extension Collectors {
+    static let Location = LocationModule.self
 }
 
 public extension TealiumConfig {

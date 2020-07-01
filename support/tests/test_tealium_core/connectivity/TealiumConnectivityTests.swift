@@ -11,29 +11,29 @@ import XCTest
 
 class TealiumConnectivityTests: XCTestCase {
     
-    var legacyConnectivityRefreshEnabled: TealiumConnectivity {
+    var legacyConnectivityRefreshEnabled: ConnectivityModule {
         let config = defaultTealiumConfig.copy
         config.connectivityRefreshEnabled = true
-        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
+        let connectivity = ConnectivityModule(config: config, delegate: nil, diskStorage: nil) { result in }
         connectivity.connectivityMonitor = LegacyConnectivityMonitor(config: config) { result in
             
         }
         return connectivity
     }
     
-    var legacyConnectivityRefreshDisabled: TealiumConnectivity {
+    var legacyConnectivityRefreshDisabled: ConnectivityModule {
         let config = defaultTealiumConfig.copy
         config.connectivityRefreshEnabled = false
-        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
+        let connectivity = ConnectivityModule(config: config, delegate: nil, diskStorage: nil) { result in }
         connectivity.connectivityMonitor = LegacyConnectivityMonitor(config: config) { result in
             
         }
         return connectivity
     }
     
-    var nwPathConnectivity: TealiumConnectivity {
+    var nwPathConnectivity: ConnectivityModule {
         let config = defaultTealiumConfig.copy
-        let connectivity = TealiumConnectivity(config: config, delegate: nil, diskStorage: nil) { result in }
+        let connectivity = ConnectivityModule(config: config, delegate: nil, diskStorage: nil) { result in }
         return connectivity
     }
     
