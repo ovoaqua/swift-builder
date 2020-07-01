@@ -33,7 +33,7 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
         let command = TealiumRemoteCommand(commandId: commandId,
                                            description: "") { _ in
 
-                                            // Unused
+            // Unused
         }
 
         let remoteCommandsManager = TealiumRemoteCommandsManager(delegate: nil)
@@ -51,7 +51,7 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
         let commandId = "test"
         let remoteCommand = TealiumRemoteCommand(commandId: commandId,
                                                  description: "test") { _ in
-                                                    //
+            //
         }
 
         let array = [remoteCommand]

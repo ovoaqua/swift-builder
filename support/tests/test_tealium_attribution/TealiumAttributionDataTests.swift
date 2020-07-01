@@ -1,5 +1,5 @@
 //
-//  TealiumAttributionModuleTests.swift
+//  AttributionModuleTests.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 11/16/16.
@@ -125,10 +125,10 @@ class TealiumAttributionDataTests: XCTestCase {
 
             attributionValues.forEach { key, mockValue in
                 guard let tealiumKey = keyTranslation[key],
-                    let mockValue = mockValue as? String,
-                    let tealiumValue = appleAttributionDetails[tealiumKey] else {
-                        XCTFail("Key could not be found")
-                        return
+                      let mockValue = mockValue as? String,
+                      let tealiumValue = appleAttributionDetails[tealiumKey] else {
+                    XCTFail("Key could not be found")
+                    return
                 }
                 XCTAssertEqual(tealiumValue, mockValue)
             }

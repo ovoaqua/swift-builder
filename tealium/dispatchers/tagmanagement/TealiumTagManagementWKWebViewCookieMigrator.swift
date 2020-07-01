@@ -13,7 +13,7 @@ import TealiumCore
 #endif
 
 // MARK: Cookie migration from HTTPCookieStore/UIWebView
-extension TealiumTagManagementWKWebView {
+extension TagManagementWKWebView {
 
     /// Migrates cookies from HTTPCookieStore to a specified WKWebView instance
     ///

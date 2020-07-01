@@ -1,5 +1,5 @@
 //
-//  TealiumAttributionModuleTests.swift
+//  AttributionModuleTests.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 11/16/16.
@@ -12,9 +12,9 @@
 @testable import TealiumCore
 import XCTest
 
-class TealiumAttributionModuleTests: XCTestCase {
+class AttributionModuleTests: XCTestCase {
 
-    var module: TealiumAttributionModule?
+    var module: AttributionModule?
     var config: TealiumConfig!
     var expectation: XCTestExpectation?
     var payload: [String: Any]?
@@ -22,7 +22,7 @@ class TealiumAttributionModuleTests: XCTestCase {
 
     override func setUp() {
         config = TestTealiumHelper().getConfig()
-        module = TealiumAttributionModule(config: config, delegate: nil, diskStorage: AttributionMockDiskStorage(), attributionData: attributionData)
+        module = AttributionModule(config: config, delegate: nil, diskStorage: AttributionMockDiskStorage(), attributionData: attributionData)
     }
 
     func testGetAttributionData() {

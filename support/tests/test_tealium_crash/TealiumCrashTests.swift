@@ -131,8 +131,23 @@ class TealiumCrashTests: XCTestCase {
 }
 
 public class MockTealiumDeviceDataCollection: TealiumDeviceDataCollection {
+    public var orientation: [String: String] {
+        return orientationDictionary
+    }
 
-    var memoryUsage = [String: String]()
+    public var model: [String: String] {
+        return modelDictionary
+    }
+
+    public var basicModel: String {
+        basicModelProperty
+    }
+
+    public var cpuType: String {
+        architecture
+    }
+
+    public var memoryUsage = [String: String]()
     var orientationDictionary = [String: String]()
     var modelDictionary = [String: String]()
     var basicModelProperty = ""
@@ -140,22 +155,6 @@ public class MockTealiumDeviceDataCollection: TealiumDeviceDataCollection {
 
     public func getMemoryUsage() -> [String: String] {
         return memoryUsage
-    }
-
-    public func orientation() -> [String: String] {
-        return orientationDictionary
-    }
-
-    public func model() -> [String: String] {
-        return modelDictionary
-    }
-
-    public func basicModel() -> String {
-        return basicModelProperty
-    }
-
-    public func cpuType() -> String {
-        return architecture
     }
 }
 

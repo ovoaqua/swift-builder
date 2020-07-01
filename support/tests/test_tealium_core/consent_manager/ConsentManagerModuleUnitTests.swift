@@ -18,7 +18,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
 
     override func setUp() {
         config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
-        config.enableConsentManager = true
+        config.consentPolicy = .gdpr
     }
     
     func testConsentManagerIsDisabledAutomatically() {
@@ -30,13 +30,13 @@ class ConsentManagerModuleUnitTests: XCTestCase {
     func testUpdateConfig() {
         module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         var newConfig = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment")
-        newConfig.enableConsentManager = false
+        newConfig.consentPolicy = nil
         var updateRequest = TealiumUpdateConfigRequest(config: newConfig)
         module.updateConfig(updateRequest)
         XCTAssertNil(module.consentManager)
         let expect = expectation(description: "consent mgr init")
         newConfig = TealiumConfig(account: "testAccount2", profile: "testProfile2", environment: "testEnvironment")
-        newConfig.enableConsentManager = true
+        newConfig.consentPolicy = .gdpr
         updateRequest = TealiumUpdateConfigRequest(config: newConfig)
         module.updateConfig(updateRequest)
         expect.fulfill()
@@ -141,7 +141,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
     }
 
     func testAddConsentDataToTrackWhenConsented() {
-        config.enableConsentManager = true
+        config.consentPolicy = .gdpr
         module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         module.consentManager?.userConsentStatus = .consented
         let expected: [String: Any] = [
@@ -172,7 +172,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
     }
 
     func testAddConsentDataToTrackWhenNotConsented() {
-        config.enableConsentManager = true
+        config.consentPolicy = .gdpr
         module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         module.consentManager?.userConsentStatus = .notConsented
         let expected: [String: Any] = [
@@ -189,7 +189,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
     }
 
     func testAddConsentDataToTrackWhenResetConsentStatus() {
-        config.enableConsentManager = true
+        config.consentPolicy = .gdpr
         module = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         module.consentManager?.userConsentStatus = .consented
         module.consentManager?.resetUserConsentPreferences()

@@ -117,12 +117,14 @@ public class ModulesManager {
                                                connectivityManager: self.connectivityManager,
                                                config: self.config)
         self.setupCollectors(config: self.config)
-        let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.modulesManagerInitialized, messages:
-                                            ["\(ModulesManagerLogMessages.collectorsInitialized): \(self.collectors.map { $0.id })",
-                                             "\(ModulesManagerLogMessages.dispatchValidatorsInitialized): \(self.dispatchValidators.map { $0.id })",
-                                             "\(ModulesManagerLogMessages.dispatchersInitialized): \(self.dispatchers.map { $0.id })"
-                                            ], info: nil, logLevel: .info, category: .`init`)
-        self.logger?.log(logRequest)
+        TealiumQueues.backgroundSerialQueue.async {
+            let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.modulesManagerInitialized, messages:
+                                                ["\(ModulesManagerLogMessages.collectorsInitialized): \(self.collectors.map { $0.id })",
+                                                 "\(ModulesManagerLogMessages.dispatchValidatorsInitialized): \(self.dispatchValidators.map { $0.id })",
+                                                 "\(ModulesManagerLogMessages.dispatchersInitialized): \(self.dispatchers.map { $0.id })"
+                                                ], info: nil, logLevel: .info, category: .`init`)
+            self.logger?.log(logRequest)
+        }
     }
 
     func updateConfig(config: TealiumConfig) {

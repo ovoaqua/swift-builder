@@ -190,7 +190,7 @@ class ConsentManagerTests: XCTestCase {
 
     func testShouldDropTrackingCall() {
         let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
-        config.enableConsentManager = true
+        config.consentPolicy = .gdpr
         let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerEmptyDelegate
         consentManagerModule.consentManager?.userConsentStatus = .notConsented
@@ -200,7 +200,7 @@ class ConsentManagerTests: XCTestCase {
     
     func testShouldDropTrackingCallCCPA() {
         let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
-        config.enableConsentManager = true
+        config.consentPolicy = .ccpa
         let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerCCPA
         consentManagerModule.consentManager?.userConsentStatus = .notConsented
@@ -210,7 +210,7 @@ class ConsentManagerTests: XCTestCase {
 
     func testShouldQueueTrackingCall() {
         let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
-        config.enableConsentManager = true
+        config.consentPolicy = .gdpr
         let consentManagerModule = TealiumConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerCCPA
         let localConsentManager = consentManagerModule.consentManager

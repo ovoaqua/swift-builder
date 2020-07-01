@@ -1,5 +1,5 @@
 //
-//  TealiumCrashModuleTests.swift
+//  CrashModuleTests.swift
 //  test-swift-tests-ios-crash
 //
 //  Created by Jonathan Wong on 2/12/18.
@@ -10,16 +10,16 @@
 @testable import TealiumCrash
 import XCTest
 
-class TealiumCrashModuleTests: XCTestCase {
+class CrashModuleTests: XCTestCase {
 
-    var crashModule: TealiumCrashModule!
+    var crashModule: CrashModule!
     var config: TealiumConfig!
     var mockCrashReporter: MockTealiumCrashReporter!
 
     override func setUp() {
         super.setUp()
         config = TealiumConfig(account: "TestAccount", profile: "TestProfile", environment: "TestEnvironment")
-        crashModule = TealiumCrashModule(config: config, delegate: self, diskStorage: nil, completion: { _ in })
+        crashModule = CrashModule(config: config, delegate: self, diskStorage: nil, completion: { _ in })
         mockCrashReporter = MockTealiumCrashReporter()
     }
 
@@ -49,8 +49,17 @@ class TealiumCrashModuleTests: XCTestCase {
     }
 }
 
-extension TealiumCrashModuleTests: TealiumModuleDelegate {
+extension CrashModuleTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
     func requestTrack(_ track: TealiumTrackRequest) {
+
+    }
+
+    func requestDequeue(reason: String) {
+
     }
 }
 

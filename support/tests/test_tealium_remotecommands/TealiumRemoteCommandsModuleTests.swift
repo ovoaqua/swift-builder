@@ -1,5 +1,5 @@
 //
-//  TealiumRemoteCommandsModuleTests.swift
+//  RemoteCommandsModuleTests.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 3/15/17.
@@ -10,11 +10,11 @@
 @testable import TealiumRemoteCommands
 import XCTest
 
-class TealiumRemoteCommandsModuleTests: XCTestCase {
+class RemoteCommandsModuleTests: XCTestCase {
 
     let helper = TestTealiumHelper()
     var config: TealiumConfig!
-    var module: TealiumRemoteCommandsModule!
+    var module: RemoteCommandsModule!
     var remoteCommandsManager = MockRemoteCommandsManager()
     let remoteCommand = MockRemoteCommand()
     var processExpectation: XCTestExpectation?
@@ -31,7 +31,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
 
     func testDisableHTTPCommandsViaConfig() {
         config.remoteHTTPCommandDisabled = true
-        module = TealiumRemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
+        module = RemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
         guard let remoteCommands = module.remoteCommands else {
             XCTFail("remoteCommands array should not be nil")
             return
@@ -45,12 +45,12 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
         processExpectation = expectation(description: "testMockProcessTealiumRemoteCommandRequest")
         config.remoteHTTPCommandDisabled = false
 
-        module = TealiumRemoteCommandsModule(config: config, delegate: self, completion: { _ in })
+        module = RemoteCommandsModule(config: config, delegate: self, completion: { _ in })
         // Add remote command
         let commandId = "test"
         let remoteCommand = TealiumRemoteCommand(commandId: commandId,
                                                  description: "") { _ in
-                                                    // self.processExpectation?.fulfill()
+            // self.processExpectation?.fulfill()
         }
         module.remoteCommands?.add(remoteCommand)
 
@@ -75,7 +75,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
 
     func testUpdateConfig() {
         config.remoteHTTPCommandDisabled = false
-        module = TealiumRemoteCommandsModule(config: config, delegate: self, completion: { _ in })
+        module = RemoteCommandsModule(config: config, delegate: self, completion: { _ in })
         XCTAssertEqual(module.remoteCommands?.commands.count, 1)
         var newRemoteCommand = TealiumRemoteCommand(commandId: "test", description: "test") { _ in
 
@@ -97,7 +97,7 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
     }
 
     func testUpdateReservedCommandsWhenAlreadyAdded() {
-        module = TealiumRemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
+        module = RemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
         module.reservedCommandsAdded = true
         XCTAssertEqual(remoteCommandsManager.addCount, 0)
         XCTAssertEqual(remoteCommandsManager.removeCommandWithIdCount, 0)
@@ -105,19 +105,19 @@ class TealiumRemoteCommandsModuleTests: XCTestCase {
 
     func testInitializeWithDefaultCommands() {
         config.remoteHTTPCommandDisabled = false
-        module = TealiumRemoteCommandsModule(config: config, delegate: self, completion: { _ in })
+        module = RemoteCommandsModule(config: config, delegate: self, completion: { _ in })
         XCTAssertEqual(module.remoteCommands?.commands.count, 1)
     }
 
     func testInitializeDefaultCommandsDisabled() {
         config.remoteHTTPCommandDisabled = true
-        module = TealiumRemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
+        module = RemoteCommandsModule(config: config, delegate: self, remoteCommands: remoteCommandsManager)
         XCTAssertEqual(module.remoteCommands?.commands.count, 0)
     }
 
 }
 
-extension TealiumRemoteCommandsModuleTests: TealiumModuleDelegate {
+extension RemoteCommandsModuleTests: TealiumModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
         if let _ = request as? TealiumRemoteCommandRequest {
             self.processExpectation?.fulfill()

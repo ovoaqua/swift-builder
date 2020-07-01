@@ -59,7 +59,7 @@ class EventDataTests: XCTestCase {
         let multi = ["itemTwo": "test2", "itemThree": "test3"]
         eventData.insert(from: multi, expires: .distantFuture)
         let expected: [String: Any] = ["itemOne": "test1", "itemTwo": "test2", "itemThree": "test3"]
-        let actual = eventData.allData
+        let actual = eventData.all
         XCTAssert(NSDictionary(dictionary: actual).isEqual(to: expected))
     }
 

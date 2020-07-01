@@ -18,22 +18,22 @@ public extension TealiumConfig {
     /// Adds optional delegates to the WebView instance.
     var webViewDelegates: [WKNavigationDelegate]? {
         get {
-            options[TealiumTagManagementConfigKey.delegate] as? [WKNavigationDelegate]
+            options[TagManagementConfigKey.delegate] as? [WKNavigationDelegate]
         }
 
         set {
-            options[TealiumTagManagementConfigKey.delegate] = newValue
+            options[TagManagementConfigKey.delegate] = newValue
         }
     }
 
     /// Optional override for the tag management webview URL.
     var tagManagementOverrideURL: String? {
         get {
-            options[TealiumTagManagementConfigKey.overrideURL] as? String
+            options[TagManagementConfigKey.overrideURL] as? String
         }
 
         set {
-            options[TealiumTagManagementConfigKey.overrideURL] = newValue
+            options[TagManagementConfigKey.overrideURL] = newValue
         }
     }
 
@@ -44,28 +44,28 @@ public extension TealiumConfig {
         if let overrideWebviewURL = tagManagementOverrideURL {
             return URL(string: overrideWebviewURL)
         } else {
-            return URL(string: "\(TealiumTagManagementKey.defaultUrlStringPrefix)/\(self.account)/\(self.profile)/\(self.environment)/mobile.html")
+            return URL(string: "\(TagManagementKey.defaultUrlStringPrefix)/\(self.account)/\(self.profile)/\(self.environment)/mobile.html")
         }
     }
 
     /// Sets a root view for `WKWebView` to be attached to. Only required for complex view hierarchies.
     var rootView: UIView? {
         get {
-            options[TealiumTagManagementConfigKey.uiview] as? UIView
+            options[TagManagementConfigKey.uiview] as? UIView
         }
 
         set {
-            options[TealiumTagManagementConfigKey.uiview] = newValue
+            options[TagManagementConfigKey.uiview] = newValue
         }
     }
 
     var shouldAddCookieObserver: Bool {
         get {
-            return options[TealiumTagManagementConfigKey.cookieObserver] as? Bool ?? true
+            return options[TagManagementConfigKey.cookieObserver] as? Bool ?? true
         }
 
         set {
-            options[TealiumTagManagementConfigKey.cookieObserver] = newValue
+            options[TagManagementConfigKey.cookieObserver] = newValue
         }
     }
 
@@ -74,7 +74,7 @@ public extension TealiumConfig {
 public extension Tealium {
 
     /// - Returns: `TealiumTagManagementProtocol` (`WKWebView` for iOS11+)
-    internal var tagManagement: TealiumTagManagementProtocol? {
+    internal var tagManagement: TagManagementProtocol? {
         let module = zz_internal_modulesManager?.modules.first {
             $0 is TagManagementModule
         }

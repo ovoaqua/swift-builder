@@ -16,7 +16,7 @@ class TealiumLocationTests: XCTestCase {
     static var expectations = [XCTestExpectation]()
     var locationManager: MockLocationManager!
     var config: TealiumConfig!
-    var tealiumLocationModule: TealiumLocationModule?
+    var locationModule: LocationModule?
 
     override func setUp() {
         guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
@@ -27,7 +27,7 @@ class TealiumLocationTests: XCTestCase {
         self.locationManager = locationManager
         TealiumLocationTests.expectations = [XCTestExpectation]()
         config = TealiumConfig(account: "tealiummobile", profile: "location", environment: "dev")
-        tealiumLocationModule = TealiumLocationModule(config: config, delegate: self, diskStorage: MockLocationDiskStorage(config: config), completion: { _ in })
+        locationModule = LocationModule(config: config, delegate: self, diskStorage: MockLocationDiskStorage(config: config), completion: { _ in })
     }
 
     override func tearDown() {
@@ -389,7 +389,7 @@ class TealiumLocationTests: XCTestCase {
                                    TealiumLocationKey.geofenceTransition: TealiumLocationKey.entered,
                                    TealiumKey.event: TealiumLocationKey.entered]
 
-        let tealiumLocation = TealiumLocation(config: config, locationDelegate: tealiumLocationModule,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: locationModule,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -412,7 +412,7 @@ class TealiumLocationTests: XCTestCase {
                                    TealiumLocationKey.geofenceTransition: TealiumLocationKey.exited,
                                    TealiumKey.event: TealiumLocationKey.exited]
 
-        let tealiumLocation = TealiumLocation(config: config, locationDelegate: tealiumLocationModule,
+        let tealiumLocation = TealiumLocation(config: config, locationDelegate: locationModule,
                                               locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -425,6 +425,10 @@ class TealiumLocationTests: XCTestCase {
 }
 
 extension TealiumLocationTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
     func requestDequeue(reason: String) {
 
     }
@@ -438,7 +442,7 @@ extension TealiumLocationTests: TealiumModuleDelegate {
                     $0.description == "testDidExitGeofence" ||
                     $0.description == "testSendGeofenceTrackingEvent"
             }
-        .forEach { $0.fulfill() }
+            .forEach { $0.fulfill() }
     }
 }
 
@@ -465,7 +469,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys.sorted(), data.keys.sorted())
         data.forEach {
             guard let value = $0.value as? String,
-                let expected = expected[$0.key] as? String else { return }
+                  let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations
@@ -480,7 +484,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys, data.keys)
         data.forEach {
             guard let value = $0.value as? String,
-                let expected = expected[$0.key] as? String else { return }
+                  let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations

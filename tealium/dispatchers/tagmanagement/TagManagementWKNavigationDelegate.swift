@@ -12,7 +12,7 @@ import WebKit
 import TealiumCore
 #endif
 
-extension TealiumTagManagementWKWebView: WKNavigationDelegate {
+extension TagManagementWKWebView: WKNavigationDelegate {
 
     /// Called when the WebView has finished loading a resource (DOM Complete)
     func webView(_ webView: WKWebView,
@@ -21,7 +21,7 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
            url == self.url {
             self.webviewStateDidChange(.loadSuccess, withError: nil)
         } else {
-            self.webviewStateDidChange(.loadFailure, withError: TealiumTagManagementError.webViewNotYetReady)
+            self.webviewStateDidChange(.loadFailure, withError: TagManagementError.webViewNotYetReady)
         }
 
         // forward to any listening delegates
@@ -115,7 +115,7 @@ extension TealiumTagManagementWKWebView: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        if self.currentState.value == WebViewState.didFailToLoad.rawValue {
+        if self.currentState.value == InternalWebViewState.didFailToLoad.rawValue {
             return
         }
         self.webviewStateDidChange(.loadFailure, withError: error)

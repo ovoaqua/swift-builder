@@ -16,8 +16,8 @@ public class TagManagementModule: Dispatcher {
     public var config: TealiumConfig
     var errorState = AtomicInteger(value: 0)
     var pendingTrackRequests = [(TealiumRequest, ModuleCompletion?)]()
-    var tagManagement: TealiumTagManagementProtocol?
-    var webViewState: Atomic<TealiumWebViewState>?
+    var tagManagement: TagManagementProtocol?
+    var webViewState: Atomic<WebViewState>?
     weak var delegate: TealiumModuleDelegate?
     public let id: String = ModuleNames.tagmanagement
 
@@ -26,7 +26,7 @@ public class TagManagementModule: Dispatcher {
     /// - Parameter tagManagement: Class instance conforming to `TealiumTagManagementProtocol`
     convenience init(config: TealiumConfig,
                      delegate: TealiumModuleDelegate,
-                     tagManagement: TealiumTagManagementProtocol) {
+                     tagManagement: TagManagementProtocol) {
         self.init(config: config, delegate: delegate) { _ in
         }
         self.tagManagement = tagManagement
@@ -37,7 +37,7 @@ public class TagManagementModule: Dispatcher {
                          completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate
-        self.tagManagement = tagManagement ?? TealiumTagManagementWKWebView(config: config, delegate: delegate)
+        self.tagManagement = tagManagement ?? TagManagementWKWebView(config: config, delegate: delegate)
         self.tagManagement?.enable(webviewURL: config.webviewURL,
                                    delegates: config.webViewDelegates,
                                    shouldAddCookieObserver: config.shouldAddCookieObserver,
@@ -49,7 +49,7 @@ public class TagManagementModule: Dispatcher {
                 if error != nil {
                     self.errorState.incrementAndGet()
                     self.webViewState?.value = .loadFailure
-                    completion?((.failure(TealiumTagManagementError.webViewNotYetReady), nil))
+                    completion?((.failure(TagManagementError.webViewNotYetReady), nil))
                 } else {
                     self.errorState.resetToZero()
                     self.webViewState = Atomic(value: .loadSuccess)
@@ -121,13 +121,13 @@ public class TagManagementModule: Dispatcher {
                 } else {
                     _ = self.errorState.incrementAndGet()
                     self.enqueue(track, completion: completion)
-                    completion?((.failure(TealiumTagManagementError.couldNotLoadURL), nil))
+                    completion?((.failure(TagManagementError.couldNotLoadURL), nil))
                 }
             }
             return
         } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
             self.enqueue(track, completion: completion)
-            completion?((.failure(TealiumTagManagementError.webViewNotYetReady), nil))
+            completion?((.failure(TagManagementError.webViewNotYetReady), nil))
             return
         }
 
@@ -207,7 +207,7 @@ public class TagManagementModule: Dispatcher {
     /// - Returns: `TealiumTrackRequest`
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
         var newTrack = request.trackDictionary
-        newTrack[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
+        newTrack[TealiumKey.dispatchService] = TagManagementKey.moduleName
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 

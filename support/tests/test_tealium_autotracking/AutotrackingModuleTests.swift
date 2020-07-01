@@ -1,5 +1,5 @@
 //
-//  TealiumAutotrackingModuleTests.swift
+//  AutotrackingModuleTests.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 12/22/16.
@@ -10,11 +10,11 @@
 @testable import TealiumCore
 import XCTest
 
-class TealiumAutotrackingModuleTests: XCTestCase {
+class AutotrackingModuleTests: XCTestCase {
 
-    var module: TealiumAutotrackingModule {
+    var module: AutotrackingModule {
         let config = testTealiumConfig.copy
-        return TealiumAutotrackingModule(config: config, delegate: self, diskStorage: nil) { _ in
+        return AutotrackingModule(config: config, delegate: self, diskStorage: nil) { _ in
 
         }
     }
@@ -37,27 +37,6 @@ class TealiumAutotrackingModuleTests: XCTestCase {
         super.tearDown()
     }
 
-    //
-    //    func testEnableDisable() {
-    //        XCTAssertTrue(module!.notificationsEnabled)
-    //
-    //        module!.disable(TealiumDisableRequest())
-    //
-    //        XCTAssertFalse(module!.notificationsEnabled)
-    //    }
-    //
-    //    func testRequestNoObjectEventTrack() {
-    //        // Should ignore requests from missing objects
-    //
-    //        let notification = Notification(name: Notification.Name(rawValue: "com.tealium.autotracking.event"),
-    //                                        object: nil,
-    //                                        userInfo: nil)
-    //
-    //        module.requestEventTrack(sender: notification)
-    //
-    //        XCTAssertTrue(requestProcess == nil, "Request process found when none should exists.")
-    //    }
-    //
     func testRequestEmptyEventTrack() {
         let module = self.module
         let testObject = TestObject()
@@ -207,7 +186,11 @@ class TealiumAutotrackingModuleTests: XCTestCase {
 
 }
 
-extension TealiumAutotrackingModuleTests: TealiumModuleDelegate {
+extension AutotrackingModuleTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
     func requestTrack(_ track: TealiumTrackRequest) {
         // TODO: Info and error callback handling
         track.completion?(true, nil, nil)

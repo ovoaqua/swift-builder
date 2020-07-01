@@ -62,7 +62,7 @@ class PerformanceTests: XCTestCase {
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", datasource: "testDatasource", options: [TealiumCollectKey.overrideCollectUrl: "https://6372509c65ca83cb33983be9c6f8f204.m.pipedream.net",
-                                                                                                                                                                TealiumVisitorServiceConstants.visitorServiceDelegate: self])
+                                                                                                                                                           TealiumVisitorServiceConstants.visitorServiceDelegate: self])
             self.stopMeasuring()
         }
     }
@@ -170,13 +170,13 @@ class PerformanceTests: XCTestCase {
 
     func testAttributionModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumAttributionModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+            _ = AttributionModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
             self.stopMeasuring()
         }
     }
 
     func testAttributionDataCollection() {
-        let module = TealiumAttributionModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+        let module = AttributionModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = module.data
             self.stopMeasuring()

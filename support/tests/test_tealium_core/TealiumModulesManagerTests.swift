@@ -9,7 +9,9 @@
 //@testable import TealiumAppData
 //@testable import TealiumCollect
 //@testable import TealiumConsentManager
+@testable import TealiumCollect
 @testable import TealiumCore
+@testable import TealiumTagManagement
 //@testable import TealiumDelegate
 //@testable import TealiumDeviceData
 //@testable import TealiumAttribution
@@ -28,13 +30,14 @@ class TealiumModulesManagerTests: XCTestCase {
 
     var modulesManager: ModulesManager {
         let config = testTealiumConfig
+        config.dispatchers = [Dispatchers.TagManagement, Dispatchers.Collect]
         config.logLevel = TealiumLogLevel.error
         config.loggerType = .print
-        return ModulesManager(config, eventDataManager: nil)
+        return ModulesManager(config, dataLayer: nil)
     }
 
     func modulesManagerForConfig(config: TealiumConfig) -> ModulesManager {
-        return ModulesManager(config, eventDataManager: nil)
+        return ModulesManager(config, dataLayer: nil)
     }
 
     override func setUp() {
@@ -54,7 +57,7 @@ class TealiumModulesManagerTests: XCTestCase {
         XCTAssertTrue(testTealiumConfig.isCollectEnabled)
         XCTAssertTrue(testTealiumConfig.isTagManagementEnabled)
 
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "TagManagement" }))
         XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Collect" }))
 
         let config = testTealiumConfig
@@ -63,14 +66,14 @@ class TealiumModulesManagerTests: XCTestCase {
         config.isTagManagementEnabled = true
         modulesManager.updateConfig(config: config)
         XCTAssertFalse(modulesManager.dispatchers.contains(where: { $0.id == "Collect" }))
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "TagManagement" }))
         config.isTagManagementEnabled = false
         modulesManager.updateConfig(config: config)
-        XCTAssertFalse(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
+        XCTAssertFalse(modulesManager.dispatchers.contains(where: { $0.id == "TagManagement" }))
         config.isTagManagementEnabled = true
         config.isCollectEnabled = true
         modulesManager.updateConfig(config: config)
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Tag Management" }))
+        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "TagManagement" }))
         XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "Collect" }))
     }
 
@@ -112,7 +115,7 @@ class TealiumModulesManagerTests: XCTestCase {
         XCTAssertEqual(modulesManager.collectors.count, 1)
         modulesManager.disableModule(id: "Dummy")
         XCTAssertEqual(modulesManager.collectors.count, 0)
-        modulesManager.disableModule(id: "Tag Management")
+        modulesManager.disableModule(id: "TagManagement")
         XCTAssertEqual(modulesManager.dispatchers.count, 1)
 
     }
@@ -125,11 +128,12 @@ class TealiumModulesManagerTests: XCTestCase {
 
         }
         modulesManager.addCollector(collector)
-        let data = modulesManager.gatherTrackData(for: ["testGatherTrackData": true]) as! [String: Bool]
-
-        XCTAssertEqual(["testGatherTrackData": true, "dummy": true], data)
+        var data = modulesManager.gatherTrackData(for: ["testGatherTrackData": true])
+        data["enabled_modules"] = nil
+        XCTAssertEqual(["testGatherTrackData": true, "dummy": true], data as! [String: Bool])
         modulesManager.dataLayerManager = DummyDataManager()
-        let dataWithEventData = modulesManager.gatherTrackData(for: ["testGatherTrackData": true]) as! [String: Bool]
+        var dataWithEventData = modulesManager.gatherTrackData(for: ["testGatherTrackData": true]) as! [String: Bool]
+        dataWithEventData["enabled_modules"] = nil
         XCTAssertEqual(["testGatherTrackData": true, "dummy": true, "eventData": true, "sessionData": true], dataWithEventData)
     }
 
@@ -321,8 +325,6 @@ class DummyCollector: Collector, DispatchListener, DispatchValidator {
         self.id = "Dummy"
     }
 
-    var id: String = "Dummy"
-
     var config: TealiumConfig {
         willSet {
             TealiumModulesManagerTests.expectatations["configPropertyUpdateModule"]?.fulfill()
@@ -360,11 +362,11 @@ class DummyDataManager: DataLayerManagerProtocol {
 
     }
 
-    func delete(forKeys: [String]) {
+    func delete(for Keys: [String]) {
 
     }
 
-    func delete(forKey key: String) {
+    func delete(for key: String) {
 
     }
 
@@ -542,11 +544,11 @@ class DummyDataManagerNoData: DataLayerManagerProtocol {
 
     }
 
-    func delete(forKeys: [String]) {
+    func delete(for Keys: [String]) {
 
     }
 
-    func delete(forKey key: String) {
+    func delete(for key: String) {
 
     }
 

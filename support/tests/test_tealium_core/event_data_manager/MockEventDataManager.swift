@@ -70,11 +70,11 @@ class MockEventDataManager: DataLayerManagerProtocol {
         
     }
 
-    func delete(forKeys: [String]) {
+    func delete(for keys: [String]) {
         deleteMultiCount += 1
     }
 
-    func delete(forKey key: String) {
+    func delete(for key: String) {
         deleteSingleCount += 1
     }
 

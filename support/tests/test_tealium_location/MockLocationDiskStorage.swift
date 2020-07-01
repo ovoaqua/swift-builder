@@ -27,8 +27,8 @@ class MockLocationDiskStorage: TealiumDiskStorageProtocol {
 
     func save<T>(_ data: T, completion: TealiumCompletion?) where T: Encodable {
         guard T.self == TealiumLocation.self,
-            let data = data as? TealiumLocation else {
-                return
+              let data = data as? TealiumLocation else {
+            return
         }
         self.locationData = data
         completion?(true, nil, nil)
@@ -52,8 +52,8 @@ class MockLocationDiskStorage: TealiumDiskStorageProtocol {
 
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
         guard T.self == TealiumLocation.self
-            else {
-                return nil
+        else {
+            return nil
         }
         if let locationData = self.locationData {
             return locationData as? T

@@ -1,5 +1,5 @@
 //
-//  TealiumAttributionModule.swift
+//  AttributionModule.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 11/16/16.

@@ -10,7 +10,7 @@
 @testable import TealiumTagManagement
 import WebKit
 
-class MockTagManagementWebView: TealiumTagManagementProtocol {
+class MockTagManagementWebView: TagManagementProtocol {
 
     var reloadCallCount = 0
     var evaluateJavascriptCallCount = 0

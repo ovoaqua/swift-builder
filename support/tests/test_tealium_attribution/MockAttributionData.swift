@@ -33,9 +33,7 @@ class MockAttributionData: TealiumAttributionDataProtocol {
     }
 
     var allAttributionData: [String: Any] {
-        guard var allData = appleAttributionDetails!.toDictionary() as? [String: Any] else {
-            return [:]
-        }
+        var allData = appleAttributionDetails!.toDictionary() as [String: Any]
         allData += volatileData
         return allData
     }

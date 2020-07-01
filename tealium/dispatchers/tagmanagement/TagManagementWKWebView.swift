@@ -13,14 +13,14 @@ import WebKit
 import TealiumCore
 #endif
 
-enum WebViewState: Int {
+enum InternalWebViewState: Int {
     case isLoaded = 0
     case isLoading = 1
     case didFailToLoad = 2
     case notYetLoaded = 3
 }
 
-class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
+class TagManagementWKWebView: NSObject, TagManagementProtocol {
 
     var webview: WKWebView?
     var webviewConfig: WKWebViewConfiguration?
@@ -31,7 +31,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     weak var view: UIView?
     var url: URL?
     var reloadHandler: TealiumCompletion?
-    var currentState: AtomicInteger = AtomicInteger(value: WebViewState.notYetLoaded.rawValue)
+    var currentState: AtomicInteger = AtomicInteger(value: InternalWebViewState.notYetLoaded.rawValue)
     weak var moduleDelegate: TealiumModuleDelegate?
 
     var delegates: TealiumMulticastDelegate<WKNavigationDelegate>? = TealiumMulticastDelegate<WKNavigationDelegate>()
@@ -121,14 +121,14 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
             self.webview = WKWebView(frame: .zero, configuration: config)
             self.webview?.navigationDelegate = self
             guard let webview = self.webview else {
-                self.enableCompletion?(false, TealiumWebviewError.webviewNotInitialized)
+                self.enableCompletion?(false, WebviewError.webviewNotInitialized)
                 return
             }
             // attach the webview to the view before continuing
             self.attachToUIView(specificView: specificView) { _ in
                 self.migrateCookies(forWebView: webview) {
                     guard let url = url else {
-                        self.enableCompletion?(false, TealiumWebviewError.webviewURLMissing)
+                        self.enableCompletion?(false, WebviewError.webviewURLMissing)
                         return
                     }
                     let request = URLRequest(url: url)
@@ -167,7 +167,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
             guard let self = self else {
                 return
             }
-            self.currentState = AtomicInteger(value: WebViewState.isLoading.rawValue)
+            self.currentState = AtomicInteger(value: InternalWebViewState.isLoading.rawValue)
             self.webview?.load(request)
         }
     }
@@ -179,7 +179,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
         guard webview != nil else {
             return false
         }
-        return WebViewState(rawValue: currentState.value) == WebViewState.isLoaded
+        return InternalWebViewState(rawValue: currentState.value) == InternalWebViewState.isLoaded
     }
 
     /// Process event data for UTAG delivery.
@@ -192,7 +192,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
         guard let javascriptString = data.tealiumJavaScriptTrackCall else {
             completion?(false,
                         ["original_payload": data, "sanitized_payload": data],
-                        TealiumTagManagementError.couldNotJSONEncodeData)
+                        TagManagementError.couldNotJSONEncodeData)
             return
         }
         TealiumQueues.mainQueue.async { [weak self] in
@@ -205,9 +205,9 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
         }
 
         var info = [String: Any]()
-        info[TealiumKey.dispatchService] = TealiumTagManagementKey.moduleName
-        info[TealiumTagManagementKey.jsCommand] = javascriptString
-        info += [TealiumTagManagementKey.payload: data]
+        info[TealiumKey.dispatchService] = TagManagementKey.moduleName
+        info[TagManagementKey.jsCommand] = javascriptString
+        info += [TagManagementKey.payload: data]
         self.evaluateJavascript(javascriptString) { result in
             info += result
             completion?(true, info, nil)
@@ -252,11 +252,11 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
             self.webview?.evaluateJavaScript(jsString) { result, error in
                 let info = Atomic(value: [String: Any]())
                 if let result = result {
-                    info.value += [TealiumTagManagementKey.jsResult: result]
+                    info.value += [TagManagementKey.jsResult: result]
                 }
 
                 if let error = error {
-                    info.value += [TealiumTagManagementKey.jsError: error]
+                    info.value += [TagManagementKey.jsError: error]
                 }
                 TealiumQueues.backgroundConcurrentQueue.write {
                     completion?(info.value)
@@ -270,11 +270,11 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
     /// - Parameters:
     ///     - state: `TealiumWebViewState` -  The webview state after the state change
     ///     - error: `Error?`
-    func webviewStateDidChange(_ state: TealiumWebViewState,
+    func webviewStateDidChange(_ state: WebViewState,
                                withError error: Error?) {
         switch state {
         case .loadSuccess:
-            self.currentState = AtomicInteger(value: WebViewState.isLoaded.rawValue)
+            self.currentState = AtomicInteger(value: InternalWebViewState.isLoaded.rawValue)
             if let reloadHandler = self.reloadHandler {
                 self.webviewDidFinishLoading = true
                 reloadHandler(true, nil, nil)
@@ -292,7 +292,7 @@ class TealiumTagManagementWKWebView: NSObject, TealiumTagManagementProtocol {
 
             }
         case .loadFailure:
-            self.currentState = AtomicInteger(value: WebViewState.didFailToLoad.rawValue)
+            self.currentState = AtomicInteger(value: InternalWebViewState.didFailToLoad.rawValue)
             if let reloadHandler = self.reloadHandler {
                 self.webviewDidFinishLoading = true
                 reloadHandler(false, nil, error)

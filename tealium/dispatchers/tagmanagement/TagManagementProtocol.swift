@@ -1,5 +1,5 @@
 //
-//  TealiumTagManagementProtocol.swift
+//  TagManagementProtocol.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 12/8/2018
@@ -13,7 +13,7 @@ import WebKit
 import TealiumCore
 #endif
 
-protocol TealiumTagManagementProtocol {
+protocol TagManagementProtocol {
 
     /// Enables the webview. Called by the webview module at init time.
     ///

@@ -26,45 +26,6 @@ public enum TealiumValue {
     public static let tiqURLSuffix = "mobile.html"
     public static let defaultBatchExpirationDays = 7
     public static let defaultMaxQueueSize = 40
-    public static let optionalCollectors = [OptionalCollectors.attribution,
-                                            // TealiumOptionalCollectors.autotracking,
-                                            OptionalCollectors.crash,
-                                            OptionalCollectors.lifecycle,
-                                            OptionalCollectors.location,
-                                            OptionalCollectors.visitorservice]
-    public static let knownDispatchers = [KnownDispatchers.collect,
-                                          KnownDispatchers.tagmanagement,
-                                          KnownDispatchers.remotecommands]
-}
-
-public enum OptionalCollectors {
-    #if COCOAPODS
-    public static let attribution = "TealiumSwift.TealiumAttributionModule"
-    public static let autotracking = "TealiumSwift.TealiumAutotrackingModule"
-    public static let crash = "TealiumSwift.TealiumCrashModule"
-    public static let lifecycle = "TealiumSwift.TealiumLifecycleModule"
-    public static let location = "TealiumSwift.TealiumLocationModule"
-    public static let visitorservice = "TealiumSwift.TealiumVisitorServiceModule"
-    #else
-    public static let attribution = "TealiumAttribution.TealiumAttributionModule"
-    public static let autotracking = "TealiumAutotracking.TealiumAutotrackingModule"
-    public static let crash = "TealiumCrash.TealiumCrashModule"
-    public static let lifecycle = "TealiumLifecycle.TealiumLifecycleModule"
-    public static let location = "TealiumLocation.TealiumLocationModule"
-    public static let visitorservice = "TealiumVisitorService.TealiumVisitorServiceModule"
-    #endif
-}
-
-public enum KnownDispatchers {
-    #if COCOAPODS
-    public static let collect = "TealiumSwift.TealiumCollectModule"
-    public static let tagmanagement = "TealiumSwift.TealiumTagManagementModule"
-    public static let remotecommands = "TealiumSwift.TealiumRemoteCommandsModule"
-    #else
-    public static let collect = "TealiumCollect.TealiumCollectModule"
-    public static let tagmanagement = "TealiumTagManagement.TealiumTagManagementModule"
-    public static let remotecommands = "TealiumRemoteCommands.TealiumRemoteCommandsModule"
-    #endif
 }
 
 public enum ModuleNames {

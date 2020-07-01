@@ -1,5 +1,5 @@
 //
-//  TealiumLifecycleModuleTests.swift
+//  LifecycleModuleTests.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 2/14/17.
@@ -10,7 +10,7 @@
 @testable import TealiumLifecycle
 import XCTest
 
-class TealiumLifecycleModuleTests: XCTestCase {
+class LifecycleModuleTests: XCTestCase {
 
     var expectationRequest: XCTestExpectation?
     var sleepExpectation: XCTestExpectation?
@@ -269,7 +269,11 @@ class TealiumLifecycleModuleTests: XCTestCase {
 
 }
 
-extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
+extension LifecycleModuleTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
     func requestDequeue(reason: String) {
 
     }
@@ -293,7 +297,7 @@ extension TealiumLifecycleModuleTests: TealiumModuleDelegate {
 
 }
 
-extension TealiumLifecycleModuleTests: TealiumLifecycleEvents {
+extension LifecycleModuleTests: TealiumLifecycleEvents {
 
     func sleep() {
         // ...

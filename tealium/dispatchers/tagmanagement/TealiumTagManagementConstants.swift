@@ -8,7 +8,7 @@
 #if os(iOS)
 import Foundation
 
-enum TealiumTagManagementKey {
+enum TagManagementKey {
     static let jsCommand = "js_command"
     static let jsResult = "js_result"
     static let jsError = "js_error"
@@ -18,7 +18,7 @@ enum TealiumTagManagementKey {
     static let defaultUrlStringPrefix = "https://tags.tiqcdn.com/utag"
 }
 
-enum TealiumTagManagementConfigKey {
+enum TagManagementConfigKey {
     static let disable = "disable_tag_management"
     static let maxQueueSize = "tagmanagement_queue_size"
     static let overrideURL = "tagmanagement_override_url"
@@ -27,11 +27,7 @@ enum TealiumTagManagementConfigKey {
     static let cookieObserver = "cookie_observer"
 }
 
-enum TealiumTagManagementValue {
-    static let defaultQueueSize = 100
-}
-
-enum TealiumTagManagementError: String, LocalizedError {
+enum TagManagementError: String, LocalizedError {
     case couldNotCreateURL
     case couldNotLoadURL
     case couldNotJSONEncodeData
@@ -44,12 +40,7 @@ enum TealiumTagManagementError: String, LocalizedError {
     }
 }
 
-enum TealiumTagManagementNotificationKey {
-    static let urlRequestMade = "com.tealium.tagmanagement.urlrequest"
-    static let jsCommand = "js"
-}
-
-enum TealiumWebviewError: String, LocalizedError {
+enum WebviewError: String, LocalizedError {
     case webviewURLMissing
     case invalidURL
     case webviewNotInitialized
@@ -59,7 +50,7 @@ enum TealiumWebviewError: String, LocalizedError {
     }
 }
 
-enum TealiumWebViewState {
+enum WebViewState {
     case loadSuccess
     case loadFailure
 }

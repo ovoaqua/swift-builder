@@ -14,7 +14,7 @@ import XCTest
 @available(iOS 11.0, *)
 class WKWebViewTests: XCTestCase {
 
-    let tagManagementWKWebView = TealiumTagManagementWKWebView()
+    let tagManagementWKWebView: TagManagementWKWebView = TagManagementWKWebView(config: testTealiumConfig.copy, delegate: TagManagementModuleDelegate())
     let testURL = TestTealiumHelper().newConfig().webviewURL
     let userDefaults = UserDefaults(suiteName: #file)
 
@@ -54,8 +54,8 @@ class WKWebViewTests: XCTestCase {
         tagManagementWKWebView.enable(webviewURL: testURL, delegates: nil, shouldAddCookieObserver: true, view: nil, completion: nil)
         tagManagementWKWebView.track(data) { _, info, error in
             XCTAssertNil(error, "Error returned from track call")
-            if let jsFromInfoDictionary = info[TealiumTagManagementKey.jsCommand] as? String,
-                let payload = info[TealiumTagManagementKey.payload] as? [String: Any] {
+            if let jsFromInfoDictionary = info[TagManagementKey.jsCommand] as? String,
+               let payload = info[TagManagementKey.payload] as? [String: Any] {
                 XCTAssertEqual(expectedJS, jsFromInfoDictionary, "Track call contained invalid data")
                 XCTAssertEqual(data.description, payload.description, "Data and Payload should be equal")
                 expectation.fulfill()
@@ -152,4 +152,20 @@ extension WKWebViewTests: WKHTTPCookieStoreObserver {
             }
         }
     }
+}
+
+@available(iOS 11.0, *)
+class TagManagementModuleDelegate: TealiumModuleDelegate {
+    func requestTrack(_ track: TealiumTrackRequest) {
+
+    }
+
+    func requestDequeue(reason: String) {
+
+    }
+
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
 }

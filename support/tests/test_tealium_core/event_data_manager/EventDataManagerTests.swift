@@ -17,7 +17,7 @@ class EventDataManagerTests: XCTestCase {
     var mockSessionStarter: SessionStarter!
 
     override func setUpWithError() throws {
-        config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", datasource: "testDatasource")
+        config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", dataSource: "testDatasource")
         mockDiskStorage = MockEventDataDiskStorage()
         mockSessionStarter = SessionStarter(config: TestTealiumHelper().getConfig(), urlSession: MockURLSessionSessionStarter())
         eventDataManager = DataLayer(config: TestTealiumHelper().getConfig(), diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
@@ -100,7 +100,7 @@ class EventDataManagerTests: XCTestCase {
     }
 
     func testDeleteForKeys() {
-        eventDataManager.delete(for keys: ["singleDataItemKey1", "singleDataItemKey2"])
+        eventDataManager.delete(for: ["singleDataItemKey1", "singleDataItemKey2"])
         let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertEqual(retrieved?.count, 1)
     }

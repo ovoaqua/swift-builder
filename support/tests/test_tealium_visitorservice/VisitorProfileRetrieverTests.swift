@@ -16,7 +16,7 @@ class TealiumVisitorServiceRetrieverTests: XCTestCase {
     var visitorServiceRetriever: TealiumVisitorServiceRetriever!
 
     override func setUp() {
-        tealConfig = TealiumConfig(account: "test", profile: "test", environment: "dev", datasource: nil, options: [:])
+        tealConfig = TealiumConfig(account: "test", profile: "test", environment: "dev", dataSource: nil, options: [:])
         visitorServiceRetriever = TealiumVisitorServiceRetriever(config: tealConfig, visitorId: "testVisitorId", urlSession: MockURLSession())
     }
 
@@ -25,7 +25,7 @@ class TealiumVisitorServiceRetrieverTests: XCTestCase {
 
     func testVisitorServiceURL() {
         XCTAssertEqual("https://visitor-service.tealiumiq.com/\(tealConfig.account)/\(tealConfig.profile)/\(visitorServiceRetriever.tealiumVisitorId)",
-            visitorServiceRetriever.visitorServiceURL)
+                       visitorServiceRetriever.visitorServiceURL)
     }
 
     func testIntervalSince() {
@@ -144,7 +144,7 @@ class TealiumVisitorServiceRetrieverTests: XCTestCase {
     // Need MockURLSessionToWork
     func testDoNotFetchVisitorProfile() {
         let timeTraveler = TimeTraveler()
-        let config = TealiumConfig(account: "test", profile: "test", environment: "prod", datasource: nil, options: [:])
+        let config = TealiumConfig(account: "test", profile: "test", environment: "prod", dataSource: nil, options: [:])
         let retriever = TealiumVisitorServiceRetriever(config: config, visitorId: "test")
         let expect = expectation(description: "should not fetch")
         retriever.lastFetch = timeTraveler.travel(by: (60 * 5 + 1) * -1)

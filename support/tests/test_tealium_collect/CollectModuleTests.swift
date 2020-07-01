@@ -1,5 +1,5 @@
 //
-//  TealiumCollectModuleTests.swift
+//  CollectModuleTests.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 11/1/16.
@@ -10,7 +10,7 @@
 @testable import TealiumCore
 import XCTest
 
-class TealiumCollectModuleTests: XCTestCase {
+class CollectModuleTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
@@ -234,7 +234,11 @@ class TealiumCollectModuleTests: XCTestCase {
 
 }
 
-extension TealiumCollectModuleTests: TealiumModuleDelegate {
+extension CollectModuleTests: TealiumModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
+    }
+
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }

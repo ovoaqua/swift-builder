@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-extension TealiumTagManagementWKWebView {
+extension TagManagementWKWebView {
 
     #if os(iOS)
     private var sharedApplication: UIApplication? {

@@ -10,7 +10,7 @@ import Foundation
 import WebKit
 
 @available(iOS 11.0, *)
-extension TealiumTagManagementWKWebView: WKHTTPCookieStoreObserver {
+extension TagManagementWKWebView: WKHTTPCookieStoreObserver {
 
     /// Listens for cookie changes in WKHTTPCookieStore
     ///￼  NOTE: this exists purely to work around an issue where cookies are not properly synced to WKWebView instances
