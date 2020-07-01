@@ -57,6 +57,26 @@ open class TealiumConfig {
             options[TealiumKey.dispatchListeners] = newValue
         }
     }
+    
+    public var collectors: [Collector]? {
+        get {
+            options[TealiumKey.collectors] as? [Collector]
+        }
+
+        set {
+            options[TealiumKey.collectors] = newValue
+        }
+    }
+    
+    public var dispatchers: [Dispatcher]? {
+        get {
+            options[TealiumKey.dispatchers] as? [Dispatcher]
+        }
+
+        set {
+            options[TealiumKey.dispatchers] = newValue
+        }
+    }
 
     public var copy: TealiumConfig {
         return TealiumConfig(account: self.account,

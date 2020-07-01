@@ -77,7 +77,7 @@ class AppDataModuleTests: XCTestCase {
     }
 
     func testSetNewAppData() {
-        appDataModule?.setNewAppData()
+        appDataModule?.storeNewAppData()
         XCTAssertEqual(mockDiskStorage.saveToDefaultsCount, 1)
         XCTAssertEqual(mockDiskStorage.saveCount, 1)
         XCTAssertNotNil(appDataModule?.appData.persistentData?.visitorId)
@@ -89,7 +89,7 @@ class AppDataModuleTests: XCTestCase {
         config.existingVisitorId = "someOtherVisitorId"
         let module = AppDataModule(config: config, delegate: self, diskStorage: mockDiskStorage, bundle: Bundle(for: type(of: self)))
         let testPersistentData = PersistentAppData(visitorId: "someVisitorId", uuid: "someUUID")
-        module.setLoadedAppData(data: testPersistentData)
+        module.loadPersistentAppData(data: testPersistentData)
         // 2x because of init in setUp
         XCTAssertEqual(mockDiskStorage.saveToDefaultsCount, 2)
         XCTAssertEqual(mockDiskStorage.saveCount, 2)

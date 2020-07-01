@@ -153,6 +153,8 @@ public enum TealiumKey {
     public static let shouldCollectTealiumData = "should_collect_tealium_data"
     public static let dispatchValidators = "dispatch_validators"
     public static let dispatchListeners = "dispatch_listeners"
+    public static let collectors = "collectors"
+    public static let dispatchers = "dispatchers"
 }
 
 public enum TealiumTrackType {

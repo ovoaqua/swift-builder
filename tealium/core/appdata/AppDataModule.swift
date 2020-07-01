@@ -53,10 +53,10 @@ public class AppDataModule: Collector, AppDataCollection {
     /// Retrieves existing data from persistent storage and stores in volatile memory.
     func fillCache() {
         guard let data = diskStorage.retrieve(as: PersistentAppData.self) else {
-            setNewAppData()
+            storeNewAppData()
             return
         }
-        self.setLoadedAppData(data: data)
+        self.loadPersistentAppData(data: data)
     }
 
     /// Deletes all app data, including persistent data.
@@ -123,7 +123,7 @@ public class AppDataModule: Collector, AppDataCollection {
     }
 
     /// Stores current AppData in memory
-    func setNewAppData() {
+    func storeNewAppData() {
         let newUUID = UUID().uuidString
         appData.persistentData = newPersistentData(for: UUID().uuidString)
         newVolatileData()
@@ -133,9 +133,9 @@ public class AppDataModule: Collector, AppDataCollection {
     /// Populates in-memory AppData with existing values from persistent storage, if present.
     ///
     /// - Parameter data: `PersistentAppData` instance  containing existing AppData variables
-    func setLoadedAppData(data: PersistentAppData) {
+    func loadPersistentAppData(data: PersistentAppData) {
         guard !AppDataModule.isMissingPersistentKeys(data: data.dictionary) else {
-            setNewAppData()
+            storeNewAppData()
             return
         }
 
