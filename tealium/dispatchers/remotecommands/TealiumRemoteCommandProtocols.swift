@@ -13,7 +13,7 @@ import TealiumCore
 #endif
 
 public protocol TealiumRemoteCommandsManagerProtocol {
-    var moduleDelegate: TealiumModuleDelegate? { get set }
+    var moduleDelegate: ModuleDelegate? { get set }
     var commands: RemoteCommandArray { get set }
     func add(_ remoteCommand: TealiumRemoteCommandProtocol)
     func remove(commandWithId: String)
@@ -30,7 +30,7 @@ public protocol TealiumRemoteCommandProtocol {
     func complete(with response: TealiumRemoteCommandResponseProtocol)
     static func sendRemoteCommandResponse(for commandId: String,
                                           response: TealiumRemoteCommandResponseProtocol,
-                                          delegate: TealiumModuleDelegate?)
+                                          delegate: ModuleDelegate?)
 }
 
 public protocol TealiumRemoteCommandResponseProtocol {

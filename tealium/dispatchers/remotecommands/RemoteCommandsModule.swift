@@ -24,13 +24,13 @@ public class RemoteCommandsModule: Dispatcher {
     ///
     /// - Parameter remoteCommands: Class instance conforming to `TealiumRemoteCommandsManagerProtocol`
     convenience init (config: TealiumConfig,
-                      delegate: TealiumModuleDelegate,
+                      delegate: ModuleDelegate,
                       remoteCommands: TealiumRemoteCommandsManagerProtocol? = nil) {
         self.init(config: config, delegate: delegate) { _ in }
         self.remoteCommands = remoteCommands
     }
 
-    public required init(config: TealiumConfig, delegate: TealiumModuleDelegate, completion: ModuleCompletion?) {
+    public required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
         remoteCommands = remoteCommands ?? TealiumRemoteCommandsManager(delegate: delegate)
         updateReservedCommands(config: config)

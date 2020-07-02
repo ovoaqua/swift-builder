@@ -77,7 +77,7 @@ class VisitorServiceModuleTests: XCTestCase {
 
 }
 
-extension VisitorServiceModuleTests: TealiumModuleDelegate {
+extension VisitorServiceModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

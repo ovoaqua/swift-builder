@@ -34,11 +34,11 @@ public class AppDataModule: Collector, AppDataCollection {
     /// Provided for testing - allows `Bundle` to be overridden
     ///
     /// - Parameter config: `TealiumConfig` instance
-    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
     /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
     /// - Parameter bundle: `Bundle` for testing
     convenience init(config: TealiumConfig,
-                     delegate: TealiumModuleDelegate,
+                     delegate: ModuleDelegate,
                      diskStorage: TealiumDiskStorageProtocol?,
                      bundle: Bundle) {
         self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
@@ -48,11 +48,11 @@ public class AppDataModule: Collector, AppDataCollection {
     /// Initializes the module
     ///
     /// - Parameter config: `TealiumConfig` instance
-    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
     /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
     /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate?,
+                         delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.config = config

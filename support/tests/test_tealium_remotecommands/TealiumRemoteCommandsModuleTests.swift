@@ -117,7 +117,7 @@ class RemoteCommandsModuleTests: XCTestCase {
 
 }
 
-extension RemoteCommandsModuleTests: TealiumModuleDelegate {
+extension RemoteCommandsModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
         if let _ = request as? TealiumRemoteCommandRequest {
             self.processExpectation?.fulfill()

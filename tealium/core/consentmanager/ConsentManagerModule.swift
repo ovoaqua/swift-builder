@@ -13,7 +13,7 @@ class ConsentManagerModule: Collector, DispatchValidator {
     public let id: String = ModuleNames.consentmanager
     var config: TealiumConfig
     var consentManager: ConsentManager?
-    weak var delegate: TealiumModuleDelegate?
+    weak var delegate: ModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
 
     var data: [String: Any]? {
@@ -21,7 +21,7 @@ class ConsentManagerModule: Collector, DispatchValidator {
     }
 
     required init(config: TealiumConfig,
-                  delegate: TealiumModuleDelegate?,
+                  delegate: ModuleDelegate?,
                   diskStorage: TealiumDiskStorageProtocol?,
                   completion: ModuleCompletion) {
         self.config = config

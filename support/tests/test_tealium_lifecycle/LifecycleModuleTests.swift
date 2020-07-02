@@ -269,7 +269,7 @@ class LifecycleModuleTests: XCTestCase {
 
 }
 
-extension LifecycleModuleTests: TealiumModuleDelegate {
+extension LifecycleModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

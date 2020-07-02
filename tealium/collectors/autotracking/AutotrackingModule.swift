@@ -105,11 +105,11 @@ public class AutotrackingModule: Collector {
 
     public let id: String = TealiumAutotrackingKey.moduleName
     public var data: [String: Any]?
-    weak var delegate: TealiumModuleDelegate?
+    weak var delegate: ModuleDelegate?
     public var config: TealiumConfig
 
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate?,
+                         delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.delegate = delegate

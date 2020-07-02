@@ -41,11 +41,11 @@ public class DeviceDataModule: Collector {
     /// Initializes the module
     ///
     /// - Parameter config: `TealiumConfig` instance
-    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
     /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
     /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate?,
+                         delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.config = config

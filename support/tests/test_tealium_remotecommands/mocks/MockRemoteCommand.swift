@@ -30,7 +30,7 @@ class MockRemoteCommand: TealiumRemoteCommandProtocol {
 
     }
     
-    static func sendRemoteCommandResponse(for commandId: String, response: TealiumRemoteCommandResponseProtocol, delegate: TealiumModuleDelegate?) {
+    static func sendRemoteCommandResponse(for commandId: String, response: TealiumRemoteCommandResponseProtocol, delegate: ModuleDelegate?) {
         
     }
 

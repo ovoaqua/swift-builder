@@ -1,5 +1,5 @@
 //
-//  TealiumModuleDelegate.swift
+//  ModuleDelegate.swift
 //  TealiumCore
 //
 //  Created by Craig Rouse on 23/04/2020.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol TealiumModuleDelegate: class {
+public protocol ModuleDelegate: class {
 
     /// Called by a module send a new track request to the Dispatch Manager
     ///

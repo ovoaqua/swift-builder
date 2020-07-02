@@ -322,7 +322,7 @@ class TestTealiumHelper {
 
 }
 
-extension TestTealiumHelper: TealiumModuleDelegate {
+extension TestTealiumHelper: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
         
     }

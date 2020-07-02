@@ -49,7 +49,7 @@ public class ConnectivityModule: Collector, ConnectivityDelegate {
     var connectivityDelegates = TealiumMulticastDelegate<ConnectivityDelegate>()
 
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate?,
+                         delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: (ModuleResult) -> Void) {
         self.config = config

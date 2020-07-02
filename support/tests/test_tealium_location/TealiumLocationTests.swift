@@ -424,7 +424,7 @@ class TealiumLocationTests: XCTestCase {
 
 }
 
-extension TealiumLocationTests: TealiumModuleDelegate {
+extension TealiumLocationTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

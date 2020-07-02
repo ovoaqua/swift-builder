@@ -317,7 +317,7 @@ public class ModulesManager {
 
 }
 
-extension ModulesManager: TealiumModuleDelegate {
+extension ModulesManager: ModuleDelegate {
     public func requestTrack(_ track: TealiumTrackRequest) {
         TealiumQueues.backgroundSerialQueue.async {
             self.sendTrack(track)

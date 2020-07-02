@@ -49,7 +49,7 @@ class CrashModuleTests: XCTestCase {
     }
 }
 
-extension CrashModuleTests: TealiumModuleDelegate {
+extension CrashModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

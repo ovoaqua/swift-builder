@@ -394,7 +394,7 @@ class PerformanceTests: XCTestCase {
 
 }
 
-extension PerformanceTests: TealiumModuleDelegate {
+extension PerformanceTests: ModuleDelegate {
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }

@@ -64,4 +64,3 @@ public enum TealiumLoggerType {
     case custom(TealiumLoggerProtocol)
 }
 // swiftlint:enable identifier_name
-

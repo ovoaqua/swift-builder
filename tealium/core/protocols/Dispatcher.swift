@@ -11,7 +11,7 @@ import Foundation
 public protocol Dispatcher: TealiumModule {
     var isReady: Bool { get }
     init(config: TealiumConfig,
-         delegate: TealiumModuleDelegate,
+         delegate: ModuleDelegate,
          completion: ModuleCompletion?)
 
     func dynamicTrack(_ request: TealiumRequest,

@@ -32,11 +32,11 @@ class TagManagementWKWebView: NSObject, TagManagementProtocol {
     var url: URL?
     var reloadHandler: TealiumCompletion?
     var currentState: AtomicInteger = AtomicInteger(value: InternalWebViewState.notYetLoaded.rawValue)
-    weak var moduleDelegate: TealiumModuleDelegate?
+    weak var moduleDelegate: ModuleDelegate?
 
     var delegates: TealiumMulticastDelegate<WKNavigationDelegate>? = TealiumMulticastDelegate<WKNavigationDelegate>()
 
-    init(config: TealiumConfig, delegate: TealiumModuleDelegate?) {
+    init(config: TealiumConfig, delegate: ModuleDelegate?) {
         moduleDelegate = delegate
         tealConfig = config
     }

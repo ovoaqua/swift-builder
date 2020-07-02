@@ -164,7 +164,7 @@ class TagManagementModuleTests: XCTestCase {
 
 }
 
-extension TagManagementModuleTests: TealiumModuleDelegate {
+extension TagManagementModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

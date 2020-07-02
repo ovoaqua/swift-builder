@@ -25,7 +25,7 @@ public class VisitorServiceModule: Collector, DispatchListener {
     ///
     /// - Parameter visitorServiceManager: Class instance conforming to `TealiumVisitorServiceManagerProtocol`
     convenience init (config: TealiumConfig,
-                      delegate: TealiumModuleDelegate?,
+                      delegate: ModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
                       visitorServiceManager: TealiumVisitorServiceManagerProtocol) {
         self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
@@ -33,7 +33,7 @@ public class VisitorServiceModule: Collector, DispatchListener {
     }
 
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate?,
+                         delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.config = config

@@ -282,7 +282,7 @@ class TealiumModulesManagerTests: XCTestCase {
 
 }
 
-extension TealiumModulesManagerTests: TealiumModuleDelegate {
+extension TealiumModulesManagerTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }
@@ -320,7 +320,7 @@ class DummyCollector: Collector, DispatchListener, DispatchValidator {
         ["dummy": true]
     }
 
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
+    required init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
         self.id = "Dummy"
     }

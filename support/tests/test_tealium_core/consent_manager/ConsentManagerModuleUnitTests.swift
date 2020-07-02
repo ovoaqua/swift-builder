@@ -208,7 +208,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
 
 }
 
-extension ConsentManagerModuleUnitTests: TealiumModuleDelegate {
+extension ConsentManagerModuleUnitTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) { }
     func requestDequeue(reason: String) { }
     func requestTrack(_ track: TealiumTrackRequest) { }

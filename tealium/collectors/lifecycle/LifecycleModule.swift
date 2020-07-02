@@ -23,7 +23,7 @@ import TealiumCore
 public class LifecycleModule: Collector {
 
     public let id: String = ModuleNames.lifecycle
-    weak var delegate: TealiumModuleDelegate?
+    weak var delegate: ModuleDelegate?
     var enabledPrior = false
     var lifecycleData = [String: Any]()
     var lastLifecycleEvent: LifecycleType?
@@ -35,7 +35,7 @@ public class LifecycleModule: Collector {
     }
 
     public required init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate?,
+                         delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.delegate = delegate

@@ -188,7 +188,7 @@ class TealiumRemoteCommandTests: XCTestCase {
 
 }
 
-extension TealiumRemoteCommandTests: TealiumModuleDelegate {
+extension TealiumRemoteCommandTests: ModuleDelegate {
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }

@@ -19,10 +19,10 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
     weak var queue = TealiumQueues.backgroundSerialQueue
     public var commands = RemoteCommandArray()
     var isEnabled = false
-    weak public var moduleDelegate: TealiumModuleDelegate?
+    weak public var moduleDelegate: ModuleDelegate?
     static var pendingResponses = Atomic<[String: Bool]>(value: [String: Bool]())
 
-    public init(delegate: TealiumModuleDelegate?) {
+    public init(delegate: ModuleDelegate?) {
         moduleDelegate = delegate
     }
 

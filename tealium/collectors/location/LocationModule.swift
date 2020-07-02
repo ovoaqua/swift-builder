@@ -16,7 +16,7 @@ public class LocationModule: Collector {
 
     public let id: String = ModuleNames.location
     public var config: TealiumConfig
-    weak var delegate: TealiumModuleDelegate?
+    weak var delegate: ModuleDelegate?
     var tealiumLocationManager: TealiumLocation?
 
     public var data: [String: Any]? {
@@ -33,7 +33,7 @@ public class LocationModule: Collector {
         return newData
     }
 
-    required public init(config: TealiumConfig, delegate: TealiumModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
+    required public init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
         self.delegate = delegate
 

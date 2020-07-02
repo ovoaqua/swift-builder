@@ -26,7 +26,7 @@ public class AttributionModule: Collector {
     ///
     /// - Parameter attributionData: Class instance conforming to `TealiumAttributionDataProtocol`
     convenience init (config: TealiumConfig,
-                      delegate: TealiumModuleDelegate?,
+                      delegate: ModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
                       attributionData: TealiumAttributionDataProtocol) {
         self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
@@ -34,7 +34,7 @@ public class AttributionModule: Collector {
     }
 
     required public init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate?,
+                         delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
         self.config = config

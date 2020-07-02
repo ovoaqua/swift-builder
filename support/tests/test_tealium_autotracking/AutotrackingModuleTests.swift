@@ -186,7 +186,7 @@ class AutotrackingModuleTests: XCTestCase {
 
 }
 
-extension AutotrackingModuleTests: TealiumModuleDelegate {
+extension AutotrackingModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

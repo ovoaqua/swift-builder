@@ -155,7 +155,7 @@ extension WKWebViewTests: WKHTTPCookieStoreObserver {
 }
 
 @available(iOS 11.0, *)
-class TagManagementModuleDelegate: TealiumModuleDelegate {
+class TagManagementModuleDelegate: ModuleDelegate {
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }

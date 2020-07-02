@@ -234,7 +234,7 @@ class CollectModuleTests: XCTestCase {
 
 }
 
-extension CollectModuleTests: TealiumModuleDelegate {
+extension CollectModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

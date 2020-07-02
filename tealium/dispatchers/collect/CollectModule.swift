@@ -15,16 +15,16 @@ public class CollectModule: Dispatcher {
     public let id: String = ModuleNames.collect
     var collect: TealiumCollectProtocol?
     public var isReady = false
-    weak var delegate: TealiumModuleDelegate?
+    weak var delegate: ModuleDelegate?
     public var config: TealiumConfig
 
     /// Initializes the module
     ///
     /// - Parameter config: `TealiumConfig` instance
-    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
     /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     public required init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate,
+                         delegate: ModuleDelegate,
                          completion: ModuleCompletion?) {
 
         self.config = config

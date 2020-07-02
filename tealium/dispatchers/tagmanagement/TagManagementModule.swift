@@ -19,15 +19,15 @@ public class TagManagementModule: Dispatcher {
     var pendingTrackRequests = [(TealiumRequest, ModuleCompletion?)]()
     var tagManagement: TagManagementProtocol?
     var webViewState: Atomic<WebViewState>?
-    weak var delegate: TealiumModuleDelegate?
+    weak var delegate: ModuleDelegate?
 
     /// Provided for unit testing￼.
     ///
     /// - Parameter config: `TealiumConfig` instance
-    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
     /// - Parameter tagManagement: Class instance conforming to `TealiumTagManagementProtocol`
     convenience init(config: TealiumConfig,
-                     delegate: TealiumModuleDelegate,
+                     delegate: ModuleDelegate,
                      tagManagement: TagManagementProtocol) {
         self.init(config: config, delegate: delegate) { _ in
         }
@@ -37,10 +37,10 @@ public class TagManagementModule: Dispatcher {
     /// Initializes the module
     ///
     /// - Parameter config: `TealiumConfig` instance
-    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
     /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     public required init(config: TealiumConfig,
-                         delegate: TealiumModuleDelegate,
+                         delegate: ModuleDelegate,
                          completion: ModuleCompletion?) {
         self.config = config
         self.delegate = delegate

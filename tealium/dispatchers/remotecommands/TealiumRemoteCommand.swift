@@ -77,10 +77,10 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
     /// - Parameters:
     ///     - commandId: `String` identifier for the Remote Command
     ///     - response: `TealiumRemoteCommandResponse` from the remote command to be passed back to the TiQ webview
-    ///     - delegate: `TealiumModuleDelegate?`
+    ///     - delegate: `ModuleDelegate?`
     public class func sendRemoteCommandResponse(for commandId: String,
                                                 response: TealiumRemoteCommandResponseProtocol,
-                                                delegate: TealiumModuleDelegate?) {
+                                                delegate: ModuleDelegate?) {
         guard let responseId = response.responseId else {
             return
         }

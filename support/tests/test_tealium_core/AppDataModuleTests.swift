@@ -119,7 +119,7 @@ class AppDataModuleTests: XCTestCase {
 
 }
 
-extension AppDataModuleTests: TealiumModuleDelegate {
+extension AppDataModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
 
     }

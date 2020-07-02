@@ -310,7 +310,7 @@ class TealiumModulesTest: XCTestCase {
 
 }
 
-extension TealiumModulesTest: TealiumModuleDelegate {
+extension TealiumModulesTest: ModuleDelegate {
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }

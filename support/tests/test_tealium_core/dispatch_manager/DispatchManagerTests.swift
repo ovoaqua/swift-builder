@@ -24,7 +24,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
     var diskStorage = DispatchQueueMockDiskStorage()
     
     var persistentQueue: TealiumPersistentDispatchQueue!
-    var delegate: TealiumModuleDelegate?
+    var delegate: ModuleDelegate?
     override func setUp() {
         super.setUp()
         self.persistentQueue = TealiumPersistentDispatchQueue(diskStorage: diskStorage)
@@ -160,7 +160,7 @@ class MockPersistentQueue: TealiumPersistentDispatchQueue {
     }
 }
 
-extension TealiumDispatchQueueModuleTests: TealiumModuleDelegate {
+extension TealiumDispatchQueueModuleTests: ModuleDelegate {
     func processRemoteCommandRequest(_ request: TealiumRequest) {
         
     }
@@ -179,7 +179,7 @@ extension TealiumDispatchQueueModuleTests: TealiumModuleDelegate {
 class DummyDispatcher: Dispatcher {
     var isReady: Bool = true
     
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate, completion: ModuleCompletion?) {
+    required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
     }
     

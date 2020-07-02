@@ -16,7 +16,7 @@ class MockRemoteCommandsManager: TealiumRemoteCommandsManagerProtocol {
     var removeCommandWithIdCount = 0
     var triggerCount = 0
     
-    var moduleDelegate: TealiumModuleDelegate?
+    var moduleDelegate: ModuleDelegate?
     var commands = RemoteCommandArray()
     
     init() {
@@ -45,7 +45,7 @@ class MockRemoteCommandsManager: TealiumRemoteCommandsManagerProtocol {
 
 }
 
-extension MockRemoteCommandsManager: TealiumModuleDelegate {
+extension MockRemoteCommandsManager: ModuleDelegate {
     func requestTrack(_ track: TealiumTrackRequest) {
 
     }

@@ -10,7 +10,7 @@ import Foundation
 
 public class ConsentManager {
 
-    private weak var delegate: TealiumModuleDelegate?
+    private weak var delegate: ModuleDelegate?
     var config: TealiumConfig
     var consentPreferencesStorage: ConsentPreferencesStorage?
     var consentLoggingEnabled: Bool {
@@ -55,11 +55,11 @@ public class ConsentManager {
     ///
     /// - Parameters:
     ///     - config: `TealiumConfig`￼
-    ///     - delegate: `TealiumModuleDelegate?`￼
+    ///     - delegate: `ModuleDelegate?`￼
     ///     - diskStorage: `TealiumDiskStorageProtocol` instance to allow overriding for unit testing￼
     ///     - completion: Optional completion block, called when fully initialized
     public init(config: TealiumConfig,
-                delegate: TealiumModuleDelegate?,
+                delegate: ModuleDelegate?,
                 diskStorage: TealiumDiskStorageProtocol) {
         self.diskStorage = diskStorage
         consentPreferencesStorage = ConsentPreferencesStorage(diskStorage: diskStorage)
