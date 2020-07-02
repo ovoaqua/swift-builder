@@ -12,7 +12,7 @@ import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
 import TealiumRemoteCommands
-//import TealiumCrash
+import TealiumCrash
 import TealiumVisitorService
 import TealiumLifecycle
 import TealiumLocation
@@ -46,12 +46,12 @@ class TealiumHelper: NSObject {
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
         config.logLevel = .debug
-        config.consentPolicy = .gdpr
+        config.consentPolicy = nil
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
-        config.shouldUseRemotePublishSettings = true
+        config.shouldUseRemotePublishSettings = false
         config.batchingEnabled = false
         config.memoryReportingEnabled = true
 //        config.sessionHandlingEnabled = true
@@ -64,10 +64,11 @@ class TealiumHelper: NSObject {
         config.remoteAPIEnabled = true
         logger = config.logger
         config.collectors = [Collectors.Attribution,
-                             Collectors.Lifecycle,
+//                             Collectors.Lifecycle,
                              Collectors.Connectivity,
-//                             Collectors.Crash,
-                             Collectors.Location,
+                             Collectors.Crash,
+                             Collectors.Device,
+//                             Collectors.Location,
                              Collectors.VisitorService,
         ]
         
@@ -100,7 +101,7 @@ class TealiumHelper: NSObject {
                 
             }
 
-            self.track(title: "init", data: nil)
+//            self.track(title: "init", data: nil)
             let persitence = teal.persistentData
             let sessionPersistence = teal.volatileData
             let dataManager = teal.dataLayer
@@ -132,9 +133,9 @@ class TealiumHelper: NSObject {
 
         }
         
-        let dispatch = EventDispatch("hello")
-        
-        tealium?.track(dispatch)
+//        let dispatch = EventDispatch("hello")
+//
+//        tealium?.track(dispatch)
         
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
@@ -194,16 +195,16 @@ class TealiumHelper: NSObject {
     }
 }
 
-//extension TealiumHelper: TealiumVisitorServiceDelegate {
-//    func didUpdate(visitorProfile: TealiumVisitorProfile) {
-//        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
-//            if self.enableHelperLogs {
-//                print(string)
-//            }
-//        }
-//    }
-//
-//}
+extension TealiumHelper: VisitorServiceDelegate {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
+            if self.enableHelperLogs {
+                print(string)
+            }
+        }
+    }
+
+}
 
 extension TealiumHelper: DispatchListener {
     public func willTrack(request: TealiumRequest) {

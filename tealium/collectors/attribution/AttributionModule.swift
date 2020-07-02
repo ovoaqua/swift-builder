@@ -40,7 +40,7 @@ public class AttributionModule: Collector {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "attribution", isCritical: false)
         self.attributionData = AttributionData(diskStorage: self.diskStorage,
-                                                      isSearchAdsEnabled: config.searchAdsEnabled)
+                                               isSearchAdsEnabled: config.searchAdsEnabled)
         completion((.success(true), nil))
     }
 

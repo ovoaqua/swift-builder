@@ -23,5 +23,5 @@ public extension TealiumConfig {
 }
 
 public extension Collectors {
-    static let DeviceData = DeviceDataModule.self
+    static let Device = DeviceDataModule.self
 }
