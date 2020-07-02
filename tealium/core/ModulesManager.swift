@@ -26,12 +26,12 @@ public class ModulesManager {
     var collectorTypes: [Collector.Type] {
         if let optionalCollectors = config.collectors {
             return [AppDataModule.self,
-                    TealiumConsentManagerModule.self,
+                    ConsentManagerModule.self,
             ] + optionalCollectors
         } else {
             return [AppDataModule.self,
                     DeviceDataModule.self,
-                    TealiumConsentManagerModule.self,
+                    ConsentManagerModule.self,
                     ConnectivityModule.self,
             ]
         }
@@ -185,7 +185,7 @@ public class ModulesManager {
 
     func setupCollectors(config: TealiumConfig) {
         collectorTypes.forEach { collector in
-            if collector == TealiumConsentManagerModule.self && config.consentPolicy == nil {
+            if collector == ConsentManagerModule.self && config.consentPolicy == nil {
                 return
             }
 

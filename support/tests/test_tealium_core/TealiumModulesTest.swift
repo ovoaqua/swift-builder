@@ -78,8 +78,8 @@ class TealiumModulesTest: XCTestCase {
             //                if module is TealiumVisitorServiceModule {
             //                    XCTFail("Logger module was found when shouldn't have been present.")
             //                }
-            //                if module is TealiumConsentManagerModule {
-            //                    XCTFail("TealiumConsentManagerModule module was found when shouldn't have been present.")
+            //                if module is ConsentManagerModule {
+            //                    XCTFail("ConsentManagerModule module was found when shouldn't have been present.")
             //                }
             //            }
 

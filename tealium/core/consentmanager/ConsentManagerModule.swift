@@ -1,5 +1,5 @@
 //
-//  TealiumConsentManagerModule.swift
+//  ConsentManagerModule.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 3/29/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TealiumConsentManagerModule: Collector, DispatchValidator {
+class ConsentManagerModule: Collector, DispatchValidator {
 
     public let id: String = ModuleNames.consentmanager
     var config: TealiumConfig

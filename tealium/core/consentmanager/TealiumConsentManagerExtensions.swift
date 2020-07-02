@@ -14,9 +14,9 @@ public extension Tealium {
     /// - Returns: `TealiumConsentManager` instance
     var consentManager: TealiumConsentManager? {
         let module = zz_internal_modulesManager?.collectors.first {
-            $0 is TealiumConsentManagerModule
+            $0 is ConsentManagerModule
         }
-        return (module as? TealiumConsentManagerModule)?.consentManager
+        return (module as? ConsentManagerModule)?.consentManager
     }
 
 }

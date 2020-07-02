@@ -222,13 +222,13 @@ class PerformanceTests: XCTestCase {
 
     func testConsentManagerModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumConsentManagerModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+            _ = ConsentManagerModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
             self.stopMeasuring()
         }
     }
 
     func testConsentManagerDataCollection() {
-        let module = TealiumConsentManagerModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+        let module = ConsentManagerModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = module.data
             self.stopMeasuring()
