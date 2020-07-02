@@ -13,7 +13,7 @@ import TealiumCore
 public class CollectModule: Dispatcher {
 
     public let id: String = ModuleNames.collect
-    var collect: TealiumCollectProtocol?
+    var collect: CollectProtocol?
     public var isReady = false
     weak var delegate: ModuleDelegate?
     public var config: TealiumConfig

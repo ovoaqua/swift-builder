@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-class CollectEventDispatcher: TealiumCollectProtocol {
+class CollectEventDispatcher: CollectProtocol {
 
     var urlSession: URLSessionProtocol?
     var urlSessionConfiguration: URLSessionConfiguration?

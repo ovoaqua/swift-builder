@@ -33,7 +33,7 @@ public class LifecycleModule: Collector {
     public var data: [String: Any]? {
         lifecycle?.asDictionary(type: nil, for: Date())
     }
-    
+
     /// Initializes the module
     ///
     /// - Parameters:

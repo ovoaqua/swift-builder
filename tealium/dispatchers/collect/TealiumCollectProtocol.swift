@@ -1,5 +1,5 @@
 //
-//  TealiumCollectProtocol.swift
+//  CollectProtocol.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 11/1/18.
@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public protocol TealiumCollectProtocol {
+public protocol CollectProtocol {
 
     /// Dispatches data to an HTTP endpoint, then calls optional completion block when finished￼.
     ///
