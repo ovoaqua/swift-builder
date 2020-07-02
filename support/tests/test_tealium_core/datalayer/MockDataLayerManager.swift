@@ -1,5 +1,5 @@
 //
-//  MockEventData.swift
+//  MockDataLayerManager.swift
 //  TealiumCore
 //
 //  Created by Christina S on 4/27/20.
@@ -9,7 +9,7 @@
 import Foundation
 @testable import TealiumCore
 
-class MockEventDataManager: DataLayerManagerProtocol {
+class MockDataLayerManager: DataLayerManagerProtocol {
     var sessionDataBacking = [String: Any]()
     var addSingleCount = 0
     var addMultiCount = 0

@@ -132,7 +132,7 @@ class TealiumHelper: NSObject {
             print("Persistent Data: \(String(describing: persitence.dictionary))")
 
         }
-        
+        tealium?.lifecycle
 //        let dispatch = EventDispatch("hello")
 //
 //        tealium?.track(dispatch)

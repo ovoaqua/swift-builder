@@ -71,11 +71,11 @@ class ConsentManagerTests: XCTestCase {
         let categories = ["cdp", "analytics"]
         let status = "consented"
         let consentDictionary: [String: Any] = [ConsentKey.consentCategoriesKey: categories, ConsentKey.trackingConsentedKey: status]
-        var UserConsentPreferences = UserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
-        UserConsentPreferences.initWithDictionary(preferencesDictionary: consentDictionary)
-        XCTAssertNotNil(UserConsentPreferences, "Consent Manager Test: \(#function) - Consent Preferences could not be initialized from dictionary")
-        XCTAssertTrue(UserConsentPreferences.consentStatus == .consented, "Consent Manager Test: \(#function) - Consent Preferences contained unexpected status")
-        XCTAssertTrue(UserConsentPreferences.consentCategories == [.cdp, .analytics], "Consent Manager Test: \(#function) - Consent Preferences contained unexpected status")
+        var userConsentPreferences = UserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
+        userConsentPreferences.initWithDictionary(preferencesDictionary: consentDictionary)
+        XCTAssertNotNil(userConsentPreferences, "Consent Manager Test: \(#function) - Consent Preferences could not be initialized from dictionary")
+        XCTAssertTrue(userConsentPreferences.consentStatus == .consented, "Consent Manager Test: \(#function) - Consent Preferences contained unexpected status")
+        XCTAssertTrue(userConsentPreferences.consentCategories == [.cdp, .analytics], "Consent Manager Test: \(#function) - Consent Preferences contained unexpected status")
     }
 
     func testTrackUserConsentPreferences() {

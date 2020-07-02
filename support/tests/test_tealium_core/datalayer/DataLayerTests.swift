@@ -1,5 +1,5 @@
 //
-//  EventDataTests.swift
+//  DataLayerTests.swift
 //  TealiumCoreTests
 //
 //  Created by Christina S on 5/4/20.
@@ -9,7 +9,7 @@
 @testable import TealiumCore
 import XCTest
 
-class EventDataTests: XCTestCase {
+class DataLayerTests: XCTestCase {
 
     var mockDataLayerItem: DataLayerItem!
     var eventData: DataLayerCollection!

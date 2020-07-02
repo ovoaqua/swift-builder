@@ -12,7 +12,7 @@ import XCTest
 class TealiumVolatileDataTests: XCTestCase {
 
     var volatileData: TealiumVolatileData?
-    var mockEventDataMgr = MockEventDataManager()
+    var mockEventDataMgr = MockDataLayerManager()
     let testVolatileData = ["key": "value",
                                         "anotherKey": "anotherValue"]
 

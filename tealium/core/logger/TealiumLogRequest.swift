@@ -38,13 +38,13 @@ public struct TealiumLogRequest: LogRequest {
     public var formattedString: String {
         var message = """
 
-            =====================================
-            ▶️ Tealium Log: \(title)
-            =====================================
-            Severity: \(logLevel.description)
+        =====================================
+        ▶️ Tealium Log: \(title)
+        =====================================
+        Severity: \(logLevel.description)
 
 
-            """
+        """
 
         if messages.count > 0 {
             message += "Log Messages:\n"

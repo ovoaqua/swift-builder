@@ -10,6 +10,12 @@
 import XCTest
 
 class TealiumConnectivityTests: XCTestCase {
+
+    var defaultTealiumConfig: TealiumConfig { TealiumConfig(account: "tealiummobile",
+                                                            profile: "demo",
+                                                            environment: "dev",
+                                                            options: nil)
+    }
     
     var legacyConnectivityRefreshEnabled: ConnectivityModule {
         let config = defaultTealiumConfig.copy

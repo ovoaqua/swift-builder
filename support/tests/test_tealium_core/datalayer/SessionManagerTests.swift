@@ -15,7 +15,7 @@ class SessionManagerTests: XCTestCase {
     var eventDataManager: DataLayer!
     var mockSessionStarter = MockTealiumSessionStarter()
     var mockURLSession = MockURLSessionSessionStarter()
-    var mockDiskStorage = MockEventDataDiskStorage()
+    var mockDiskStorage = MockDataLayerDiskStorage()
     var timeTraveler = TimeTraveler()
     var lastTrackDate: Date!
     var numberOfTracks: Int!

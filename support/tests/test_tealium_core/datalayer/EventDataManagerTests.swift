@@ -18,7 +18,7 @@ class EventDataManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", dataSource: "testDatasource")
-        mockDiskStorage = MockEventDataDiskStorage()
+        mockDiskStorage = MockDataLayerDiskStorage()
         mockSessionStarter = SessionStarter(config: TestTealiumHelper().getConfig(), urlSession: MockURLSessionSessionStarter())
         eventDataManager = DataLayer(config: TestTealiumHelper().getConfig(), diskStorage: mockDiskStorage, sessionStarter: mockSessionStarter)
     }

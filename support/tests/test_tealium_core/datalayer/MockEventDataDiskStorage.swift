@@ -1,5 +1,5 @@
 //
-//  MockEventDataDiskStorage.swift
+//  MockDataLayerDiskStorage.swift
 //  TealiumCoreTests
 //
 //  Created by Christina S on 4/28/20.
@@ -9,7 +9,7 @@
 import Foundation
 @testable import TealiumCore
 
-class MockEventDataDiskStorage: TealiumDiskStorageProtocol {
+class MockDataLayerDiskStorage: TealiumDiskStorageProtocol {
 
     var mockEventData: DataLayerCollection?
 
