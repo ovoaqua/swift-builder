@@ -8,6 +8,20 @@
 
 import Foundation
 
+public extension DataLayer {
+
+    /// Adds traceId to the payload for debugging server side integrations.
+    /// - Parameter id: `String` traceId from server side interface.
+    func joinTrace(id: String) {
+        add(key: TealiumKey.traceId, value: id, expiry: .session)
+    }
+
+    /// Ends the trace for the current session.
+    func leaveTrace() {
+        delete(for: TealiumKey.traceId)
+    }
+}
+
 public extension Tealium {
 
     /// Sends a request to modules to initiate a trace with a specific Trace ID￼.

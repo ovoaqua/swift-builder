@@ -58,11 +58,11 @@ class MockDataLayerManager: DataLayerManagerProtocol {
 
     var isTagManagementEnabled: Bool = true
 
-    func add(data: [String: Any], expiration: Expiration) {
+    func add(data: [String: Any], expiration: Expiry) {
         addMultiCount += 1
     }
 
-    func add(key: String, value: Any, expiration: Expiration) {
+    func add(key: String, value: Any, expiration: Expiry) {
         addSingleCount += 1
     }
 

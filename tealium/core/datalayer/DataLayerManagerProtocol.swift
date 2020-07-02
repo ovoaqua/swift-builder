@@ -21,8 +21,8 @@ public protocol DataLayerManagerProtocol {
     var sessionData: [String: Any] { get set }
     var sessionStarter: SessionStarterProtocol { get }
     var isTagManagementEnabled: Bool { get set }
-    func add(data: [String: Any], expiration: Expiration)
-    func add(key: String, value: Any, expiration: Expiration)
+    func add(data: [String: Any], expiry: Expiry?)
+    func add(key: String, value: Any, expiry: Expiry?)
     func joinTrace(id: String)
     func delete(for keys: [String])
     func delete(for key: String)
@@ -31,4 +31,16 @@ public protocol DataLayerManagerProtocol {
     func refreshSessionData()
     func sessionRefresh()
     func startNewSession(with sessionStarter: SessionStarterProtocol)
+}
+
+extension DataLayerManagerProtocol {
+
+    func add(data: [String: Any], expiry: Expiry? = .session) {
+        add(data: data, expiry: expiry)
+    }
+
+    func add(key: String, value: Any, expiry: Expiry? = .session) {
+        add(key: key, value: value, expiry: expiry)
+    }
+
 }

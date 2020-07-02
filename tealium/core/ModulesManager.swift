@@ -27,7 +27,7 @@ public class ModulesManager {
         if let optionalCollectors = config.collectors {
             return [AppDataModule.self,
                     ConsentManagerModule.self,
-            ] + optionalCollectors
+                ] + optionalCollectors
         } else {
             return [AppDataModule.self,
                     DeviceDataModule.self,
@@ -119,10 +119,10 @@ public class ModulesManager {
         self.setupCollectors(config: self.config)
         TealiumQueues.backgroundSerialQueue.async {
             let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.modulesManagerInitialized, messages:
-                                                ["\(ModulesManagerLogMessages.collectorsInitialized): \(self.collectors.map { $0.id })",
-                                                 "\(ModulesManagerLogMessages.dispatchValidatorsInitialized): \(self.dispatchValidators.map { $0.id })",
-                                                 "\(ModulesManagerLogMessages.dispatchersInitialized): \(self.dispatchers.map { $0.id })"
-                                                ], info: nil, logLevel: .info, category: .`init`)
+                ["\(ModulesManagerLogMessages.collectorsInitialized): \(self.collectors.map { $0.id })",
+                    "\(ModulesManagerLogMessages.dispatchValidatorsInitialized): \(self.dispatchValidators.map { $0.id })",
+                    "\(ModulesManagerLogMessages.dispatchersInitialized): \(self.dispatchers.map { $0.id })"
+            ], info: nil, logLevel: .info, category: .`init`)
             self.logger?.log(logRequest)
         }
     }
@@ -212,14 +212,14 @@ public class ModulesManager {
                 self.config.dispatchers?.forEach { dispatcherType in
                     let dispatcherTypeDescription = String(describing: dispatcherType)
                     if dispatcherTypeDescription.contains(ModuleNames.tagmanagement),
-                       config.isTagManagementEnabled == false {
+                        config.isTagManagementEnabled == false {
                         return
                     } else {
                         self.dataLayerManager?.isTagManagementEnabled = true
                     }
 
                     if dispatcherTypeDescription.contains(ModuleNames.collect),
-                       config.isCollectEnabled == false {
+                        config.isCollectEnabled == false {
                         return
                     }
 

@@ -54,7 +54,6 @@ class TealiumHelper: NSObject {
         config.shouldUseRemotePublishSettings = false
         config.batchingEnabled = false
         config.memoryReportingEnabled = true
-//        config.sessionHandlingEnabled = true
         config.diskStorageEnabled = true
         //config.visitorServiceDelegate = self
         config.remoteAPIEnabled = false
@@ -102,34 +101,34 @@ class TealiumHelper: NSObject {
             }
 
 //            self.track(title: "init", data: nil)
-            let persitence = teal.persistentData
-            let sessionPersistence = teal.volatileData
-            let dataManager = teal.dataLayer
+            let dataLayer = teal.dataLayer
             teal.consentManager?.userConsentStatus = .consented
             
-            dataManager.add(key: "myvarforever", value: 123456, expiration: .forever)
+            dataLayer.add(key: "myvarforever", value: 123456, expiry: .forever)
 
-            persitence.add(data: ["some_key1": "some_val1"], expiration: .session)
+            // dataLayer.add(data: ["some_key1": "some_val1"])
+            dataLayer.add(data: ["some_key1": "some_val1"], expiry: .session)
 
-            persitence.add(data: ["some_key_forever":"some_val_forever"]) // forever
+            dataLayer.add(data: ["some_key_forever":"some_val_forever"], expiry: .forever) // forever
 
-            persitence.add(data: ["until": "restart"], expiration: .untilRestart)
+            dataLayer.add(data: ["until": "restart"], expiry: .untilRestart)
 
-            persitence.add(data: ["custom": "expire in 3 min"], expiration: .afterCustom((.minutes, 3)))
+            dataLayer.add(data: ["custom": "expire in 3 min"], expiry: .afterCustom((.minutes, 3)))
 
-            persitence.delete(for: ["myvarforever"])
+            dataLayer.delete(for: ["myvarforever"])
 
-            sessionPersistence.add(data: ["hello": "world"]) // session
+            dataLayer.add(data: ["hello": "world"], expiry: .untilRestart)
 
-            sessionPersistence.add(value: 123, for: "test") // session
+            dataLayer.add(key: "test", value: 123, expiry: .session)
+            //dataLayer.add(key: "test", value: 123)
 
-            sessionPersistence.delete(for: ["hello", "test"])
+            dataLayer.delete(for: ["hello", "test"])
 
-            persitence.add(value: "hello", for: "itsme", expiration: .afterCustom((.months, 1)))
+            dataLayer.add(key: "hello", value: "itsme", expiry: .afterCustom((.months, 1)))
 
-            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
+            print("Session Data: \(String(describing: dataLayer.allSessionData))")
 
-            print("Persistent Data: \(String(describing: persitence.dictionary))")
+            print("Persistent Data: \(String(describing: dataLayer.allEventData))")
 
         }
         tealium?.lifecycle

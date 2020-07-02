@@ -61,8 +61,8 @@ public struct GeofenceData: Codable {
 
         guard let path = bundle.path(forResource: file.replacingOccurrences(of: ".json", with: ""),
                                      ofType: "json") else {
-            logError(message: LocationErrors.noFile)
-            return nil
+                                        logError(message: LocationErrors.noFile)
+                                        return nil
         }
         guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) else {
             logError(message: LocationErrors.couldNotRetrieve)
@@ -88,8 +88,8 @@ public struct GeofenceData: Codable {
         do {
             let jsonString = try String(contentsOf: geofenceUrl)
             guard let data = jsonString.data(using: .utf8),
-                  let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
-                return
+                let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
+                    return
             }
             geofences = filter(geofences: geofenceData)
             logInfo(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎")
@@ -104,9 +104,9 @@ public struct GeofenceData: Codable {
             return
         }
         guard let data = json.data(using: .utf8),
-              let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
-            logError(message: LocationErrors.couldNotDecode)
-            return
+            let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
+                logError(message: LocationErrors.couldNotDecode)
+                return
         }
         geofences = filter(geofences: geofenceData)
         logInfo(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎")

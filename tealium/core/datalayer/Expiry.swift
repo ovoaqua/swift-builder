@@ -1,5 +1,5 @@
 //
-//  Expiration.swift
+//  Expiry.swift
 //  TealiumSwift
 //
 //  Created by Christina S on 4/22/20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum Expiration {
+public enum Expiry {
     case session
     case untilRestart
     case forever

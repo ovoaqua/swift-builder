@@ -49,9 +49,9 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     public init?(request: URLRequest) {
         self.urlRequest = request
         guard let requestData = requestData(from: request),
-              let _ = configData(from: requestData),
-              let _ = payload(from: requestData) else {
-            return nil
+            let _ = configData(from: requestData),
+            let _ = payload(from: requestData) else {
+                return nil
         }
     }
 
@@ -61,9 +61,9 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     /// - Returns: `[String: Any]?` containing key-value pairs to add to the RemoteCommandResponse
     func requestData(from request: URLRequest) -> [String: Any]? {
         guard let parameters = parameters(from: request),
-              let requestString = parameters[TealiumRemoteCommandsKey.request] as? String,
-              let dictionary = dictionary(from: requestString) else {
-            return nil
+            let requestString = parameters[TealiumRemoteCommandsKey.request] as? String,
+            let dictionary = dictionary(from: requestString) else {
+                return nil
         }
         return dictionary
     }
@@ -98,9 +98,9 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     ///  or an empty dictionary
     public var config: [String: Any] {
         guard let request = self.urlRequest,
-              let requestData = requestData(from: request),
-              let config = configData(from: requestData) else {
-            return [String: Any]()
+            let requestData = requestData(from: request),
+            let config = configData(from: requestData) else {
+                return [String: Any]()
         }
         return config
     }
@@ -122,9 +122,9 @@ public class TealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol,
     ///  or an empty dictionary
     public func payload() -> [String: Any] {
         guard let urlRequest = self.urlRequest,
-              let requestData = requestData(from: urlRequest),
-              let payload = payload(from: requestData) else {
-            return [String: Any]()
+            let requestData = requestData(from: urlRequest),
+            let payload = payload(from: requestData) else {
+                return [String: Any]()
         }
         return payload
     }
