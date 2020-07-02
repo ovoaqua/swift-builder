@@ -8,7 +8,7 @@
 
 //@testable import TealiumAppData
 //@testable import TealiumCollect
-//@testable import TealiumConsentManager
+//@testable import ConsentManager
 @testable import TealiumCollect
 @testable import TealiumCore
 @testable import TealiumTagManagement

@@ -134,11 +134,8 @@ public class LifecycleModule: Collector {
         guard let title = data[LifecycleKey.type] as? String else {
             return
         }
-        let trackData = Tealium.trackDataFor(title: title,
-                                             options: data)
-        let track = TealiumTrackRequest(data: trackData,
-                                        completion: nil)
-        delegate?.requestTrack(track)
+        let dispatch = EventDispatch(title, dataLayer: data)
+        delegate?.requestTrack(dispatch.trackRequest)
     }
 }
 

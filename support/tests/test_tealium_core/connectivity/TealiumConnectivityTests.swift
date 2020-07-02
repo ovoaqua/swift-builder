@@ -66,7 +66,7 @@ class TealiumConnectivityTests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let data = connectivity.data!
             
-            XCTAssertEqual(data[TealiumConnectivityKey.connectionType] as! String, TealiumConnectivityKey.connectionTypeWifi)
+            XCTAssertEqual(data[ConnectivityKey.connectionType] as! String, ConnectivityKey.connectionTypeWifi)
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: 1.0)
@@ -75,7 +75,7 @@ class TealiumConnectivityTests: XCTestCase {
     func testCurrentConnectionTypeLegacy() {
         let connectivity = legacyConnectivityRefreshEnabled
         let data = connectivity.data!
-        XCTAssertEqual(data[TealiumConnectivityKey.connectionType] as! String, TealiumConnectivityKey.connectionTypeWifi)
+        XCTAssertEqual(data[ConnectivityKey.connectionType] as! String, ConnectivityKey.connectionTypeWifi)
     }
     
     func testCheckIsConnected() {
@@ -149,7 +149,7 @@ class TealiumConnectivityTests: XCTestCase {
     // Legacy test only
      func testDefaultConnectivityInterval() {
          let connectivity = legacyConnectivityRefreshEnabled
-        XCTAssertEqual((connectivity.connectivityMonitor as! LegacyConnectivityMonitor).timer?.timeInterval, TimeInterval(exactly: TealiumConnectivityConstants.defaultInterval) ,"Unexpected default time interval")
+        XCTAssertEqual((connectivity.connectivityMonitor as! LegacyConnectivityMonitor).timer?.timeInterval, TimeInterval(exactly: ConnectivityConstants.defaultInterval) ,"Unexpected default time interval")
      }
      
      // Legacy test only

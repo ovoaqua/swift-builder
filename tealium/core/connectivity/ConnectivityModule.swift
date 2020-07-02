@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol TealiumConnectivityMonitorProtocol {
+protocol ConnectivityMonitorProtocol {
     init(config: TealiumConfig,
          completion: @escaping ((Result<Bool, Error>) -> Void))
     var config: TealiumConfig { get set }
@@ -20,18 +20,18 @@ protocol TealiumConnectivityMonitorProtocol {
     func checkIsConnected(completion: @escaping ((Result<Bool, Error>) -> Void))
 }
 
-public class ConnectivityModule: Collector, TealiumConnectivityDelegate {
+public class ConnectivityModule: Collector, ConnectivityDelegate {
 
     public var id: String = ModuleNames.connectivity
 
     public var data: [String: Any]? {
         if let connectionType = self.connectivityMonitor?.currentConnnectionType {
-            return [TealiumConnectivityKey.connectionType: connectionType,
-                    TealiumConnectivityKey.connectionTypeLegacy: connectionType,
+            return [ConnectivityKey.connectionType: connectionType,
+                    ConnectivityKey.connectionTypeLegacy: connectionType,
             ]
         } else {
-            return [TealiumConnectivityKey.connectionType: TealiumConnectivityKey.connectionTypeUnknown,
-                    TealiumConnectivityKey.connectionTypeLegacy: TealiumConnectivityKey.connectionTypeUnknown,
+            return [ConnectivityKey.connectionType: ConnectivityKey.connectionTypeUnknown,
+                    ConnectivityKey.connectionTypeLegacy: ConnectivityKey.connectionTypeUnknown,
             ]
         }
     }
@@ -45,8 +45,8 @@ public class ConnectivityModule: Collector, TealiumConnectivityDelegate {
     // used to simulate connection status for unit tests
     var forceConnectionOverride: Bool?
 
-    var connectivityMonitor: TealiumConnectivityMonitorProtocol?
-    var connectivityDelegates = TealiumMulticastDelegate<TealiumConnectivityDelegate>()
+    var connectivityMonitor: ConnectivityMonitorProtocol?
+    var connectivityDelegates = TealiumMulticastDelegate<ConnectivityDelegate>()
 
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate?,
@@ -83,10 +83,10 @@ public class ConnectivityModule: Collector, TealiumConnectivityDelegate {
         self.connectivityMonitor?.checkIsConnected(completion: completion)
     }
 
-    /// Method to add new classes implementing the TealiumConnectivityDelegate to subscribe to connectivity updates￼.
+    /// Method to add new classes implementing the ConnectivityDelegate to subscribe to connectivity updates￼.
     ///
-    /// - Parameter delegate: `TealiumConnectivityDelegate`
-    func addConnectivityDelegate(delegate: TealiumConnectivityDelegate) {
+    /// - Parameter delegate: `ConnectivityDelegate`
+    func addConnectivityDelegate(delegate: ConnectivityDelegate) {
         connectivityDelegates.add(delegate)
     }
 

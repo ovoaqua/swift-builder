@@ -307,3 +307,43 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
     }
 
 }
+
+public protocol Dispatch {
+    var trackRequest: TealiumTrackRequest { get }
+}
+
+public struct EventDispatch: Dispatch {
+    internal var eventName: String
+    internal var dataLayer: [String: Any]?
+
+    public init(_ eventName: String,
+                dataLayer: [String: Any]? = nil) {
+        self.eventName = eventName
+        self.dataLayer = dataLayer
+    }
+
+    public var trackRequest: TealiumTrackRequest {
+        var data = dataLayer ?? [String: Any]()
+        data[TealiumKey.event] = eventName
+        return TealiumTrackRequest(data: data)
+    }
+}
+
+public struct ViewDispatch: Dispatch {
+    internal var viewName: String
+    internal var dataLayer: [String: Any]?
+
+    public init(_ viewName: String,
+                dataLayer: [String: Any]? = nil) {
+        self.viewName = viewName
+        self.dataLayer = dataLayer
+    }
+
+    public var trackRequest: TealiumTrackRequest {
+        var data = dataLayer ?? [String: Any]()
+        data[TealiumKey.event] = viewName
+        data[TealiumKey.callType] = TealiumTrackType.view.description
+        data[TealiumKey.screenTitle] = viewName
+        return TealiumTrackRequest(data: data)
+    }
+}

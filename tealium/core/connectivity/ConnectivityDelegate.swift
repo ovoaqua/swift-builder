@@ -1,5 +1,5 @@
 //
-//  TealiumConnectivityDelegate.swift
+//  ConnectivityDelegate.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 16/5/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol TealiumConnectivityDelegate: class {
+public protocol ConnectivityDelegate: class {
 
     /// Called when network connectivity is lost.
     func connectionLost()

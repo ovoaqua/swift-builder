@@ -11,24 +11,24 @@ import Foundation
 import XCTest
 
 class ConsentManagerTests: XCTestCase {
-    var consentManager: TealiumConsentManager {
+    var consentManager: ConsentManager {
         let config = self.config!
-        return TealiumConsentManager(config: config, delegate: self, diskStorage: ConsentMockDiskStorage())
+        return ConsentManager(config: config, delegate: self, diskStorage: ConsentMockDiskStorage())
     }
     
-    var consentManagerEmptyDelegate: TealiumConsentManager {
+    var consentManagerEmptyDelegate: ConsentManager {
         let config = self.config!
-        return TealiumConsentManager(config: config, delegate: ConsentManagerDelegate(), diskStorage: ConsentMockDiskStorage())
+        return ConsentManager(config: config, delegate: ConsentManagerDelegate(), diskStorage: ConsentMockDiskStorage())
     }
     
-    var consentManagerCCPA: TealiumConsentManager {
+    var consentManagerCCPA: ConsentManager {
         let config = self.config!
         config.consentPolicy = .ccpa
-        return TealiumConsentManager(config: config, delegate: ConsentManagerDelegate(), diskStorage: ConsentMockDiskStorage())
+        return ConsentManager(config: config, delegate: ConsentManagerDelegate(), diskStorage: ConsentMockDiskStorage())
     }
     
-    func consentManagerForConfig(_ config: TealiumConfig) -> TealiumConsentManager {
-        return TealiumConsentManager(config: config, delegate: ConsentManagerDelegate(), diskStorage: ConsentMockDiskStorage())
+    func consentManagerForConfig(_ config: TealiumConfig) -> ConsentManager {
+        return ConsentManager(config: config, delegate: ConsentManagerDelegate(), diskStorage: ConsentMockDiskStorage())
     }
     
     
@@ -70,8 +70,8 @@ class ConsentManagerTests: XCTestCase {
     func testConsentStoreConfigFromDictionary() {
         let categories = ["cdp", "analytics"]
         let status = "consented"
-        let consentDictionary: [String: Any] = [TealiumConsentConstants.consentCategoriesKey: categories, TealiumConsentConstants.trackingConsentedKey: status]
-        var UserConsentPreferences = TealiumUserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
+        let consentDictionary: [String: Any] = [ConsentKey.consentCategoriesKey: categories, ConsentKey.trackingConsentedKey: status]
+        var UserConsentPreferences = UserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
         UserConsentPreferences.initWithDictionary(preferencesDictionary: consentDictionary)
         XCTAssertNotNil(UserConsentPreferences, "Consent Manager Test: \(#function) - Consent Preferences could not be initialized from dictionary")
         XCTAssertTrue(UserConsentPreferences.consentStatus == .consented, "Consent Manager Test: \(#function) - Consent Preferences contained unexpected status")
@@ -84,7 +84,7 @@ class ConsentManagerTests: XCTestCase {
         let consentManager = consentManagerForConfig(config)
         let expectation = self.expectation(description: "testTrackUserConsentPreferences")
         expectations.append(expectation)
-        let consentPreferences = TealiumUserConsentPreferences(consentStatus: .consented, consentCategories: [.cdp])
+        let consentPreferences = UserConsentPreferences(consentStatus: .consented, consentCategories: [.cdp])
         consentManager.trackUserConsentPreferences(consentPreferences)
         waiter.wait(for: expectations, timeout: 2)
     }
@@ -112,7 +112,7 @@ class ConsentManagerTests: XCTestCase {
     // extensively tested
     func testStoreUserConsentPreferences() {
         let consentManager = consentManagerEmptyDelegate
-        let preferences = TealiumUserConsentPreferences(consentStatus: .consented, consentCategories: [.cdp, .analytics])
+        let preferences = UserConsentPreferences(consentStatus: .consented, consentCategories: [.cdp, .analytics])
         consentManager.storeUserConsentPreferences(preferences)
         let savedPreferences = consentManager.consentPreferencesStorage?.preferences
         if let categories = savedPreferences?.consentCategories, let status = savedPreferences?.consentStatus {
@@ -268,7 +268,7 @@ class ConsentManagerTests: XCTestCase {
 
     func testSetUserConsentPreferences() {
         let consentManager = consentManagerEmptyDelegate
-        let expectedUserConsentPreferences = TealiumUserConsentPreferences(consentStatus: .consented, consentCategories: [.analytics, .engagement])
+        let expectedUserConsentPreferences = UserConsentPreferences(consentStatus: .consented, consentCategories: [.analytics, .engagement])
         consentManager.currentPolicy.preferences = expectedUserConsentPreferences
         let actualUserConsentPreferences = consentManager.currentPolicy.preferences
         XCTAssertEqual(actualUserConsentPreferences, expectedUserConsentPreferences)
@@ -284,7 +284,7 @@ extension ConsentManagerTests: TealiumModuleDelegate {
 
     func requestTrack(_ track: TealiumTrackRequest) {
         trackData = track.trackDictionary
-        if trackData?["tealium_event"] as? String == TealiumConsentConstants.gdprConsentCookieEventName {
+        if trackData?["tealium_event"] as? String == ConsentKey.gdprConsentCookieEventName {
             return
         }
         if let testtrackUserConsentPreferencesExpectation = getExpectation(forDescription: "testTrackUserConsentPreferences") {

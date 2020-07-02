@@ -1,5 +1,5 @@
 //
-//  TealiumConsentPreferencesStorage.swift
+//  ConsentPreferencesStorage.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 4/26/18.
@@ -9,16 +9,16 @@
 import Foundation
 
 /// Dedicated persistent storage for consent preferences
-class TealiumConsentPreferencesStorage {
+class ConsentPreferencesStorage {
 
     static let consentStorage = UserDefaults.standard
     static let key = "consentpreferences"
-    let readWriteQueue = ReadWrite("\(TealiumConsentPreferencesStorage.key).label")
+    let readWriteQueue = ReadWrite("\(ConsentPreferencesStorage.key).label")
     let diskStorage: TealiumDiskStorageProtocol
-    var preferences: TealiumUserConsentPreferences? {
+    var preferences: UserConsentPreferences? {
         get {
             readWriteQueue.read {
-                guard let data = diskStorage.retrieve(as: TealiumUserConsentPreferences.self) else {
+                guard let data = diskStorage.retrieve(as: UserConsentPreferences.self) else {
                     return nil
                 }
                 return data

@@ -2,7 +2,7 @@
 //@testable import TealiumAppData
 @testable import TealiumCollect
 //@testable import TealiumConnectivity
-@testable import TealiumConsentManager
+@testable import ConsentManager
 @testable import TealiumCore
 //@testable import TealiumDelegate
 //@testable import DeviceData

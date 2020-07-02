@@ -31,6 +31,12 @@ public class AppDataModule: Collector, AppDataCollection {
 
     public var config: TealiumConfig
 
+    /// Provided for testing - allows `Bundle` to be overridden
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
+    /// - Parameter bundle: `Bundle` for testing
     convenience init(config: TealiumConfig,
                      delegate: TealiumModuleDelegate,
                      diskStorage: TealiumDiskStorageProtocol?,
@@ -39,6 +45,12 @@ public class AppDataModule: Collector, AppDataCollection {
         self.bundle = bundle
     }
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
@@ -69,8 +81,6 @@ public class AppDataModule: Collector, AppDataCollection {
     var count: Int {
         return appData.count
     }
-
-    // MARK: INTERNAL
 
     /// Checks if persistent keys are missing from the `data` dictionary.
     ///

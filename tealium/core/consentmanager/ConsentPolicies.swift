@@ -9,11 +9,11 @@
 import Foundation
 
 protocol ConsentPolicy {
-    init (_ preferences: TealiumUserConsentPreferences)
+    init (_ preferences: UserConsentPreferences)
     var shouldUpdateConsentCookie: Bool { get }
     var updateConsentCookieEventName: String { get }
     var consentPolicyStatusInfo: [String: Any]? { get }
-    var preferences: TealiumUserConsentPreferences { get set }
+    var preferences: UserConsentPreferences { get set }
     var trackAction: TealiumConsentTrackAction { get }
     var consentTrackingEventName: String { get }
     var shouldLogConsentStatus: Bool { get }
@@ -21,7 +21,7 @@ protocol ConsentPolicy {
 
 struct CCPAConsentPolicy: ConsentPolicy {
 
-    init(_ preferences: TealiumUserConsentPreferences) {
+    init(_ preferences: UserConsentPreferences) {
         self.preferences = preferences
     }
 
@@ -29,10 +29,10 @@ struct CCPAConsentPolicy: ConsentPolicy {
     var shouldLogConsentStatus = false
 
     var consentTrackingEventName: String {
-        return self.currentStatus == .consented ? TealiumConsentConstants.consentGrantedEventName : TealiumConsentConstants.consentPartialEventName
+        return self.currentStatus == .consented ? ConsentKey.consentGrantedEventName : ConsentKey.consentPartialEventName
     }
 
-    var preferences: TealiumUserConsentPreferences
+    var preferences: UserConsentPreferences
 
     var currentStatus: TealiumConsentStatus {
         preferences.consentStatus
@@ -40,7 +40,7 @@ struct CCPAConsentPolicy: ConsentPolicy {
 
     var shouldUpdateConsentCookie: Bool = true
 
-    var updateConsentCookieEventName = TealiumConsentConstants.ccpaCookieEventName
+    var updateConsentCookieEventName = ConsentKey.ccpaCookieEventName
 
     var trackAction: TealiumConsentTrackAction {
         return .trackingAllowed
@@ -48,14 +48,14 @@ struct CCPAConsentPolicy: ConsentPolicy {
 
     var consentPolicyStatusInfo: [String: Any]? {
         let doNotSell = currentStatus == .notConsented ? true : false
-        return [TealiumConsentConstants.doNotSellKey: doNotSell,
-                TealiumConsentConstants.policyKey: TealiumConsentPolicy.ccpa.rawValue]
+        return [ConsentKey.doNotSellKey: doNotSell,
+                ConsentKey.policyKey: TealiumConsentPolicy.ccpa.rawValue]
     }
 }
 
 struct GDPRConsentPolicy: ConsentPolicy {
 
-    init(_ preferences: TealiumUserConsentPreferences) {
+    init(_ preferences: UserConsentPreferences) {
         self.preferences = preferences
     }
 
@@ -63,20 +63,20 @@ struct GDPRConsentPolicy: ConsentPolicy {
 
     var consentTrackingEventName: String {
         if preferences.consentStatus == .notConsented {
-            return TealiumConsentConstants.consentDeclinedEventName
+            return ConsentKey.consentDeclinedEventName
         }
         if let currentCategories = preferences.consentCategories?.count, currentCategories < TealiumConsentCategories.allCategories.count {
-            return TealiumConsentConstants.consentPartialEventName
+            return ConsentKey.consentPartialEventName
         } else {
-            return TealiumConsentConstants.consentGrantedEventName
+            return ConsentKey.consentGrantedEventName
         }
     }
 
-    var preferences: TealiumUserConsentPreferences
+    var preferences: UserConsentPreferences
 
     var shouldUpdateConsentCookie = true
 
-    var updateConsentCookieEventName = TealiumConsentConstants.gdprConsentCookieEventName
+    var updateConsentCookieEventName = ConsentKey.gdprConsentCookieEventName
 
     var currentStatus: TealiumConsentStatus {
         preferences.consentStatus
@@ -88,7 +88,7 @@ struct GDPRConsentPolicy: ConsentPolicy {
 
     var consentPolicyStatusInfo: [String: Any]? {
         var params = preferences.dictionary ?? [String: Any]()
-        params[TealiumConsentConstants.policyKey] = TealiumConsentPolicy.gdpr.rawValue
+        params[ConsentKey.policyKey] = TealiumConsentPolicy.gdpr.rawValue
         return params
     }
 

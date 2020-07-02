@@ -335,7 +335,7 @@ extension ModulesManager: TealiumModuleDelegate {
     }
 }
 
-extension ModulesManager: TealiumConnectivityDelegate {
+extension ModulesManager: ConnectivityDelegate {
     public func connectionLost() {
         logger?.log(TealiumLogRequest(title: ModulesManagerLogMessages.system, message: ModulesManagerLogMessages.connectionLost, info: nil, logLevel: .info, category: .general))
     }

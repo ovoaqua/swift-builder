@@ -20,10 +20,10 @@ import CoreTelephony
 import WatchKit
 #endif
 
-class DeviceDataModule: Collector {
-    let id: String = ModuleNames.devicedata
+public class DeviceDataModule: Collector {
+    public let id: String = ModuleNames.devicedata
 
-    var data: [String: Any]? {
+    public var data: [String: Any]? {
         guard config.shouldCollectTealiumData else {
             return nil
         }
@@ -31,17 +31,23 @@ class DeviceDataModule: Collector {
         return cachedData
     }
 
-    var isMemoryEnabled: Bool {
+    var isMemoryReportingEnabled: Bool {
         config.memoryReportingEnabled
     }
     var deviceDataCollection: DeviceDataCollection
     var cachedData = [String: Any]()
-    var config: TealiumConfig
+    public var config: TealiumConfig
 
-    required init(config: TealiumConfig,
-                  delegate: TealiumModuleDelegate?,
-                  diskStorage: TealiumDiskStorageProtocol?,
-                  completion: ModuleCompletion) {
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
+    required public init(config: TealiumConfig,
+                         delegate: TealiumModuleDelegate?,
+                         diskStorage: TealiumDiskStorageProtocol?,
+                         completion: ModuleCompletion) {
         self.config = config
         deviceDataCollection = DeviceData()
         cachedData = enableTimeData
@@ -81,7 +87,7 @@ class DeviceDataModule: Collector {
         result[DeviceDataKey.isCharging] = result[DeviceDataKey.isChargingLegacy] ?? ""
         result[TealiumKey.languageLegacy] = DeviceData.iso639Language
         result[TealiumKey.language] = result[TealiumKey.languageLegacy] ?? ""
-        if isMemoryEnabled {
+        if isMemoryReportingEnabled {
             result += deviceDataCollection.memoryUsage
         }
         result += deviceDataCollection.orientation

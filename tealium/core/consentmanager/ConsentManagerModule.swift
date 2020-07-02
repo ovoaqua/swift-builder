@@ -12,7 +12,7 @@ class ConsentManagerModule: Collector, DispatchValidator {
 
     public let id: String = ModuleNames.consentmanager
     var config: TealiumConfig
-    var consentManager: TealiumConsentManager?
+    var consentManager: ConsentManager?
     weak var delegate: TealiumModuleDelegate?
     var diskStorage: TealiumDiskStorageProtocol!
 
@@ -20,13 +20,16 @@ class ConsentManagerModule: Collector, DispatchValidator {
         consentManager?.currentPolicy.consentPolicyStatusInfo
     }
 
-    required init(config: TealiumConfig, delegate: TealiumModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: ModuleCompletion) {
+    required init(config: TealiumConfig,
+                  delegate: TealiumModuleDelegate?,
+                  diskStorage: TealiumDiskStorageProtocol?,
+                  completion: ModuleCompletion) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config,
-                                                             forModule: TealiumConsentConstants.moduleName,
+                                                             forModule: ConsentKey.moduleName,
                                                              isCritical: true)
         self.delegate = delegate
-        consentManager = TealiumConsentManager(config: config, delegate: delegate, diskStorage: self.diskStorage)
+        consentManager = ConsentManager(config: config, delegate: delegate, diskStorage: self.diskStorage)
         completion((.success(true), nil))
     }
 
@@ -39,8 +42,8 @@ class ConsentManagerModule: Collector, DispatchValidator {
         if newConfig != self.config,
            newConfig.account != config.account,
            newConfig.profile != config.profile {
-            self.diskStorage = TealiumDiskStorage(config: request.config, forModule: TealiumConsentConstants.moduleName, isCritical: true)
-            consentManager = TealiumConsentManager(config: config, delegate: delegate, diskStorage: self.diskStorage)
+            self.diskStorage = TealiumDiskStorage(config: request.config, forModule: ConsentKey.moduleName, isCritical: true)
+            consentManager = ConsentManager(config: config, delegate: delegate, diskStorage: self.diskStorage)
         }
         config = newConfig
     }
@@ -55,17 +58,17 @@ class ConsentManagerModule: Collector, DispatchValidator {
 
         // allow tracking calls to continue if they are for auditing purposes
         if let event = request.trackDictionary[TealiumKey.event] as? String,
-           (event == TealiumConsentConstants.consentPartialEventName ||
-                event == TealiumConsentConstants.consentGrantedEventName ||
-                event == TealiumConsentConstants.consentDeclinedEventName ||
-                event == TealiumConsentConstants.gdprConsentCookieEventName ||
-                event == TealiumConsentConstants.ccpaCookieEventName) {
+           (event == ConsentKey.consentPartialEventName ||
+                event == ConsentKey.consentGrantedEventName ||
+                event == ConsentKey.consentDeclinedEventName ||
+                event == ConsentKey.gdprConsentCookieEventName ||
+                event == ConsentKey.ccpaCookieEventName) {
             return (false, nil)
         }
         switch consentManager?.trackingStatus {
         case .trackingQueued:
             var newData = request.trackDictionary
-            newData[TealiumKey.queueReason] = TealiumConsentConstants.moduleName
+            newData[TealiumKey.queueReason] = ConsentKey.moduleName
             let newTrack = TealiumTrackRequest(data: newData)
             return (true, addConsentDataToTrack(newTrack).trackDictionary)
         case .trackingAllowed:

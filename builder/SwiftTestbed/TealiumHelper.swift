@@ -93,8 +93,6 @@ class TealiumHelper: NSObject {
 //        config.addRemoteCommand(remoteCommand)
         #endif
         
-        tealium!.
-        
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self,
                 let teal = self.tealium else {
@@ -133,7 +131,10 @@ class TealiumHelper: NSObject {
             print("Persistent Data: \(String(describing: persitence.dictionary))")
 
         }
-        tealium?.track(title: "hello")
+        
+        let dispatch = EventDispatch("hello")
+        
+        tealium?.track(dispatch)
         
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
@@ -170,29 +171,13 @@ class TealiumHelper: NSObject {
     }
 
     func track(title: String, data: [String: Any]?) {
-        tealium?.track(title: title,
-                       data: data,
-                       completion: { (success, info, error) in
-                        // Optional post processing
-                        if self.enableHelperLogs == false {
-                            return
-                        }
-                        
-                        
-                        
-        })
+        let dispatch = EventDispatch(title, dataLayer: data)
+        tealium?.track(dispatch)
     }
 
     func trackView(title: String, data: [String: Any]?) {
-//        self.start()
-        tealium?.trackView(title: title,
-                       data: data,
-                       completion: { (success, info, error) in
-                        // Optional post processing
-                        if self.enableHelperLogs == false {
-                            return
-                        }
-        })
+        let dispatch = ViewDispatch(title, dataLayer: data)
+        tealium?.track(dispatch)
 
     }
     

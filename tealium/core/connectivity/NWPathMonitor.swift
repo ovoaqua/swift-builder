@@ -16,23 +16,23 @@ import Network
 @available(watchOS 5, *)
 @available(macCatalyst 13, *)
 @available(OSX 10.14, *)
-class TealiumNWPathMonitor: TealiumConnectivityMonitorProtocol {
+class TealiumNWPathMonitor: ConnectivityMonitorProtocol {
 
     var currentConnnectionType: String? {
         guard isConnected == true else {
-            return TealiumConnectivityKey.connectionTypeNone
+            return ConnectivityKey.connectionTypeNone
         }
         if isCellular == true {
-            return TealiumConnectivityKey.connectionTypeCell
+            return ConnectivityKey.connectionTypeCell
         }
         if isWifi == true {
-            return TealiumConnectivityKey.connectionTypeWifi
+            return ConnectivityKey.connectionTypeWifi
         }
 
         if isWired == true {
-            return TealiumConnectivityKey.connectionTypeWired
+            return ConnectivityKey.connectionTypeWired
         }
-        return TealiumConnectivityKey.connectionTypeUnknown
+        return ConnectivityKey.connectionTypeUnknown
     }
 
     var monitor = NWPathMonitor()

@@ -56,10 +56,10 @@ class ConsentManagerModuleUnitTests: XCTestCase {
     func testShouldQueueAllowAuditingEvents() {
         module = ConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         let auditingEvents = [
-            TealiumConsentConstants.consentPartialEventName,
-            TealiumConsentConstants.consentGrantedEventName,
-            TealiumConsentConstants.consentDeclinedEventName,
-            TealiumConsentConstants.gdprConsentCookieEventName
+            ConsentKey.consentPartialEventName,
+            ConsentKey.consentGrantedEventName,
+            ConsentKey.consentDeclinedEventName,
+            ConsentKey.gdprConsentCookieEventName
         ]
         auditingEvents.forEach {
             track = TealiumTrackRequest(data: [TealiumKey.event: $0])
@@ -145,8 +145,8 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         module = ConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         module.consentManager?.userConsentStatus = .consented
         let expected: [String: Any] = [
-            TealiumConsentConstants.trackingConsentedKey: "consented",
-            TealiumConsentConstants.consentCategoriesKey: ["analytics",
+            ConsentKey.trackingConsentedKey: "consented",
+            ConsentKey.consentCategoriesKey: ["analytics",
                                                            "affiliates",
                                                            "display_ads",
                                                            "email",
@@ -176,8 +176,8 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         module = ConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         module.consentManager?.userConsentStatus = .notConsented
         let expected: [String: Any] = [
-            TealiumConsentConstants.trackingConsentedKey: "notConsented",
-            TealiumConsentConstants.consentCategoriesKey: [],
+            ConsentKey.trackingConsentedKey: "notConsented",
+            ConsentKey.consentCategoriesKey: [],
             "test": "track",
             "policy": "gdpr"
         ]
@@ -194,8 +194,8 @@ class ConsentManagerModuleUnitTests: XCTestCase {
         module.consentManager?.userConsentStatus = .consented
         module.consentManager?.resetUserConsentPreferences()
         let expected: [String: Any] = [
-            TealiumConsentConstants.trackingConsentedKey: "unknown",
-            TealiumConsentConstants.consentCategoriesKey: [],
+            ConsentKey.trackingConsentedKey: "unknown",
+            ConsentKey.consentCategoriesKey: [],
             "test": "track",
             "policy": "gdpr"
         ]

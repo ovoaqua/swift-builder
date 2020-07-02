@@ -65,25 +65,3 @@ public enum TealiumLoggerType {
 }
 // swiftlint:enable identifier_name
 
-public extension TealiumConfig {
-    var loggerType: TealiumLoggerType {
-        get {
-            options[TealiumKey.loggerType] as? TealiumLoggerType ?? TealiumConstants.defaultLoggerType
-        }
-
-        set {
-            options[TealiumKey.loggerType] = newValue
-        }
-    }
-
-    var logLevel: TealiumLogLevel? {
-        get {
-            options[TealiumKey.logLevel] as? TealiumLogLevel
-        }
-
-        set {
-            options[TealiumKey.logLevel] = newValue
-        }
-    }
-
-}

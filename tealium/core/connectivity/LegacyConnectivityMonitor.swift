@@ -12,15 +12,15 @@ import Foundation
 import SystemConfiguration
 #endif
 
-class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
+class LegacyConnectivityMonitor: ConnectivityMonitorProtocol {
     var currentConnnectionType: String? {
         #if os(watchOS)
-        return TealiumConnectivityKey.connectionTypeUnknown
+        return ConnectivityKey.connectionTypeUnknown
         #else
         if isConnected == true {
             return connectionType
         } else {
-            return TealiumConnectivityKey.connectionTypeNone
+            return ConnectivityKey.connectionTypeNone
         }
         #endif
     }
@@ -31,7 +31,7 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
         return false
         #else
         let connected = isConnectedToNetwork()
-        if config.wifiOnlySending == true, currentConnnectionType != TealiumConnectivityKey.connectionTypeWifi {
+        if config.wifiOnlySending == true, currentConnnectionType != ConnectivityKey.connectionTypeWifi {
             return false
         } else {
             return connected
@@ -44,7 +44,7 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
     }
 
     var isCellular: Bool? {
-        currentConnnectionType == TealiumConnectivityKey.connectionTypeCell
+        currentConnnectionType == ConnectivityKey.connectionTypeCell
     }
 
     var isWired: Bool? {
@@ -97,7 +97,7 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
 
     func checkConnectionFromURLSessionTask(completion: @escaping ((Result<Bool, Error>) -> Void)) {
         let session = self.urlSession ?? URLSession(configuration: .ephemeral)
-        guard let testURL = URL(string: TealiumConnectivityConstants.connectivityTestURL) else {
+        guard let testURL = URL(string: ConnectivityConstants.connectivityTestURL) else {
             return
         }
         var request = URLRequest(url: testURL)
@@ -137,9 +137,9 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
         connectionType = TealiumConnectivityKey.connectionTypeWifi
         #else
         if flags.contains(.isWWAN) == true {
-            connectionType = TealiumConnectivityKey.connectionTypeCell
+            connectionType = ConnectivityKey.connectionTypeCell
         } else if flags.contains(.connectionRequired) == false {
-            connectionType = TealiumConnectivityKey.connectionTypeWifi
+            connectionType = ConnectivityKey.connectionTypeWifi
         }
         #endif
 
@@ -152,7 +152,7 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
         let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
         let isConnected = (isReachable && !needsConnection)
         if !isConnected {
-            connectionType = TealiumConnectivityKey.connectionTypeNone
+            connectionType = ConnectivityKey.connectionTypeNone
         }
 
         return isConnected
@@ -162,7 +162,7 @@ class LegacyConnectivityMonitor: TealiumConnectivityMonitorProtocol {
     /// Sets a timer to check for connectivity status updates￼.
     ///
     /// - Parameter interval: `Int` representing the time interval in seconds for new connectivity checks
-    func refreshConnectivityStatus(_ interval: Int = TealiumConnectivityConstants.defaultInterval) {
+    func refreshConnectivityStatus(_ interval: Int = ConnectivityConstants.defaultInterval) {
         // already an active timer, so don't start a new one
         if timer != nil {
             return

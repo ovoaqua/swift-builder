@@ -1,5 +1,5 @@
 //
-//  TealiumConnectivityConfigExtensions.swift
+//  ConnectivityConfigExtensions.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/03/2019.
@@ -13,11 +13,11 @@ public extension TealiumConfig {
     /// Sets the interval with which new connectivity checks will be carried out.
     var connectivityRefreshInterval: Int? {
         get {
-            options[TealiumConnectivityKey.refreshIntervalKey] as? Int
+            options[ConnectivityKey.refreshIntervalKey] as? Int
         }
 
         set {
-            options[TealiumConnectivityKey.refreshIntervalKey] = newValue
+            options[ConnectivityKey.refreshIntervalKey] = newValue
         }
     }
 
@@ -25,11 +25,11 @@ public extension TealiumConfig {
     /// If `true` (default), queued track calls will be flushed when connectivity is restored.
     var connectivityRefreshEnabled: Bool? {
         get {
-            options[TealiumConnectivityKey.refreshEnabledKey] as? Bool
+            options[ConnectivityKey.refreshEnabledKey] as? Bool
         }
 
         set {
-            options[TealiumConnectivityKey.refreshEnabledKey] = newValue
+            options[ConnectivityKey.refreshEnabledKey] = newValue
         }
     }
 }

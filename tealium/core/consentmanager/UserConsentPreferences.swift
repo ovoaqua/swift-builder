@@ -1,5 +1,5 @@
 //
-//  TealiumUserConsentPreferences.swift
+//  UserConsentPreferences.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 4/25/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TealiumUserConsentPreferences: Equatable, Codable {
+public struct UserConsentPreferences: Equatable, Codable {
 
     var consentCategories: [TealiumConsentCategories]?
     var consentStatus: TealiumConsentStatus
@@ -27,11 +27,11 @@ public struct TealiumUserConsentPreferences: Equatable, Codable {
     ///
     /// - Parameter preferencesDictionary: `[String: Any]` containing a valid consent preferences dictionary.
     public mutating func initWithDictionary(preferencesDictionary: [String: Any]) {
-        if let categories = preferencesDictionary[TealiumConsentConstants.consentCategoriesKey] as? [String] {
+        if let categories = preferencesDictionary[ConsentKey.consentCategoriesKey] as? [String] {
             self.consentCategories = consentCategoriesStringToEnum(categories)
         }
 
-        if let consentedStatus = preferencesDictionary[TealiumConsentConstants.trackingConsentedKey] as? String {
+        if let consentedStatus = preferencesDictionary[ConsentKey.trackingConsentedKey] as? String {
             switch consentedStatus {
             case TealiumConsentStatus.consented.rawValue:
                 self.consentStatus = TealiumConsentStatus.consented
@@ -73,12 +73,12 @@ public struct TealiumUserConsentPreferences: Equatable, Codable {
     public var dictionary: [String: Any]? {
         var preferencesDictionary = [String: Any]()
 
-        preferencesDictionary[TealiumConsentConstants.trackingConsentedKey] = self.consentStatus.rawValue
+        preferencesDictionary[ConsentKey.trackingConsentedKey] = self.consentStatus.rawValue
 
         if let categories = self.consentCategories, categories.count > 0 {
-            preferencesDictionary[TealiumConsentConstants.consentCategoriesKey] = consentCategoriesEnumToStringArray(categories)
+            preferencesDictionary[ConsentKey.consentCategoriesKey] = consentCategoriesEnumToStringArray(categories)
         } else {
-            preferencesDictionary[TealiumConsentConstants.consentCategoriesKey] = [String]()
+            preferencesDictionary[ConsentKey.consentCategoriesKey] = [String]()
         }
         return preferencesDictionary.count > 0 ? preferencesDictionary : nil
     }

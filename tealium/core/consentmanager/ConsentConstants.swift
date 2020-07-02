@@ -1,5 +1,5 @@
 //
-//  TealiumConsentConstants.swift
+//  ConsentConstants.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 4/20/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum TealiumConsentConstants {
+public enum ConsentKey {
     static let consentCategoriesKey = "consent_categories"
     static let doNotSellKey = "do_not_sell"
     static let trackingConsentedKey = "tracking_consented"

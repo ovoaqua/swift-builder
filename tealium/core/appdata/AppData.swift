@@ -1,5 +1,5 @@
 //
-//  VolatileAppData.swift
+//  AppData.swift
 //  TealiumSwift
 //
 //  Created by Craig Rouse on 28/11/2019.

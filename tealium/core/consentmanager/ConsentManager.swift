@@ -1,5 +1,5 @@
 //
-//  TealiumConsentManager.swift
+//  ConsentManager.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 3/29/18.
@@ -8,11 +8,11 @@
 
 import Foundation
 
-public class TealiumConsentManager {
+public class ConsentManager {
 
     private weak var delegate: TealiumModuleDelegate?
     var config: TealiumConfig
-    var consentPreferencesStorage: TealiumConsentPreferencesStorage?
+    var consentPreferencesStorage: ConsentPreferencesStorage?
     var consentLoggingEnabled: Bool {
         config.consentLoggingEnabled
     }
@@ -62,11 +62,11 @@ public class TealiumConsentManager {
                 delegate: TealiumModuleDelegate?,
                 diskStorage: TealiumDiskStorageProtocol) {
         self.diskStorage = diskStorage
-        consentPreferencesStorage = TealiumConsentPreferencesStorage(diskStorage: diskStorage)
+        consentPreferencesStorage = ConsentPreferencesStorage(diskStorage: diskStorage)
         self.config = config
         self.delegate = delegate
         // try to load config from persistent storage first
-        let preferences = consentPreferencesStorage?.preferences ?? TealiumUserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
+        let preferences = consentPreferencesStorage?.preferences ?? UserConsentPreferences(consentStatus: .unknown, consentCategories: nil)
 
         switch config.consentPolicy ?? .gdpr {
         case .ccpa:
@@ -84,7 +84,7 @@ public class TealiumConsentManager {
     /// Sends a track call containing the consent settings if consent logging is enabled￼.
     ///
     /// - Parameter preferences: `TealiumUserConsentPreferences?`
-    func trackUserConsentPreferences(_ preferences: TealiumUserConsentPreferences?) {
+    func trackUserConsentPreferences(_ preferences: UserConsentPreferences?) {
         if var consentData = currentPolicy.consentPolicyStatusInfo {
             consentData[TealiumKey.event] = currentPolicy.consentTrackingEventName
             // this track call must only be sent if "Log Consent Changes" is enabled and user has consented
@@ -115,7 +115,7 @@ public class TealiumConsentManager {
     }
 
     /// Saves current consent preferences to persistent storage.
-    func storeUserConsentPreferences(_ preferences: TealiumUserConsentPreferences) {
+    func storeUserConsentPreferences(_ preferences: UserConsentPreferences) {
         currentPolicy.preferences = preferences
         // store data
         consentPreferencesStorage?.preferences = preferences
@@ -140,7 +140,7 @@ public class TealiumConsentManager {
 }
 
 // MARK: Public API
-public extension TealiumConsentManager {
+public extension ConsentManager {
 
     /// Resets all consent preferences in memory and in persistent storage.
     func resetUserConsentPreferences() {

@@ -1,5 +1,5 @@
 //
-//  TealiumAppDataCollection.swift
+//  AppDataCollection.swift
 //  TealiumSwift
 //
 //  Created by Craig Rouse on 29/11/2019.

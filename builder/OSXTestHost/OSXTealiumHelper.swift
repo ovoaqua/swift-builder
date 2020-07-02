@@ -10,7 +10,7 @@ import Foundation
 import TealiumCore
 import TealiumCollect
 import TealiumConnectivity
-import TealiumConsentManager
+import ConsentManager
 import TealiumDispatchQueue
 import TealiumDelegate
 import DeviceData
