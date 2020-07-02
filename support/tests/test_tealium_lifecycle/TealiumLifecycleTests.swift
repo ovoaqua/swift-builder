@@ -12,12 +12,12 @@ import XCTest
 
 class TealiumLifecycleTests: XCTestCase {
 
-    var lifecycle: TealiumLifecycle!
+    var lifecycle: Lifecycle!
 
     override func setUp() {
         super.setUp()
 
-        lifecycle = TealiumLifecycle()
+        lifecycle = Lifecycle()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
@@ -274,12 +274,12 @@ class TealiumLifecycleTests: XCTestCase {
         let date1 = Date(timeIntervalSince1970: 0)
         let date2 = Date(timeIntervalSince1970: 10)
 
-        let initialSession = TealiumLifecycleSession(launchDate: date1)
-        let session = TealiumLifecycleSession(launchDate: date2)
+        let initialSession = LifecycleSession(launchDate: date1)
+        let session = LifecycleSession(launchDate: date2)
         let sizeLimit = 50
         let testQueue = sizeLimit * 10
 
-        var lifecycle = TealiumLifecycle()
+        var lifecycle = Lifecycle()
         lifecycle.sessionsSize = sizeLimit
 
         lifecycle.sessions.append(initialSession)

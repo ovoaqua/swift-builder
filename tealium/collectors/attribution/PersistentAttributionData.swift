@@ -70,22 +70,22 @@ public struct PersistentAttributionData: Codable {
     /// - Returns: `[String: Any]`
     public func toDictionary() -> [String: String] {
         // note: compiler cannot type-check in reasonable time, so assignment and return split up into separate statements
-        let attributionData: [String: String] = [TealiumAttributionKey.clickedWithin30D: clickedWithin30D ?? "",
-                                                 TealiumAttributionKey.clickedDate: clickedDate ?? "",
-                                                 TealiumAttributionKey.conversionDate: conversionDate ?? "",
-                                                 TealiumAttributionKey.conversionType: conversionType ?? "",
-                                                 TealiumAttributionKey.purchaseDate: purchaseDate ?? "",
-                                                 TealiumAttributionKey.orgName: orgName ?? "",
-                                                 TealiumAttributionKey.orgId: orgId ?? "",
-                                                 TealiumAttributionKey.campaignId: campaignId ?? "",
-                                                 TealiumAttributionKey.campaignName: campaignName ?? "",
-                                                 TealiumAttributionKey.adGroupId: adGroupId ?? "",
-                                                 TealiumAttributionKey.adGroupName: adGroupName ?? "",
-                                                 TealiumAttributionKey.adKeyword: adKeyword ?? "",
-                                                 TealiumAttributionKey.adKeywordMatchType: adKeywordMatchType ?? "",
-                                                 TealiumAttributionKey.creativeSetName: creativeSetName ?? "",
-                                                 TealiumAttributionKey.creativeSetId: creativeSetId ?? "",
-                                                 TealiumAttributionKey.region: region ?? "",
+        let attributionData: [String: String] = [AttributionKey.clickedWithin30D: clickedWithin30D ?? "",
+                                                 AttributionKey.clickedDate: clickedDate ?? "",
+                                                 AttributionKey.conversionDate: conversionDate ?? "",
+                                                 AttributionKey.conversionType: conversionType ?? "",
+                                                 AttributionKey.purchaseDate: purchaseDate ?? "",
+                                                 AttributionKey.orgName: orgName ?? "",
+                                                 AttributionKey.orgId: orgId ?? "",
+                                                 AttributionKey.campaignId: campaignId ?? "",
+                                                 AttributionKey.campaignName: campaignName ?? "",
+                                                 AttributionKey.adGroupId: adGroupId ?? "",
+                                                 AttributionKey.adGroupName: adGroupName ?? "",
+                                                 AttributionKey.adKeyword: adKeyword ?? "",
+                                                 AttributionKey.adKeywordMatchType: adKeywordMatchType ?? "",
+                                                 AttributionKey.creativeSetName: creativeSetName ?? "",
+                                                 AttributionKey.creativeSetId: creativeSetId ?? "",
+                                                 AttributionKey.region: region ?? "",
         ]
 
         return attributionData.filter {

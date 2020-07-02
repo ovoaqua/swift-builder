@@ -1,5 +1,5 @@
 //
-//  TealiumLifecycle.swift
+//  Lifecycle.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 05/07/2019.
@@ -10,7 +10,7 @@ import Foundation
 
 // swiftlint:disable type_body_length
 // swiftlint:disable file_length
-public struct TealiumLifecycle: Codable {
+public struct Lifecycle: Codable {
 
     var autotracked: String?
 
@@ -25,7 +25,7 @@ public struct TealiumLifecycle: Codable {
     var dateLastUpdate: Date?
     var totalSecondsAwake: Int
     var sessionsSize: Int
-    var sessions = [TealiumLifecycleSession]() {
+    var sessions = [LifecycleSession]() {
         didSet {
             // Limit size of sessions records
             while sessions.count > sessionsSize &&
@@ -59,7 +59,7 @@ public struct TealiumLifecycle: Codable {
         self.countWakeTotal = try values.decode(Int.self, forKey: .countWakeTotal)
         self.dateLastUpdate = try values.decodeIfPresent(Date.self, forKey: .dateLastUpdate)
         self.totalSecondsAwake = try values.decode(Int.self, forKey: .totalSecondsAwake)
-        self.sessions = try values.decode([TealiumLifecycleSession].self, forKey: .sessions)
+        self.sessions = try values.decode([LifecycleSession].self, forKey: .sessions)
         self.sessionsSize = LifecycleKey.defaultSessionsSize
     }
 
@@ -316,14 +316,14 @@ public struct TealiumLifecycle: Codable {
     ///   - overrideSession: `TealiumLifecycleSession? `override session. Mainly for testing.
     /// - Returns: `[String:Any]` containing lifecycle launch variables
     public mutating func newLaunch(at date: Date,
-                                   overrideSession: TealiumLifecycleSession?) -> [String: Any] {
+                                   overrideSession: LifecycleSession?) -> [String: Any] {
         autotracked = "true"
         countLaunch += 1
         countLaunchTotal += 1
         countWake += 1
         countWakeTotal += 1
 
-        let newSession = overrideSession ?? TealiumLifecycleSession(launchDate: date)
+        let newSession = overrideSession ?? LifecycleSession(launchDate: date)
         sessions.append(newSession)
 
         if crashDetected == "true" {
@@ -380,12 +380,12 @@ public struct TealiumLifecycle: Codable {
     ///   - date: `Date` to trigger wake from.
     ///   - overrideSession: `TealiumLifecycleSession? `override session. Mainly for testing.
     /// - Returns: `[String:Any]` containing lifecycle wake variables
-    public mutating func newWake(at date: Date, overrideSession: TealiumLifecycleSession?) -> [String: Any] {
+    public mutating func newWake(at date: Date, overrideSession: LifecycleSession?) -> [String: Any] {
         autotracked = "true"
         countWake += 1
         countWakeTotal += 1
 
-        let newSession = overrideSession ?? TealiumLifecycleSession(wakeDate: date)
+        let newSession = overrideSession ?? LifecycleSession(wakeDate: date)
         sessions.append(newSession)
 
         return asDictionary(type: LifecycleType.wake.description,

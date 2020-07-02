@@ -1,5 +1,5 @@
 //
-//  TealiumAttributionConstants.swift
+//  AttributionConstants.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 14/03/2019.
@@ -8,27 +8,27 @@
 #if os(iOS)
 import Foundation
 
-public struct TealiumAttributionKey {
+public struct AttributionKey {
     public static let allCases = [
-        TealiumAttributionKey.idfa,
-        TealiumAttributionKey.idfv,
-        TealiumAttributionKey.isTrackingAllowed,
-        TealiumAttributionKey.clickedWithin30D,
-        TealiumAttributionKey.clickedDate,
-        TealiumAttributionKey.conversionDate,
-        TealiumAttributionKey.conversionType,
-        TealiumAttributionKey.orgName,
-        TealiumAttributionKey.orgId,
-        TealiumAttributionKey.purchaseDate,
-        TealiumAttributionKey.campaignId,
-        TealiumAttributionKey.campaignName,
-        TealiumAttributionKey.adGroupId,
-        TealiumAttributionKey.adGroupName,
-        TealiumAttributionKey.adKeyword,
-        TealiumAttributionKey.adKeywordMatchType,
-        TealiumAttributionKey.creativeSetId,
-        TealiumAttributionKey.creativeSetName,
-        TealiumAttributionKey.region
+        AttributionKey.idfa,
+        AttributionKey.idfv,
+        AttributionKey.isTrackingAllowed,
+        AttributionKey.clickedWithin30D,
+        AttributionKey.clickedDate,
+        AttributionKey.conversionDate,
+        AttributionKey.conversionType,
+        AttributionKey.orgName,
+        AttributionKey.orgId,
+        AttributionKey.purchaseDate,
+        AttributionKey.campaignId,
+        AttributionKey.campaignName,
+        AttributionKey.adGroupId,
+        AttributionKey.adGroupName,
+        AttributionKey.adKeyword,
+        AttributionKey.adKeywordMatchType,
+        AttributionKey.creativeSetId,
+        AttributionKey.creativeSetName,
+        AttributionKey.region
     ]
 
     // Internal module keys

@@ -9,26 +9,26 @@
 import Foundation
 @testable import TealiumAttribution
 
-class MockAttributionData: TealiumAttributionDataProtocol {
+class MockAttributionData: AttributionDataProtocol {
     var appleAttributionDetails: PersistentAttributionData?
     var appleSearchAdsDataCalled = 0
     init() {
         self.appleAttributionDetails = PersistentAttributionData(withDictionary: [
-            TealiumAttributionKey.clickedWithin30D: "true",
-            TealiumAttributionKey.orgName: "org name",
-            TealiumAttributionKey.orgId: "555555",
-            TealiumAttributionKey.campaignId: "12345678",
-            TealiumAttributionKey.campaignName: "campaign name",
-            TealiumAttributionKey.conversionDate: "2020-01-04T17:18:07Z",
-            TealiumAttributionKey.conversionType: "Download",
-            TealiumAttributionKey.clickedDate: "2020-01-04T17:17:00Z",
-            TealiumAttributionKey.adGroupId: "12345678",
-            TealiumAttributionKey.adGroupName: "adgroup name",
-            TealiumAttributionKey.region: "US",
-            TealiumAttributionKey.adKeyword: "keyword",
-            TealiumAttributionKey.adKeywordMatchType: "Broad",
-            TealiumAttributionKey.creativeSetId: "12345678",
-            TealiumAttributionKey.creativeSetName: "Creative Set name"
+            AttributionKey.clickedWithin30D: "true",
+            AttributionKey.orgName: "org name",
+            AttributionKey.orgId: "555555",
+            AttributionKey.campaignId: "12345678",
+            AttributionKey.campaignName: "campaign name",
+            AttributionKey.conversionDate: "2020-01-04T17:18:07Z",
+            AttributionKey.conversionType: "Download",
+            AttributionKey.clickedDate: "2020-01-04T17:17:00Z",
+            AttributionKey.adGroupId: "12345678",
+            AttributionKey.adGroupName: "adgroup name",
+            AttributionKey.region: "US",
+            AttributionKey.adKeyword: "keyword",
+            AttributionKey.adKeywordMatchType: "Broad",
+            AttributionKey.creativeSetId: "12345678",
+            AttributionKey.creativeSetName: "Creative Set name"
         ])
     }
 
@@ -47,9 +47,9 @@ class MockAttributionData: TealiumAttributionDataProtocol {
     }
 
     var volatileData: [String: Any] {
-        [TealiumAttributionKey.idfa: idfa,
-         TealiumAttributionKey.idfv: idfv,
-         TealiumAttributionKey.isTrackingAllowed: isAdvertisingTrackingEnabled]
+        [AttributionKey.idfa: idfa,
+         AttributionKey.idfv: idfv,
+         AttributionKey.isTrackingAllowed: isAdvertisingTrackingEnabled]
     }
 
     var isAdvertisingTrackingEnabled: String = "true"

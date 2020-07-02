@@ -1,5 +1,5 @@
 //
-//  TealiumAttribution.swift
+//  AttributionData.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 14/03/2019.
@@ -13,7 +13,7 @@ import TealiumCore
 
 // Apple Documentation: https://searchads.apple.com/v/advanced/help/c/docs/pdf/attribution-api.pdf
 
-public class TealiumAttributionData: TealiumAttributionDataProtocol {
+public class AttributionData: AttributionDataProtocol {
     var identifierManager: TealiumASIdentifierManagerProtocol
     var adClient: TealiumAdClientProtocol
     let diskStorage: TealiumDiskStorageProtocol
@@ -69,9 +69,9 @@ public class TealiumAttributionData: TealiumAttributionDataProtocol {
     /// - Returns: `[String: Any]` of all volatile data (collected at init time): IDFV, IDFA, isTrackingAllowed
     public lazy var volatileData: [String: Any] = {
         return [
-            TealiumAttributionKey.idfa: idfa,
-            TealiumAttributionKey.idfv: idfv,
-            TealiumAttributionKey.isTrackingAllowed: isAdvertisingTrackingEnabled
+            AttributionKey.idfa: idfa,
+            AttributionKey.idfv: idfv,
+            AttributionKey.isTrackingAllowed: isAdvertisingTrackingEnabled
         ]
     }()
 

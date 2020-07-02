@@ -61,15 +61,15 @@ public struct GeofenceData: Codable {
 
         guard let path = bundle.path(forResource: file.replacingOccurrences(of: ".json", with: ""),
                                      ofType: "json") else {
-            logError(message: TealiumLocationErrors.noFile.rawValue)
+            logError(message: LocationErrors.noFile)
             return nil
         }
         guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) else {
-            logError(message: TealiumLocationErrors.couldNotRetrieve.rawValue)
+            logError(message: LocationErrors.couldNotRetrieve)
             return nil
         }
         guard let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: jsonData) else {
-            logError(message: TealiumLocationErrors.couldNotDecode.rawValue)
+            logError(message: LocationErrors.couldNotDecode)
             return nil
         }
         geofences = filter(geofences: geofenceData)
@@ -78,11 +78,11 @@ public struct GeofenceData: Codable {
 
     init?(url: String, logger: TealiumLoggerProtocol? = nil) {
         guard !url.isEmpty else {
-            logError(message: TealiumLocationErrors.noUrl.rawValue)
+            logError(message: LocationErrors.noUrl)
             return
         }
         guard let geofenceUrl = URL(string: url) else {
-            logError(message: TealiumLocationErrors.invalidUrl.rawValue)
+            logError(message: LocationErrors.invalidUrl)
             return
         }
         do {
@@ -100,12 +100,12 @@ public struct GeofenceData: Codable {
 
     init?(json: String, logger: TealiumLoggerProtocol? = nil) {
         guard !json.isEmpty else {
-            logError(message: TealiumLocationErrors.noJson.rawValue)
+            logError(message: LocationErrors.noJson)
             return
         }
         guard let data = json.data(using: .utf8),
               let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
-            logError(message: TealiumLocationErrors.couldNotDecode.rawValue)
+            logError(message: LocationErrors.couldNotDecode)
             return
         }
         geofences = filter(geofences: geofenceData)

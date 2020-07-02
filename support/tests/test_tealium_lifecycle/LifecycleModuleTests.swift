@@ -47,7 +47,7 @@ class LifecycleModuleTests: XCTestCase {
 
     func testLifecycleSavedToStorage() {
         lifecycleModule = LifecycleModule(config: config, delegate: self, diskStorage: LifecycleMockDiskStorage(), completion: { _ in })
-        let lifecycle = TealiumLifecycle()
+        let lifecycle = Lifecycle()
         lifecycleModule.lifecycle = lifecycle
         let stored = lifecycleModule.lifecycle
         XCTAssertNotNil(stored)

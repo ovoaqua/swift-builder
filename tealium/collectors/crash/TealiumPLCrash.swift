@@ -143,30 +143,30 @@ public class TealiumPLCrash: AppDataCollection {
                     registerDictionary[register.registerName] = String(format: "0x%02x", register.registerValue)
                 }
             }
-            threadDictionary[TealiumCrashKey.ImageThread.registers] = registerDictionary
-            threadDictionary[TealiumCrashKey.ImageThread.crashed] = thread.crashed
-            threadDictionary[TealiumCrashKey.ImageThread.threadId] = NSNull() // NR: null
-            threadDictionary[TealiumCrashKey.ImageThread.priority] = NSNull() // NR: null
+            threadDictionary[CrashKey.ImageThread.registers] = registerDictionary
+            threadDictionary[CrashKey.ImageThread.crashed] = thread.crashed
+            threadDictionary[CrashKey.ImageThread.threadId] = NSNull() // NR: null
+            threadDictionary[CrashKey.ImageThread.priority] = NSNull() // NR: null
 
             var stackArray = [[String: Any]]()
             var stackDictionary = [String: Any]()
             if let stackFrames = thread.stackFrames, !thread.stackFrames.isEmpty {
                 for case let stack as TEALPLCrashReportStackFrameInfo in stackFrames {
-                    stackDictionary[TealiumCrashKey.ImageThread.instructionPointer] = stack.instructionPointer
+                    stackDictionary[CrashKey.ImageThread.instructionPointer] = stack.instructionPointer
                     var symbolDictionary = [String: Any]()
                     if let symbolInfo = stack.symbolInfo {
-                        symbolDictionary[TealiumCrashKey.ImageThread.symbolName] = symbolInfo.symbolName
-                        symbolDictionary[TealiumCrashKey.ImageThread.symbolStartAddress] = symbolInfo.startAddress
+                        symbolDictionary[CrashKey.ImageThread.symbolName] = symbolInfo.symbolName
+                        symbolDictionary[CrashKey.ImageThread.symbolStartAddress] = symbolInfo.startAddress
                     } else {
                         // NR has these values and are required
-                        symbolDictionary[TealiumCrashKey.ImageThread.symbolName] = NSNull()
-                        symbolDictionary[TealiumCrashKey.ImageThread.symbolStartAddress] = 0
+                        symbolDictionary[CrashKey.ImageThread.symbolName] = NSNull()
+                        symbolDictionary[CrashKey.ImageThread.symbolStartAddress] = 0
                     }
-                    stackDictionary[TealiumCrashKey.ImageThread.symbolInfo] = symbolDictionary
+                    stackDictionary[CrashKey.ImageThread.symbolInfo] = symbolDictionary
                     stackArray.append(stackDictionary)
                 }
             }
-            threadDictionary[TealiumCrashKey.ImageThread.stack] = stackArray
+            threadDictionary[CrashKey.ImageThread.stack] = stackArray
 
             array.append(threadDictionary)
 
@@ -187,13 +187,13 @@ public class TealiumPLCrash: AppDataCollection {
         var codeTypeDictionary = [String: Any]()
         if let images = images {
             for image in images {
-                formatted[TealiumCrashKey.ImageThread.baseAddress] = String(format: "0x%02x", image.imageBaseAddress)
-                codeTypeDictionary[TealiumCrashKey.ImageThread.architecture] = deviceDataCollection.architecture()
-                codeTypeDictionary[TealiumCrashKey.ImageThread.typeEncoding] = typeEncoding(image.codeType.typeEncoding)
-                formatted[TealiumCrashKey.ImageThread.codeType] = codeTypeDictionary
-                formatted[TealiumCrashKey.ImageThread.imageName] = image.imageName
-                formatted[TealiumCrashKey.ImageThread.imageUuid] = image.imageUUID
-                formatted[TealiumCrashKey.ImageThread.imageSize] = image.imageSize
+                formatted[CrashKey.ImageThread.baseAddress] = String(format: "0x%02x", image.imageBaseAddress)
+                codeTypeDictionary[CrashKey.ImageThread.architecture] = deviceDataCollection.architecture()
+                codeTypeDictionary[CrashKey.ImageThread.typeEncoding] = typeEncoding(image.codeType.typeEncoding)
+                formatted[CrashKey.ImageThread.codeType] = codeTypeDictionary
+                formatted[CrashKey.ImageThread.imageName] = image.imageName
+                formatted[CrashKey.ImageThread.imageUuid] = image.imageUUID
+                formatted[CrashKey.ImageThread.imageSize] = image.imageSize
 
                 array.append(formatted)
 
@@ -214,24 +214,24 @@ public class TealiumPLCrash: AppDataCollection {
     /// - Returns: [String: Any] containing all crash-related variables
     public func getData(truncateLibraries: Bool = false, truncateThreads: Bool = false) -> [String: Any] {
         [TealiumKey.event: TealiumPLCrash.CrashEvent,
-         TealiumCrashKey.uuid: uuid,
-         TealiumCrashKey.deviceMemoryUsageLegacy: memoryUsage,
-         TealiumCrashKey.deviceMemoryUsage: memoryUsage,
-         TealiumCrashKey.deviceMemoryAvailableLegacy: deviceMemoryAvailable,
-         TealiumCrashKey.deviceMemoryAvailable: deviceMemoryAvailable,
-         TealiumCrashKey.deviceOsBuild: osBuild,
+         CrashKey.uuid: uuid,
+         CrashKey.deviceMemoryUsageLegacy: memoryUsage,
+         CrashKey.deviceMemoryUsage: memoryUsage,
+         CrashKey.deviceMemoryAvailableLegacy: deviceMemoryAvailable,
+         CrashKey.deviceMemoryAvailable: deviceMemoryAvailable,
+         CrashKey.deviceOsBuild: osBuild,
          TealiumKey.appBuild: appBuild(),
-         TealiumCrashKey.processId: processIdentifier ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.processPath: processPath ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.parentProcess: parentProcessName ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.parentProcessId: parentProcessIdentifier ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.exceptionName: exceptionName ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.exceptionReason: exceptionReason ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.signalCode: signalCode ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.signalName: signalName ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.signalAddress: signalAddress ?? TealiumPLCrash.CrashDataUnknown,
-         TealiumCrashKey.libraries: libraries(truncate: truncateLibraries),
-         TealiumCrashKey.threads: threads(truncate: truncateThreads)
+         CrashKey.processId: processIdentifier ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.processPath: processPath ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.parentProcess: parentProcessName ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.parentProcessId: parentProcessIdentifier ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.exceptionName: exceptionName ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.exceptionReason: exceptionReason ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.signalCode: signalCode ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.signalName: signalName ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.signalAddress: signalAddress ?? TealiumPLCrash.CrashDataUnknown,
+         CrashKey.libraries: libraries(truncate: truncateLibraries),
+         CrashKey.threads: threads(truncate: truncateThreads)
         ]
     }
 

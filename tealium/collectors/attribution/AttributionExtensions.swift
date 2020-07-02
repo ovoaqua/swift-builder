@@ -1,5 +1,5 @@
 //
-//  TealiumAttributionExtensions.swift
+//  AttributionExtensions.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 14/03/2019.
@@ -16,11 +16,11 @@ public extension TealiumConfig {
     /// Enables (`true`) or disables (`false`) Apple Search Ads API in the Attribution module￼.
     var searchAdsEnabled: Bool {
         get {
-            options[TealiumAttributionKey.isSearchAdsEnabled] as? Bool ?? false
+            options[AttributionKey.isSearchAdsEnabled] as? Bool ?? false
         }
 
         set {
-            options[TealiumAttributionKey.isSearchAdsEnabled] = newValue
+            options[AttributionKey.isSearchAdsEnabled] = newValue
         }
     }
 }

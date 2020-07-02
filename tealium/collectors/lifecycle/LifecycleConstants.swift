@@ -1,5 +1,5 @@
 //
-//  TealiumLifecycleConstants.swift
+//  LifecycleConstants.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 28/08/2019.

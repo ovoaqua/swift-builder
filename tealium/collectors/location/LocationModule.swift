@@ -26,9 +26,9 @@ public class LocationModule: Collector {
         }
         let location = tealiumLocationManager.latestLocation
         if location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
-            newData = [TealiumLocationKey.deviceLatitude: "\(location.coordinate.latitude)",
-                       TealiumLocationKey.deviceLongitude: "\(location.coordinate.longitude)",
-                       TealiumLocationKey.accuracy: tealiumLocationManager.locationAccuracy]
+            newData = [LocationKey.deviceLatitude: "\(location.coordinate.latitude)",
+                       LocationKey.deviceLongitude: "\(location.coordinate.longitude)",
+                       LocationKey.accuracy: tealiumLocationManager.locationAccuracy]
         }
         return newData
     }

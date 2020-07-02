@@ -49,7 +49,7 @@ class AttributionMockDiskStorage: TealiumDiskStorageProtocol {
         else {
             return
         }
-        let mockData: [String: String] = Dictionary(uniqueKeysWithValues: TealiumAttributionKey.allCases.map { ($0, "mockdata") })
+        let mockData: [String: String] = Dictionary(uniqueKeysWithValues: AttributionKey.allCases.map { ($0, "mockdata") })
         retrieveCount += 1
         completion(true, PersistentAttributionData(withDictionary: mockData), nil)
     }
@@ -61,7 +61,7 @@ class AttributionMockDiskStorage: TealiumDiskStorageProtocol {
         guard T.self == PersistentAttributionData.self else {
             return nil
         }
-        let mockData: [String: String] = Dictionary(uniqueKeysWithValues: TealiumAttributionKey.allCases.map { ($0, "mockdata") })
+        let mockData: [String: String] = Dictionary(uniqueKeysWithValues: AttributionKey.allCases.map { ($0, "mockdata") })
         retrieveCount += 1
         return PersistentAttributionData(withDictionary: mockData) as? T
     }

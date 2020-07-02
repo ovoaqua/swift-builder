@@ -13,7 +13,7 @@ import XCTest
 
 class VisitorServiceModuleTests: XCTestCase {
 
-    var visitorServiceManager: TealiumVisitorServiceManager?
+    var visitorServiceManager: VisitorServiceManager?
     var mockDiskStorage: MockTealiumDiskStorage!
     var mockVisitorServiceManager = MockTealiumVisitorServiceManager()
     var config: TealiumConfig!
@@ -24,7 +24,7 @@ class VisitorServiceModuleTests: XCTestCase {
         super.setUp()
         config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnv")
         mockDiskStorage = MockTealiumDiskStorage()
-        visitorServiceManager = TealiumVisitorServiceManager(config: config, delegate: nil, diskStorage: mockDiskStorage)
+        visitorServiceManager = VisitorServiceManager(config: config, delegate: nil, diskStorage: mockDiskStorage)
         visitorServiceManager?.visitorId = "test"
     }
 

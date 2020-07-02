@@ -26,7 +26,7 @@ class TealiumLifecycleSessionTests: XCTestCase {
         let start = Date(timeIntervalSince1970: 1_480_554_000)     // 2016 DEC 1 - 01:00 UTC
         let end = Date(timeIntervalSince1970: 1_480_557_600)       // 2016 DEC 2 - 02:00 UTC
 
-        var session = TealiumLifecycleSession(wakeDate: start)
+        var session = LifecycleSession(wakeDate: start)
         session.sleepDate = end
 
         XCTAssertTrue(session.secondsElapsed == 3600, "Unexpected seconds elapsed returned: \(session.secondsElapsed))")
@@ -36,7 +36,7 @@ class TealiumLifecycleSessionTests: XCTestCase {
         let start = Date(timeIntervalSince1970: 1_480_554_000)     // 2016 DEC 1 - 01:00 UTC
         let end = Date(timeIntervalSince1970: 1_480_557_600)       // 2016 DEC 2 - 02:00 UTC
 
-        var session = TealiumLifecycleSession(launchDate: start)
+        var session = LifecycleSession(launchDate: start)
         session.sleepDate = end
 
         XCTAssertTrue(session.secondsElapsed == 3600, "Unexpected seconds elapsed returned: \(session.secondsElapsed))")

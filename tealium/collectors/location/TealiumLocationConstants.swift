@@ -9,7 +9,7 @@
 #if os(iOS)
 import Foundation
 
-public enum TealiumLocationKey {
+public enum LocationKey {
     static let name = "TealiumLocationModule"
     static let dleBaseUrl = "https://tags.tiqcdn.com/dle/"
     static let fileName = "geofences"
@@ -27,25 +27,25 @@ public enum TealiumLocationKey {
     static let lowAccuracy = "low"
 }
 
-public enum TealiumLocationConfigKey {
+public enum LocationConfigKey {
     static let useHighAccuracy = "is_high_accuracy"
     static let updateDistance = "update_distance"
     static let geofenceAssetName = "geofence_asset_name"
     static let geofenceJsonUrl = "geofence_json_url"
 }
 
-public enum TealiumLocationConfig {
+public enum LocationConfig {
     case tealium
     case localFile(String)
     case customUrl(String)
 }
 
-public enum TealiumLocationErrors: String {
-    case noUrl = "URL is empty."
-    case noJson = "JSON is empty."
-    case invalidUrl = "URL is invalid."
-    case noFile = "File does not exist."
-    case couldNotRetrieve = "Could not retrieve JSON."
-    case couldNotDecode = "Could not decode JSON."
+enum LocationErrors {
+    static let noUrl = "URL is empty."
+    static let noJson = "JSON is empty."
+    static let invalidUrl = "URL is invalid."
+    static let noFile = "File does not exist."
+    static let couldNotRetrieve = "Could not retrieve JSON."
+    static let couldNotDecode = "Could not decode JSON."
 }
 #endif

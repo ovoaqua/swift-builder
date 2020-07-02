@@ -1,5 +1,5 @@
 //
-//  TealiumVisitorServiceManager.swift
+//  VisitorServiceManager.swift
 //  tealium-swift
 //
 //  Created by Christina Sund on 5/13/19.
@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public protocol TealiumVisitorServiceDelegate: class {
+public protocol VisitorServiceDelegate: class {
     func didUpdate(visitorProfile: TealiumVisitorProfile)
 }
 
@@ -20,15 +20,15 @@ public enum VisitorServiceStatus: Int {
     case blocked = 1
 }
 
-public protocol TealiumVisitorServiceManagerProtocol {
+public protocol VisitorServiceManagerProtocol {
     func startProfileUpdates(visitorId: String)
     func requestVisitorProfile()
 }
 
-public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol {
+public class VisitorServiceManager: VisitorServiceManagerProtocol {
 
-    weak public var delegate: TealiumVisitorServiceDelegate?
-    var visitorServiceRetriever: TealiumVisitorServiceRetriever?
+    weak public var delegate: VisitorServiceDelegate?
+    var visitorServiceRetriever: VisitorServiceRetriever?
     var diskStorage: TealiumDiskStorageProtocol
     var timer: TealiumRepeatingTimer?
     var stateTimer: TealiumRepeatingTimer?
@@ -39,8 +39,13 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
     var pollingAttempts: AtomicInteger = AtomicInteger(value: 0)
     var maxPollingAttempts = 5
 
+    /// Initializes the Visitor Service Manager
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `VisitorServiceDelegate` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
     init(config: TealiumConfig,
-         delegate: TealiumVisitorServiceDelegate?,
+         delegate: VisitorServiceDelegate?,
          diskStorage: TealiumDiskStorageProtocol) {
         tealiumConfig = config
         self.delegate = delegate
@@ -59,7 +64,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
 
     public func startProfileUpdates(visitorId: String) {
         self.visitorId = visitorId
-        visitorServiceRetriever = visitorServiceRetriever ?? TealiumVisitorServiceRetriever(config: tealiumConfig, visitorId: visitorId)
+        visitorServiceRetriever = visitorServiceRetriever ?? VisitorServiceRetriever(config: tealiumConfig, visitorId: visitorId)
         requestVisitorProfile()
     }
 
@@ -115,7 +120,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
             timer = nil
         }
         pollingAttempts.value = 0
-        self.timer = TealiumRepeatingTimer(timeInterval: TealiumVisitorServiceConstants.pollingInterval)
+        self.timer = TealiumRepeatingTimer(timeInterval: VisitorServiceConstants.pollingInterval)
         self.timer?.eventHandler = { [weak self] in
             guard let self = self else {
                 return
@@ -157,7 +162,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
                         completion(nil, nil)
                         return
                 }
-                guard let lifetimeEventCount = profile.numbers?[TealiumVisitorServiceConstants.eventCountMetric],
+                guard let lifetimeEventCount = profile.numbers?[VisitorServiceConstants.eventCountMetric],
                     self.lifetimeEventCountHasBeenUpdated(lifetimeEventCount) else {
                         completion(nil, nil)
                         return
@@ -184,7 +189,7 @@ public class TealiumVisitorServiceManager: TealiumVisitorServiceManagerProtocol 
     }
 }
 
-public extension TealiumVisitorServiceManager {
+public extension VisitorServiceManager {
 
     /// Called when the visitor profile has been updated
     ///

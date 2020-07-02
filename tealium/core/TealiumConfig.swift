@@ -28,6 +28,7 @@ open class TealiumConfig {
         }
     }
 
+    /// Intended for internal use only. Provides access to the internal Tealium logger instance.
     public var logger: TealiumLoggerProtocol? {
         get {
             options[TealiumKey.logger] as? TealiumLoggerProtocol
@@ -38,6 +39,7 @@ open class TealiumConfig {
         }
     }
 
+    /// Provides the option to add custom `DispatchValidator`s to control whether events should be dispatched, queued, or dropped
     public var dispatchValidators: [DispatchValidator]? {
         get {
             options[TealiumKey.dispatchValidators] as? [DispatchValidator]
@@ -48,6 +50,7 @@ open class TealiumConfig {
         }
     }
 
+    /// Provides the option to add custom `DispatchListener`s to listen for tracking calls just prior to dispatch
     public var dispatchListeners: [DispatchListener]? {
         get {
             options[TealiumKey.dispatchListeners] as? [DispatchListener]
@@ -58,6 +61,7 @@ open class TealiumConfig {
         }
     }
 
+    /// Allows configuration of optional Tealium Collectors
     public var collectors: [Collector.Type]? {
         get {
             options[TealiumKey.collectors] as? [Collector.Type]
@@ -68,6 +72,7 @@ open class TealiumConfig {
         }
     }
 
+    /// Allows configuration of optional Tealium Dispatchers
     public var dispatchers: [Dispatcher.Type]? {
         get {
             options[TealiumKey.dispatchers] as? [Dispatcher.Type]
@@ -78,6 +83,7 @@ open class TealiumConfig {
         }
     }
 
+    /// Returns a deep copy of the config object
     public var copy: TealiumConfig {
         return TealiumConfig(account: self.account,
                              profile: self.profile,
@@ -139,10 +145,10 @@ open class TealiumConfig {
         if let options = options {
             self.options = options
         }
-        self.logger = self.logger ?? getLogger()
+        self.logger = self.logger ?? getNewLogger()
     }
 
-    func getLogger() -> TealiumLoggerProtocol {
+    func getNewLogger() -> TealiumLoggerProtocol {
         switch loggerType {
         case .custom(let logger):
             return logger

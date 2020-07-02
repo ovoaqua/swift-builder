@@ -8,7 +8,7 @@
 #if os(iOS)
 import Foundation
 
-public protocol TealiumAttributionDataProtocol {
+public protocol AttributionDataProtocol {
 
     /// - Returns: `[String: Any]` containing all attribution data
     var allAttributionData: [String: Any] { get }

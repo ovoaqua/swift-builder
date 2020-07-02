@@ -27,12 +27,12 @@ class AttributionModuleTests: XCTestCase {
 
     func testGetAttributionData() {
         let allAttrData = self.module?.data
-        XCTAssertNotNil(allAttrData?[TealiumAttributionKey.clickedDate])
-        XCTAssertNotNil(allAttrData?[TealiumAttributionKey.idfa])
-        XCTAssertNotNil(allAttrData?[TealiumAttributionKey.idfv])
-        XCTAssertNotNil(allAttrData?[TealiumAttributionKey.orgName])
-        XCTAssertNotNil(allAttrData?[TealiumAttributionKey.campaignName])
-        XCTAssertNotNil(allAttrData?[TealiumAttributionKey.creativeSetName])
+        XCTAssertNotNil(allAttrData?[AttributionKey.clickedDate])
+        XCTAssertNotNil(allAttrData?[AttributionKey.idfa])
+        XCTAssertNotNil(allAttrData?[AttributionKey.idfv])
+        XCTAssertNotNil(allAttrData?[AttributionKey.orgName])
+        XCTAssertNotNil(allAttrData?[AttributionKey.campaignName])
+        XCTAssertNotNil(allAttrData?[AttributionKey.creativeSetName])
 
     }
 

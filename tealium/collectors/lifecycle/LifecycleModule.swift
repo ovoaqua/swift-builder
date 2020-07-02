@@ -33,8 +33,15 @@ public class LifecycleModule: Collector {
     public var data: [String: Any]? {
         lifecycle?.asDictionary(type: nil, for: Date())
     }
-
-    public required init(config: TealiumConfig,
+    
+    /// Initializes the module
+    ///
+    /// - Parameters:
+    ///     -  config: `TealiumConfig` instance
+    ///     - delegate: `TealiumModuleDelegate` instance
+    ///     - diskStorage: `TealiumDiskStorageProtocol` instance
+    ///     - completion: `ModuleCompletion` block to be called when init is finished
+    required public init(config: TealiumConfig,
                          delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
                          completion: ModuleCompletion) {
@@ -49,10 +56,10 @@ public class LifecycleModule: Collector {
         completion((.success(true), nil))
     }
 
-    var lifecycle: TealiumLifecycle? {
+    var lifecycle: Lifecycle? {
         get {
-            guard let storedData = diskStorage.retrieve(as: TealiumLifecycle.self) else {
-                return TealiumLifecycle()
+            guard let storedData = diskStorage.retrieve(as: Lifecycle.self) else {
+                return Lifecycle()
             }
             return storedData
         }

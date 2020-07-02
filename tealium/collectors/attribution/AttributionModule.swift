@@ -18,7 +18,7 @@ public class AttributionModule: Collector {
         self.attributionData.allAttributionData
     }
 
-    var attributionData: TealiumAttributionDataProtocol!
+    var attributionData: AttributionDataProtocol!
     var diskStorage: TealiumDiskStorageProtocol!
     public var config: TealiumConfig
 
@@ -28,7 +28,7 @@ public class AttributionModule: Collector {
     convenience init (config: TealiumConfig,
                       delegate: ModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
-                      attributionData: TealiumAttributionDataProtocol) {
+                      attributionData: AttributionDataProtocol) {
         self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
         self.attributionData = attributionData
     }
@@ -39,7 +39,7 @@ public class AttributionModule: Collector {
                          completion: ModuleCompletion) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "attribution", isCritical: false)
-        self.attributionData = TealiumAttributionData(diskStorage: self.diskStorage,
+        self.attributionData = AttributionData(diskStorage: self.diskStorage,
                                                       isSearchAdsEnabled: config.searchAdsEnabled)
         completion((.success(true), nil))
     }

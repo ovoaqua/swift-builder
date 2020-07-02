@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-open class TealiumLifecyclePersistentData {
+open class LifecyclePersistentData {
 
     let diskStorage: TealiumDiskStorageProtocol
 
@@ -20,11 +20,11 @@ open class TealiumLifecyclePersistentData {
         self.diskStorage = diskStorage
     }
 
-    func load() -> TealiumLifecycle? {
-        return diskStorage.retrieve(as: TealiumLifecycle.self)
+    func load() -> Lifecycle? {
+        return diskStorage.retrieve(as: Lifecycle.self)
     }
 
-    func save(_ lifecycle: TealiumLifecycle) -> (success: Bool, error: Error?) {
+    func save(_ lifecycle: Lifecycle) -> (success: Bool, error: Error?) {
         diskStorage.save(lifecycle, completion: nil)
         return (true, nil)
     }

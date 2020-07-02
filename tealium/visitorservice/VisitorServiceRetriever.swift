@@ -1,5 +1,5 @@
 //
-//  TealiumVisitorServiceRetriever.swift
+//  VisitorServiceRetriever.swift
 //  tealium-swift
 //
 //  Created by Christina Sund on 5/15/19.
@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumVisitorServiceRetriever {
+public class VisitorServiceRetriever {
 
     var urlSession: URLSessionProtocol?
     var tealiumConfig: TealiumConfig
@@ -85,7 +85,7 @@ public class TealiumVisitorServiceRetriever {
 
     /// Generates the visitor service url
     var visitorServiceURL: String {
-        var url = TealiumVisitorServiceConstants.defaultVisitorServiceDomain
+        var url = VisitorServiceConstants.defaultVisitorServiceDomain
         if let overrideURL = tealiumConfig.visitorServiceOverrideURL, URL(string: overrideURL) != nil {
             url = overrideURL
         }
@@ -95,7 +95,7 @@ public class TealiumVisitorServiceRetriever {
     /// Should fetch visitor profile based on interval set in the config or defaults to every 5 minutes
     var shouldFetchVisitorProfile: Bool {
         guard let refresh = tealiumConfig.visitorServiceRefreshInterval else {
-            return shouldFetch(basedOn: lastFetch, interval: TealiumVisitorServiceConstants.defaultRefreshInterval.milliseconds, environment: tealiumConfig.environment)
+            return shouldFetch(basedOn: lastFetch, interval: VisitorServiceConstants.defaultRefreshInterval.milliseconds, environment: tealiumConfig.environment)
         }
         return shouldFetch(basedOn: lastFetch, interval: refresh.milliseconds, environment: tealiumConfig.environment)
     }

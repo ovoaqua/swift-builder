@@ -101,22 +101,22 @@ class TealiumCrashTests: XCTestCase {
                 let crashReport = try TEALPLCrashReport(data: data)
                 let crash = TealiumPLCrash(crashReport: crashReport, deviceDataCollection: mockDeviceDataCollection)
                 let expectedKeys = [TealiumKey.event,
-                                    TealiumCrashKey.uuid,
-                                    TealiumCrashKey.deviceMemoryUsage,
-                                    TealiumCrashKey.deviceMemoryAvailable,
-                                    TealiumCrashKey.deviceOsBuild,
+                                    CrashKey.uuid,
+                                    CrashKey.deviceMemoryUsage,
+                                    CrashKey.deviceMemoryAvailable,
+                                    CrashKey.deviceOsBuild,
                                     TealiumKey.appBuild,
-                                    TealiumCrashKey.processId,
-                                    TealiumCrashKey.processPath,
-                                    TealiumCrashKey.parentProcess,
-                                    TealiumCrashKey.parentProcessId,
-                                    TealiumCrashKey.exceptionName,
-                                    TealiumCrashKey.exceptionReason,
-                                    TealiumCrashKey.signalCode,
-                                    TealiumCrashKey.signalName,
-                                    TealiumCrashKey.signalAddress,
-                                    TealiumCrashKey.libraries,
-                                    TealiumCrashKey.threads
+                                    CrashKey.processId,
+                                    CrashKey.processPath,
+                                    CrashKey.parentProcess,
+                                    CrashKey.parentProcessId,
+                                    CrashKey.exceptionName,
+                                    CrashKey.exceptionReason,
+                                    CrashKey.signalCode,
+                                    CrashKey.signalName,
+                                    CrashKey.signalAddress,
+                                    CrashKey.libraries,
+                                    CrashKey.threads
                 ]
                 let result = crash.getData()
                 for key in expectedKeys {

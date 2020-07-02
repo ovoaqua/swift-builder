@@ -20,12 +20,16 @@ public class CrashModule: Collector {
     public var config: TealiumConfig
 
     public var data: [String: Any]? {
-        self.crashReporter?.getData()
+        self.crashReporter?.data
     }
 
     /// Provided for unit testing￼.
     ///
-    /// - Parameter crashReporter: Class instance conforming to `CrashReporterProtocol`
+    /// - Parameters:
+    ///     - config: `TealiumConfig` instance
+    ///     - delegate: `TealiumModuleDelegate` instance
+    ///     - diskStorage: `TealiumDiskStorageProtocol` instance
+    ///     - crashReporter: Class instance conforming to `CrashReporterProtocol`
     convenience init (config: TealiumConfig,
                       delegate: ModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
@@ -34,6 +38,13 @@ public class CrashModule: Collector {
         self.crashReporter = crashReporter
     }
 
+    /// Initializes the module
+    ///
+    /// - Parameters:
+    ///     -  config: `TealiumConfig` instance
+    ///     - delegate: `TealiumModuleDelegate` instance
+    ///     - diskStorage: `TealiumDiskStorageProtocol` instance
+    ///     - completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig,
                          delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,
@@ -41,7 +52,7 @@ public class CrashModule: Collector {
         self.delegate = delegate
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "crash", isCritical: false)
-        self.crashReporter = TealiumCrashReporter()
+        self.crashReporter = CrashReporter()
         completion((.success(true), nil))
     }
 

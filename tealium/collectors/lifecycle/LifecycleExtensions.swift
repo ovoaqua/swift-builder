@@ -1,5 +1,5 @@
 //
-//  TealiumLifecycleExtensions.swift
+//  LifecycleExtensions.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 28/08/2019.
@@ -32,7 +32,7 @@ extension Bundle {
     }
 }
 
-extension Array where Element == TealiumLifecycleSession {
+extension Array where Element == LifecycleSession {
 
     /// Get item before last
     ///

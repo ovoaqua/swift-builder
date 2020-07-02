@@ -37,11 +37,11 @@ public extension TealiumConfig {
     /// or false if only significant location updates are desired (more battery friendly)
     var useHighAccuracy: Bool {
         get {
-            options[TealiumLocationConfigKey.useHighAccuracy] as? Bool ?? false
+            options[LocationConfigKey.useHighAccuracy] as? Bool ?? false
         }
 
         set {
-            options[TealiumLocationConfigKey.useHighAccuracy] = newValue
+            options[LocationConfigKey.useHighAccuracy] = newValue
         }
     }
 
@@ -51,11 +51,11 @@ public extension TealiumConfig {
     /// - `Double` distance in meters
     var updateDistance: Double {
         get {
-            options[TealiumLocationConfigKey.updateDistance] as? Double ?? 500.0
+            options[LocationConfigKey.updateDistance] as? Double ?? 500.0
         }
 
         set {
-            options[TealiumLocationConfigKey.updateDistance] = newValue
+            options[LocationConfigKey.updateDistance] = newValue
         }
     }
 
@@ -65,11 +65,11 @@ public extension TealiumConfig {
     /// - `String` name of local file to read
     var geofenceFileName: String? {
         get {
-            options[TealiumLocationConfigKey.geofenceAssetName] as? String
+            options[LocationConfigKey.geofenceAssetName] as? String
         }
 
         set {
-            options[TealiumLocationConfigKey.geofenceAssetName] = newValue
+            options[LocationConfigKey.geofenceAssetName] = newValue
         }
     }
 
@@ -79,16 +79,16 @@ public extension TealiumConfig {
     /// - `String` name of the url to read
     var geofenceUrl: String? {
         get {
-            options[TealiumLocationConfigKey.geofenceJsonUrl] as? String
+            options[LocationConfigKey.geofenceJsonUrl] as? String
         }
 
         set {
-            options[TealiumLocationConfigKey.geofenceJsonUrl] = newValue
+            options[LocationConfigKey.geofenceJsonUrl] = newValue
         }
     }
 
     /// `TealiumLocationConfig`: The Geofences data retrieved from either a local file, url, or DLE
-    var initializeGeofenceDataFrom: TealiumLocationConfig {
+    var initializeGeofenceDataFrom: LocationConfig {
         if let geofenceAsset = self.geofenceFileName {
             return .localFile(geofenceAsset)
         } else if let geofenceUrl = self.geofenceUrl {

@@ -19,15 +19,15 @@ public class VisitorServiceModule: Collector, DispatchListener {
     var diskStorage: TealiumDiskStorageProtocol!
     var firstEventSent = false
     var visitorId: String?
-    var visitorServiceManager: TealiumVisitorServiceManagerProtocol?
+    var visitorServiceManager: VisitorServiceManagerProtocol?
 
     /// Provided for unit testing￼.
     ///
-    /// - Parameter visitorServiceManager: Class instance conforming to `TealiumVisitorServiceManagerProtocol`
+    /// - Parameter visitorServiceManager: Class instance conforming to `VisitorServiceManagerProtocol`
     convenience init (config: TealiumConfig,
                       delegate: ModuleDelegate?,
                       diskStorage: TealiumDiskStorageProtocol?,
-                      visitorServiceManager: TealiumVisitorServiceManagerProtocol) {
+                      visitorServiceManager: VisitorServiceManagerProtocol) {
         self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
         self.visitorServiceManager = visitorServiceManager
     }
@@ -38,9 +38,9 @@ public class VisitorServiceModule: Collector, DispatchListener {
                          completion: ModuleCompletion) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: ModuleNames.visitorservice.lowercased(), isCritical: false)
-        self.visitorServiceManager = TealiumVisitorServiceManager(config: config,
-                                                                  delegate: config.visitorServiceDelegate,
-                                                                  diskStorage: self.diskStorage)
+        self.visitorServiceManager = VisitorServiceManager(config: config,
+                                                           delegate: config.visitorServiceDelegate,
+                                                           diskStorage: self.diskStorage)
         completion((.success(true), nil))
     }
 

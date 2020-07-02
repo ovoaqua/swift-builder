@@ -1,5 +1,5 @@
 //
-//  TealiumVisitorProfileExtensions.swift
+//  VisitorServiceExtensions.swift
 //  tealium-swift
 //
 //  Created by Christina Sund on 5/16/19.
@@ -22,10 +22,10 @@ extension Int64 {
 public extension Tealium {
 
     /// - Returns: `VisitorServiceManager` instance
-    var visitorService:  TealiumVisitorServiceManager? {
+    var visitorService:  VisitorServiceManager? {
         (zz_internal_modulesManager?.modules.first {
             type(of: $0) == VisitorServiceModule.self
-        } as? VisitorServiceModule)?.visitorServiceManager as? TealiumVisitorServiceManager
+        } as? VisitorServiceModule)?.visitorServiceManager as? VisitorServiceManager
     }
 }
 
@@ -39,23 +39,23 @@ public extension TealiumConfig {
     /// Set to `0` if the profile should always be fetched following a track request.
     var visitorServiceRefreshInterval: Int64? {
         get {
-            options[TealiumVisitorServiceConstants.refreshInterval] as? Int64
+            options[VisitorServiceConstants.refreshInterval] as? Int64
         }
 
         set {
-            options[TealiumVisitorServiceConstants.refreshInterval] = newValue
+            options[VisitorServiceConstants.refreshInterval] = newValue
         }
     }
 
     /// Visitor service delegates to be notified of any changes to the visitor profile.
     /// Note: if no delegates are registered, no requests will be made to fetch the visitor profile from the server.
-    var visitorServiceDelegate: TealiumVisitorServiceDelegate? {
+    var visitorServiceDelegate: VisitorServiceDelegate? {
         get {
-            options[TealiumVisitorServiceConstants.visitorServiceDelegate] as? TealiumVisitorServiceDelegate
+            options[VisitorServiceConstants.visitorServiceDelegate] as? VisitorServiceDelegate
         }
 
         set {
-            options[TealiumVisitorServiceConstants.visitorServiceDelegate] = newValue
+            options[VisitorServiceConstants.visitorServiceDelegate] = newValue
         }
     }
 
@@ -63,22 +63,22 @@ public extension TealiumConfig {
     /// Format: https://overridden-subdomain.yourdomain.com/
     var visitorServiceOverrideURL: String? {
         get {
-            options[TealiumVisitorServiceConstants.visitorServiceOverrideURL] as? String
+            options[VisitorServiceConstants.visitorServiceOverrideURL] as? String
         }
 
         set {
-            options[TealiumVisitorServiceConstants.visitorServiceOverrideURL] = newValue
+            options[VisitorServiceConstants.visitorServiceOverrideURL] = newValue
         }
     }
 
     /// Sets a specific overridden profile from which to fetch the visitor profile.
     var visitorServiceOverrideProfile: String? {
         get {
-            options[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] as? String
+            options[VisitorServiceConstants.visitorServiceOverrideProfile] as? String
         }
 
         set {
-            options[TealiumVisitorServiceConstants.visitorServiceOverrideProfile] = newValue
+            options[VisitorServiceConstants.visitorServiceOverrideProfile] = newValue
         }
     }
 }

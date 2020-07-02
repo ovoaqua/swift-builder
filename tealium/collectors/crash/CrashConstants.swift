@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum TealiumCrashKey {
+public enum CrashKey {
     public static let moduleName = "crash"
     public static let uuid = "crash_uuid"
     public static let processId = "crash_process_id"

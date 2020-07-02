@@ -9,9 +9,9 @@
 import Foundation
 
 // Represents a serializable block of time between a given wake and a sleep
-public struct TealiumLifecycleSession: Codable, Equatable {
+public struct LifecycleSession: Codable, Equatable {
 
-    var appVersion: String = TealiumLifecycleSession.currentAppVersion
+    var appVersion: String = LifecycleSession.currentAppVersion
     var wakeDate: Date?
     var sleepDate: Date? {
         didSet {
@@ -56,7 +56,7 @@ public struct TealiumLifecycleSession: Codable, Equatable {
     }
 
     // Is this being used anywhere? Move to unit tests?
-    public static func == (lhs: TealiumLifecycleSession, rhs: TealiumLifecycleSession ) -> Bool {
+    public static func == (lhs: LifecycleSession, rhs: LifecycleSession ) -> Bool {
         if lhs.wakeDate != rhs.wakeDate { return false }
         if lhs.sleepDate != rhs.sleepDate { return false }
         if lhs.secondsElapsed != rhs.secondsElapsed { return false }

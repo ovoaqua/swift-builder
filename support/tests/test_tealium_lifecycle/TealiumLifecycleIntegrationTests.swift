@@ -30,7 +30,7 @@ class TealiumLifecycleIntegrationTests: XCTestCase {
         }
 
         let allEvents = allEventsDict["events"] as! NSArray
-        var lifecycle = TealiumLifecycle()
+        var lifecycle = Lifecycle()
         let count = allEvents.count
 
         for i in 0..<count {
@@ -43,7 +43,7 @@ class TealiumLifecycleIntegrationTests: XCTestCase {
             var returnedData = [String: Any]()
             switch type {
             case "launch":
-                var overrideSession = TealiumLifecycleSession(launchDate: time)
+                var overrideSession = LifecycleSession(launchDate: time)
                 overrideSession.appVersion = appVersion
                 returnedData = lifecycle.newLaunch(at: time, overrideSession: overrideSession)
                 if i == 0 {
@@ -55,7 +55,7 @@ class TealiumLifecycleIntegrationTests: XCTestCase {
                 returnedData = lifecycle.newSleep(at: time)
                 XCTAssertNil(returnedData["lifecycle_isfirstlaunch"])
             case "wake":
-                var overrideSession = TealiumLifecycleSession(wakeDate: time)
+                var overrideSession = LifecycleSession(wakeDate: time)
                 overrideSession.appVersion = appVersion
                 returnedData = lifecycle.newWake(at: time, overrideSession: overrideSession)
                 XCTAssertNil(returnedData["lifecycle_isfirstlaunch"])
@@ -74,11 +74,11 @@ class TealiumLifecycleIntegrationTests: XCTestCase {
         // Creating test sessions, only interested in secondsElapsed here.
         let start = Date(timeIntervalSince1970: 1_480_554_000)     // 2016 DEC 1 - 01:00 UTC
         let end = Date(timeIntervalSince1970: 1_480_557_600)       // 2016 DEC 2 - 02:00 UTC
-        var sessionSuccess = TealiumLifecycleSession(wakeDate: start)
+        var sessionSuccess = LifecycleSession(wakeDate: start)
         sessionSuccess.sleepDate = end
-        let sessionCrashed = TealiumLifecycleSession(wakeDate: start)
+        let sessionCrashed = LifecycleSession(wakeDate: start)
 
-        var lifecycle = TealiumLifecycle()
+        var lifecycle = Lifecycle()
         _ = lifecycle.newLaunch(at: start, overrideSession: nil)
 
         // Double checking that we aren't returning "true" if we're still in the first launch session.

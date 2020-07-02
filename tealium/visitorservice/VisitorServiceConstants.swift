@@ -1,5 +1,5 @@
 //
-//  TealiumVisitorServiceConstants.swift
+//  VisitorServiceConstants.swift
 //  tealium-swift
 //
 //  Created by Christina Sund on 5/13/19.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum TealiumVisitorServiceConstants {
+enum VisitorServiceConstants {
     static let moduleName = "visitorservice"
     static let refreshInterval = "visitor_service_refresh_interval"
     static let enableVisitorService = "enable_visitor_service"
@@ -19,9 +19,4 @@ enum TealiumVisitorServiceConstants {
     static let visitorServiceOverrideProfile = "visitor_service_override_profile"
     static let visitorServiceOverrideURL = "visitor_service_override_url"
     static let defaultVisitorServiceDomain = "https://visitor-service.tealiumiq.com/"
-}
-
-public enum AttributeScope {
-    case visitor
-    case visit
 }

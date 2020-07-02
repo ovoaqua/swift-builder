@@ -22,7 +22,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     var geofences = Geofences()
     weak var locationDelegate: LocationDelegate?
     var didEnterRegionWorking = false
-    var locationAccuracy = TealiumLocationKey.lowAccuracy
+    var locationAccuracy = LocationKey.lowAccuracy
 
     init(config: TealiumConfig,
          bundle: Bundle = Bundle.main,
@@ -47,7 +47,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         if config.useHighAccuracy {
-            locationAccuracy = TealiumLocationKey.highAccuracy
+            locationAccuracy = LocationKey.highAccuracy
         }
 
         requestPermissions()
@@ -59,7 +59,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     ///
     /// - parameter config: `TealiumConfig` tealium config to be read from
     var geofencesUrl: String {
-        return "\(TealiumLocationKey.dleBaseUrl)\(config.account)/\(config.profile)/\(TealiumLocationKey.fileName).json"
+        return "\(LocationKey.dleBaseUrl)\(config.account)/\(config.profile)/\(LocationKey.fileName).json"
     }
 
     /// Gets the permission status of Location Services
@@ -127,7 +127,7 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
             let geofenceLocation = CLLocation(latitude: $0.center.latitude, longitude: $0.center.longitude)
 
             guard let distance = lastLocation?.distance(from: geofenceLocation),
-                  distance.isLess(than: TealiumLocationKey.additionRange) else {
+                  distance.isLess(than: LocationKey.additionRange) else {
                 stopMonitoring(geofence: $0)
                 return
             }
@@ -156,9 +156,9 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     /// - parameter region: `CLRegion` that was entered
     public func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
         if state == .inside && region.notifyOnEntry {
-            sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.entered)
+            sendGeofenceTrackingEvent(region: region, triggeredTransition: LocationKey.entered)
         } else if state == .outside && region.notifyOnExit {
-            sendGeofenceTrackingEvent(region: region, triggeredTransition: TealiumLocationKey.exited)
+            sendGeofenceTrackingEvent(region: region, triggeredTransition: LocationKey.exited)
         }
     }
 
@@ -177,21 +177,21 @@ public class TealiumLocation: NSObject, CLLocationManagerDelegate {
     /// - parameter triggeredTransition: `String` Type of transition that occured
     public func sendGeofenceTrackingEvent(region: CLRegion, triggeredTransition: String) {
         var data = [String: Any]()
-        data[TealiumLocationKey.geofenceName] = "\(region.identifier)"
-        data[TealiumLocationKey.geofenceTransition] = "\(triggeredTransition)"
+        data[LocationKey.geofenceName] = "\(region.identifier)"
+        data[LocationKey.geofenceTransition] = "\(triggeredTransition)"
         data[TealiumKey.event] = triggeredTransition
 
         if let lastLocation = lastLocation {
-            data[TealiumLocationKey.deviceLatitude] = "\(lastLocation.coordinate.latitude)"
-            data[TealiumLocationKey.deviceLongitude] = "\(lastLocation.coordinate.longitude)"
-            data[TealiumLocationKey.timestamp] = "\(lastLocation.timestamp)"
-            data[TealiumLocationKey.speed] = "\(lastLocation.speed)"
-            data[TealiumLocationKey.accuracy] = locationAccuracy
+            data[LocationKey.deviceLatitude] = "\(lastLocation.coordinate.latitude)"
+            data[LocationKey.deviceLongitude] = "\(lastLocation.coordinate.longitude)"
+            data[LocationKey.timestamp] = "\(lastLocation.timestamp)"
+            data[LocationKey.speed] = "\(lastLocation.speed)"
+            data[LocationKey.accuracy] = locationAccuracy
         }
 
-        if triggeredTransition == TealiumLocationKey.exited {
+        if triggeredTransition == LocationKey.exited {
             locationDelegate?.didExitGeofence(data)
-        } else if triggeredTransition == TealiumLocationKey.entered {
+        } else if triggeredTransition == LocationKey.entered {
             locationDelegate?.didEnterGeofence(data)
         }
     }
