@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataExtensions.swift
+//  DeviceDataExtensions.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/08/2019.
@@ -12,11 +12,11 @@ public extension TealiumConfig {
 
     var memoryReportingEnabled: Bool {
         get {
-            return options[TealiumDeviceDataModuleKey.isMemoryReportingEnabled] as? Bool ?? false
+            return options[DeviceDataModuleKey.isMemoryReportingEnabled] as? Bool ?? false
         }
 
         set {
-            options[TealiumDeviceDataModuleKey.isMemoryReportingEnabled] = newValue
+            options[DeviceDataModuleKey.isMemoryReportingEnabled] = newValue
         }
     }
 

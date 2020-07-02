@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataCarrierInfo.swift
+//  DeviceDataCarrierInfo.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/08/2019.
@@ -13,7 +13,7 @@ import CoreTelephony
 #endif
 import Foundation
 
-extension TealiumDeviceData {
+extension DeviceData {
     /// - Returns: `[String: String]` containing current network carrier info
     class var carrierInfo: [String: String] {
         // only available on iOS
@@ -26,25 +26,25 @@ extension TealiumDeviceData {
         // this is a workaround
         #if targetEnvironment(simulator)
         carrierInfo = [
-            TealiumDeviceDataKey.carrierMNC: "00",
-            TealiumDeviceDataKey.carrierMCC: "000",
-            TealiumDeviceDataKey.carrierISO: "us",
-            TealiumDeviceDataKey.carrier: "simulator",
-            TealiumDeviceDataKey.carrierMNCLegacy: "00",
-            TealiumDeviceDataKey.carrierMCCLegacy: "000",
-            TealiumDeviceDataKey.carrierISOLegacy: "us",
-            TealiumDeviceDataKey.carrierLegacy: "simulator"
+            DeviceDataKey.carrierMNC: "00",
+            DeviceDataKey.carrierMCC: "000",
+            DeviceDataKey.carrierISO: "us",
+            DeviceDataKey.carrier: "simulator",
+            DeviceDataKey.carrierMNCLegacy: "00",
+            DeviceDataKey.carrierMCCLegacy: "000",
+            DeviceDataKey.carrierISOLegacy: "us",
+            DeviceDataKey.carrierLegacy: "simulator"
         ]
         #elseif targetEnvironment(macCatalyst)
         carrierInfo = [
-            TealiumDeviceDataKey.carrierMNC: "00",
-            TealiumDeviceDataKey.carrierMCC: "000",
-            TealiumDeviceDataKey.carrierISO: "us",
-            TealiumDeviceDataKey.carrier: "macCatalyst",
-            TealiumDeviceDataKey.carrierMNCLegacy: "00",
-            TealiumDeviceDataKey.carrierMCCLegacy: "000",
-            TealiumDeviceDataKey.carrierISOLegacy: "us",
-            TealiumDeviceDataKey.carrierLegacy: "macCatalyst"
+            DeviceDataKey.carrierMNC: "00",
+            DeviceDataKey.carrierMCC: "000",
+            DeviceDataKey.carrierISO: "us",
+            DeviceDataKey.carrier: "macCatalyst",
+            DeviceDataKey.carrierMNCLegacy: "00",
+            DeviceDataKey.carrierMCCLegacy: "000",
+            DeviceDataKey.carrierISOLegacy: "us",
+            DeviceDataKey.carrierLegacy: "macCatalyst"
         ]
         #else
         let networkInfo = CTTelephonyNetworkInfo()
@@ -61,14 +61,14 @@ extension TealiumDeviceData {
             carrier = networkInfo.subscriberCellularProvider
         }
         carrierInfo = [
-            TealiumDeviceDataKey.carrierMNCLegacy: carrier?.mobileNetworkCode ?? "",
-            TealiumDeviceDataKey.carrierMNC: carrier?.mobileNetworkCode ?? "",
-            TealiumDeviceDataKey.carrierMCCLegacy: carrier?.mobileCountryCode ?? "",
-            TealiumDeviceDataKey.carrierMCC: carrier?.mobileCountryCode ?? "",
-            TealiumDeviceDataKey.carrierISOLegacy: carrier?.isoCountryCode ?? "",
-            TealiumDeviceDataKey.carrierISO: carrier?.isoCountryCode ?? "",
-            TealiumDeviceDataKey.carrierLegacy: carrier?.carrierName ?? "",
-            TealiumDeviceDataKey.carrier: carrier?.carrierName ?? ""
+            DeviceDataKey.carrierMNCLegacy: carrier?.mobileNetworkCode ?? "",
+            DeviceDataKey.carrierMNC: carrier?.mobileNetworkCode ?? "",
+            DeviceDataKey.carrierMCCLegacy: carrier?.mobileCountryCode ?? "",
+            DeviceDataKey.carrierMCC: carrier?.mobileCountryCode ?? "",
+            DeviceDataKey.carrierISOLegacy: carrier?.isoCountryCode ?? "",
+            DeviceDataKey.carrierISO: carrier?.isoCountryCode ?? "",
+            DeviceDataKey.carrierLegacy: carrier?.carrierName ?? "",
+            DeviceDataKey.carrier: carrier?.carrierName ?? ""
         ]
         #endif
         #endif

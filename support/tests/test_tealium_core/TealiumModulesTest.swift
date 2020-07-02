@@ -5,7 +5,7 @@
 @testable import TealiumConsentManager
 @testable import TealiumCore
 //@testable import TealiumDelegate
-//@testable import TealiumDeviceData
+//@testable import DeviceData
 //@testable import TealiumLogger
 //@testable import TealiumPersistentData
 @testable import TealiumVisitorService

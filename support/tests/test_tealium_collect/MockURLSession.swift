@@ -62,7 +62,7 @@ class DataTaskError: URLSessionDataTaskProtocol {
         self.url = url
     }
     func resume() {
-        let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: [TealiumCollectKey.errorHeaderKey: "missing account/profile"])
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: [CollectKey.errorHeaderKey: "missing account/profile"])
         completionHandler(nil, urlResponse, nil)
     }
 

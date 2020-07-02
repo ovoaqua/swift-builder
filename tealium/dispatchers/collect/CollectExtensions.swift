@@ -1,5 +1,5 @@
 //
-//  TealiumCollectExtensions.swift
+//  CollectExtensions.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 19/03/2019.
@@ -16,7 +16,7 @@ public extension TealiumConfig {
     /// Overrides the default Collect endpoint URL￼.
     var collectOverrideURL: String? {
         get {
-            options[TealiumCollectKey.overrideCollectUrl] as? String
+            options[CollectKey.overrideCollectUrl] as? String
         }
 
         set {
@@ -31,9 +31,9 @@ public extension TealiumConfig {
                 if lastChar != "&" {
                     urlString += "&"
                 }
-                options[TealiumCollectKey.overrideCollectUrl] = urlString
+                options[CollectKey.overrideCollectUrl] = urlString
             } else {
-                options[TealiumCollectKey.overrideCollectUrl] = newValue
+                options[CollectKey.overrideCollectUrl] = newValue
             }
         }
     }
@@ -41,11 +41,11 @@ public extension TealiumConfig {
     /// Overrides the default Collect endpoint profile￼.
     var collectOverrideProfile: String? {
         get {
-            options[TealiumCollectKey.overrideCollectProfile] as? String
+            options[CollectKey.overrideCollectProfile] as? String
         }
 
         set {
-            options[TealiumCollectKey.overrideCollectProfile] = newValue
+            options[CollectKey.overrideCollectProfile] = newValue
         }
     }
 }

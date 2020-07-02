@@ -75,7 +75,7 @@ public class TealiumCrashReporter: CrashReporterProtocol {
             guard let crashReport = try? TEALPLCrashReport(data: crashReportData) else {
                 return nil
             }
-            let crash = TealiumPLCrash(crashReport: crashReport, deviceDataCollection: TealiumDeviceData())
+            let crash = TealiumPLCrash(crashReport: crashReport, deviceDataCollection: DeviceData())
             var data = [String: Any]()
             data += crash.getData(truncate: true)
 

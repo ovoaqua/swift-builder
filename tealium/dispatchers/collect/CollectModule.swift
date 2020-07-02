@@ -18,6 +18,11 @@ public class CollectModule: Dispatcher {
     weak var delegate: TealiumModuleDelegate?
     public var config: TealiumConfig
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          completion: ModuleCompletion?) {
@@ -28,19 +33,24 @@ public class CollectModule: Dispatcher {
         completion?((.success(true), nil))
     }
 
+    /// Configures the collect dispatcher
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     func updateCollectDispatcher(config: TealiumConfig,
                                  completion: ModuleCompletion?) {
-        let urlString = config.options[TealiumCollectKey.overrideCollectUrl] as? String ?? TealiumCollectPostDispatcher.defaultDispatchBaseURL
-        collect = TealiumCollectPostDispatcher(dispatchURL: urlString, completion: completion)
+        let urlString = config.options[CollectKey.overrideCollectUrl] as? String ?? CollectEventDispatcher.defaultDispatchBaseURL
+        collect = CollectEventDispatcher(dispatchURL: urlString, completion: completion)
     }
 
     /// Detects track type and dispatches appropriately, adding mandatory data (account and profile) to the track if missing.￼
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
+    /// - Parameter completion: `ModuleCompletion` block to be called when track is finished
     public func dynamicTrack(_ request: TealiumRequest,
                              completion: ModuleCompletion?) {
         guard collect != nil else {
-            completion?((.failure(TealiumCollectError.collectNotInitialized), nil))
+            completion?((.failure(CollectError.collectNotInitialized), nil))
             return
         }
 
@@ -59,17 +69,20 @@ public class CollectModule: Dispatcher {
                 prepareForDispatch($0)
             }
             guard !requests.isEmpty else {
-                completion?((.failure(TealiumCollectError.invalidBatchRequest), nil))
+                completion?((.failure(CollectError.invalidBatchRequest), nil))
                 return
             }
             let newRequest = TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion)
             self.batchTrack(newRequest, completion: completion)
         default:
-            completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
+            completion?((.failure(CollectError.trackNotApplicableForCollectModule), nil))
             return
         }
     }
 
+    /// Checks if the event is intended to set consent cookies in the Tag Management module
+    /// - Parameter data: `[String: Any]` containing the data layer for this event
+    /// - Returns: `Bool`
     func isConsentEvent(_ data: [String: Any]) -> Bool {
         guard let event = data[TealiumKey.event] as? String else {
             return false
@@ -93,17 +106,18 @@ public class CollectModule: Dispatcher {
             newTrack[TealiumKey.profile] = profileOverride
         }
 
-        newTrack[TealiumKey.dispatchService] = TealiumCollectKey.moduleName
+        newTrack[TealiumKey.dispatchService] = CollectKey.moduleName
         return TealiumTrackRequest(data: newTrack, completion: request.completion)
     }
 
     /// Adds relevant info to the track request, then passes the request to a dipatcher for processing￼.
     ///
     /// - Parameter track: `TealiumTrackRequest` to be dispatched
+    /// - Parameter completion: `ModuleCompletion` block to be called when track is finished
     func track(_ track: TealiumTrackRequest,
                completion: ModuleCompletion?) {
         guard let collect = collect else {
-            completion?((.failure(TealiumCollectError.collectNotInitialized), nil))
+            completion?((.failure(CollectError.collectNotInitialized), nil))
             return
         }
 
@@ -116,15 +130,16 @@ public class CollectModule: Dispatcher {
     /// Adds relevant info to the track request, then passes the request to a dipatcher for processing￼.
     ///
     /// - Parameter track: `TealiumBatchTrackRequest` to be dispatched
+    /// - Parameter completion: `ModuleCompletion` block to be called when track is finished
     func batchTrack(_ request: TealiumBatchTrackRequest,
                     completion: ModuleCompletion?) {
         guard let collect = collect else {
-            completion?((.failure(TealiumCollectError.collectNotInitialized), nil))
+            completion?((.failure(CollectError.collectNotInitialized), nil))
             return
         }
 
         guard let compressed = request.compressed() else {
-            completion?((.failure(TealiumCollectError.invalidBatchRequest), nil))
+            completion?((.failure(CollectError.invalidBatchRequest), nil))
             return
         }
 

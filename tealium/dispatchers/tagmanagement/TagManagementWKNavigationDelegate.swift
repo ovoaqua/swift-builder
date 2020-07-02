@@ -1,5 +1,5 @@
 //
-//  TealiumTagManagementWKNavigationDelegate.swift
+//  TagManagementWKNavigationDelegate.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 07/12/2018.

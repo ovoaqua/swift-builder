@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataScreenInfo.swift
+//  DeviceDataScreenInfo.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/08/2019.
@@ -17,11 +17,11 @@ import WatchKit
 #endif
 
 // MARK: Screen Info
-public extension TealiumDeviceData {
+public extension DeviceData {
     /// - Returns: `String` containing the device's resolution
     class var resolution: String {
         #if os(OSX)
-        return TealiumDeviceDataValue.unknown
+        return DeviceDataValue.unknown
         #elseif os(watchOS)
         let res = WKInterfaceDevice.current().screenBounds
         let scale = WKInterfaceDevice.current().screenScale
@@ -46,13 +46,13 @@ public extension TealiumDeviceData {
         let orientation = UIDevice.current.orientation
 
         let isLandscape = orientation.isLandscape
-        var fullOrientation = [TealiumDeviceDataKey.orientation: isLandscape ? "Landscape" : "Portrait"]
+        var fullOrientation = [DeviceDataKey.orientation: isLandscape ? "Landscape" : "Portrait"]
 
-        fullOrientation[TealiumDeviceDataKey.fullOrientation] = getDeviceOrientation(orientation)
+        fullOrientation[DeviceDataKey.fullOrientation] = getDeviceOrientation(orientation)
         return fullOrientation
         #else
-        return [TealiumDeviceDataKey.orientation: TealiumDeviceDataValue.unknown,
-                TealiumDeviceDataKey.fullOrientation: TealiumDeviceDataValue.unknown
+        return [DeviceDataKey.orientation: DeviceDataValue.unknown,
+                DeviceDataKey.fullOrientation: DeviceDataValue.unknown
         ]
         #endif
     }
@@ -71,9 +71,9 @@ public extension TealiumDeviceData {
         case .portraitUpsideDown:
             appOrientationString = "Portrait Upside Down"
         case .unknown:
-            appOrientationString = TealiumDeviceDataValue.unknown
+            appOrientationString = DeviceDataValue.unknown
         @unknown default:
-            appOrientationString = TealiumDeviceDataValue.unknown
+            appOrientationString = DeviceDataValue.unknown
         }
         return appOrientationString
     }
@@ -95,9 +95,9 @@ public extension TealiumDeviceData {
         case .portraitUpsideDown:
             deviceOrientationString = "Portrait Upside Down"
         case .unknown:
-            deviceOrientationString = TealiumDeviceDataValue.unknown
+            deviceOrientationString = DeviceDataValue.unknown
         @unknown default:
-            deviceOrientationString = TealiumDeviceDataValue.unknown
+            deviceOrientationString = DeviceDataValue.unknown
         }
         return deviceOrientationString
     }

@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataConstants.swift
+//  DeviceDataConstants.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/08/2019.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum TealiumDeviceDataKey {
+public enum DeviceDataKey {
 
     public static let batteryPercentLegacy = "battery_percent"
     public static let batteryPercent = "device_battery_percent"
@@ -41,12 +41,12 @@ public enum TealiumDeviceDataKey {
     public static let appOrientationExtended = "app_orientation_extended"
 }
 
-enum TealiumDeviceDataModuleKey {
+enum DeviceDataModuleKey {
     static let moduleName = "devicedata"
     static let isMemoryReportingEnabled = "com.tealium.devicedata.memory.enable"
 }
 
-public enum TealiumDeviceDataValue {
+public enum DeviceDataValue {
     public static let unknown = "unknown"
     static let appleWatch = "Apple Watch"
 }

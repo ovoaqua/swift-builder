@@ -1,5 +1,5 @@
 //
-//  TealiumWKWebViewAttachToView.swift
+//  WKWebViewAttachToView.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 13/03/2019.

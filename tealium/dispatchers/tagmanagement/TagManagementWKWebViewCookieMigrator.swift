@@ -1,5 +1,5 @@
 //
-//  TealiumTagManagementWKWebViewCookieMigrator.swift
+//  TagManagementWKWebViewCookieMigrator.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 07/03/2019.

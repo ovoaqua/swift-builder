@@ -1,6 +1,6 @@
 //
 //  DeviceNamesLookup.swift
-//  TealiumDeviceData
+//  DeviceData
 //
 //  Created by Craig Rouse on 14/01/2020.
 //  Copyright © 2020 Tealium, Inc. All rights reserved.

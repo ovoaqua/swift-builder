@@ -1,5 +1,5 @@
 //
-//  TealiumTagManagementWKWebViewCookieStoreObserver.swift
+//  TagManagementWKWebViewCookieStoreObserver.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 12/8/2018

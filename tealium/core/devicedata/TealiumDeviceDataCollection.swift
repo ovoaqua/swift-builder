@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataCollection.swift
+//  DeviceDataCollection.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/08/2019.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol TealiumDeviceDataCollection {
+public protocol DeviceDataCollection {
     var memoryUsage: [String: String] { get }
 
     var orientation: [String: String] { get }
@@ -20,7 +20,7 @@ public protocol TealiumDeviceDataCollection {
     var cpuType: String { get }
 }
 
-public extension TealiumDeviceDataCollection {
+public extension DeviceDataCollection {
     /// - Returns: `String` containing the device's CPU architecture
     func architecture() -> String {
         let bit = MemoryLayout<Int>.size

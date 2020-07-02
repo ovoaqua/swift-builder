@@ -13,7 +13,7 @@ import TealiumConnectivity
 import TealiumConsentManager
 import TealiumDispatchQueue
 import TealiumDelegate
-import TealiumDeviceData
+import DeviceData
 import TealiumPersistentData
 import TealiumVolatileData
 import TealiumVisitorService

@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataMemoryInfo.swift
+//  DeviceDataMemoryInfo.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/08/2019.
@@ -14,7 +14,7 @@ private let HOST_VM_INFO64_COUNT: mach_msg_type_number_t =
     UInt32(MemoryLayout<vm_statistics64_data_t>.size / MemoryLayout<integer_t>.size)
 // swiftlint:enable identifier_name
 
-public extension TealiumDeviceData {
+public extension DeviceData {
 
     enum Unit: Double {
         // For going from byte to -
@@ -47,7 +47,7 @@ public extension TealiumDeviceData {
         if kerr == KERN_SUCCESS {
             appMemoryUsed = String(format: "%0.2fMB", Double(info.resident_size) / Unit.megabyte.rawValue)
         } else {
-            appMemoryUsed = TealiumDeviceDataValue.unknown
+            appMemoryUsed = DeviceDataValue.unknown
         }
 
         // summary of used system memory
@@ -76,13 +76,13 @@ public extension TealiumDeviceData {
             / Unit.megabyte.rawValue
 
         return [
-            TealiumDeviceDataKey.memoryFree: String(format: "%0.2fMB", free),
-            TealiumDeviceDataKey.memoryInactive: String(format: "%0.2fMB", inactive),
-            TealiumDeviceDataKey.memoryWired: String(format: "%0.2fMB", wired),
-            TealiumDeviceDataKey.memoryActive: String(format: "%0.2fMB", active),
-            TealiumDeviceDataKey.memoryCompressed: String(format: "%0.2fMB", compressed),
-            TealiumDeviceDataKey.physicalMemory: String(format: "%0.2fMB", physical),
-            TealiumDeviceDataKey.appMemoryUsage: appMemoryUsed
+            DeviceDataKey.memoryFree: String(format: "%0.2fMB", free),
+            DeviceDataKey.memoryInactive: String(format: "%0.2fMB", inactive),
+            DeviceDataKey.memoryWired: String(format: "%0.2fMB", wired),
+            DeviceDataKey.memoryActive: String(format: "%0.2fMB", active),
+            DeviceDataKey.memoryCompressed: String(format: "%0.2fMB", compressed),
+            DeviceDataKey.physicalMemory: String(format: "%0.2fMB", physical),
+            DeviceDataKey.appMemoryUsage: appMemoryUsed
         ]
     }
 }

@@ -13,7 +13,7 @@
 @testable import TealiumCore
 @testable import TealiumTagManagement
 //@testable import TealiumDelegate
-//@testable import TealiumDeviceData
+//@testable import DeviceData
 //@testable import TealiumAttribution
 //@testable import TealiumVisitorService
 import XCTest

@@ -1,5 +1,5 @@
 //
-//  TealiumCollectErrors.swift
+//  CollectError.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 19/03/2019.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum TealiumCollectError: String, LocalizedError {
+public enum CollectError: String, LocalizedError {
     case collectNotInitialized
     case unknownResponseType
     case xErrorDetected

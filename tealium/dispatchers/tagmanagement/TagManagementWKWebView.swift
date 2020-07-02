@@ -1,5 +1,5 @@
 //
-//  TealiumTagManagementWKWebView.swift
+//  TagManagementWKWebView.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 06/12/2018.

@@ -1,5 +1,5 @@
 //
-//  TealiumCollectConstants.swift
+//  CollectConstants.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 19/03/2019.
@@ -11,7 +11,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public enum TealiumCollectKey {
+public enum CollectKey {
     static let moduleName = "collect"
     static let encodedURLString = "encoded_url"
     static let overrideCollectUrl = "tealium_override_collect_url"

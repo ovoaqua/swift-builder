@@ -19,7 +19,7 @@ public class TealiumPLCrash: AppDataCollection {
     static let CrashEvent = "crash"
 
     let crashReport: TEALPLCrashReport
-    let deviceDataCollection: TealiumDeviceDataCollection
+    let deviceDataCollection: DeviceDataCollection
     private let bundle = Bundle.main
 
     var uuid: String
@@ -36,7 +36,7 @@ public class TealiumPLCrash: AppDataCollection {
     var threadInfos: [TEALPLCrashReportThreadInfo]?
     var images: [TEALPLCrashReportBinaryImageInfo]?
 
-    init(crashReport: TEALPLCrashReport, deviceDataCollection: TealiumDeviceDataCollection) {
+    init(crashReport: TEALPLCrashReport, deviceDataCollection: DeviceDataCollection) {
         self.crashReport = crashReport
         self.deviceDataCollection = deviceDataCollection
         self.uuid = UUID().uuidString
@@ -81,8 +81,8 @@ public class TealiumPLCrash: AppDataCollection {
             deviceMemoryUsage = deviceDataCollection.memoryUsage
         }
 
-        guard let appMemoryUsage = deviceMemoryUsage?[TealiumDeviceDataKey.appMemoryUsage] else {
-            return TealiumDeviceDataValue.unknown
+        guard let appMemoryUsage = deviceMemoryUsage?[DeviceDataKey.appMemoryUsage] else {
+            return DeviceDataValue.unknown
         }
         return appMemoryUsage
     }
@@ -91,15 +91,15 @@ public class TealiumPLCrash: AppDataCollection {
         if deviceMemoryUsage == nil {
             deviceMemoryUsage = deviceDataCollection.memoryUsage
         }
-        guard let memoryAvailable = deviceMemoryUsage?[TealiumDeviceDataKey.memoryFree] else {
-            return TealiumDeviceDataValue.unknown
+        guard let memoryAvailable = deviceMemoryUsage?[DeviceDataKey.memoryFree] else {
+            return DeviceDataValue.unknown
         }
         return memoryAvailable
     }
 
     var osBuild: String {
-        let build = TealiumDeviceData.oSBuild
-        guard build != TealiumDeviceDataValue.unknown else {
+        let build = DeviceData.oSBuild
+        guard build != DeviceDataValue.unknown else {
             if let crashReportBuild = crashReport.systemInfo.operatingSystemBuild {
                 return crashReportBuild
             }
@@ -111,7 +111,7 @@ public class TealiumPLCrash: AppDataCollection {
 
     func appBuild() -> String {
         guard let appBuild = build(bundle: bundle) else {
-            return TealiumDeviceDataValue.unknown
+            return DeviceDataValue.unknown
         }
         return appBuild
     }

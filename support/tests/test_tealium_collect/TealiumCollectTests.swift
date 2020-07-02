@@ -50,10 +50,10 @@ class TealiumCollectTests: XCTestCase {
         // invalid url
         let string = "tealium"
 
-        _ = TealiumCollectPostDispatcher(dispatchURL: string) { result in
+        _ = CollectEventDispatcher(dispatchURL: string) { result in
             switch result.0 {
             case .failure(let error):
-                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.invalidDispatchURL)
+                XCTAssertEqual(error as! CollectError, CollectError.invalidDispatchURL)
             case .success:
                 XCTFail("Unexpected Success")
             }
@@ -64,7 +64,7 @@ class TealiumCollectTests: XCTestCase {
         // invalid url
         let string = "tealium"
 
-        let dispatcher = TealiumCollectPostDispatcher(dispatchURL: string)
+        let dispatcher = CollectEventDispatcher(dispatchURL: string)
 
         guard let bulkURL = dispatcher.bulkEventDispatchURL else {
             XCTFail("Missing bulk url")
@@ -76,25 +76,25 @@ class TealiumCollectTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(bulkURL, "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.bulkEventPath)")
-        XCTAssertEqual(url, "\(TealiumCollectPostDispatcher.defaultDispatchBaseURL)\(TealiumCollectPostDispatcher.singleEventPath)")
+        XCTAssertEqual(bulkURL, "\(CollectEventDispatcher.defaultDispatchBaseURL)\(CollectEventDispatcher.bulkEventPath)")
+        XCTAssertEqual(url, "\(CollectEventDispatcher.defaultDispatchBaseURL)\(CollectEventDispatcher.singleEventPath)")
     }
 
     func testGetDomainFromURLStringInvalidURL() {
-        XCTAssertNil(TealiumCollectPostDispatcher.getDomainFromURLString(url: "hello"))
+        XCTAssertNil(CollectEventDispatcher.getDomainFromURLString(url: "hello"))
     }
 
     func testGetDomainFromURLString() {
-        XCTAssertEqual("tealium.com", TealiumCollectPostDispatcher.getDomainFromURLString(url: "https://tealium.com")!)
+        XCTAssertEqual("tealium.com", CollectEventDispatcher.getDomainFromURLString(url: "https://tealium.com")!)
     }
 
     func testInitWithInvalidBaseURLString() {
         // invalid url
         let string = "https://tealium/"
-        _ = TealiumCollectPostDispatcher(dispatchURL: string) { result in
+        _ = CollectEventDispatcher(dispatchURL: string) { result in
             switch result.0 {
             case .failure(let error):
-                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.invalidDispatchURL)
+                XCTAssertEqual(error as! CollectError, CollectError.invalidDispatchURL)
             case .success:
                 XCTFail("Unexpected Success")
             }
@@ -102,7 +102,7 @@ class TealiumCollectTests: XCTestCase {
     }
 
     func testGetURLSessionReturnsEphemeralSession() {
-        let session = TealiumCollectPostDispatcher.getURLSession()
+        let session = CollectEventDispatcher.getURLSession()
 
         XCTAssertNotEqual(session.configuration.httpCookieStorage!.debugDescription, URLSessionConfiguration.default.httpCookieStorage!.debugDescription)
         XCTAssertEqual(session.configuration.httpCookieStorage!.debugDescription, URLSessionConfiguration.ephemeral.httpCookieStorage!.debugDescription)
@@ -110,18 +110,18 @@ class TealiumCollectTests: XCTestCase {
 
     func testValidURL() {
         let validURL = "https://collect.tealiumiq.com/event/"
-        XCTAssertTrue(TealiumCollectPostDispatcher.isValidUrl(url: validURL), "isValidURL returned unexpected failure")
+        XCTAssertTrue(CollectEventDispatcher.isValidUrl(url: validURL), "isValidURL returned unexpected failure")
         let invalidURL = "invalidURL"
-        XCTAssertFalse(TealiumCollectPostDispatcher.isValidUrl(url: invalidURL), "isValidURL returned unexpected success")
+        XCTAssertFalse(CollectEventDispatcher.isValidUrl(url: invalidURL), "isValidURL returned unexpected success")
     }
 
     func testSendURLRequest() {
         mockURLSession = MockURLSession()
-        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL) else {
+        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL) else {
             XCTFail("Could not create post request")
             return
         }
-        let dispatcher = TealiumCollectPostDispatcher(dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
+        let dispatcher = CollectEventDispatcher(dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
         dispatcher.sendURLRequest(request) { result in
             switch result.0 {
             case .failure:
@@ -135,15 +135,15 @@ class TealiumCollectTests: XCTestCase {
 
     func testSendURLRequestFailingURL() {
         mockURLSession = MockURLSessionError()
-        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL) else {
+        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL) else {
             XCTFail("Could not create post request")
             return
         }
-        let dispatcher = TealiumCollectPostDispatcher(dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
+        let dispatcher = CollectEventDispatcher(dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
         dispatcher.sendURLRequest(request) { result in
             switch result.0 {
             case .failure(let error):
-                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.xErrorDetected)
+                XCTAssertEqual(error as! CollectError, CollectError.xErrorDetected)
                 XCTAssertNotNil(result.1)
             case .success:
                 XCTFail("Unexpected success")
@@ -153,15 +153,15 @@ class TealiumCollectTests: XCTestCase {
 
     func testSendURLRequestNon200() {
         mockURLSession = MockURLSessionNon200()
-        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL) else {
+        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL) else {
             XCTFail("Could not create post request")
             return
         }
-        let dispatcher = TealiumCollectPostDispatcher(dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
+        let dispatcher = CollectEventDispatcher(dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
         dispatcher.sendURLRequest(request) { result in
             switch result.0 {
             case .failure(let error):
-                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.non200Response)
+                XCTAssertEqual(error as! CollectError, CollectError.non200Response)
             case .success:
                 XCTFail("Unexpected success")
             }
@@ -170,11 +170,11 @@ class TealiumCollectTests: XCTestCase {
 
     func testSendURLRequestURLError() {
         mockURLSession = MockURLSessionURLError()
-        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL) else {
+        guard let request = urlPOSTRequestWithJSONString(testJSONString, dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL) else {
             XCTFail("Could not create post request")
             return
         }
-        let dispatcher = TealiumCollectPostDispatcher(dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
+        let dispatcher = CollectEventDispatcher(dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
         dispatcher.sendURLRequest(request) { result in
             switch result.0 {
             case .failure(let error):
@@ -187,7 +187,7 @@ class TealiumCollectTests: XCTestCase {
 
     func testDispatch() {
         mockURLSession = MockURLSession()
-        let dispatcher = TealiumCollectPostDispatcher(dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
+        let dispatcher = CollectEventDispatcher(dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
         dispatcher.dispatch(data: self.testDictionary) { result in
             switch result.0 {
             case .failure:
@@ -201,11 +201,11 @@ class TealiumCollectTests: XCTestCase {
 
     func testDispatchWithError() {
         mockURLSession = MockURLSessionError()
-        let dispatcher = TealiumCollectPostDispatcher(dispatchURL: TealiumCollectPostDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
+        let dispatcher = CollectEventDispatcher(dispatchURL: CollectEventDispatcher.defaultDispatchBaseURL, urlSession: mockURLSession)
         dispatcher.dispatch(data: self.testDictionary) { result in
             switch result.0 {
             case .failure(let error):
-                XCTAssertEqual(error as! TealiumCollectError, TealiumCollectError.xErrorDetected)
+                XCTAssertEqual(error as! CollectError, CollectError.xErrorDetected)
                 XCTAssertNotNil(result.1)
             case .success:
                 XCTFail("Unexpected success")

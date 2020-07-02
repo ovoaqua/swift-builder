@@ -10,7 +10,7 @@
 @testable import TealiumCore
 @testable import TealiumCrash
 @testable import TealiumCrashReporteriOS
-//@testable import TealiumDeviceData
+//@testable import DeviceData
 //@testable import TealiumVolatileData
 import XCTest
 
@@ -18,13 +18,13 @@ class TealiumCrashTests: XCTestCase {
 
     var mockTimestampCollection: TimestampCollection!
     var mockAppDataCollection: AppDataCollection!
-    var mockDeviceDataCollection: TealiumDeviceDataCollection!
+    var mockDeviceDataCollection: DeviceDataCollection!
 
     override func setUp() {
         super.setUp()
         mockTimestampCollection = MockTimestampCollection()
         mockAppDataCollection = MockTealiumAppDataCollection()
-        mockDeviceDataCollection = MockTealiumDeviceDataCollection()
+        mockDeviceDataCollection = MockDeviceDataCollection()
     }
 
     override func tearDown() {
@@ -53,14 +53,14 @@ class TealiumCrashTests: XCTestCase {
         let crashReport = TEALPLCrashReport()
         let crash = TealiumPLCrash(crashReport: crashReport, deviceDataCollection: mockDeviceDataCollection)
 
-        XCTAssertEqual(TealiumDeviceDataValue.unknown, crash.memoryUsage)
+        XCTAssertEqual(DeviceDataValue.unknown, crash.memoryUsage)
     }
 
     func testMemoryAvailableReturnsUnknownIfMemoryFreeIsNil() {
         let crashReport = TEALPLCrashReport()
         let crash = TealiumPLCrash(crashReport: crashReport, deviceDataCollection: mockDeviceDataCollection)
 
-        XCTAssertEqual(TealiumDeviceDataValue.unknown, crash.deviceMemoryAvailable)
+        XCTAssertEqual(DeviceDataValue.unknown, crash.deviceMemoryAvailable)
     }
 
     func testThreadsReturnsCrashedIfTruncated() {
@@ -130,7 +130,7 @@ class TealiumCrashTests: XCTestCase {
     }
 }
 
-public class MockTealiumDeviceDataCollection: TealiumDeviceDataCollection {
+public class MockDeviceDataCollection: DeviceDataCollection {
     public var orientation: [String: String] {
         return orientationDictionary
     }

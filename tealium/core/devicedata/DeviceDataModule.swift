@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataModule.swift
+//  DeviceDataModule.swift
 //  tealium-swift
 //
 //  Created by Jason Koo on 8/3/17.
@@ -34,7 +34,7 @@ class DeviceDataModule: Collector {
     var isMemoryEnabled: Bool {
         config.memoryReportingEnabled
     }
-    var deviceDataCollection: TealiumDeviceDataCollection
+    var deviceDataCollection: DeviceDataCollection
     var cachedData = [String: Any]()
     var config: TealiumConfig
 
@@ -43,7 +43,7 @@ class DeviceDataModule: Collector {
                   diskStorage: TealiumDiskStorageProtocol?,
                   completion: ModuleCompletion) {
         self.config = config
-        deviceDataCollection = TealiumDeviceData()
+        deviceDataCollection = DeviceData()
         cachedData = enableTimeData
         completion((.success(true), nil))
     }
@@ -56,16 +56,16 @@ class DeviceDataModule: Collector {
 
         result[TealiumKey.architectureLegacy] = deviceDataCollection.architecture()
         result[TealiumKey.architecture] = result[TealiumKey.architectureLegacy] ?? ""
-        result[TealiumDeviceDataKey.osBuildLegacy] = TealiumDeviceData.oSBuild
-        result[TealiumDeviceDataKey.osBuild] = TealiumDeviceData.oSBuild
+        result[DeviceDataKey.osBuildLegacy] = DeviceData.oSBuild
+        result[DeviceDataKey.osBuild] = DeviceData.oSBuild
         result[TealiumKey.cpuTypeLegacy] = deviceDataCollection.cpuType
         result[TealiumKey.cpuType] = result[TealiumKey.cpuTypeLegacy] ?? ""
         result += deviceDataCollection.model
-        result[TealiumDeviceDataKey.osVersionLegacy] = TealiumDeviceData.oSVersion
-        result[TealiumDeviceDataKey.osVersion] = result[TealiumDeviceDataKey.osVersionLegacy] ?? ""
-        result[TealiumKey.osName] = TealiumDeviceData.oSName
+        result[DeviceDataKey.osVersionLegacy] = DeviceData.oSVersion
+        result[DeviceDataKey.osVersion] = result[DeviceDataKey.osVersionLegacy] ?? ""
+        result[TealiumKey.osName] = DeviceData.oSName
         result[TealiumKey.platform] = result[TealiumKey.osName] ?? ""
-        result[TealiumKey.resolution] = TealiumDeviceData.resolution
+        result[TealiumKey.resolution] = DeviceData.resolution
         return result
     }
 
@@ -75,17 +75,17 @@ class DeviceDataModule: Collector {
     var trackTimeData: [String: Any] {
         var result = [String: Any]()
 
-        result[TealiumDeviceDataKey.batteryPercentLegacy] = TealiumDeviceData.batteryPercent
-        result[TealiumDeviceDataKey.batteryPercent] = result[TealiumDeviceDataKey.batteryPercentLegacy] ?? ""
-        result[TealiumDeviceDataKey.isChargingLegacy] = TealiumDeviceData.isCharging
-        result[TealiumDeviceDataKey.isCharging] = result[TealiumDeviceDataKey.isChargingLegacy] ?? ""
-        result[TealiumKey.languageLegacy] = TealiumDeviceData.iso639Language
+        result[DeviceDataKey.batteryPercentLegacy] = DeviceData.batteryPercent
+        result[DeviceDataKey.batteryPercent] = result[DeviceDataKey.batteryPercentLegacy] ?? ""
+        result[DeviceDataKey.isChargingLegacy] = DeviceData.isCharging
+        result[DeviceDataKey.isCharging] = result[DeviceDataKey.isChargingLegacy] ?? ""
+        result[TealiumKey.languageLegacy] = DeviceData.iso639Language
         result[TealiumKey.language] = result[TealiumKey.languageLegacy] ?? ""
         if isMemoryEnabled {
             result += deviceDataCollection.memoryUsage
         }
         result += deviceDataCollection.orientation
-        result += TealiumDeviceData.carrierInfo
+        result += DeviceData.carrierInfo
         return result
     }
 }

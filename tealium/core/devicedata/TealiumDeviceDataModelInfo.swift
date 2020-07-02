@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceDataModelInfo.swift
+//  DeviceDataModelInfo.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 20/08/2019.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension TealiumDeviceData {
+public extension DeviceData {
 
     /// Retrieves the Apple model name, e.g. iPhone11,2.
     ///

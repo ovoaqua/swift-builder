@@ -1,5 +1,5 @@
 //
-//  TealiumDeviceData.swift
+//  DeviceData.swift
 //  tealium-swift
 //
 //  Created by Jonathan Wong on 1/10/18.
@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 #endif
 
-public class TealiumDeviceData: TealiumDeviceDataCollection {
+public class DeviceData: DeviceDataCollection {
 
     // needed for use by other modules
     public init() {
@@ -26,7 +26,7 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
         UIDevice.current.isBatteryMonitoringEnabled = true
         return String(describing: (UIDevice.current.batteryLevel * 100))
         #else
-        return TealiumDeviceDataValue.unknown
+        return DeviceDataValue.unknown
         #endif
     }
 
@@ -44,10 +44,10 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
         case .unplugged:
             return "false"
         default:
-            return TealiumDeviceDataValue.unknown
+            return DeviceDataValue.unknown
         }
         #else
-        return TealiumDeviceDataValue.unknown
+        return DeviceDataValue.unknown
         #endif
     }
 
@@ -92,7 +92,7 @@ public class TealiumDeviceData: TealiumDeviceDataCollection {
         case CPU_TYPE_ARM:
             return "ARM"
         default:
-            return TealiumDeviceDataValue.unknown
+            return DeviceDataValue.unknown
         }
     }
 

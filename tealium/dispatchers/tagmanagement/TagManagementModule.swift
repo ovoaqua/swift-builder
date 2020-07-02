@@ -1,5 +1,5 @@
 //
-//  TealiumTagManagementModule.swift
+//  TagManagementModule.swift
 //  TealiumSwift
 //
 //  Created by Christina S on 4/28/20.
@@ -12,6 +12,7 @@ import TealiumCore
 /// Dispatch Service Module for sending track data to the Tealium Webview.
 public class TagManagementModule: Dispatcher {
 
+    public let id: String = ModuleNames.tagmanagement
     public var isReady = false
     public var config: TealiumConfig
     var errorState = AtomicInteger(value: 0)
@@ -19,10 +20,11 @@ public class TagManagementModule: Dispatcher {
     var tagManagement: TagManagementProtocol?
     var webViewState: Atomic<WebViewState>?
     weak var delegate: TealiumModuleDelegate?
-    public let id: String = ModuleNames.tagmanagement
 
     /// Provided for unit testing￼.
     ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `TealiumModuleDelegate` instance
     /// - Parameter tagManagement: Class instance conforming to `TealiumTagManagementProtocol`
     convenience init(config: TealiumConfig,
                      delegate: TealiumModuleDelegate,
@@ -32,6 +34,11 @@ public class TagManagementModule: Dispatcher {
         self.tagManagement = tagManagement
     }
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `TealiumModuleDelegate` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     public required init(config: TealiumConfig,
                          delegate: TealiumModuleDelegate,
                          completion: ModuleCompletion?) {
@@ -63,6 +70,7 @@ public class TagManagementModule: Dispatcher {
     /// Sends the track request to the webview.
     ///￼
     /// - Parameter track: `TealiumTrackRequest` to be sent to the webview
+    /// - Parameter completion: `ModuleCompletion` block to be called when the request has been processed
     func dispatchTrack(_ request: TealiumRequest,
                        completion: ModuleCompletion?) {
         switch request {
@@ -81,8 +89,6 @@ public class TagManagementModule: Dispatcher {
                         }
                         return
                     }
-                    //                    self.didFinish(track,
-                    //                                   info: info)
                     completion?((.success(true), nil))
                 }
             }
@@ -110,7 +116,8 @@ public class TagManagementModule: Dispatcher {
 
     /// Detects track type and dispatches appropriately.
     ///
-    /// - Parameter track: `TealiumRequest`, which is expected to be either a `TealiumTrackRequest` or a `TealiumBatchTrackRequest`
+    /// - Parameter track: `TealiumRequest`, which is expected to be a `TealiumTrackRequest`, `TealiumBatchTrackRequest` or a `TealiumRemoteCommandRequestResponse`
+    /// - Parameter completion: `ModuleCompletion` block to be called when the request has been processed
     public func dynamicTrack(_ track: TealiumRequest,
                              completion: ModuleCompletion?) {
         if self.errorState.value > 0 {
@@ -142,8 +149,6 @@ public class TagManagementModule: Dispatcher {
             self.dispatchTrack(newRequest, completion: completion)
         case let track as TealiumRemoteAPIRequest:
             self.dispatchTrack(prepareForDispatch(track.trackRequest), completion: completion)
-            //            let reportRequest = TealiumReportRequest(message: "Processing remote_api request.")
-            //            self.delegate?.tealiumModuleRequests(module: self, process: reportRequest)
             return
         case let command as TealiumRemoteCommandRequestResponse:
             if var jsCommand = command.data[TealiumKey.jsCommand] as? String {
@@ -163,6 +168,7 @@ public class TagManagementModule: Dispatcher {
     /// Enqueues a request for later dispatch if the webview isn't ready.
     ///
     /// - Parameter request: `TealiumRequest` to be enqueued
+    /// - Parameter completion: `ModuleCompletion` block to be called when the request has been processed
     func enqueue(_ request: TealiumRequest,
                  completion: ModuleCompletion?) {
         guard request is TealiumTrackRequest || request is TealiumBatchTrackRequest || request is TealiumRemoteAPIRequest else {
@@ -193,6 +199,7 @@ public class TagManagementModule: Dispatcher {
         }
     }
 
+    /// Flushes any queued requests sent before the webview was ready
     func flushQueue() {
         let pending = self.pendingTrackRequests
         self.pendingTrackRequests = []

@@ -1,5 +1,5 @@
 //
-//  TealiumTagManagementConstants.swift
+//  TagManagementConstants.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 07/03/2019.
