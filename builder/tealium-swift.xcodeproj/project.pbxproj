@@ -533,7 +533,7 @@
 		D7F8D8CE2460613300796E12 /* TealiumPLCrash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F70732032111F00630388 /* TealiumPLCrash.swift */; };
 		D7F8D8D22460613300796E12 /* TealiumCrashReporteriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD4D7F12040D0FC005C3045 /* TealiumCrashReporteriOS.framework */; };
 		D7F8D8DD2460613300796E12 /* TealiumCrashReporteriOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD4D7F12040D0FC005C3045 /* TealiumCrashReporteriOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D7F8D8E7246079F500796E12 /* TealiumModuleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7596C9A2451D6E1003AB939 /* TealiumModuleDelegate.swift */; };
+		D7F8D8E7246079F500796E12 /* ModuleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7596C9A2451D6E1003AB939 /* ModuleDelegate.swift */; };
 		D7FF987A24ACBCBB00E87A80 /* CrashExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF987924ACBCBB00E87A80 /* CrashExtensions.swift */; };
 		D7FF987C24ACBD1300E87A80 /* AutoTrackingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF987B24ACBD1300E87A80 /* AutoTrackingExtensions.swift */; };
 		D7FF987D24AD0B6F00E87A80 /* MockAttributionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7F075A24770212003E23B9 /* MockAttributionData.swift */; };
@@ -1600,7 +1600,7 @@
 		D7596C892451A886003AB939 /* Dispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = "<group>"; };
 		D7596C8B2451AE35003AB939 /* DispatchValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchValidator.swift; sourceTree = "<group>"; };
 		D7596C982451D141003AB939 /* TealiumModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumModule.swift; sourceTree = "<group>"; };
-		D7596C9A2451D6E1003AB939 /* TealiumModuleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumModuleDelegate.swift; sourceTree = "<group>"; };
+		D7596C9A2451D6E1003AB939 /* ModuleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleDelegate.swift; sourceTree = "<group>"; };
 		D762FC41232F97EF00CBC4D0 /* TealiumLocationTests-iOSs.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "TealiumLocationTests-iOSs.xctest"; path = "TealiumLocationTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D76FE19D2193093A00D73EC5 /* TealiumAttribution.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumAttribution.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D76FE19E2193093A00D73EC5 /* TealiumAttribution-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TealiumAttribution-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -2520,7 +2520,7 @@
 				71F085C61DDE154C008850C8 /* TealiumConfig.swift */,
 				71F085C71DDE154C008850C8 /* TealiumConstants.swift */,
 				D79A2D952087FF49001C1F80 /* TealiumInstanceManager.swift */,
-				D7596C9A2451D6E1003AB939 /* TealiumModuleDelegate.swift */,
+				D7596C9A2451D6E1003AB939 /* ModuleDelegate.swift */,
 				D70FC79F244F04EA004AD838 /* ModulesManager.swift */,
 				D7A42DE02459A00E006D15B3 /* ModuleResult.swift */,
 			);
@@ -5171,7 +5171,7 @@
 				D7DB82E1245ADF4D005392B2 /* ConnectivityModule.swift in Sources */,
 				D79A1CA6244A0FF500BBA8B3 /* DeviceDataConstants.swift in Sources */,
 				D7174B2E2346505000D685F7 /* URLSessionProtocol.swift in Sources */,
-				D7F8D8E7246079F500796E12 /* TealiumModuleDelegate.swift in Sources */,
+				D7F8D8E7246079F500796E12 /* ModuleDelegate.swift in Sources */,
 				D719955622B7F190005BE543 /* Disk+InternalHelpers.swift in Sources */,
 				D79A1C99244A0F8300BBA8B3 /* TealiumPersistentDispatchQueue.swift in Sources */,
 				D719955722B7F190005BE543 /* Disk+VolumeInformation.swift in Sources */,
