@@ -24,17 +24,17 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
     public var isTagManagementEnabled = false
 
     public init(config: TealiumConfig,
-                diskStorage: TealiumDiskStorageProtocol? = nil,
-                sessionStarter: SessionStarterProtocol? = nil) {
+        diskStorage: TealiumDiskStorageProtocol? = nil,
+        sessionStarter: SessionStarterProtocol? = nil) {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "eventdata")
         self.sessionStarter = sessionStarter ?? SessionStarter(config: config)
         self.minutesBetweenSessionIdentifier = TimeInterval(TealiumKey.defaultMinutesBetweenSession)
         var currentStaticData = [TealiumKey.account: config.account,
-                                 TealiumKey.profile: config.profile,
-                                 TealiumKey.environment: config.environment,
-                                 TealiumKey.libraryName: TealiumValue.libraryName,
-                                 TealiumKey.libraryVersion: TealiumValue.libraryVersion]
+            TealiumKey.profile: config.profile,
+            TealiumKey.environment: config.environment,
+            TealiumKey.libraryName: TealiumValue.libraryName,
+            TealiumKey.libraryVersion: TealiumValue.libraryVersion]
 
         if let dataSource = config.dataSource {
             currentStaticData[TealiumKey.dataSource] = dataSource
@@ -66,7 +66,7 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
             allSessionData += persistentData.all
         }
 
-        allSessionData[TealiumKey.random] = "\(Int.random(in: 1...16))"
+        allSessionData[TealiumKey.random] = random
         if !currentTimestampsExist(allSessionData) {
             allSessionData.merge(currentTimeStamps) { _, new in new }
             allSessionData[TealiumKey.timestampOffset] = timeZoneOffset
@@ -116,8 +116,8 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
     ///   - value: `Any` should be `String` or `[String]`.
     ///   - expiration: `Expiry` level.
     public func add(key: String,
-                    value: Any,
-                    expiry: Expiry? = .session) {
+        value: Any,
+        expiry: Expiry? = .session) {
         self.add(data: [key: value], expiry: expiry!)
     }
 
@@ -126,7 +126,7 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
     ///   - data: `[String: Any]` to be stored.
     ///   - expiration: `Expiry` level.
     public func add(data: [String: Any],
-                    expiry: Expiry? = .session) {
+        expiry: Expiry? = .session) {
         switch expiry {
         case .session:
             self.sessionData += data
@@ -169,6 +169,11 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
     /// Deletes all values from storage.
     public func deleteAll() {
         persistentDataStorage?.removeAll()
+    }
+
+    /// - Returns: `String` format of random 16 digit number
+    private var random: String {
+        (1..<16).reduce(into: "") { string, _ in string += String(Int(arc4random_uniform(10))) }
     }
 
 }

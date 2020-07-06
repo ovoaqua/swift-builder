@@ -51,6 +51,7 @@ public extension TealiumConfig {
     }
     #endif
 
+    /// Enables (`true`) or disables (`false`) lifecycle auto tracking. Default is `true`. If set to `false` and lifecycle launch/sleep/wake events are desired, they will need to be manually called using the public methods in the `LifecycleModule`.
     var lifecycleAutoTrackingEnabled: Bool {
         get {
             options[LifecycleKey.autotrackingEnabled] as? Bool ?? true
