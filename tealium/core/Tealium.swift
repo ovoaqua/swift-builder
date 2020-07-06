@@ -20,8 +20,8 @@ public class Tealium {
     // swiftlint:disable identifier_name
     public var zz_internal_modulesManager: ModulesManager?
     // swiftlint:enable identifier_name
-
-    // MARK: PUBLIC
+    /// Returns `true` if Tealium has finished loading all modules.
+    public var isReady = false
 
     /// Initializer.
     ///
@@ -34,6 +34,7 @@ public class Tealium {
         defer {
             TealiumQueues.backgroundSerialQueue.async {
                 enableCompletion?(.success(true))
+                self.isReady = true
             }
         }
 

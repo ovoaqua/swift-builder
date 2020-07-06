@@ -97,7 +97,8 @@ public class ModulesManager {
           knownDispatchers: [String]? = nil) {
         self.originalConfig = config.copy
         self.config = config
-        self.connectivityManager = ConnectivityModule(config: self.config, delegate: nil, diskStorage: nil) { _ in }
+        self.connectivityManager = ConnectivityModule(config: self.config, delegate: nil, diskStorage: nil) { _ in
+        }
         self.dataLayerManager = dataLayer
         connectivityManager.addConnectivityDelegate(delegate: self)
         if config.shouldUseRemotePublishSettings {
@@ -107,7 +108,7 @@ public class ModulesManager {
             }
         }
         self.logger = self.config.logger
-        self.setupDispatchers(config: self.config)
+        //        self.setupDispatchers(config: self.config)
         self.setupDispatchValidators(config: self.config)
         self.setupDispatchListeners(config: self.config)
 
@@ -203,55 +204,55 @@ public class ModulesManager {
     }
 
     func setupDispatchers(config: TealiumConfig) {
-        self.connectivityManager.checkIsConnected { [weak self] result in
-            guard let self = self else {
+        //        self.connectivityManager.checkIsConnected { [weak self] result in
+        //            guard let self = self else {
+        //                return
+        //            }
+        //            switch result {
+        //            case .success:
+        self.config.dispatchers?.forEach { dispatcherType in
+            let dispatcherTypeDescription = String(describing: dispatcherType)
+            if dispatcherTypeDescription.contains(ModuleNames.tagmanagement),
+               config.isTagManagementEnabled == false {
+                return
+            } else {
+                self.dataLayerManager?.isTagManagementEnabled = true
+            }
+
+            if dispatcherTypeDescription.contains(ModuleNames.collect),
+               config.isCollectEnabled == false {
                 return
             }
-            switch result {
-            case .success:
-                self.config.dispatchers?.forEach { dispatcherType in
-                    let dispatcherTypeDescription = String(describing: dispatcherType)
-                    if dispatcherTypeDescription.contains(ModuleNames.tagmanagement),
-                       config.isTagManagementEnabled == false {
-                        return
-                    } else {
-                        self.dataLayerManager?.isTagManagementEnabled = true
-                    }
 
-                    if dispatcherTypeDescription.contains(ModuleNames.collect),
-                       config.isCollectEnabled == false {
-                        return
-                    }
-
-                    let dispatcher = dispatcherType.init(config: config, delegate: self) { result in
-                        switch result.0 {
-                        case .failure:
-                            print("log error")
-                        default:
-                            break
-                        }
-                    }
-
-                    self.addDispatcher(dispatcher)
+            let dispatcher = dispatcherType.init(config: config, delegate: self) { result in
+                switch result.0 {
+                case .failure:
+                    print("log error")
+                default:
+                    break
                 }
-                if self.dispatchers.isEmpty {
-                    let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.system,
-                                                       message: ModulesManagerLogMessages.noDispatchersEnabled,
-                                                       info: nil,
-                                                       logLevel: .error,
-                                                       category: .`init`)
-                    self.logger?.log(logRequest)
-                }
-            case .failure:
-                let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.system,
-                                                   message: ModulesManagerLogMessages.noConnectionDispatchersDisabled,
-                                                   info: nil,
-                                                   logLevel: .error,
-                                                   category: .`init`)
-                self.logger?.log(logRequest)
-                return
             }
+
+            self.addDispatcher(dispatcher)
         }
+        if self.dispatchers.isEmpty {
+            let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.system,
+                                               message: ModulesManagerLogMessages.noDispatchersEnabled,
+                                               info: nil,
+                                               logLevel: .error,
+                                               category: .`init`)
+            self.logger?.log(logRequest)
+        }
+        //            case .failure:
+        //                let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.system,
+        //                                                   message: ModulesManagerLogMessages.noConnectionDispatchersDisabled,
+        //                                                   info: nil,
+        //                                                   logLevel: .error,
+        //                                                   category: .`init`)
+        //                self.logger?.log(logRequest)
+        //                return
+        //            }
+        //        }
 
     }
 
@@ -344,7 +345,9 @@ extension ModulesManager: ConnectivityDelegate {
         if self.dispatchers.isEmpty {
             self.setupDispatchers(config: config)
         }
-        self.requestDequeue(reason: TealiumConstants.connectionRestoredReason)
+        TealiumQueues.backgroundSerialQueue.async {
+            self.requestDequeue(reason: TealiumConstants.connectionRestoredReason)
+        }
     }
 
 }

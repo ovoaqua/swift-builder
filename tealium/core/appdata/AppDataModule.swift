@@ -18,11 +18,25 @@ public class AppDataModule: Collector, AppDataCollection {
 
     /// Retrieves current appdata
     public var data: [String: Any]? {
-        if self.config.shouldCollectTealiumData {
+        // If collectors are configured and AppData isn't present, only return mandatory Tealium data
+        if shouldCollectAllAppData {
             return appData.dictionary
         } else {
             return appData.persistentData?.dictionary
         }
+    }
+
+    var shouldCollectAllAppData: Bool {
+        if let collectors = self.config.collectors {
+            if collectors.contains(where: { $0 == AppDataModule.self }) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return true
+        }
+
     }
     /// Optional override for visitor ID
     var existingVisitorId: String? {

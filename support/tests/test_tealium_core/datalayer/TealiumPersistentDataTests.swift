@@ -12,7 +12,7 @@ import XCTest
 class TealiumPersistentDataTests: XCTestCase {
 
     var persistentData: TealiumPersistentData?
-    var mockEventDataMgr = MockEventDataManager()
+    var mockEventDataMgr = MockDataLayerManager()
     let testPersistentData = ["key": "value",
                                      "anotherKey": "anotherValue"]
 

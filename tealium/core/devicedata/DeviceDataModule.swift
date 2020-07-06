@@ -24,9 +24,6 @@ public class DeviceDataModule: Collector {
     public let id: String = ModuleNames.devicedata
 
     public var data: [String: Any]? {
-        guard config.shouldCollectTealiumData else {
-            return nil
-        }
         cachedData += trackTimeData
         return cachedData
     }

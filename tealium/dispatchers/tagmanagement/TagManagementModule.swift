@@ -134,7 +134,7 @@ public class TagManagementModule: Dispatcher {
             return
         } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
             self.enqueue(track, completion: completion)
-            completion?((.failure(TagManagementError.webViewNotYetReady), nil))
+            //            completion?((.failure(TagManagementError.webViewNotYetReady), nil))
             return
         }
 

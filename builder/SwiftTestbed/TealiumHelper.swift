@@ -57,14 +57,14 @@ class TealiumHelper: NSObject {
 //        config.sessionHandlingEnabled = true
         config.diskStorageEnabled = true
         //config.visitorServiceDelegate = self
-        config.remoteAPIEnabled = false
-        config.shouldCollectTealiumData = true
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
-        config.remoteAPIEnabled = true
+        config.remoteAPIEnabled = false
         logger = config.logger
-        config.collectors = [Collectors.Attribution,
-//                             Collectors.Lifecycle,
+        config.collectors = [
+//            Collectors.Attribution,
+                             Collectors.Lifecycle,
+//                             Collectors.AppData,
                              Collectors.Connectivity,
                              Collectors.Crash,
                              Collectors.Device,
@@ -73,8 +73,9 @@ class TealiumHelper: NSObject {
         ]
         
         config.dispatchers = [Dispatchers.Collect,
-                              Dispatchers.TagManagement,
-                              Dispatchers.RemoteCommands]
+//                              Dispatchers.TagManagement,
+//                              Dispatchers.RemoteCommands
+        ]
 //        tealium?.dataLayerManager
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
@@ -127,13 +128,15 @@ class TealiumHelper: NSObject {
 
             persitence.add(value: "hello", for: "itsme", expiration: .afterCustom((.months, 1)))
 
-            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
-
-            print("Persistent Data: \(String(describing: persitence.dictionary))")
-
+//            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
+//
+//            print("Persistent Data: \(String(describing: persitence.dictionary))")
+//            print("Visitor ID: \(self.tealium?.visitorId ?? "not ready")")
+//            print("Tealium Ready: \(self.tealium!.isReady)")
         }
-        tealium?.lifecycle
-//        let dispatch = EventDispatch("hello")
+        
+//        print("Tealium Ready: \(self.tealium!.isReady)")
+//        let dispatch = EventDispatch("hello-post-open")
 //
 //        tealium?.track(dispatch)
         

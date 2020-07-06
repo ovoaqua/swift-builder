@@ -10,9 +10,7 @@ import UIKit
 // MARK: VALUES
 #endif
 
-public enum Collectors {
-    static let AppData = AppDataModule.self
-}
+public enum Collectors {}
 
 public enum Dispatchers {}
 
@@ -117,7 +115,6 @@ public enum TealiumKey {
     public static let loggerType = "logger_type"
     public static let logLevel = "log_level"
     public static let logger = "com.tealium.logger"
-    public static let shouldCollectTealiumData = "should_collect_tealium_data"
     public static let dispatchValidators = "dispatch_validators"
     public static let dispatchListeners = "dispatch_listeners"
     public static let collectors = "collectors"

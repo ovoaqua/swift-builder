@@ -143,8 +143,7 @@ class DispatchManager: DispatchManagerProtocol {
         #endif
 
         if checkShouldQueue(request: &newRequest) {
-            let enqueueRequest = TealiumEnqueueRequest(data: newRequest, completion: nil)
-            queue(enqueueRequest)
+            enqueue(newRequest, reason: nil)
             return
         }
 
@@ -229,22 +228,6 @@ class DispatchManager: DispatchManagerProtocol {
         persistentQueue.removeOldDispatches(maxQueueSize, since: sinceDate)
     }
 
-    func queue(_ request: TealiumEnqueueRequest) {
-        removeOldDispatches()
-        let allTrackRequests = request.data
-
-        allTrackRequests.forEach {
-            var newData = $0.trackDictionary
-            newData[TealiumKey.wasQueued] = "true"
-            let uuid = $0.uuid
-            var newTrack = TealiumTrackRequest(data: newData,
-                                               completion: $0.completion)
-            newTrack.uuid = uuid
-            persistentQueue.appendDispatch(newTrack)
-            logQueue(request: newTrack, reason: nil)
-        }
-    }
-
     func enqueue(_ request: TealiumTrackRequest,
                  reason: String?) {
         defer {
@@ -252,9 +235,12 @@ class DispatchManager: DispatchManagerProtocol {
                 handleDequeueRequest(reason: "Dispatch queue limit reached.")
             }
         }
+        removeOldDispatches()
         // no conditions preventing queueing, so queue request
         var requestData = request.trackDictionary
-        requestData[TealiumKey.queueReason] = reason ?? TealiumKey.batchingEnabled
+        if requestData[TealiumKey.queueReason] == nil {
+            requestData[TealiumKey.queueReason] = reason ?? TealiumKey.batchingEnabled
+        }
         requestData[TealiumKey.wasQueued] = "true"
         var newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
         newRequest.uuid = request.uuid
