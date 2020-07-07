@@ -359,11 +359,11 @@ class DummyDataManager: DataLayerManagerProtocol {
 
     var isTagManagementEnabled: Bool = true
 
-    func add(data: [String: Any], expiration: Expiration) {
+    func add(data: [String: Any], expiry: Expiry?) {
 
     }
 
-    func add(key: String, value: Any, expiration: Expiration) {
+    func add(key: String, value: Any, expiry: Expiry?) {
 
     }
 
@@ -541,11 +541,11 @@ class DummyDataManagerNoData: DataLayerManagerProtocol {
 
     var isTagManagementEnabled: Bool = true
 
-    func add(data: [String: Any], expiration: Expiration) {
+    func add(data: [String: Any], expiry: Expiry) {
 
     }
 
-    func add(key: String, value: Any, expiration: Expiration) {
+    func add(key: String, value: Any, expiry: Expiry) {
 
     }
 

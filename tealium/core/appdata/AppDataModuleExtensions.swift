@@ -12,19 +12,15 @@ public extension Collectors {
     static let AppData = AppDataModule.self
 }
 
-// public interface for consent manager
+// public interface for AppData module
 public extension Tealium {
 
-    /// - Returns: `ConsentManager` instance
+    /// - Returns: `AppData` module instance
     internal var appData: AppDataModule? {
         let module = zz_internal_modulesManager?.collectors.first {
             $0 is AppDataModule
         }
         return (module as? AppDataModule)
-    }
-
-    var visitorId: String? {
-        self.appData?.appData.persistentData?.visitorId
     }
 
 }

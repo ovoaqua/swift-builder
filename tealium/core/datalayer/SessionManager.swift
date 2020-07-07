@@ -19,8 +19,7 @@ public extension DataLayer {
         }
         set {
             let current = Date()
-            if let lastTrackDate = lastTrackDate,
-               config.sessionHandlingEnabled {
+            if let lastTrackDate = lastTrackDate {
                 if let date = lastTrackDate.addSeconds(secondsBetweenTrackEvents),
                    date > current {
                     let tracks = numberOfTracksBacking + 1
@@ -45,7 +44,7 @@ public extension DataLayer {
         }
         set {
             if let newValue = newValue {
-                add(data: [TealiumKey.sessionId: newValue], expiration: .session)
+                add(data: [TealiumKey.sessionId: newValue], expiry: .session)
             }
         }
     }
@@ -56,7 +55,7 @@ public extension DataLayer {
         sessionData = [String: Any]()
         sessionId = Date().unixTimeMilliseconds
         shouldTriggerSessionRequest = true
-        add(key: TealiumKey.sessionId, value: sessionId!, expiration: .session)
+        add(key: TealiumKey.sessionId, value: sessionId!, expiry: .session)
     }
 
     /// Checks if the session has expired in storage, if so, refreshes the session and saves the new data.
@@ -67,7 +66,7 @@ public extension DataLayer {
             return
         }
         numberOfTracks += 1
-        add(key: TealiumKey.sessionId, value: existingSessionId, expiration: .session)
+        add(key: TealiumKey.sessionId, value: existingSessionId, expiry: .session)
     }
 
     /// If the tag management module is enabled and multiple tracks have been sent in given time, a new session is started.

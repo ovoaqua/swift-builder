@@ -28,13 +28,6 @@ class SessionManagerTests: XCTestCase {
     override func tearDownWithError() throws {
         eventDataManager.numberOfTracksBacking = 0
     }
-    
-    func testSessionStarterNotHitWhenSessionHandlingEnabledFalse() {
-        eventDataManager.numberOfTracks = 0
-         XCTAssertEqual(mockSessionStarter.sessionRequestCount, 0)
-        XCTAssertEqual(eventDataManager.numberOfTracksBacking, 2)
-        XCTAssertNotNil(eventDataManager.lastTrackDate)
-    }
 
     func testLastTrackDateNilIncrementsNumberOfTracksBackingAndSetsLastTrackDate() {
         eventDataManager.lastTrackDate = nil
@@ -44,7 +37,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func testTwoTracksInSecondsBetweenTracksStartsNewSession() {
-        eventDataManager.config.sessionHandlingEnabled = true
         eventDataManager.isTagManagementEnabled = true
         eventDataManager.shouldTriggerSessionRequest = true
         eventDataManager.lastTrackDate = timeTraveler.travel(by: 20)

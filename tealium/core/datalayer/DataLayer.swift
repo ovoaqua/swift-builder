@@ -39,7 +39,7 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
         if let dataSource = config.dataSource {
             currentStaticData[TealiumKey.dataSource] = dataSource
         }
-        add(data: currentStaticData, expiration: .untilRestart)
+        add(data: currentStaticData, expiry: .untilRestart)
         sessionRefresh()
     }
 
@@ -55,7 +55,7 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
             return allData
         }
         set {
-            self.add(data: newValue, expiration: .forever)
+            self.add(data: newValue, expiry: .forever)
         }
     }
 
@@ -114,28 +114,28 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
     /// - Parameters:
     ///   - key: `String` name of key to be stored.
     ///   - value: `Any` should be `String` or `[String]`.
-    ///   - expiration: `Expiration` level.
+    ///   - expiration: `Expiry` level.
     public func add(key: String,
                     value: Any,
-                    expiration: Expiration) {
-        self.add(data: [key: value], expiration: expiration)
+                    expiry: Expiry? = .session) {
+        self.add(data: [key: value], expiry: expiry!)
     }
 
     /// Adds data to be stored based on the `Expiraton`.
     /// - Parameters:
     ///   - data: `[String: Any]` to be stored.
-    ///   - expiration: `Expiration` level.
+    ///   - expiration: `Expiry` level.
     public func add(data: [String: Any],
-                    expiration: Expiration) {
-        switch expiration {
+                    expiry: Expiry? = .session) {
+        switch expiry {
         case .session:
             self.sessionData += data
-            self.persistentDataStorage?.insert(from: self.sessionData, expires: expiration.date)
+            self.persistentDataStorage?.insert(from: self.sessionData, expires: expiry!.date)
         case .untilRestart:
             self.restartData += data
-            self.persistentDataStorage?.insert(from: self.restartData, expires: expiration.date)
+            self.persistentDataStorage?.insert(from: self.restartData, expires: expiry!.date)
         default:
-            self.persistentDataStorage?.insert(from: data, expires: expiration.date)
+            self.persistentDataStorage?.insert(from: data, expires: expiry!.date)
         }
 
     }

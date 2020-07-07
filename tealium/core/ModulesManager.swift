@@ -204,12 +204,6 @@ public class ModulesManager {
     }
 
     func setupDispatchers(config: TealiumConfig) {
-        //        self.connectivityManager.checkIsConnected { [weak self] result in
-        //            guard let self = self else {
-        //                return
-        //            }
-        //            switch result {
-        //            case .success:
         self.config.dispatchers?.forEach { dispatcherType in
             let dispatcherTypeDescription = String(describing: dispatcherType)
             if dispatcherTypeDescription.contains(ModuleNames.tagmanagement),
@@ -243,16 +237,6 @@ public class ModulesManager {
                                                category: .`init`)
             self.logger?.log(logRequest)
         }
-        //            case .failure:
-        //                let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.system,
-        //                                                   message: ModulesManagerLogMessages.noConnectionDispatchersDisabled,
-        //                                                   info: nil,
-        //                                                   logLevel: .error,
-        //                                                   category: .`init`)
-        //                self.logger?.log(logRequest)
-        //                return
-        //            }
-        //        }
 
     }
 

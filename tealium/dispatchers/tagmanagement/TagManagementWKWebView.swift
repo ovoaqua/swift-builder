@@ -115,9 +115,7 @@ class TagManagementWKWebView: NSObject, TagManagementProtocol {
                 WKWebsiteDataStore.default().httpCookieStore.add(self)
             }
             var config = WKWebViewConfiguration()
-            if self.tealConfig.sessionHandlingEnabled {
-                self.insertNoSessionString(config: &config)
-            }
+            self.insertNoSessionString(config: &config)
             self.webview = WKWebView(frame: .zero, configuration: config)
             self.webview?.navigationDelegate = self
             guard let webview = self.webview else {

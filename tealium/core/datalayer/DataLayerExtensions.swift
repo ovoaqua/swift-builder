@@ -1,5 +1,5 @@
 //
-//  EventDataExtensions.swift
+//  DataLayerExtensions.swift
 //  TealiumSwift
 //
 //  Created by Christina S on 4/22/20.
@@ -10,36 +10,9 @@ import Foundation
 
 public extension Tealium {
 
-    /// Get the Data Manager instance for accessing file persistence and auto data variable APIs.
-    ///
-    /// - Returns: `TealiumPersistentData` instance
-    var persistentData: TealiumPersistentData {
-        return TealiumPersistentData(dataLayer: dataLayer)
-    }
-
-    /// Get the Data Manager instance for accessing file persistence and auto data variable APIs.
-    ///
-    /// - Returns: `TealiumVolatileData` instance
-    var volatileData: TealiumVolatileData {
-        return TealiumVolatileData(dataLayer: dataLayer)
-    }
-
-}
-
-public extension TealiumConfig {
-
-    /// Enables session handling through native code versus through the webview and utag.js
-    /// this prevents extra session counts from background events like push messages. This
-    /// is currently disabled by default
-    @available(*, deprecated, message: "Not currently released, for future use.")
-    var sessionHandlingEnabled: Bool {
-        get {
-            return options[TealiumKey.sessionHandlingEnabled] as? Bool ?? false
-        }
-
-        set {
-            options[TealiumKey.sessionHandlingEnabled] = newValue
-        }
+    /// - Returns: `String` The Tealium Visitor Id
+    var visitorId: String? {
+        dataLayer.allEventData[TealiumKey.visitorId] as? String
     }
 
 }
@@ -52,7 +25,6 @@ public extension TealiumKey {
     static let defaultMinutesBetweenSession = 30
     static let defaultsSecondsBetweenTrackEvents = 30.0
     static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
-    static let sessionHandlingEnabled = "session_handling_enabled"
 }
 
 extension Date {
