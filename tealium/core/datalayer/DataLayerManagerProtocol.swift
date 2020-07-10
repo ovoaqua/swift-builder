@@ -15,22 +15,13 @@ public protocol TimestampCollection {
 public protocol DataLayerManagerProtocol {
     var allEventData: [String: Any] { get set }
     var allSessionData: [String: Any] { get }
-    //    var minutesBetweenSessionIdentifier: TimeInterval { get set }
-    //    var secondsBetweenTrackEvents: TimeInterval { get set }
     var sessionId: String? { get set }
     var sessionData: [String: Any] { get set }
-    //    var sessionStarter: SessionStarterProtocol { get }
-    //    var isTagManagementEnabled: Bool { get set }
     func add(data: [String: Any], expiry: Expiry?)
     func add(key: String, value: Any, expiry: Expiry?)
-    //    func joinTrace(id: String)
     func delete(for keys: [String])
     func delete(for key: String)
     func deleteAll()
-    //    func leaveTrace()
-    //    func refreshSessionData()
-    //    func refreshSession()
-    //    func startNewSession(with sessionStarter: SessionStarterProtocol)
 }
 
 protocol SessionManagerProtocol {
