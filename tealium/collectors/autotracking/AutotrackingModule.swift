@@ -182,8 +182,7 @@ public class AutotrackingModule: Collector {
     ///￼
     /// - Parameter data: `[String:Any]` additional variable data.
     func requestTrack(data: [String: Any]) {
-        let track = TealiumTrackRequest(data: data,
-                                        completion: nil)
+        let track = TealiumTrackRequest(data: data)
 
         delegate?.requestTrack(track)
     }

@@ -52,7 +52,8 @@ class TealiumHelper: NSObject {
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.shouldUseRemotePublishSettings = false
-        config.batchingEnabled = false
+        config.batchingEnabled = true
+        config.batchSize = 5
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
         //config.visitorServiceDelegate = self
@@ -73,7 +74,8 @@ class TealiumHelper: NSObject {
         ]
         
         config.dispatchers = [Dispatchers.Collect,
-//                              Dispatchers.TagManagement,
+//                              MyCustomDispatcher.self,
+                              Dispatchers.TagManagement,
 //                              Dispatchers.RemoteCommands
         ]
 //        tealium?.dataLayerManager
@@ -94,7 +96,8 @@ class TealiumHelper: NSObject {
 //        }
 //        config.addRemoteCommand(remoteCommand)
         #endif
-        
+//        config.diskStorageDirectory = .documents
+//        config.loggerType = .custom(<#T##TealiumLoggerProtocol#>)
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self,
                 let teal = self.tealium else {
@@ -105,7 +108,6 @@ class TealiumHelper: NSObject {
 //            self.track(title: "init", data: nil)
             let dataLayer = teal.dataLayer
             teal.consentManager?.userConsentStatus = .consented
-            
             dataLayer.add(key: "myvarforever", value: 123456, expiry: .forever)
 
             // dataLayer.add(data: ["some_key1": "some_val1"])
@@ -190,7 +192,8 @@ class TealiumHelper: NSObject {
     }
 
     func leaveTrace() {
-        self.tealium?.leaveTrace()
+//        self.tealium?.leaveTrace()
+        self.tealium?.flushQueue()
     }
     
     func crash() {
@@ -258,4 +261,31 @@ class MyDateCollector: Collector {
         return "\(Calendar.current.dateComponents([.weekday], from: Date()).weekday ?? -1)"
     }
 
+}
+
+
+class MyCustomDispatcher: Dispatcher {
+    var isReady: Bool
+    
+    var id = "MyCustomDispatcher"
+    
+    var config: TealiumConfig
+    
+    required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
+        self.config = config
+        self.isReady = true
+    }
+    
+    func dynamicTrack(_ request: TealiumRequest, completion: ModuleCompletion?) {
+        switch request {
+        case let request as TealiumTrackRequest:
+            print("Track received: \(request.event ?? "no event name")")
+            // perform track action, e.g. send to custom endpoint
+        case _ as TealiumBatchTrackRequest:
+            print("Batch track received")
+            // perform batch track action, e.g. send to custom endpoint
+        default:
+            return
+        }
+    }
 }

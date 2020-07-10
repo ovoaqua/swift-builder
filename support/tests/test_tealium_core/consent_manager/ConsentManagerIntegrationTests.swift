@@ -233,8 +233,8 @@ class ConsentManagerTests: XCTestCase {
     func testConsentStatusConsentedSetsAllCategoryNames() {
         let consentManager = consentManagerEmptyDelegate
         consentManager.userConsentStatus = .consented
-        XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories! == TealiumConsentCategories.allCategories)
-        XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories!.count == TealiumConsentCategories.allCategories.count)
+        XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories! == TealiumConsentCategories.all)
+        XCTAssertTrue(consentManager.currentPolicy.preferences.consentCategories!.count == TealiumConsentCategories.all.count)
     }
 
     func testNotConsentedRemovesAllCategoryNames() {

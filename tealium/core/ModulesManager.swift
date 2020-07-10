@@ -55,6 +55,16 @@ public class ModulesManager {
         }
     }
     var dataLayerManager: DataLayerManagerProtocol?
+    var sessionManager: SessionManagerProtocol? {
+        get {
+            dataLayerManager as? SessionManagerProtocol
+        }
+        // swiftlint:disable unused_setter_value
+        set {
+
+        }
+        // swiftlint:enable unused_setter_value
+    }
     var logger: TealiumLoggerProtocol?
     public var modules: [TealiumModule] {
         get {
@@ -210,7 +220,7 @@ public class ModulesManager {
                config.isTagManagementEnabled == false {
                 return
             } else {
-                self.dataLayerManager?.isTagManagementEnabled = true
+                self.sessionManager?.isTagManagementEnabled = true
             }
 
             if dispatcherTypeDescription.contains(ModuleNames.collect),
@@ -257,7 +267,7 @@ public class ModulesManager {
             self.remotePublishSettingsRetriever?.refresh()
         }
         let requestData = gatherTrackData(for: request.trackDictionary)
-        let newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
+        let newRequest = TealiumTrackRequest(data: requestData)
         dispatchManager?.processTrack(newRequest)
     }
 
@@ -272,7 +282,7 @@ public class ModulesManager {
 
         allData.value[TealiumKey.enabledModules] = modules.sorted { $0.id < $1.id }.map { $0.id }
 
-        dataLayerManager?.sessionRefresh()
+        sessionManager?.refreshSession()
         if let dataLayer = dataLayerManager?.allEventData {
             allData.value += dataLayer
         }

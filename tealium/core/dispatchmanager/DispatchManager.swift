@@ -242,7 +242,7 @@ class DispatchManager: DispatchManagerProtocol {
             requestData[TealiumKey.queueReason] = reason ?? TealiumKey.batchingEnabled
         }
         requestData[TealiumKey.wasQueued] = "true"
-        var newRequest = TealiumTrackRequest(data: requestData, completion: request.completion)
+        var newRequest = TealiumTrackRequest(data: requestData)
         newRequest.uuid = request.uuid
         persistentQueue.appendDispatch(newRequest)
 
@@ -297,12 +297,12 @@ class DispatchManager: DispatchManagerProtocol {
                     if var data = batch.first?.trackDictionary {
                         // for all release calls, bypass the queue and send immediately
                         data += [TealiumDispatchQueueConstants.bypassQueueKey: true]
-                        let request = TealiumTrackRequest(data: data, completion: nil)
+                        let request = TealiumTrackRequest(data: data)
                         runDispatchers(for: request)
                     }
 
                 case let val where val > 1:
-                    let batchRequest = TealiumBatchTrackRequest(trackRequests: batch, completion: nil)
+                    let batchRequest = TealiumBatchTrackRequest(trackRequests: batch)
                     runDispatchers(for: batchRequest)
                 default:
                     // should never reach here
@@ -400,7 +400,7 @@ extension DispatchManager {
     }
 
     func canQueueRequest(_ request: TealiumTrackRequest) -> Bool {
-        guard let event = request.event() else {
+        guard let event = request.event else {
             return false
         }
         var shouldQueue = true
@@ -434,10 +434,10 @@ extension DispatchManager {
                     let singleRequestUUID = request.uuid
                     var newData = request.trackDictionary
                     newData += data
-                    var newRequest = TealiumTrackRequest(data: newData, completion: request.completion)
+                    var newRequest = TealiumTrackRequest(data: newData)
                     newRequest.uuid = singleRequestUUID
                     return newRequest
-                }, completion: request.completion)
+                })
                 request.uuid = uuid
                 let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
                 self.logger?.log(logRequest)
@@ -493,7 +493,7 @@ extension DispatchManager {
             event = "batch"
         case let request as TealiumTrackRequest:
             uuid = request.uuid
-            event = request.event()
+            event = request.event
         default:
             uuid = nil
         }

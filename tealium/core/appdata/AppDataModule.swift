@@ -27,6 +27,7 @@ public class AppDataModule: Collector, AppDataCollection {
     }
 
     var shouldCollectAllAppData: Bool {
+        // If collector was included on the original config object, enable all data
         if let collectors = self.config.collectors {
             if collectors.contains(where: { $0 == AppDataModule.self }) {
                 return true
@@ -34,6 +35,7 @@ public class AppDataModule: Collector, AppDataCollection {
                 return false
             }
         } else {
+            // Default case - no collectors specified, so enable all data
             return true
         }
 

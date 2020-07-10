@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
+public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, TimestampCollection {
 
     var data = Set<DataLayerItem>()
     var diskStorage: TealiumDiskStorageProtocol
@@ -19,7 +19,7 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
     public var numberOfTracksBacking = 0
     public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
     public var sessionData = [String: Any]()
-    public var sessionStarter: SessionStarterProtocol
+    var sessionStarter: SessionStarterProtocol
     public var shouldTriggerSessionRequest = false
     public var isTagManagementEnabled = false
 
@@ -40,7 +40,7 @@ public class DataLayer: DataLayerManagerProtocol, TimestampCollection {
             currentStaticData[TealiumKey.dataSource] = dataSource
         }
         add(data: currentStaticData, expiry: .untilRestart)
-        sessionRefresh()
+        refreshSession()
     }
 
     /// - Returns: `[String: Any]` containing all stored event data.

@@ -21,7 +21,7 @@ public enum TealiumValue {
     public static let maxEventBatchSize = 10
     public static let defaultMinimumDiskSpace: Int32 = 20_000_000
     public static let tiqBaseURL = "https://tags.tiqcdn.com/utag/"
-    public static let tiqURLSuffix = "mobile.html"
+    public static let tiqURLSuffix = "mobile.html?sdk_session_count=true"
     public static let defaultBatchExpirationDays = 7
     public static let defaultMaxQueueSize = 40
 }

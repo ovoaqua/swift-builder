@@ -80,9 +80,8 @@ public class TagManagementModule: Dispatcher {
             }
             #if TEST
             #else
-            self.tagManagement?.trackMultiple(allTrackData) { success, info, error in
+            self.tagManagement?.trackMultiple(allTrackData) { success, _, error in
                 TealiumQueues.backgroundConcurrentQueue.write {
-                    track.completion?(success, info, error)
                     guard error == nil else {
                         if let error = error {
                             completion?((.failure(error), nil))
@@ -96,9 +95,8 @@ public class TagManagementModule: Dispatcher {
         case let track as TealiumTrackRequest:
             #if TEST
             #else
-            self.tagManagement?.track(track.trackDictionary) { success, info, error in
+            self.tagManagement?.track(track.trackDictionary) { success, _, error in
                 TealiumQueues.backgroundConcurrentQueue.write {
-                    track.completion?(success, info, error)
                     guard error == nil else {
                         if let error = error {
                             completion?((.failure(error), nil))
@@ -134,7 +132,6 @@ public class TagManagementModule: Dispatcher {
             return
         } else if self.webViewState == nil || self.tagManagement?.isWebViewReady == false {
             self.enqueue(track, completion: completion)
-            //            completion?((.failure(TagManagementError.webViewNotYetReady), nil))
             return
         }
 
@@ -144,8 +141,7 @@ public class TagManagementModule: Dispatcher {
         case let track as TealiumTrackRequest:
             self.dispatchTrack(prepareForDispatch(track), completion: completion)
         case let track as TealiumBatchTrackRequest:
-            let newRequest = TealiumBatchTrackRequest(trackRequests: track.trackRequests.map { prepareForDispatch($0) },
-                                                      completion: track.completion)
+            let newRequest = TealiumBatchTrackRequest(trackRequests: track.trackRequests.map { prepareForDispatch($0) })
             self.dispatchTrack(newRequest, completion: completion)
         case let track as TealiumRemoteAPIRequest:
             self.dispatchTrack(prepareForDispatch(track.trackRequest), completion: completion)
@@ -184,7 +180,7 @@ public class TagManagementModule: Dispatcher {
                 track.data = trackData.encodable
                 return track
             }
-            self.pendingTrackRequests.append((TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion), completion))
+            self.pendingTrackRequests.append((TealiumBatchTrackRequest(trackRequests: requests), completion))
         case let request as TealiumTrackRequest:
             var track = request
             var trackData = track.trackDictionary
@@ -215,7 +211,7 @@ public class TagManagementModule: Dispatcher {
     func prepareForDispatch(_ request: TealiumTrackRequest) -> TealiumTrackRequest {
         var newTrack = request.trackDictionary
         newTrack[TealiumKey.dispatchService] = TagManagementKey.moduleName
-        return TealiumTrackRequest(data: newTrack, completion: request.completion)
+        return TealiumTrackRequest(data: newTrack)
     }
 
 }

@@ -57,12 +57,12 @@ public class LocationModule: Collector {
 extension LocationModule: LocationDelegate {
 
     func didEnterGeofence(_ data: [String: Any]) {
-        let trackRequest = TealiumTrackRequest(data: data, completion: nil)
+        let trackRequest = TealiumTrackRequest(data: data)
         delegate?.requestTrack(trackRequest)
     }
 
     func didExitGeofence(_ data: [String: Any]) {
-        let trackRequest = TealiumTrackRequest(data: data, completion: nil)
+        let trackRequest = TealiumTrackRequest(data: data)
         delegate?.requestTrack(trackRequest)
     }
 }

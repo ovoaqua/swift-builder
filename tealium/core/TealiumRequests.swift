@@ -19,7 +19,6 @@ import Foundation
 /// Request protocol
 public protocol TealiumRequest {
     var typeId: String { get set }
-    var completion: TealiumCompletion? { get set }
 
     static func instanceTypeId() -> String
 }
@@ -27,7 +26,6 @@ public protocol TealiumRequest {
 // MARK: Update Config Request
 public struct TealiumUpdateConfigRequest: TealiumRequest {
     public var typeId = TealiumUpdateConfigRequest.instanceTypeId()
-    public var completion: TealiumCompletion?
     public let config: TealiumConfig
 
     public init(config: TealiumConfig) {
@@ -43,7 +41,6 @@ public struct TealiumUpdateConfigRequest: TealiumRequest {
 /// Request to queue a track call
 public struct TealiumEnqueueRequest: TealiumRequest {
     public var typeId = TealiumEnqueueRequest.instanceTypeId()
-    public var completion: TealiumCompletion?
     public var data: [TealiumTrackRequest]
     var queueReason: String? {
         willSet {
@@ -53,25 +50,21 @@ public struct TealiumEnqueueRequest: TealiumRequest {
             self.data = data.map {
                 var data = $0.trackDictionary
                 data[TealiumKey.queueReason] = newValue
-                return TealiumTrackRequest(data: data, completion: $0.completion)
+                return TealiumTrackRequest(data: data)
             }
         }
     }
 
     public init(data: TealiumTrackRequest,
-                queueReason: String? = nil,
-                completion: TealiumCompletion?) {
+                queueReason: String? = nil) {
         self.data = [data]
         self.queueReason = queueReason
-        self.completion = completion
     }
 
     public init(data: TealiumBatchTrackRequest,
-                queueReason: String? = nil,
-                completion: TealiumCompletion?) {
+                queueReason: String? = nil) {
         self.data = data.trackRequests
         self.queueReason = queueReason
-        self.completion = completion
     }
 
     public static func instanceTypeId() -> String {
@@ -82,7 +75,6 @@ public struct TealiumEnqueueRequest: TealiumRequest {
 // MARK: Remote API Request
 public struct TealiumRemoteAPIRequest: TealiumRequest {
     public var typeId = TealiumRemoteAPIRequest.instanceTypeId()
-    public var completion: TealiumCompletion?
     public var trackRequest: TealiumTrackRequest
 
     public init(trackRequest: TealiumTrackRequest) {
@@ -100,7 +92,6 @@ public struct TealiumRemoteAPIRequest: TealiumRequest {
 // MARK: Remote Notification Request
 public struct TealiumRemoteCommandRequest: TealiumRequest {
     public var typeId = TealiumRemoteCommandRequest.instanceTypeId()
-    public var completion: TealiumCompletion?
     public var data: [String: Any]
 
     public init(data: [String: Any]) {
@@ -116,7 +107,6 @@ public struct TealiumRemoteCommandRequest: TealiumRequest {
 // MARK: Remote Notification Response
 public struct TealiumRemoteCommandRequestResponse: TealiumRequest {
     public var typeId = TealiumRemoteCommandRequestResponse.instanceTypeId()
-    public var completion: TealiumCompletion?
     public var data: [String: Any]
 
     public init(data: [String: Any]) {
@@ -156,7 +146,6 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
         }
     }
     public var typeId = TealiumTrackRequest.instanceTypeId()
-    public var completion: TealiumCompletion?
 
     public var data: AnyEncodable
 
@@ -172,17 +161,11 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
         case data
     }
 
-    public init(data: [String: Any],
-                completion: TealiumCompletion?) {
+    public init(data: [String: Any]) {
         self.uuid = data[TealiumKey.requestUUID] as? String ?? UUID().uuidString
         var data = data
         data[TealiumKey.requestUUID] = uuid
         self.data = data.encodable
-        self.completion = completion
-    }
-
-    public init(data: [String: Any]) {
-        self.init(data: data, completion: nil)
     }
 
     public static func instanceTypeId() -> String {
@@ -219,8 +202,8 @@ public struct TealiumTrackRequest: TealiumRequest, Codable, Comparable {
         self.data = dictionary.encodable
     }
 
-    public func event() -> String? {
-        return self.trackDictionary[TealiumKey.event] as? String
+    public var event: String? {
+        self.trackDictionary[TealiumKey.event] as? String
     }
 
 }
@@ -251,8 +234,6 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
     ]
     public var trackRequests: [TealiumTrackRequest]
 
-    public var completion: TealiumCompletion?
-
     enum CodingKeys: String, CodingKey {
         case typeId
         case trackRequests
@@ -262,10 +243,8 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
         return "batchtrack"
     }
 
-    public init(trackRequests: [TealiumTrackRequest],
-                completion: TealiumCompletion?) {
+    public init(trackRequests: [TealiumTrackRequest]) {
         self.trackRequests = trackRequests
-        self.completion = completion
         self.uuid = UUID().uuidString
     }
 

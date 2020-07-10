@@ -63,6 +63,16 @@ public class Tealium {
         }
     }
 
+    /// Sends all queued dispatches immediately. May still be blocked by DispatchValidators such as Consent Manager
+    public func flushQueue() {
+        TealiumQueues.backgroundSerialQueue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.zz_internal_modulesManager?.requestDequeue(reason: "Flush Queue Called")
+        }
+    }
+
     /// Track an event
     ///
     /// - Parameter dispatch: `Dispatch` containing the event/view name and the data layer object for this event
