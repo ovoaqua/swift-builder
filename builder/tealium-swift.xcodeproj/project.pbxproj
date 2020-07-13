@@ -4381,7 +4381,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D755DD0921945E41003C6BA1 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4397,7 +4397,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D755DD8221945F99003C6BA1 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4412,7 +4412,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D755EDC224A6048400EA7784 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4431,7 +4431,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D762FC3D232F97EF00CBC4D0 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4461,7 +4461,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D7805832233A65FB00DAD90E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4478,7 +4478,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D7805845233A672800DAD90E /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4510,7 +4510,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D788A3EA231841F200BC6D60 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4771,7 +4771,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D7CED26121932DD500ACD291 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4786,7 +4786,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint.sh\n";
+			shellScript = "if [[ ${BUILD_SCRIPT} == \"NO\" ]]; then\n    $SRCROOT/../tealium/scripts/run-swiftlint.sh\nfi\n";
 		};
 		D7F2DEDE233279A1000D0E0F /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6095,6 +6095,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -6139,6 +6140,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -6557,6 +6559,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -6603,6 +6606,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -6648,6 +6652,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -6692,6 +6697,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -6736,6 +6742,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -6780,6 +6787,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -6895,6 +6903,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -6939,6 +6948,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -7061,6 +7071,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -7083,6 +7094,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = tealium.ios.visitorservice;
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME)";
@@ -7107,6 +7119,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -7224,6 +7237,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -7273,6 +7287,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -8565,6 +8580,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -8612,6 +8628,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -8659,6 +8676,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -8706,6 +8724,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_SCRIPT = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";

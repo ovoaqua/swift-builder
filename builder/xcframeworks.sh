@@ -35,7 +35,8 @@ CATALYST_ARCHIVE="ios-catalyst.xcarchive"
 function define_product_name {
     case $1 in
         *"$LATEST_MAJOR"*)
-            PRODUCT_NAME=(TealiumCore TealiumAttribution TealiumAutotracking TealiumCollect TealiumLifecycle TealiumLocation TealiumRemoteCommands TealiumTagManagement TealiumVisitorService)
+            #PRODUCT_NAME=(TealiumCore TealiumAttribution TealiumAutotracking TealiumCollect TealiumLifecycle TealiumLocation TealiumRemoteCommands TealiumTagManagement TealiumVisitorService)
+            PRODUCT_NAME=(TealiumCore)
             ;;
         *"$PREVIOUS_MAJOR"*)
             PRODUCT_NAME=(TealiumCore TealiumAppData TealiumAttribution TealiumAutotracking TealiumCollect TealiumConsentManager TealiumCrash TealiumDelegate TealiumDeviceData TealiumDispatchQueue TealiumLifecycle TealiumLocation TealiumLogger TealiumPersistentData TealiumRemoteCommands TealiumTagManagement TealiumVisitorService TealiumVolatileData)
@@ -81,7 +82,8 @@ function archive {
     -sdk "${4}" \
     SKIP_INSTALL=NO \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-    SUPPORTS_MACCATALYST=YES
+    SUPPORTS_MACCATALYST=YES \
+    BUILD_SCRIPT=YES
     echo "Archiving ${1} ${2} ${3} ${4}"   
 }
 
@@ -91,7 +93,7 @@ function create_xcframework_ios_only {
     -framework "${BUILD_PATH}/${IOS_SIM_ARCHIVE}/Products/Library/Frameworks/${1}.framework" \
     -framework "${BUILD_PATH}/${IOS_ARCHIVE}/Products/Library/Frameworks/${1}.framework" \
     -framework "${BUILD_PATH}/${CATALYST_ARCHIVE}/Products/Library/Frameworks/${1}.framework" \
-    -output "${XCFRAMEWORK_PATH}/${1}".xcframework; 
+    -output "${XCFRAMEWORK_PATH}/${1}".xcframework;
 }
 
 # create xcframeworks for products supporting all platforms
