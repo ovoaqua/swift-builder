@@ -141,7 +141,7 @@ class TealiumHelper: NSObject {
 //        let dispatch = EventDispatch("hello-post-open")
 //
 //        tealium?.track(dispatch)
-        
+        let dispatch = ViewDispatch("VIEW_NAME", dataLayer: ["key": "value"])
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
             return

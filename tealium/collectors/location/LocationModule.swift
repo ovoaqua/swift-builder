@@ -17,7 +17,7 @@ public class LocationModule: Collector {
     public let id: String = ModuleNames.location
     public var config: TealiumConfig
     weak var delegate: ModuleDelegate?
-    var tealiumLocationManager: TealiumLocation?
+    var tealiumLocationManager: TealiumLocationManager?
 
     public var data: [String: Any]? {
         var newData = [String: Any]()
@@ -38,10 +38,10 @@ public class LocationModule: Collector {
         self.delegate = delegate
 
         if Thread.isMainThread {
-            tealiumLocationManager = TealiumLocation(config: config, locationDelegate: self)
+            tealiumLocationManager = TealiumLocationManager(config: config, locationDelegate: self)
         } else {
             TealiumQueues.mainQueue.async {
-                self.tealiumLocationManager = TealiumLocation(config: config, locationDelegate: self)
+                self.tealiumLocationManager = TealiumLocationManager(config: config, locationDelegate: self)
             }
         }
 

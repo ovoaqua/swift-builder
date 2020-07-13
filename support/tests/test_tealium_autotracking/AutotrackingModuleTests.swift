@@ -126,8 +126,8 @@ class AutotrackingModuleTests: XCTestCase {
         let customData = ["a": "b",
                           "c": "d"]
 
-        TealiumAutotracking.addCustom(data: customData,
-                                      toObject: testObject)
+        TealiumAutotrackingManager.addCustom(data: customData,
+                                             toObject: testObject)
 
         let notification = Notification(name: Notification.Name(rawValue: "com.tealium.autotracking.event"),
                                         object: testObject,
@@ -156,10 +156,10 @@ class AutotrackingModuleTests: XCTestCase {
         let customData = ["a": "b",
                           "c": "d"]
 
-        TealiumAutotracking.addCustom(data: customData,
-                                      toObject: testObject)
+        TealiumAutotrackingManager.addCustom(data: customData,
+                                             toObject: testObject)
 
-        TealiumAutotracking.removeCustomData(fromObject: testObject)
+        TealiumAutotrackingManager.removeCustomData(fromObject: testObject)
 
         let notification = Notification(name: Notification.Name(rawValue: "com.tealium.autotracking.event"),
                                         object: testObject,

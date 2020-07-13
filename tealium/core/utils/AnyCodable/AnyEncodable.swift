@@ -227,7 +227,6 @@ extension AnyEncodable: ExpressibleByNilLiteral {}
 extension AnyEncodable: ExpressibleByBooleanLiteral {}
 extension AnyEncodable: ExpressibleByIntegerLiteral {}
 extension AnyEncodable: ExpressibleByFloatLiteral {}
-extension AnyEncodable: ExpressibleByStringLiteral {}
 extension AnyEncodable: ExpressibleByArrayLiteral {}
 extension AnyEncodable: ExpressibleByDictionaryLiteral {}
 
@@ -245,14 +244,6 @@ extension _AnyEncodable {
     }
 
     public init(floatLiteral value: Double) {
-        self.init(value)
-    }
-
-    public init(extendedGraphemeClusterLiteral value: String) {
-        self.init(value)
-    }
-
-    public init(stringLiteral value: String) {
         self.init(value)
     }
 
