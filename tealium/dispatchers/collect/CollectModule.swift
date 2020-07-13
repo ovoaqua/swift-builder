@@ -58,7 +58,7 @@ public class CollectModule: Dispatcher {
         switch request {
         case let request as TealiumTrackRequest:
             guard !isConsentEvent(request.trackDictionary) else {
-                //                completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
+                completion?((.failure(CollectError.trackNotApplicableForCollectModule), nil))
                 return
             }
             self.track(prepareForDispatch(request), completion: completion)
