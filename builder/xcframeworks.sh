@@ -35,8 +35,7 @@ CATALYST_ARCHIVE="ios-catalyst.xcarchive"
 function define_product_name {
     case $1 in
         *"$LATEST_MAJOR"*)
-            #PRODUCT_NAME=(TealiumCore TealiumAttribution TealiumAutotracking TealiumCollect TealiumLifecycle TealiumLocation TealiumRemoteCommands TealiumTagManagement TealiumVisitorService)
-            PRODUCT_NAME=(TealiumCore)
+            PRODUCT_NAME=(TealiumCore TealiumAttribution TealiumAutotracking TealiumCollect TealiumLifecycle TealiumLocation TealiumRemoteCommands TealiumTagManagement TealiumVisitorService)
             ;;
         *"$PREVIOUS_MAJOR"*)
             PRODUCT_NAME=(TealiumCore TealiumAppData TealiumAttribution TealiumAutotracking TealiumCollect TealiumConsentManager TealiumCrash TealiumDelegate TealiumDeviceData TealiumDispatchQueue TealiumLifecycle TealiumLocation TealiumLogger TealiumPersistentData TealiumRemoteCommands TealiumTagManagement TealiumVisitorService TealiumVolatileData)
