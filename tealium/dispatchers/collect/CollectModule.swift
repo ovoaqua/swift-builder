@@ -7,8 +7,9 @@
 //
 
 import Foundation
+#if collect
 import TealiumCore
-
+#endif
 /// Dispatch Service Module for sending track data to the Tealium Collect or custom endpoint.
 public class CollectModule: Dispatcher {
 

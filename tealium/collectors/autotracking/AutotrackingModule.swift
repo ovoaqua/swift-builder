@@ -28,7 +28,7 @@ enum TealiumAutotrackingKey {
 
 public extension Tealium {
 
-    var autotracking: TealiumAutotracking? {
+    var autotracking: TealiumAutotrackingManager? {
         (zz_internal_modulesManager?.modules.first {
             type(of: $0) == AutotrackingModule.self
         } as? AutotrackingModule)?.autotracking
@@ -38,7 +38,7 @@ public extension Tealium {
 
 var tealiumAssociatedObjectHandle: UInt8 = 0
 
-public class TealiumAutotracking {
+public class TealiumAutotrackingManager {
 
     /// Add custom data to an object, to be included with an autotracked event.
     ///￼
@@ -81,8 +81,8 @@ public class TealiumAutotracking {
     /// - Parameter toObject: `NSObject` to add data for.
     public func addCustom(data: [String: Any],
                           toObject: NSObject) {
-        TealiumAutotracking.addCustom(data: data,
-                                      toObject: toObject)
+        TealiumAutotrackingManager.addCustom(data: data,
+                                             toObject: toObject)
     }
 
     /// Instance level customData function - convenience for framework APIs.
@@ -90,14 +90,14 @@ public class TealiumAutotracking {
     /// - Parameter forObject: `NSObject` to retrieve data for.
     /// - Returns: `[String:Any]?`
     public func customData(forObject: NSObject) -> [String: Any]? {
-        return TealiumAutotracking.customData(forObject: forObject)
+        return TealiumAutotrackingManager.customData(forObject: forObject)
     }
 
     /// Instance level removeCustomData function - convenience for framework APIs.
     ///￼
     /// - Parameter fromObject: NSObject to disassociate data from.
     public func removeCustomData(fromObject: NSObject) {
-        TealiumAutotracking.removeCustomData(fromObject: fromObject)
+        TealiumAutotrackingManager.removeCustomData(fromObject: fromObject)
     }
 }
 
@@ -125,7 +125,7 @@ public class AutotrackingModule: Collector {
     }
 
     var notificationsEnabled = false
-    let autotracking = TealiumAutotracking()
+    let autotracking = TealiumAutotrackingManager()
 
     // MARK: 
     // MARK: INTERNAL
@@ -146,7 +146,7 @@ public class AutotrackingModule: Collector {
         var data: [String: Any] = [TealiumKey.event: title ,
                                    TealiumAutotrackingKey.autotracked: "true"]
 
-        if let customData = TealiumAutotracking.customData(forObject: object) {
+        if let customData = TealiumAutotrackingManager.customData(forObject: object) {
             data += customData
         }
 
@@ -170,7 +170,7 @@ public class AutotrackingModule: Collector {
                                    TealiumAutotrackingKey.autotracked: "true"
         ]
 
-        if let customData = TealiumAutotracking.customData(forObject: viewController) {
+        if let customData = TealiumAutotrackingManager.customData(forObject: viewController) {
             data += customData
         }
 

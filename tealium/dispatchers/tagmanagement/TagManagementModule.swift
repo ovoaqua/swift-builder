@@ -7,7 +7,9 @@
 //
 
 import Foundation
+#if tagmanagement
 import TealiumCore
+#endif
 
 /// Dispatch Service Module for sending track data to the Tealium Webview.
 public class TagManagementModule: Dispatcher {

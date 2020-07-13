@@ -122,6 +122,7 @@ public enum TealiumKey {
     public static let dispatchListeners = "dispatch_listeners"
     public static let collectors = "collectors"
     public static let dispatchers = "dispatchers"
+    static let lifecycleAutotrackingEnabled = "enable_lifecycle_autotracking"
 }
 
 public enum TealiumTrackType {

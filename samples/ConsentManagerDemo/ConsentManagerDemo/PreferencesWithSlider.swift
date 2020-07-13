@@ -27,9 +27,9 @@ class PreferencesWithSliderViewController: FormViewController {
         form +++ Section("Current Settings")
                 // MARK: Current Consent Status
                 <<< LabelRow { row in
-            let consentPrefs = helper.getCurrentConsentPreferences()
+            let consentPrefs = helper.currentConsentPreferences
             var stat = "Not Consented"
-            if let pref = consentPrefs?["tracking_consented"] as? String, pref == "1" {
+            if let pref = consentPrefs?["tracking_consented"] as? String, pref == "consented" {
                 stat = "Consented"
             }
 
@@ -47,7 +47,7 @@ class PreferencesWithSliderViewController: FormViewController {
 
         // MARK: Current Consent Categories
         <<< LabelRow { row in
-            let consentPrefs = helper.getCurrentConsentPreferences()
+            let consentPrefs = helper.currentConsentPreferences
             var cats = ""
             if let prefCats = consentPrefs?["consent_categories"] as? [String] {
                 cats = prefCats.joined(separator: ", ")
@@ -58,7 +58,7 @@ class PreferencesWithSliderViewController: FormViewController {
             row.tag = "statuscats"
             row.cell.textLabel?.numberOfLines = 5
         }.cellUpdate { _, row in
-            let consentPrefs = helper.getCurrentConsentPreferences()
+            let consentPrefs = helper.currentConsentPreferences
             var cats = ""
             if let prefCats = consentPrefs?["consent_categories"] as? [String] {
                 cats = prefCats.joined(separator: ", ")
@@ -73,12 +73,13 @@ class PreferencesWithSliderViewController: FormViewController {
             if let slideRow = row as SliderRow? {
                 slideRow.steps = 3
                 slideRow.title = "Consent"
-                slideRow.minimumValue = 0
-                slideRow.maximumValue = 3
                 slideRow.value = detectLevelOfConsent()
                 slideRow.tag = "consent-slider"
                 slideRow.shouldHideValue = true
             }
+        }.cellSetup { cell, row in
+            cell.slider.minimumValue = 0
+            cell.slider.maximumValue = 3
         }.cellUpdate { cell, row in
             if let labelRow = self.form.rowBy(tag: "consent-label") as? LabelRow {
                 switch row.value {
@@ -172,7 +173,7 @@ class PreferencesWithSliderViewController: FormViewController {
 
     func detectLevelOfConsent() -> Float {
         let helper = TealiumHelper.shared
-        let consentPrefs = helper.getCurrentConsentPreferences()
+        let consentPrefs = helper.currentConsentPreferences
         if let prefCats = consentPrefs?["consent_categories"] as? [String] {
             switch prefCats.count {
                 case 15:

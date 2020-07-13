@@ -13,9 +13,9 @@
 import XCTest
 #if os(iOS)
 @testable import TealiumAttribution
-@testable import TealiumAutotracking
+@testable import TealiumAutotrackingManager
 //@testable import TealiumCrash
-@testable import TealiumLocation
+@testable import TealiumLocationManager
 // @testable import TealiumRemoteCommands
 @testable import TealiumTagManagement
 #endif
