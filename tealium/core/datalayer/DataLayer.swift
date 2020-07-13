@@ -66,7 +66,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
             allSessionData += persistentData.all
         }
 
-        allSessionData[TealiumKey.random] = "\(Int.random(in: 1...16))"
+        allSessionData[TealiumKey.random] = random
         if !currentTimestampsExist(allSessionData) {
             allSessionData.merge(currentTimeStamps) { _, new in new }
             allSessionData[TealiumKey.timestampOffset] = timeZoneOffset
@@ -171,6 +171,11 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
     /// Deletes all values from storage.
     public func deleteAll() {
         persistentDataStorage?.removeAll()
+    }
+
+    /// - Returns: `String` format of random 16 digit number
+    private var random: String {
+        (1..<16).reduce(into: "") { string, _ in string += String(Int(arc4random_uniform(10))) }
     }
 
 }

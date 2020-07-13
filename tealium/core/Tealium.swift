@@ -63,7 +63,7 @@ public class Tealium {
         }
     }
 
-    /// Sends all queued dispatches immediately. May still be blocked by DispatchValidators such as Consent Manager
+    /// Sends all queued dispatches immediately. Requests may still be blocked by DispatchValidators such as Consent Manager
     public func flushQueue() {
         TealiumQueues.backgroundSerialQueue.async { [weak self] in
             guard let self = self else {

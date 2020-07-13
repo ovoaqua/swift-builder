@@ -194,6 +194,7 @@ class TealiumHelper: NSObject {
     func leaveTrace() {
         self.tealium?.leaveTrace()
 //        self.tealium?.flushQueue()
+//        tealium?.dataLayer.
     }
     
     func crash() {

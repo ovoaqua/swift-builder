@@ -15,7 +15,6 @@ enum ConnectivityConstants {
 
 enum ConnectivityKey {
     static let moduleName = "connectivity"
-    static let connectionTypeLegacy = "network_connection_type"
     static let connectionType = "connection_type"
     static let connectionTypeWifi = "wifi"
     static let connectionTypeWired = "wired"
