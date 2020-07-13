@@ -237,49 +237,49 @@ targets:
       - target: TealiumCollect
       - target: TealiumLifecycle
       - target: TealiumVisitorService     
-  TealiumCrash:
-    type: framework
-    platform: iOS
-    sources:
-      - path: tealium/Collectors/crash
-        buildPhase: sources
-      - path: tealium/Collectors/crash
-        buildPhase: headers
-    settings:
-      base:
-          SDKROOT: ""
-          INFOPLIST_FILE: "TealiumCrash-Info.plist"
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash
-          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
-          TARGETED_DEVICE_FAMILY: "1,2,3,4"
-          IPHONEOS_DEPLOYMENT_TARGET: 9.0
-          FRAMEWORK_SEARCH_PATHS: "$(PROJECT_DIR)/../Carthage/Build/iOS"
-      configs:
-        debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash DEBUG
-    dependencies:
-      - target: TealiumCore
-      - carthage: TealiumCrashReporteriOS
-    info:
-      path: builder/TealiumCrash-Info.plist
-  TealiumCrashTests-iOS:
-    type: bundle.unit-test
-    platform: iOS
-    directlyEmbedCarthageDependencies: false
-    sources:
-      - path: support/tests/test_tealium_crash
-        buildPhase: sources
-        excludes:
-          - "resources/*" 
-      - path: support/tests/test_tealium_crash/resources     
-        buildPhase: resources
-    settings:
-      base:
-        CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
-    dependencies:
-      - target: TealiumCrash
-        link: false
+  # TealiumCrash:
+  #   type: framework
+  #   platform: iOS
+  #   sources:
+  #     - path: tealium/Collectors/crash
+  #       buildPhase: sources
+  #     - path: tealium/Collectors/crash
+  #       buildPhase: headers
+  #   settings:
+  #     base:
+  #         SDKROOT: ""
+  #         INFOPLIST_FILE: "TealiumCrash-Info.plist"
+  #         SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash
+  #         SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+  #         TARGETED_DEVICE_FAMILY: "1,2,3,4"
+  #         IPHONEOS_DEPLOYMENT_TARGET: 9.0
+  #         FRAMEWORK_SEARCH_PATHS: "$(PROJECT_DIR)/../Carthage/Build/iOS"
+  #     configs:
+  #       debug:
+  #         SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash DEBUG
+  #   dependencies:
+  #     - target: TealiumCore
+  #     - carthage: TealiumCrashReporteriOS
+  #   info:
+  #     path: builder/TealiumCrash-Info.plist
+  # TealiumCrashTests-iOS:
+  #   type: bundle.unit-test
+  #   platform: iOS
+  #   directlyEmbedCarthageDependencies: false
+  #   sources:
+  #     - path: support/tests/test_tealium_crash
+  #       buildPhase: sources
+  #       excludes:
+  #         - "resources/*" 
+  #     - path: support/tests/test_tealium_crash/resources     
+  #       buildPhase: resources
+  #   settings:
+  #     base:
+  #       CODE_SIGN_STYLE: "Manual"
+  #       DEVELOPMENT_TEAM: ""         
+  #   dependencies:
+  #     - target: TealiumCrash
+  #       link: false
   TealiumLifecycle:
     type: framework
     platform: iOS
@@ -608,12 +608,12 @@ schemes:
         TealiumCore: all
     run:
       config: Release
-  TealiumCrash:
-    build:
-      targets:
-        TealiumCrash: all
-    run:
-      config: Release                                                
+  # TealiumCrash:
+  #   build:
+  #     targets:
+  #       TealiumCrash: all
+  #   run:
+  #     config: Release                                                
   TealiumLifecycle:
     build:
       targets:
@@ -725,16 +725,16 @@ schemes:
         - TealiumCoreTests-tvOS
         - name: TealiumCoreTests-tvOS
           parallelizable: true          
-  TealiumCrashTests-iOS:
-    build:
-      targets:
-        TealiumCrashTests-iOS: [test]
-    test:
-      gatherCoverageData: true
-      targets:
-        - TealiumCrashTests-iOS
-        - name: TealiumCrashTests-iOS
-          parallelizable: true
+  # TealiumCrashTests-iOS:
+  #   build:
+  #     targets:
+  #       TealiumCrashTests-iOS: [test]
+  #   test:
+  #     gatherCoverageData: true
+  #     targets:
+  #       - TealiumCrashTests-iOS
+  #       - name: TealiumCrashTests-iOS
+  #         parallelizable: true
   TealiumLifecycleTests-iOS:
     build:
       targets:

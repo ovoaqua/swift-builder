@@ -7,7 +7,9 @@
 //
 #if os(iOS)
 import Foundation
+#if attribution
 import TealiumCore
+#endif
 
 public struct PersistentAttributionData: Codable {
 

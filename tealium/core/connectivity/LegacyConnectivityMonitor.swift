@@ -134,7 +134,7 @@ class LegacyConnectivityMonitor: ConnectivityMonitorProtocol {
         var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags()
         SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags)
         #if os(OSX)
-        connectionType = TealiumConnectivityKey.connectionTypeWifi
+        connectionType = ConnectivityKey.connectionTypeWifi
         #else
         if flags.contains(.isWWAN) == true {
             connectionType = ConnectivityKey.connectionTypeCell

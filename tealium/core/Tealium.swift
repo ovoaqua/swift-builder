@@ -65,7 +65,7 @@ public class Tealium {
     /// Track an event
     ///
     /// - Parameter dispatch: `Dispatch` containing the event/view name and the data layer object for this event
-    public func track(_ dispatch: Dispatch) {
+    public func track(_ dispatch: TealiumDispatch) {
         TealiumQueues.backgroundSerialQueue.async { [weak self] in
             guard let self = self else {
                 return

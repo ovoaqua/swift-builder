@@ -1,5 +1,5 @@
 //
-//  TealiumLocation.swift
+//  TealiumLocationManager.swift
 //  TealiumLocation
 //
 //  Created by Harry Cassell on 02/09/2019.
@@ -12,7 +12,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumLocation: NSObject, CLLocationManagerDelegate {
+public class TealiumLocationManager: NSObject, CLLocationManagerDelegate {
     var config: TealiumConfig
     var logger: TealiumLoggerProtocol? {
         config.logger

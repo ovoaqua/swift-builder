@@ -6,7 +6,16 @@ target 'TealiumSwiftExample' do
   use_frameworks!
 
   # Pods for TealiumSwiftExample
-  pod "tealium-swift", :path=> "../../"
+  pod "tealium-swift", :path=> "../.."
+
+end
+
+target 'TealiumJSInterfaceExample' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for TealiumSwiftExample
+  pod "tealium-swift", :path=> "../.."
 
 end
 
@@ -15,12 +24,10 @@ target 'TealiumSwiftWatchExample Extension' do
   use_frameworks!
 
   # Pods for TealiumSwiftWatchExample Extension
-  pod "tealium-swift/Core", :path=> "../../"
-  pod "tealium-swift/TealiumAppData", :path=> "../../"
-  pod "tealium-swift/TealiumCollect", :path=> "../../"
-  pod "tealium-swift/TealiumDeviceData", :path=> "../../"
-  pod "tealium-swift/TealiumLifecycle", :path=> "../../"
-  pod "tealium-swift/TealiumVisitorService", :path=> "../../"
+  pod "tealium-swift/Core", :path=> "../.."
+  pod "tealium-swift/TealiumCollect", :path=> "../.."
+  pod "tealium-swift/TealiumLifecycle", :path=> "../.."
+  pod "tealium-swift/TealiumVisitorService", :path=> "../.."
 end
 
 target 'TealiumSwiftTVExample' do
@@ -28,11 +35,8 @@ target 'TealiumSwiftTVExample' do
   use_frameworks!
 
   # Pods for TealiumSwiftWatchExample Extension
-  pod "tealium-swift/Core", :path=> "../../"
-  pod "tealium-swift/TealiumAppData", :path=> "../../"
-  pod "tealium-swift/TealiumCollect", :path=> "../../"
-  pod "tealium-swift/TealiumConnectivity", :path=> "../../"
-  pod "tealium-swift/TealiumDeviceData", :path=> "../../"
-  pod "tealium-swift/TealiumLifecycle", :path=> "../../"
-  pod "tealium-swift/TealiumVisitorService", :path=> "../../"
+  pod "tealium-swift/Core", :path=> "../.."
+  pod "tealium-swift/TealiumCollect", :path=> "../.."
+  pod "tealium-swift/TealiumLifecycle", :path=> "../.."
+  pod "tealium-swift/TealiumVisitorService", :path=> "../.."
 end  
