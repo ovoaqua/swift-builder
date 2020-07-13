@@ -193,7 +193,6 @@ extension AutotrackingModuleTests: ModuleDelegate {
 
     func requestTrack(_ track: TealiumTrackRequest) {
         // TODO: Info and error callback handling
-        track.completion?(true, nil, nil)
         requestProcess = track
         expectationRequest?.fulfill()
     }
