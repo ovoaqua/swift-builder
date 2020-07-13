@@ -189,7 +189,7 @@ class ConsentManagerTests: XCTestCase {
     }
 
     func testShouldDropTrackingCall() {
-        let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
+        let track = TealiumTrackRequest(data: ["dummy": "true"])
         config.consentPolicy = .gdpr
         let consentManagerModule = ConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerEmptyDelegate
@@ -199,7 +199,7 @@ class ConsentManagerTests: XCTestCase {
     }
     
     func testShouldDropTrackingCallCCPA() {
-        let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
+        let track = TealiumTrackRequest(data: ["dummy": "true"])
         config.consentPolicy = .ccpa
         let consentManagerModule = ConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerCCPA
@@ -209,7 +209,7 @@ class ConsentManagerTests: XCTestCase {
     }
 
     func testShouldQueueTrackingCall() {
-        let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
+        let track = TealiumTrackRequest(data: ["dummy": "true"])
         config.consentPolicy = .gdpr
         let consentManagerModule = ConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerCCPA
@@ -220,7 +220,7 @@ class ConsentManagerTests: XCTestCase {
     }
 
     func testShouldNotQueueTrackingCall() {
-        let track = TealiumTrackRequest(data: ["dummy": "true"], completion: nil)
+        let track = TealiumTrackRequest(data: ["dummy": "true"])
         let consentManagerModule = ConsentManagerModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         consentManagerModule.consentManager = consentManagerEmptyDelegate
         let localConsentManager = consentManagerModule.consentManager

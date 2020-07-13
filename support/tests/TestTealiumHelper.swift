@@ -38,8 +38,7 @@ var testTealiumConfig: TealiumConfig { TealiumConfig(account: TealiumTestValue.a
                                       options: testOptionalData as [String: Any])
 }
 
-let testTrackRequest = TealiumTrackRequest(data: [:],
-                                           completion: nil)
+let testTrackRequest = TealiumTrackRequest(data: [:])
 
 let testDataDictionary: [String: Any]  =
     [

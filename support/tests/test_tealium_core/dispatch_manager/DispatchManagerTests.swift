@@ -55,13 +55,13 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         config.batchingEnabled = true
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         dispatchManager.clearQueue()
-        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "hello"], completion: nil)
+        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "hello"])
         dispatchManager.processTrack(trackRequest)
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 1)
         dispatchManager.processTrack(trackRequest)
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 2)
         // wake event should not be queued
-        let wakeRequest = TealiumTrackRequest(data: ["tealium_event": "wake"], completion: nil)
+        let wakeRequest = TealiumTrackRequest(data: ["tealium_event": "wake"])
         dispatchManager.processTrack(wakeRequest)
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 3)
     }
@@ -71,9 +71,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         config.batchingEnabled = true
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         dispatchManager.clearQueue()
-        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "wake"], completion: nil)
-        let batchTrack = TealiumBatchTrackRequest(trackRequests: [trackRequest, trackRequest], completion: nil)
-        dispatchManager.queue(TealiumEnqueueRequest(data: batchTrack, completion: nil))
+        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "wake"])
+        dispatchManager.enqueue(trackRequest, reason: nil)
+        dispatchManager.enqueue(trackRequest, reason: nil)
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 2)
     }
     
@@ -98,7 +98,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         let dispatcher = DummyDispatcher(config: config, delegate: self, completion: nil)
         dispatchManager.dispatchers = [dispatcher]
         
-        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "myevent"], completion: nil)
+        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "myevent"])
         dispatchManager.processTrack(trackRequest)
         wait(for: [TealiumDispatchQueueModuleTests.remoteAPIExpectation!], timeout: 5.0)
     }
@@ -112,9 +112,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         config.logLevel = .silent
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         dispatchManager.clearQueue()
-        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "wake"], completion: nil)
-        let batchTrack = TealiumBatchTrackRequest(trackRequests: [trackRequest, trackRequest], completion: nil)
-        dispatchManager.queue(TealiumEnqueueRequest(data: batchTrack, completion: nil))
+        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "wake"])
+        dispatchManager.enqueue(trackRequest, reason: nil)
+        dispatchManager.enqueue(trackRequest, reason: nil)
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 2)
         dispatchManager.dequeue()
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 0)
@@ -128,9 +128,9 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         config.logLevel = .silent
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         dispatchManager.clearQueue()
-        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "wake"], completion: nil)
-        let batchTrack = TealiumBatchTrackRequest(trackRequests: [trackRequest, trackRequest], completion: nil)
-        dispatchManager.queue(TealiumEnqueueRequest(data: batchTrack, completion: nil))
+        let trackRequest = TealiumTrackRequest(data: ["tealium_event": "wake"])
+        dispatchManager.enqueue(trackRequest, reason: nil)
+        dispatchManager.enqueue(trackRequest, reason: nil)
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 2)
         dispatchManager.clearQueue()
         XCTAssertEqual(dispatchManager.persistentQueue.currentEvents, 0)
@@ -144,11 +144,11 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         #endif
         config.logLevel = .silent
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
-        XCTAssertFalse(dispatchManager.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "grant_full_consent"], completion: nil)))
-        XCTAssertTrue(dispatchManager.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "view"], completion: nil)))
+        XCTAssertFalse(dispatchManager.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "grant_full_consent"])))
+        XCTAssertTrue(dispatchManager.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "view"])))
         config.batchingBypassKeys = ["view"]
         dispatchManager.config = config
-        XCTAssertFalse(dispatchManager.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "view"], completion: nil)))
+        XCTAssertFalse(dispatchManager.canQueueRequest(TealiumTrackRequest(data: ["tealium_event": "view"])))
     }
 
 }

@@ -12,7 +12,6 @@ import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
 import TealiumRemoteCommands
-import TealiumCrash
 import TealiumVisitorService
 import TealiumLifecycle
 import TealiumLocation
@@ -67,7 +66,7 @@ class TealiumHelper: NSObject {
                              Collectors.Lifecycle,
 //                             Collectors.AppData,
                              Collectors.Connectivity,
-                             Collectors.Crash,
+//                             Collectors.Crash,
                              Collectors.Device,
 //                             Collectors.Location,
                              Collectors.VisitorService,
