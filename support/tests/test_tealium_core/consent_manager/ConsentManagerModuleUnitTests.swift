@@ -46,7 +46,7 @@ class ConsentManagerModuleUnitTests: XCTestCase {
 
     func testShouldQueueIsBatchTrackRequest() {
         track = TealiumTrackRequest(data: ["test": "track"])
-        let batchTrack = TealiumBatchTrackRequest(trackRequests: [track, track, track], completion: nil)
+        let batchTrack = TealiumBatchTrackRequest(trackRequests: [track, track, track])
         module = ConsentManagerModule(config: config, delegate: self, diskStorage: ConsentMockDiskStorage(), completion: { _ in })
         let queue = module.shouldQueue(request: batchTrack)
         XCTAssertTrue(queue.0)

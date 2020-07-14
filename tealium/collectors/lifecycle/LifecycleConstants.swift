@@ -14,7 +14,6 @@ import TealiumCore
 public enum LifecycleKey {
 
     static let moduleName = "lifecycle"
-    static let autotrackingEnabled = "enable_autotracking"
     static let defaultSessionsSize = 20
     static let autotracked = "autotracked"
     static let dayOfWeek = "lifecycle_dayofweek_local"

@@ -26,7 +26,7 @@ class TealiumPersistentQueueTests: XCTestCase {
     }
 
     func testSaveAndOverwrite() {
-        let track = TealiumTrackRequest(data: [key: "true"], completion: nil)
+        let track = TealiumTrackRequest(data: [key: "true"])
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
@@ -38,7 +38,7 @@ class TealiumPersistentQueueTests: XCTestCase {
     }
 
     func testPeek() {
-        let track = TealiumTrackRequest(data: [key: "true"], completion: nil)
+        let track = TealiumTrackRequest(data: [key: "true"])
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
@@ -52,7 +52,7 @@ class TealiumPersistentQueueTests: XCTestCase {
 
     func testappendDispatchEmptyQueue() {
         persistentQueue?.diskStorage.delete(completion: nil)
-        let track = TealiumTrackRequest(data: [key: "true"], completion: nil)
+        let track = TealiumTrackRequest(data: [key: "true"])
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
@@ -73,7 +73,7 @@ class TealiumPersistentQueueTests: XCTestCase {
     }
 
     func testClearQueue() {
-        let track = TealiumTrackRequest(data: [key: "true"], completion: nil)
+        let track = TealiumTrackRequest(data: [key: "true"])
         persistentQueue?.diskStorage.append(track, completion: nil)
         persistentQueue?.diskStorage.append(track, completion: nil)
         var data = persistentQueue?.diskStorage.retrieve(as: [TealiumTrackRequest].self)
@@ -85,7 +85,7 @@ class TealiumPersistentQueueTests: XCTestCase {
     }
 
     func testDequeueDispatches() {
-        let track = TealiumTrackRequest(data: [key: "true"], completion: nil)
+        let track = TealiumTrackRequest(data: [key: "true"])
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
         persistentQueue?.appendDispatch(track)
@@ -99,10 +99,10 @@ class TealiumPersistentQueueTests: XCTestCase {
     func testRemoveOldDispatches() {
         let date = Date()
         var components = DateComponents()
-        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "current_date", TealiumKey.timestampUnix: date.unixTimeSeconds], completion: nil))
-        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "no_timestamp"], completion: nil))
+        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "current_date", TealiumKey.timestampUnix: date.unixTimeSeconds]))
+        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "no_timestamp"]))
         components.day = -2
-        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "old_date", TealiumKey.timestampUnix: Calendar.current.date(byAdding: components, to: date)!.unixTimeSeconds], completion: nil))
+        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "old_date", TealiumKey.timestampUnix: Calendar.current.date(byAdding: components, to: date)!.unixTimeSeconds]))
         components.day = -1
         let newDate = Calendar.current.date(byAdding: components, to: date)
         XCTAssertEqual(persistentQueue?.currentEvents, 3)
@@ -110,8 +110,8 @@ class TealiumPersistentQueueTests: XCTestCase {
         XCTAssertEqual(persistentQueue?.currentEvents, 2)
         persistentQueue?.removeOldDispatches(1)
         XCTAssertEqual(persistentQueue?.currentEvents, 1)
-        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "current_date", TealiumKey.timestampUnix: date.unixTimeSeconds], completion: nil))
-        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "no_timestamp"], completion: nil))
+        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "current_date", TealiumKey.timestampUnix: date.unixTimeSeconds]))
+        persistentQueue?.appendDispatch(TealiumTrackRequest(data: ["tealium_event": "no_timestamp"]))
         persistentQueue?.removeOldDispatches(2)
         XCTAssertEqual(persistentQueue?.currentEvents, 2)
     }

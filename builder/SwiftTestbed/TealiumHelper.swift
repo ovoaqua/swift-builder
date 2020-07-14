@@ -12,7 +12,6 @@ import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
 import TealiumRemoteCommands
-import TealiumCrash
 import TealiumVisitorService
 import TealiumLifecycle
 import TealiumLocation
@@ -67,7 +66,7 @@ class TealiumHelper: NSObject {
                              Collectors.Lifecycle,
 //                             Collectors.AppData,
                              Collectors.Connectivity,
-                             Collectors.Crash,
+//                             Collectors.Crash,
                              Collectors.Device,
 //                             Collectors.Location,
                              Collectors.VisitorService,
@@ -141,7 +140,7 @@ class TealiumHelper: NSObject {
 //        let dispatch = EventDispatch("hello-post-open")
 //
 //        tealium?.track(dispatch)
-        
+        let dispatch = ViewDispatch("VIEW_NAME", dataLayer: ["key": "value"])
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
             return

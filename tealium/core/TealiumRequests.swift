@@ -287,11 +287,11 @@ public struct TealiumBatchTrackRequest: TealiumRequest, Codable {
 
 }
 
-public protocol Dispatch {
+public protocol TealiumDispatch {
     var trackRequest: TealiumTrackRequest { get }
 }
 
-public struct EventDispatch: Dispatch {
+public struct EventDispatch: TealiumDispatch {
     internal var eventName: String
     internal var dataLayer: [String: Any]?
 
@@ -308,7 +308,7 @@ public struct EventDispatch: Dispatch {
     }
 }
 
-public struct ViewDispatch: Dispatch {
+public struct ViewDispatch: TealiumDispatch {
     internal var viewName: String
     internal var dataLayer: [String: Any]?
 

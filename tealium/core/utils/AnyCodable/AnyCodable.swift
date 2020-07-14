@@ -115,6 +115,5 @@ extension AnyCodable: ExpressibleByNilLiteral {}
 extension AnyCodable: ExpressibleByBooleanLiteral {}
 extension AnyCodable: ExpressibleByIntegerLiteral {}
 extension AnyCodable: ExpressibleByFloatLiteral {}
-extension AnyCodable: ExpressibleByStringLiteral {}
 extension AnyCodable: ExpressibleByArrayLiteral {}
 extension AnyCodable: ExpressibleByDictionaryLiteral {}
