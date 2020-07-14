@@ -25,6 +25,10 @@ class HostedDataLayer: HostedDataLayerProtocol {
     var id = "HostedDataLayer"
     var config: TealiumConfig
 
+    var baseURL: String {
+        return "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/"
+    }
+
     required init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
     }
@@ -50,6 +54,46 @@ class HostedDataLayer: HostedDataLayerProtocol {
     func requestData(for url: URL,
                      completion: ((Result<[String: Any], Error>) -> Void)) {
 
+    }
+
+}
+
+enum HostedDataLayerErrors: Error {
+    case unknownResponseType
+    case emptyResponse
+    case unableToDecodeData
+}
+
+class HostedDataLayerRetriever {
+
+    let session = URLSession(configuration: .ephemeral)
+
+    func getData(for url: URL,
+                 completion: @escaping ((Result<[String: Any], Error>) -> Void)) {
+        session.dataTask(with: url) { data, response, error in
+            guard error == nil else {
+                completion(.failure(error!))
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse, response.statusCode == HttpStatusCodes.ok.rawValue else {
+                completion(.failure(HostedDataLayerErrors.unknownResponseType))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(HostedDataLayerErrors.emptyResponse))
+                return
+            }
+
+            guard let decodedData = (try? JSONDecoder().decode(AnyDecodable.self, from: data))?.value as? [String: Any] else {
+                completion(.failure(HostedDataLayerErrors.unableToDecodeData))
+                return
+            }
+
+            completion(.success(decodedData))
+
+        }
     }
 
 }
