@@ -23,7 +23,7 @@ class HostedDataLayerTests: XCTestCase {
 
     override func tearDown() { }
     
-    func testKeyLookupFromDataLayer() {
+    func testGetURLForDispatch() {
         let config = self.config
     
         let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: nil) { _ in }

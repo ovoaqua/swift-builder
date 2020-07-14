@@ -11,12 +11,50 @@ import Foundation
 protocol HostedDataLayerProtocol: DispatchValidator, Collector {
     var cache: [HostedDataLayerCacheItem] { get set }
     func getURL(for dispatch: TealiumTrackRequest) -> URL?
-    func requestData(for url: URL, completion: ((Result<[String: Any], Error>) -> Void))
+    //    func requestData(for url: URL, completion: ((Result<[String: Any], Error>) -> Void))
 }
 
-struct HostedDataLayerCacheItem {
+struct HostedDataLayerCacheItem: Codable, Equatable {
+    static func == (lhs: HostedDataLayerCacheItem, rhs: HostedDataLayerCacheItem) -> Bool {
+        if let lhsData = lhs.data, let rhsData = rhs.data {
+            return lhs.id == rhs.id && lhsData == rhsData
+        } else {
+            return lhs.id == rhs.id
+        }
+    }
+
     var id: String
-    var data: [String: Any]
+    var data: [String: Any]?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case data
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if let data = self.data?.encodable {
+            try container.encode(id, forKey: .id)
+            try container.encode(data, forKey: .data)
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try values.decode(String.self, forKey: .id)
+        if let cacheItem = try values.decode(AnyDecodable.self, forKey: .data).value as? [String: Any] {
+            self.id = id
+            self.data = cacheItem
+        } else {
+            throw HostedDataLayerErrors.unableToDecodeData
+        }
+    }
+
+    init(id: String,
+         data: [String: Any]) {
+        self.id = id
+        self.data = data
+    }
 }
 
 extension Array where Element == HostedDataLayerCacheItem {
@@ -40,10 +78,18 @@ public extension TealiumConfig {
 }
 
 public class HostedDataLayer: HostedDataLayerProtocol {
-    var cache: [HostedDataLayerCacheItem] = []
+    var cache: [HostedDataLayerCacheItem] = [] {
+        willSet {
+            if newValue != self.cache {
+                self.diskStorage.save(newValue, completion: nil)
+            }
+        }
+    }
     var processed = [String]()
     public var id = "HostedDataLayer"
     public var config: TealiumConfig
+    public var data: [String: Any]?
+    var diskStorage: TealiumDiskStorageProtocol
 
     let retriever = HostedDataLayerRetriever()
 
@@ -53,6 +99,10 @@ public class HostedDataLayer: HostedDataLayerProtocol {
 
     required public init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
+        self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "hdl")
+        if let cache = self.diskStorage.retrieve(as: [HostedDataLayerCacheItem].self) {
+            self.cache = cache
+        }
     }
 
     public func shouldQueue(request: TealiumRequest) -> (Bool, [String: Any]?) {
@@ -103,8 +153,6 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         return false
     }
 
-    public var data: [String: Any]?
-
     func extractKey(from dispatch: TealiumTrackRequest) -> String? {
         guard let keys = config.hostedDataLayerKeys else {
             return nil
@@ -130,11 +178,6 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         }
 
         return URL(string: "\(baseURL)\(lookupValue).json")
-    }
-
-    func requestData(for url: URL,
-                     completion: ((Result<[String: Any], Error>) -> Void)) {
-
     }
 
 }
