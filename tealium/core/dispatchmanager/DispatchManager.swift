@@ -163,19 +163,19 @@ class DispatchManager: DispatchManagerProtocol {
                 if shouldQueue.0 == true {
                     let batchingReason = shouldQueue.1? [TealiumKey.queueReason] as? String ?? TealiumKey.batchingEnabled
 
-                    self.enqueue(request, reason: batchingReason)
+                    self.enqueue(newRequest, reason: batchingReason)
                     // batch request and release if necessary
                     return
                 }
 
                 guard let dispatchers = self.dispatchers, !dispatchers.isEmpty else {
-                    self.enqueue(request, reason: "Dispatchers Not Ready")
+                    self.enqueue(newRequest, reason: "Dispatchers Not Ready")
                     return
                 }
 
                 self.runDispatchers(for: newRequest)
             case .failure:
-                self.enqueue(request, reason: "connectivity")
+                self.enqueue(newRequest, reason: "connectivity")
             }
         }
 
@@ -187,12 +187,14 @@ class DispatchManager: DispatchManagerProtocol {
         }
         return dispatchValidators.filter {
             let response = $0.shouldQueue(request: request)
-            if response.0 == true, let data = response.1 {
+            if let data = response.1 {
                 var newData = request.trackDictionary
                 newData += data
                 request.data = newData.encodable
-                let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
-                self.logger?.log(logRequest)
+                if response.0 == true {
+                    let logRequest = TealiumLogRequest(title: "Dispatch Manager", message: "Track request enqueued by Dispatch Validator: \($0.id)", info: data, logLevel: .info, category: .track)
+                    self.logger?.log(logRequest)
+                }
             }
             return response.0
         }.count > 0
@@ -287,7 +289,13 @@ class DispatchManager: DispatchManagerProtocol {
     }
 
     func dequeue() {
-        if let queuedDispatches = persistentQueue.dequeueDispatches() {
+        if var queuedDispatches = persistentQueue.dequeueDispatches() {
+            queuedDispatches = queuedDispatches.map {
+                var request = $0
+                _ = checkShouldQueue(request: &request)
+                return request
+            }
+
             let batches: [[TealiumTrackRequest]] = queuedDispatches.chunks(maxDispatchSize)
 
             batches.forEach { batch in

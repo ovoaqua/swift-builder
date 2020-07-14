@@ -70,13 +70,18 @@ class TealiumHelper: NSObject {
                              Collectors.Device,
 //                             Collectors.Location,
                              Collectors.VisitorService,
+            HostedDataLayer.self,
         ]
+        
+        config.hostedDataLayerKeys = ["hdl-test": "product_id"]
         
         config.dispatchers = [Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
 //                              Dispatchers.RemoteCommands
         ]
+        
+//        config.dispatchValidators = HostedDataLayer(config: T##TealiumConfig, delegate: T##ModuleDelegate?, diskStorage: T##TealiumDiskStorageProtocol?, completion: T##(ModuleResult) -> Void)
 //        tealium?.dataLayerManager
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
@@ -176,12 +181,14 @@ class TealiumHelper: NSObject {
     }
 
     func track(title: String, data: [String: Any]?) {
-        let dispatch = EventDispatch(title, dataLayer: data)
+//        let dispatch = EventDispatch(title, dataLayer: data)
+        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"bcd234"])
         tealium?.track(dispatch)
     }
 
     func trackView(title: String, data: [String: Any]?) {
-        let dispatch = ViewDispatch(title, dataLayer: data)
+//        let dispatch = ViewDispatch(title, dataLayer: data)
+        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"abc123"])
         tealium?.track(dispatch)
 
     }

@@ -146,7 +146,7 @@ extension _AnyEncodable {
         case .floatType, .float32Type:
             try container.encode(nsnumber.floatValue)
         case .doubleType, .float64Type, .cgFloatType:
-            try container.encode(nsnumber.doubleValue)
+            try container.encode(nsnumber.decimalValue)
             #if swift(>=5.0)
         @unknown default:
             fatalError("Data type not yet supported. Error in \(#file) at \(#line)")

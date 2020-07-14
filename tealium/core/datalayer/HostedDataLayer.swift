@@ -19,36 +19,117 @@ struct HostedDataLayerCacheItem {
     var data: [String: Any]
 }
 
-class HostedDataLayer: HostedDataLayerProtocol {
-    var cache: [HostedDataLayerCacheItem] = []
+extension Array where Element == HostedDataLayerCacheItem {
+    internal subscript(_ id: String) -> [String: Any]? {
+        self.first { $0.id == id }?.data
+    }
+}
 
-    var id = "HostedDataLayer"
-    var config: TealiumConfig
+public extension TealiumConfig {
+
+    var hostedDataLayerKeys: [String: String]? {
+        get {
+            options[TealiumKey.hostedDataLayerKeys] as? [String: String]
+        }
+
+        set {
+            options[TealiumKey.hostedDataLayerKeys] = newValue
+        }
+    }
+
+}
+
+public class HostedDataLayer: HostedDataLayerProtocol {
+    var cache: [HostedDataLayerCacheItem] = []
+    var processed = [String]()
+    public var id = "HostedDataLayer"
+    public var config: TealiumConfig
+
+    let retriever = HostedDataLayerRetriever()
 
     var baseURL: String {
         return "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/"
     }
 
-    required init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
+    required public init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
     }
 
-    func shouldQueue(request: TealiumRequest) -> (Bool, [String: Any]?) {
-        return (false, nil)
+    public func shouldQueue(request: TealiumRequest) -> (Bool, [String: Any]?) {
+
+        guard let dispatch = request as? TealiumTrackRequest else {
+            return(false, nil)
+        }
+
+        if processed.contains(dispatch.uuid) {
+            return(false, nil)
+        }
+
+        guard let url = getURL(for: dispatch) else {
+            return(false, nil)
+        }
+
+        guard let dispatchKey = self.extractKey(from: dispatch) else {
+            return(false, nil)
+        }
+
+        guard let itemId = dispatch.trackDictionary[dispatchKey] else {
+            return (false, nil)
+        }
+
+        if let existingCache = cache["\(itemId)"] {
+            processed.append(dispatch.uuid)
+            return(false, existingCache)
+        }
+
+        retriever.getData(for: url) { result in
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let data):
+                let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)
+                self.cache.append(cacheItem)
+            }
+        }
+
+        return (true, ["queue_reason": "Awaiting HDL response"])
     }
 
-    func shouldDrop(request: TealiumRequest) -> Bool {
+    public func shouldDrop(request: TealiumRequest) -> Bool {
         return false
     }
 
-    func shouldPurge(request: TealiumRequest) -> Bool {
+    public func shouldPurge(request: TealiumRequest) -> Bool {
         return false
     }
 
-    var data: [String: Any]?
+    public var data: [String: Any]?
+
+    func extractKey(from dispatch: TealiumTrackRequest) -> String? {
+        guard let keys = config.hostedDataLayerKeys else {
+            return nil
+        }
+
+        guard let event = dispatch.event else {
+            return nil
+        }
+
+        guard let dispatchKey = keys[event] else {
+            return nil
+        }
+        return dispatchKey
+    }
 
     func getURL(for dispatch: TealiumTrackRequest) -> URL? {
-        return nil
+        guard let dispatchKey = extractKey(from: dispatch) else {
+            return nil
+        }
+
+        guard let lookupValue = dispatch.trackDictionary[dispatchKey] else {
+            return nil
+        }
+
+        return URL(string: "\(baseURL)\(lookupValue).json")
     }
 
     func requestData(for url: URL,
@@ -93,7 +174,7 @@ class HostedDataLayerRetriever {
 
             completion(.success(decodedData))
 
-        }
+        }.resume()
     }
 
 }
