@@ -9,7 +9,7 @@
 import Foundation
 
 protocol HostedDataLayerProtocol: DispatchValidator, Collector {
-    var cache: [HostedDataLayerCacheItem] { get set }
+    var cache: [HostedDataLayerCacheItem]? { get set }
     func getURL(for dispatch: TealiumTrackRequest) -> URL?
     //    func requestData(for url: URL, completion: ((Result<[String: Any], Error>) -> Void))
 }
@@ -78,13 +78,24 @@ public extension TealiumConfig {
 }
 
 public class HostedDataLayer: HostedDataLayerProtocol {
-    var cache: [HostedDataLayerCacheItem] = [] {
-        willSet {
-            if newValue != self.cache {
+    var tempCache: [HostedDataLayerCacheItem]? = []
+    var cache: [HostedDataLayerCacheItem]? {
+        get {
+            self.tempCache
+        }
+
+        set {
+            if var newValue = newValue,
+               newValue != self.cache {
+                while newValue.count > TealiumValue.hdlCacheSizeMax {
+                    newValue.removeFirst()
+                }
+                self.tempCache = newValue
                 self.diskStorage.save(newValue, completion: nil)
             }
         }
     }
+
     var processed = [String]()
     public var id = "HostedDataLayer"
     public var config: TealiumConfig
@@ -101,7 +112,7 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "hdl")
         if let cache = self.diskStorage.retrieve(as: [HostedDataLayerCacheItem].self) {
-            self.cache = cache
+            self.tempCache = cache
         }
     }
 
@@ -127,7 +138,7 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return (false, nil)
         }
 
-        if let existingCache = cache["\(itemId)"] {
+        if let existingCache = cache?["\(itemId)"] {
             processed.append(dispatch.uuid)
             return(false, existingCache)
         }
@@ -138,7 +149,7 @@ public class HostedDataLayer: HostedDataLayerProtocol {
                 print(error.localizedDescription)
             case .success(let data):
                 let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)
-                self.cache.append(cacheItem)
+                self.cache?.append(cacheItem)
             }
         }
 
@@ -186,6 +197,11 @@ enum HostedDataLayerErrors: Error {
     case unknownResponseType
     case emptyResponse
     case unableToDecodeData
+}
+
+protocol HostedDataLayerRetrieverProtocol {
+    func getData(for url: URL,
+                 completion: @escaping ((Result<[String: Any], Error>) -> Void))
 }
 
 class HostedDataLayerRetriever {

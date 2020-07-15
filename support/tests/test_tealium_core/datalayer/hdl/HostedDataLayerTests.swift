@@ -17,6 +17,10 @@ class HostedDataLayerTests: XCTestCase {
         return TealiumConfig(account: "tealiummobile", profile: "demo", environment: "dev")
     }
 
+    var randomCacheItem: HostedDataLayerCacheItem {
+        HostedDataLayerCacheItem(id: "\(Int.random(in: 0...10000))", data: ["product_name": "test"])
+    }
+    
     override func setUp() {
         
     }
@@ -37,18 +41,16 @@ class HostedDataLayerTests: XCTestCase {
         
         XCTAssertEqual(hostedDataLayer.getURL(for: dispatch.trackRequest)!, URL(string: "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/abc123.json")!)
     }
-//
-//    func testCacheExpiresWhenCacheSizeExceeded() {
-//        let hostedDataLayer = HostedDataLayer(config: config)
-//        let cache = HDLFullCache()
-//        hostedDataLayer.cache = cache
-//        let firstItem = cache.first!
-//        let cacheItem = HDLCacheItem(...)
-//        hostedDataLayer.cache.append(cacheItem)
-//        XCTAssertEqual(hostedDataLayer.cache.count, TealiumValue.hdlMaxCacheSize)
-//        XCTAssertEqual(hostedDataLayer.cache.last!, cacheItem)
-//        XCTAssertFalse(hostedDataLayer.cache.contains(firstItem)) // first item was removed
-//    }
+
+    func testCacheExpiresWhenCacheSizeExceeded() {
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
+        let firstItem = hostedDataLayer.cache!.first!
+        let cacheItem = randomCacheItem
+        hostedDataLayer.cache!.append(cacheItem)
+        XCTAssertEqual(hostedDataLayer.cache!.count, TealiumValue.hdlCacheSizeMax)
+        XCTAssertEqual(hostedDataLayer.cache!.last!, cacheItem)
+        XCTAssertFalse(hostedDataLayer.cache!.contains(firstItem)) // first item was removed
+    }
 //
 //    func testRetryOnFailure() {
 //        let expectation = self.expectation(description: "testRetryOnFailure")
