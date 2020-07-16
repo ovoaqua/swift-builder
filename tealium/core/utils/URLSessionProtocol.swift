@@ -12,7 +12,8 @@ public typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
 
 public protocol URLSessionProtocol {
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void)
     func finishTealiumTasksAndInvalidate()
 }
 

@@ -182,7 +182,7 @@ class TealiumHelper: NSObject {
 
     func track(title: String, data: [String: Any]?) {
 //        let dispatch = EventDispatch(title, dataLayer: data)
-        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"bcd234"])
+        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"bcsd234"])
         tealium?.track(dispatch)
     }
 

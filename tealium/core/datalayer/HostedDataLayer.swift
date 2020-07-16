@@ -10,6 +10,7 @@ import Foundation
 
 protocol HostedDataLayerProtocol: DispatchValidator, Collector {
     var cache: [HostedDataLayerCacheItem]? { get set }
+    var retriever: HostedDataLayerRetrieverProtocol { get set }
     func getURL(for dispatch: TealiumTrackRequest) -> URL?
     //    func requestData(for url: URL, completion: ((Result<[String: Any], Error>) -> Void))
 }
@@ -46,7 +47,7 @@ struct HostedDataLayerCacheItem: Codable, Equatable {
             self.id = id
             self.data = cacheItem
         } else {
-            throw HostedDataLayerErrors.unableToDecodeData
+            throw HostedDataLayerError.unableToDecodeData
         }
     }
 
@@ -78,6 +79,8 @@ public extension TealiumConfig {
 }
 
 public class HostedDataLayer: HostedDataLayerProtocol {
+    var retriever: HostedDataLayerRetrieverProtocol = HostedDataLayerRetriever()
+
     var tempCache: [HostedDataLayerCacheItem]? = []
     var cache: [HostedDataLayerCacheItem]? {
         get {
@@ -96,13 +99,14 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         }
     }
 
+    var failingRequests = [String: Int]()
+
     var processed = [String]()
     public var id = "HostedDataLayer"
     public var config: TealiumConfig
     public var data: [String: Any]?
     var diskStorage: TealiumDiskStorageProtocol
-
-    let retriever = HostedDataLayerRetriever()
+    var failingDataLayerItems = Set<String>()
 
     var baseURL: String {
         return "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/"
@@ -122,6 +126,8 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, nil)
         }
 
+        //        guard failingRequests[dispatch.uuid]
+
         if processed.contains(dispatch.uuid) {
             return(false, nil)
         }
@@ -135,7 +141,11 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         }
 
         guard let itemId = dispatch.trackDictionary[dispatchKey] else {
-            return (false, nil)
+            return(false, nil)
+        }
+
+        guard failingDataLayerItems.contains("\(itemId)") == false else {
+            return (false, ["hosted_data_layer_error": "Data layer item \(itemId).json does not exist"])
         }
 
         if let existingCache = cache?["\(itemId)"] {
@@ -143,9 +153,18 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, existingCache)
         }
 
+        // TODO: Keep track of requests for specific cache items. If it fails after 5 attempts, always allow the request to complete. If empty response received, always release.
+        // What happens if queue is released due to a release event but there's no data? Do we save the request for later and send it out of order?
         retriever.getData(for: url) { result in
             switch result {
             case .failure(let error):
+                if error as? HostedDataLayerError == HostedDataLayerError.unableToDecodeData {
+                    self.processed.append(dispatch.uuid)
+                    self.failingDataLayerItems.insert("\(itemId)")
+                    return
+                }
+                self.failingRequests[dispatch.uuid] = self.failingRequests[dispatch.uuid] ?? 0
+                self.failingRequests[dispatch.uuid]? += 1
                 print(error.localizedDescription)
             case .success(let data):
                 let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)
@@ -193,7 +212,7 @@ public class HostedDataLayer: HostedDataLayerProtocol {
 
 }
 
-enum HostedDataLayerErrors: Error {
+enum HostedDataLayerError: Error {
     case unknownResponseType
     case emptyResponse
     case unableToDecodeData
@@ -204,12 +223,32 @@ protocol HostedDataLayerRetrieverProtocol {
                  completion: @escaping ((Result<[String: Any], Error>) -> Void))
 }
 
-class HostedDataLayerRetriever {
+class HostedDataLayerRetriever: HostedDataLayerRetrieverProtocol {
 
     let session = URLSession(configuration: .ephemeral)
 
     func getData(for url: URL,
                  completion: @escaping ((Result<[String: Any], Error>) -> Void)) {
+        
+        session.tealiumDataTask(with: url) { result in
+            switch result {
+            case .success(let response):
+                guard let data = response.1 else {
+                    completion(.failure(HostedDataLayerError.emptyResponse))
+                    return
+                }
+
+                guard let decodedData = (try? JSONDecoder().decode(AnyDecodable.self, from: data))?.value as? [String: Any] else {
+                    completion(.failure(HostedDataLayerError.unableToDecodeData))
+                    return
+                }
+
+                completion(.success(decodedData))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }.resume()
+        
         session.dataTask(with: url) { data, response, error in
             guard error == nil else {
                 completion(.failure(error!))
@@ -217,17 +256,17 @@ class HostedDataLayerRetriever {
             }
 
             guard let response = response as? HTTPURLResponse, response.statusCode == HttpStatusCodes.ok.rawValue else {
-                completion(.failure(HostedDataLayerErrors.unknownResponseType))
+                completion(.failure(HostedDataLayerError.unknownResponseType))
                 return
             }
 
             guard let data = data else {
-                completion(.failure(HostedDataLayerErrors.emptyResponse))
+                completion(.failure(HostedDataLayerError.emptyResponse))
                 return
             }
 
             guard let decodedData = (try? JSONDecoder().decode(AnyDecodable.self, from: data))?.value as? [String: Any] else {
-                completion(.failure(HostedDataLayerErrors.unableToDecodeData))
+                completion(.failure(HostedDataLayerError.unableToDecodeData))
                 return
             }
 

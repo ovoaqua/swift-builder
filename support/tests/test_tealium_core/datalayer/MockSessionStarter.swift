@@ -36,8 +36,8 @@ class MockURLSessionSessionStarter: URLSessionProtocol {
         return SessionStarterDataTask(completionHandler: completionHandler, url: url)
     }
 
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return SessionStarterDataTask(completionHandler: completionHandler, url: with.url!)
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return SessionStarterDataTask(completionHandler: completionHandler, url: with request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() { }
@@ -65,8 +65,8 @@ class MockURLSessionSessionStarterInvalidResponse: URLSessionProtocol {
         return SessionStarterDataTaskInvalidResponse(completionHandler: completionHandler, url: url)
     }
 
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return SessionStarterDataTaskInvalidResponse(completionHandler: completionHandler, url: with.url!)
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return SessionStarterDataTaskInvalidResponse(completionHandler: completionHandler, url: with request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() { }
@@ -95,8 +95,8 @@ class MockURLSessionSessionStarterRequestError: URLSessionProtocol {
         return SessionStarterDataTaskError(completionHandler: completionHandler, url: url)
     }
 
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return SessionStarterDataTaskError(completionHandler: completionHandler, url: with.url!)
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return SessionStarterDataTaskError(completionHandler: completionHandler, url: with request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() { }

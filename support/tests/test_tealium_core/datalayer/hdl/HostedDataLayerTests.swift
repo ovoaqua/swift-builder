@@ -36,11 +36,6 @@ class HostedDataLayerTests: XCTestCase {
         let config = self.config
     
         let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: nil) { _ in }
-//
-//        config.hostedDataLayerKeys = [
-//            "product_view": "product_id",
-//            "category_view": "category_id",
-//        ]
         
         let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
         
@@ -105,6 +100,18 @@ class HostedDataLayerTests: XCTestCase {
         XCTAssertFalse(shouldQueue.0, "Should queue returned true unexpectedly")
     }
     
+    func testShouldDropAlwaysReturnsFalse() {
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
+        XCTAssertFalse(hostedDataLayer.shouldDrop(request: dispatch.trackRequest), "Should drop returned true unexpectedly")
+    }
+    
+    func testShouldPurgeAlwaysReturnsFalse() {
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
+        XCTAssertFalse(hostedDataLayer.shouldPurge(request: dispatch.trackRequest), "Should purge returned true unexpectedly")
+    }
+    
 }
 
 class HostedDataLayerModuleDelegate: ModuleDelegate {
@@ -120,5 +127,20 @@ class HostedDataLayerModuleDelegate: ModuleDelegate {
         
     }
     
+    
+}
+
+class MockHDLRetrieverFailingRequest: HostedDataLayerRetrieverProtocol {
+    func getData(for url: URL, completion: @escaping ((Result<[String : Any], Error>) -> Void)) {
+        
+    }
+    
+}
+
+
+class MockHDLRetrieverSuccessfulRequest: HostedDataLayerRetrieverProtocol {
+    func getData(for url: URL, completion: @escaping ((Result<[String : Any], Error>) -> Void)) {
+        
+    }
     
 }

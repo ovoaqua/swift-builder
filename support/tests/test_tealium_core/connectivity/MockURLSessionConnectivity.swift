@@ -29,9 +29,9 @@ class MockURLSessionConnectivityNoConnection: URLSessionProtocol {
     }
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
-        return ConnectivityDataTaskNoConnection(completionHandler: completionHandler, url: with.url!)
+        return ConnectivityDataTaskNoConnection(completionHandler: completionHandler, url: with request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
@@ -59,9 +59,9 @@ class MockURLSessionConnectivityWithConnection: URLSessionProtocol {
     }
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
-        return ConnectivityDataTaskWithConnection(completionHandler: completionHandler, url: with.url!)
+        return ConnectivityDataTaskWithConnection(completionHandler: completionHandler, url: with request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
