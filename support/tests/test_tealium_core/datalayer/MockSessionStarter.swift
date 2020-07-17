@@ -31,13 +31,23 @@ class MockTealiumSessionStarter: SessionStarterProtocol {
 }
 
 class MockURLSessionSessionStarter: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return SessionStarterDataTask(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+    
 
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return SessionStarterDataTask(completionHandler: completionHandler, url: url)
     }
 
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return SessionStarterDataTask(completionHandler: completionHandler, url: with request.url!)
+        return SessionStarterDataTask(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() { }
@@ -60,13 +70,23 @@ class SessionStarterDataTask: URLSessionDataTaskProtocol {
 }
 
 class MockURLSessionSessionStarterInvalidResponse: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return SessionStarterDataTaskInvalidResponse(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+    
 
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return SessionStarterDataTaskInvalidResponse(completionHandler: completionHandler, url: url)
     }
 
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return SessionStarterDataTaskInvalidResponse(completionHandler: completionHandler, url: with request.url!)
+        return SessionStarterDataTaskInvalidResponse(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() { }
@@ -90,13 +110,23 @@ class SessionStarterDataTaskInvalidResponse: URLSessionDataTaskProtocol {
 }
 
 class MockURLSessionSessionStarterRequestError: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return SessionStarterDataTaskError(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+    
 
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return SessionStarterDataTaskError(completionHandler: completionHandler, url: url)
     }
 
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return SessionStarterDataTaskError(completionHandler: completionHandler, url: with request.url!)
+        return SessionStarterDataTaskError(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() { }

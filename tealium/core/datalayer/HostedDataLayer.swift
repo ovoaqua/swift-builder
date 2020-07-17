@@ -99,8 +99,6 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         }
     }
 
-    var failingRequests = [String: Int]()
-
     var processed = [String]()
     public var id = "HostedDataLayer"
     public var config: TealiumConfig
@@ -140,7 +138,7 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, nil)
         }
 
-        guard let itemId = dispatch.trackDictionary[dispatchKey] else {
+        guard let itemId = dispatch.trackDictionary[dispatchKey] as? String else {
             return(false, nil)
         }
 
@@ -155,24 +153,52 @@ public class HostedDataLayer: HostedDataLayerProtocol {
 
         // TODO: Keep track of requests for specific cache items. If it fails after 5 attempts, always allow the request to complete. If empty response received, always release.
         // What happens if queue is released due to a release event but there's no data? Do we save the request for later and send it out of order?
+        //        retriever.getData(for: url) { result in
+        //            switch result {
+        //            case .failure(let error):
+        //                if error as? HostedDataLayerError == HostedDataLayerError.unableToDecodeData {
+        //                    self.processed.append(dispatch.uuid)
+        //                    self.failingDataLayerItems.insert("\(itemId)")
+        //                    return
+        //                }
+        //                self.failingRequests[dispatch.uuid] = self.failingRequests[dispatch.uuid] ?? 0
+        //                self.failingRequests[dispatch.uuid]? += 1
+        //                print(error.localizedDescription)
+        //            case .success(let data):
+        //                let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)
+        //                self.cache?.append(cacheItem)
+        //            }
+        //        }
+
+        retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: 5)
+
+        return (true, ["queue_reason": "Awaiting HDL response"])
+    }
+
+    func retrieveAndRetry(url: URL,
+                          dispatch: TealiumTrackRequest,
+                          itemId: String,
+                          maxRetries: Int,
+                          current: Int = 0) {
         retriever.getData(for: url) { result in
             switch result {
             case .failure(let error):
-                if error as? HostedDataLayerError == HostedDataLayerError.unableToDecodeData {
+                if let error = error as? HostedDataLayerError, [HostedDataLayerError.unableToDecodeData, HostedDataLayerError.emptyResponse].contains(error) {
                     self.processed.append(dispatch.uuid)
                     self.failingDataLayerItems.insert("\(itemId)")
                     return
                 }
-                self.failingRequests[dispatch.uuid] = self.failingRequests[dispatch.uuid] ?? 0
-                self.failingRequests[dispatch.uuid]? += 1
-                print(error.localizedDescription)
+                if current < maxRetries {
+                    self.retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: maxRetries, current: current + 1)
+                } else {
+                    self.failingDataLayerItems.insert(itemId)
+                    print(error.localizedDescription)
+                }
             case .success(let data):
                 let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)
                 self.cache?.append(cacheItem)
             }
         }
-
-        return (true, ["queue_reason": "Awaiting HDL response"])
     }
 
     public func shouldDrop(request: TealiumRequest) -> Bool {

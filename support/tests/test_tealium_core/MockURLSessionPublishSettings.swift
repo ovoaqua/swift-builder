@@ -10,6 +10,16 @@ import Foundation
 import TealiumCore
 // swiftlint:disable function_body_length
 class MockURLSessionPublishSettings: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return DataTask(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return DataTask(completionHandler: completionHandler, url: url)
     }
@@ -17,7 +27,7 @@ class MockURLSessionPublishSettings: URLSessionProtocol {
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
-        return DataTask(completionHandler: completionHandler, url: with request.url!)
+        return DataTask(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
@@ -53,12 +63,22 @@ class DataTask: URLSessionDataTaskProtocol {
 }
 
 class MockURLSessionPublishSettingsExtraContent: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return DataTaskExtraContent(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return DataTaskExtraContent(completionHandler: completionHandler, url: url)
     }
 
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return DataTaskExtraContent(completionHandler: completionHandler, url: with request.url!)
+        return DataTaskExtraContent(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
@@ -186,6 +206,16 @@ class DataTaskExtraContent: URLSessionDataTaskProtocol {
 }
 // swiftlint:enable function_body_length
 class MockURLSessionPublishSettingsNoContent: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return DataTaskNoContent(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return DataTaskNoContent(completionHandler: completionHandler, url: url)
     }
@@ -193,7 +223,7 @@ class MockURLSessionPublishSettingsNoContent: URLSessionProtocol {
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
-        return DataTaskNoContent(completionHandler: completionHandler, url: with request.url!)
+        return DataTaskNoContent(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {

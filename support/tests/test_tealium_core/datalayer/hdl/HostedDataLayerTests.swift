@@ -13,6 +13,9 @@ import XCTest
 
 class HostedDataLayerTests: XCTestCase {
     
+    static var shouldRetryExpectation: XCTestExpectation!
+    static var badDataExpectation: XCTestExpectation!
+    
     var config: TealiumConfig {
         let config = TealiumConfig(account: "tealiummobile", profile: "demo", environment: "dev")
         config.hostedDataLayerKeys = [
@@ -61,6 +64,46 @@ class HostedDataLayerTests: XCTestCase {
 //        self.wait(for: [expectation], timeout: 5.0)
 //
 //    }
+    func testRetryOnHTTPError() {
+        HostedDataLayerTests.shouldRetryExpectation = self.expectation(description: "testRetryOnHTTPError")
+        let retriever = HostedDataLayerRetriever()
+        let session = MockURLSessionURLError()
+        retriever.session = session
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
+        hostedDataLayer.retriever = retriever
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
+        self.wait(for: [HostedDataLayerTests.shouldRetryExpectation], timeout: 5.0)
+        
+    }
+    
+    func testNoRetryIfUnableToDecode() {
+//        HostedDataLayerTests.shouldRetryExpectation = self.expectation(description: "testRetryOnHTTPError")
+        let retriever = HostedDataLayerRetriever()
+        let session = MockURLSessionBadResponse()
+        retriever.session = session
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
+        hostedDataLayer.retriever = retriever
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
+//        self.wait(for: [HostedDataLayerTests.shouldRetryExpectation], timeout: 5.0)
+        
+    }
+    
+    
+    func testNoRetryIfEmptyResponse() {
+//        HostedDataLayerTests.shouldRetryExpectation = self.expectation(description: "testRetryOnHTTPError")
+        let retriever = HostedDataLayerRetriever()
+        let session = MockURLSessionEmptyResponse()
+        retriever.session = session
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
+        hostedDataLayer.retriever = retriever
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
+//        self.wait(for: [HostedDataLayerTests.shouldRetryExpectation], timeout: 5.0)
+        
+    }
+    
 //
 //    func testTrackingCallSentWithNoDataIfMaxRetriesReached() {
 //        let expectation = self.expectation(description: "testRetryOnFailure")
@@ -71,6 +114,48 @@ class HostedDataLayerTests: XCTestCase {
 //        self.wait(for: [expectation], timeout: 5.0)
 //    }
 //
+    
+    func testRetrieverReturnsFailureIfBadResponse() {
+        let retriever = HostedDataLayerRetriever()
+        retriever.session = MockURLSessionBadResponse()
+        retriever.getData(for: URL(string:"https://tags.tiqcdn.com")!) { result in
+            switch result {
+            case .failure(let error):
+                XCTAssertEqual(error as! HostedDataLayerError, HostedDataLayerError.unableToDecodeData)
+            case .success:
+                XCTFail("Unexpected success")
+            }
+        }
+    }
+    
+    func testRetrieverReturnsFailureIfHTTPError() {
+        let retriever = HostedDataLayerRetriever()
+        retriever.session = MockURLSessionURLError()
+        retriever.getData(for: URL(string:"https://tags.tiqcdn.com")!) { result in
+            switch result {
+            case .failure(let error):
+                XCTAssertNotNil(error)
+            case .success:
+                XCTFail("Unexpected success")
+            }
+        }
+    }
+    
+    func testRetrieverReturnsSuccessWithExpectedResponse() {
+        let retriever = HostedDataLayerRetriever()
+        retriever.session = MockURLSessionURLSuccess()
+        retriever.getData(for: URL(string:"https://tags.tiqcdn.com")!) { result in
+            switch result {
+            case .failure:
+                XCTFail("Unexpected failure")
+            case .success(let data):
+                XCTAssertEqual(data["product_color"] as! String, "blue")
+                
+            }
+        }
+    }
+    
+    
     func testShouldQueueReturnsFalseWhenDispatchDoesNotContainRequiredKeys() {
         let dispatch = ViewDispatch("product_view", dataLayer: ["product_sku": "abc123"])
         let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
@@ -131,6 +216,8 @@ class HostedDataLayerModuleDelegate: ModuleDelegate {
 }
 
 class MockHDLRetrieverFailingRequest: HostedDataLayerRetrieverProtocol {
+    var session: URLSessionProtocol = MockURLSessionURLError()
+    
     func getData(for url: URL, completion: @escaping ((Result<[String : Any], Error>) -> Void)) {
         
     }
@@ -138,9 +225,203 @@ class MockHDLRetrieverFailingRequest: HostedDataLayerRetrieverProtocol {
 }
 
 
-class MockHDLRetrieverSuccessfulRequest: HostedDataLayerRetrieverProtocol {
-    func getData(for url: URL, completion: @escaping ((Result<[String : Any], Error>) -> Void)) {
-        
+//class MockHDLRetrieverSuccessfulRequest: HostedDataLayerRetrieverProtocol {
+//    var session: URLSessionProtocol
+//    
+//    func getData(for url: URL, completion: @escaping ((Result<[String : Any], Error>) -> Void)) {
+//
+//    }
+//
+//}
+
+
+class MockURLSessionURLError: URLSessionProtocol {
+
+    var retries = 0
+    
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return DataTaskURLError(completionHandler: { data, response, error in
+            self.retries += 1
+            if self.retries == 5 {
+                HostedDataLayerTests.shouldRetryExpectation.fulfill()
+            }
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
     }
     
+    func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskURLError(completionHandler: completionHandler, url: url)
+    }
+
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskURLError(completionHandler: completionHandler, url: request.url!)
+    }
+
+    func finishTealiumTasksAndInvalidate() {
+    }
+
+}
+
+class DataTaskURLError: URLSessionDataTaskProtocol {
+    let completionHandler: DataTaskCompletion
+    let url: URL
+    init(completionHandler: @escaping DataTaskCompletion,
+         url: URL) {
+        self.completionHandler = completionHandler
+        self.url = url
+    }
+    
+    func resume() {
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 301, httpVersion: "1.1", headerFields: nil)
+        completionHandler(nil, urlResponse, HTTPError.serverSideError(301))
+    }
+
+}
+
+
+class MockURLSessionBadResponse: URLSessionProtocol {
+
+    var retries = 0
+    
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return DataTaskBadResponse(completionHandler: { data, response, error in
+            if self.retries > 0 {
+                XCTFail("Should not retry")
+            }
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+            self.retries += 1
+        }, url: url)
+    }
+    
+    func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskBadResponse(completionHandler: completionHandler, url: url)
+    }
+
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskBadResponse(completionHandler: completionHandler, url: request.url!)
+    }
+
+    func finishTealiumTasksAndInvalidate() {
+    }
+
+}
+
+class DataTaskBadResponse: URLSessionDataTaskProtocol {
+    let data = "//\n".data(using: .utf8)
+    let completionHandler: DataTaskCompletion
+    let url: URL
+    init(completionHandler: @escaping DataTaskCompletion,
+         url: URL) {
+        self.completionHandler = completionHandler
+        self.url = url
+    }
+    
+    func resume() {
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+        completionHandler(data, urlResponse, nil)
+    }
+
+}
+
+
+
+class MockURLSessionURLSuccess: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return DataTaskURLSuccess(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+    
+    func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskURLSuccess(completionHandler: completionHandler, url: url)
+    }
+
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskURLSuccess(completionHandler: completionHandler, url: request.url!)
+    }
+
+    func finishTealiumTasksAndInvalidate() {
+    }
+
+}
+
+class DataTaskURLSuccess: URLSessionDataTaskProtocol {
+    let data = """
+    {
+        "product_color": "blue",
+        "product_category": "shorts",
+        "product_price": 19.99
+    }
+    """.data(using: .utf8)
+    let completionHandler: DataTaskCompletion
+    let url: URL
+    init(completionHandler: @escaping DataTaskCompletion,
+         url: URL) {
+        self.completionHandler = completionHandler
+        self.url = url
+    }
+    
+    func resume() {
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+        completionHandler(data, urlResponse, nil)
+    }
+
+}
+
+
+class MockURLSessionEmptyResponse: URLSessionProtocol {
+    var retries = 0
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return DataTaskEmptyResponse(completionHandler: { data, response, error in
+            if self.retries > 0 {
+                XCTFail("Should not retry on empty response")
+            }
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+            self.retries += 1
+        }, url: url)
+    }
+    
+    func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskEmptyResponse(completionHandler: completionHandler, url: url)
+    }
+
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return DataTaskEmptyResponse(completionHandler: completionHandler, url: request.url!)
+    }
+
+    func finishTealiumTasksAndInvalidate() {
+    }
+
+}
+
+class DataTaskEmptyResponse: URLSessionDataTaskProtocol {
+    let completionHandler: DataTaskCompletion
+    let url: URL
+    init(completionHandler: @escaping DataTaskCompletion,
+         url: URL) {
+        self.completionHandler = completionHandler
+        self.url = url
+    }
+    
+    func resume() {
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+        completionHandler(nil, urlResponse, nil)
+    }
+
 }
