@@ -29,7 +29,7 @@ extension URLSession: URLSessionProtocol {
     }
 
     public func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
-        
+
         return dataTask(with: url) { data, response, error in
             if let error = error {
                 completionHandler(.failure(error))
@@ -38,7 +38,7 @@ extension URLSession: URLSessionProtocol {
             if let response = response as? HTTPURLResponse {
                 let status = response.statusCode
                 guard (200...299).contains(status) else {
-                    completionHandler(Result.failure(HTTPError.serverSideError(status)))
+                    completionHandler(.failure(HTTPError.serverSideError(status)))
                     return
                 }
                 completionHandler(.success((response, data)))

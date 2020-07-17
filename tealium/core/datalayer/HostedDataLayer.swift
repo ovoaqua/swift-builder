@@ -219,17 +219,18 @@ enum HostedDataLayerError: Error {
 }
 
 protocol HostedDataLayerRetrieverProtocol {
+    var session: URLSessionProtocol { get set }
     func getData(for url: URL,
                  completion: @escaping ((Result<[String: Any], Error>) -> Void))
 }
 
 class HostedDataLayerRetriever: HostedDataLayerRetrieverProtocol {
 
-    let session = URLSession(configuration: .ephemeral)
+    var session: URLSessionProtocol = URLSession(configuration: .ephemeral)
 
     func getData(for url: URL,
                  completion: @escaping ((Result<[String: Any], Error>) -> Void)) {
-        
+
         session.tealiumDataTask(with: url) { result in
             switch result {
             case .success(let response):
@@ -247,31 +248,6 @@ class HostedDataLayerRetriever: HostedDataLayerRetrieverProtocol {
             case .failure(let error):
                 completion(.failure(error))
             }
-        }.resume()
-        
-        session.dataTask(with: url) { data, response, error in
-            guard error == nil else {
-                completion(.failure(error!))
-                return
-            }
-
-            guard let response = response as? HTTPURLResponse, response.statusCode == HttpStatusCodes.ok.rawValue else {
-                completion(.failure(HostedDataLayerError.unknownResponseType))
-                return
-            }
-
-            guard let data = data else {
-                completion(.failure(HostedDataLayerError.emptyResponse))
-                return
-            }
-
-            guard let decodedData = (try? JSONDecoder().decode(AnyDecodable.self, from: data))?.value as? [String: Any] else {
-                completion(.failure(HostedDataLayerError.unableToDecodeData))
-                return
-            }
-
-            completion(.success(decodedData))
-
         }.resume()
     }
 

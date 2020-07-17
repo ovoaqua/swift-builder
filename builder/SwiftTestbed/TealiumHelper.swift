@@ -15,6 +15,7 @@ import TealiumRemoteCommands
 import TealiumVisitorService
 import TealiumLifecycle
 import TealiumLocation
+import TealiumAutotracking
 
 extension String: Error {}
 
@@ -63,6 +64,7 @@ class TealiumHelper: NSObject {
         config.collectors = [
             MyDateCollector.self,
 //            Collectors.Attribution,
+            Collectors.AutoTracking,
                              Collectors.Lifecycle,
 //                             Collectors.AppData,
                              Collectors.Connectivity,
@@ -145,7 +147,7 @@ class TealiumHelper: NSObject {
 //        let dispatch = EventDispatch("hello-post-open")
 //
 //        tealium?.track(dispatch)
-        let dispatch = ViewDispatch("VIEW_NAME", dataLayer: ["key": "value"])
+//        let dispatch = ViewDispatch("VIEW_NAME", dataLayer: ["key": "value"])
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
             return

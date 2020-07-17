@@ -3963,6 +3963,7 @@
 						ProvisioningStyle = Manual;
 					};
 					D788A47F231970B900BC6D60 = {
+						LastSwiftMigration = 1200;
 						ProvisioningStyle = Automatic;
 						TestTargetID = D777EDA31FB0B87300181B11;
 					};
@@ -4013,9 +4014,11 @@
 						ProvisioningStyle = Manual;
 					};
 					D7F2DEB7233279A1000D0E0F = {
+						LastSwiftMigration = 1200;
 						ProvisioningStyle = Automatic;
 					};
 					D7F2DEE4233279B2000D0E0F = {
+						LastSwiftMigration = 1200;
 						ProvisioningStyle = Automatic;
 					};
 				};
