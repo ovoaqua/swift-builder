@@ -76,7 +76,7 @@ class TealiumHelper: NSObject {
         ]
         
         config.hostedDataLayerKeys = ["hdl-test": "product_id"]
-        
+        config.hostedDataLayerTimeToLive = 1
         config.dispatchers = [Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
