@@ -12,7 +12,6 @@ protocol HostedDataLayerProtocol: DispatchValidator, Collector {
     var cache: [HostedDataLayerCacheItem]? { get set }
     var retriever: HostedDataLayerRetrieverProtocol { get set }
     func getURL(for dispatch: TealiumTrackRequest) -> URL?
-    //    func requestData(for url: URL, completion: ((Result<[String: Any], Error>) -> Void))
 }
 
 struct HostedDataLayerCacheItem: Codable, Equatable {
@@ -124,8 +123,6 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, nil)
         }
 
-        //        guard failingRequests[dispatch.uuid]
-
         if processed.contains(dispatch.uuid) {
             return(false, nil)
         }
@@ -151,6 +148,8 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, existingCache)
         }
 
+        // TODO: Expiry for data layer cache for each item - session or custom days
+        
         // TODO: Keep track of requests for specific cache items. If it fails after 5 attempts, always allow the request to complete. If empty response received, always release.
         // What happens if queue is released due to a release event but there's no data? Do we save the request for later and send it out of order?
         //        retriever.getData(for: url) { result in
