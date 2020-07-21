@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol HostedDataLayerProtocol: DispatchValidator, Collector {
+protocol HostedDataLayerProtocol: DispatchValidator {
     var cache: [HostedDataLayerCacheItem]? { get set }
     var retriever: HostedDataLayerRetrieverProtocol { get set }
     func getURL(for dispatch: TealiumTrackRequest) -> URL?
@@ -29,8 +29,8 @@ public class HostedDataLayer: HostedDataLayerProtocol {
                 while newValue.count > TealiumValue.hdlCacheSizeMax {
                     newValue.removeFirst()
                 }
-                self.tempCache = newValue
-                self.diskStorage.save(newValue, completion: nil)
+                cacheBacking = newValue
+                diskStorage.save(newValue, completion: nil)
             }
         }
     }

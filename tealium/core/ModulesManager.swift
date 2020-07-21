@@ -24,22 +24,17 @@ public class ModulesManager {
     var originalConfig: TealiumConfig
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     var collectorTypes: [Collector.Type] {
-        var enabledCollectors = [Collector.Type]()
         if let optionalCollectors = config.collectors {
-            enabledCollectors = [AppDataModule.self,
-                                 ConsentManagerModule.self,
+            return [AppDataModule.self,
+                    ConsentManagerModule.self,
             ] + optionalCollectors
         } else {
-            enabledCollectors = [AppDataModule.self,
-                                 DeviceDataModule.self,
-                                 ConsentManagerModule.self,
-                                 ConnectivityModule.self,
+            return [AppDataModule.self,
+                    DeviceDataModule.self,
+                    ConsentManagerModule.self,
+                    ConnectivityModule.self,
             ]
         }
-        if config.hostedDataLayerKeys != nil {
-            enabledCollectors += [HostedDataLayer.self]
-        }
-        return enabledCollectors
     }
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {
@@ -123,7 +118,7 @@ public class ModulesManager {
             }
         }
         self.logger = self.config.logger
-        //        self.setupDispatchers(config: self.config)
+        self.setupHostedDataLayer(config: self.config)
         self.setupDispatchValidators(config: self.config)
         self.setupDispatchListeners(config: self.config)
 
@@ -258,6 +253,13 @@ public class ModulesManager {
     func setupDispatchValidators(config: TealiumConfig) {
         config.dispatchValidators?.forEach {
             self.addDispatchValidator($0)
+        }
+    }
+
+    func setupHostedDataLayer(config: TealiumConfig) {
+        if config.hostedDataLayerKeys != nil {
+            let hostedDataLayer = HostedDataLayer(config: config, delegate: self, diskStorage: nil) { _ in }
+            addDispatchValidator(hostedDataLayer)
         }
     }
 

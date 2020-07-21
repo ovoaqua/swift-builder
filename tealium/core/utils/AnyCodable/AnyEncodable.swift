@@ -72,7 +72,13 @@ extension _AnyEncodable {
         switch value {
             #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         case let number as NSNumber:
-            try encode(nsnumber: number, into: &container)
+            if Double(truncating: number) == Double.nan {
+                try container.encode("NaN")
+            } else if Double(truncating: number) == Double.infinity {
+                try container.encode("Infinity")
+            } else {
+                try encode(nsnumber: number, into: &container)
+            }
             #endif
         case is NSNull, is Void:
             try container.encodeNil()
@@ -101,7 +107,13 @@ extension _AnyEncodable {
         case let float as Float:
             try container.encode(float)
         case let double as Double:
-            try container.encode(double)
+            if double == Double.nan {
+                try container.encode("NaN")
+            } else if double == Double.infinity {
+                try container.encode("Infinity")
+            } else {
+                try container.encode(double)
+            }
         case let string as String:
             try container.encode(string)
         case let date as Date:
@@ -146,7 +158,13 @@ extension _AnyEncodable {
         case .floatType, .float32Type:
             try container.encode(nsnumber.floatValue)
         case .doubleType, .float64Type, .cgFloatType:
-            try container.encode(nsnumber.decimalValue)
+            if nsnumber == NSDecimalNumber.notANumber {
+                try container.encode("NaN")
+            } else if Double(truncating: nsnumber) == Double.infinity {
+                try container.encode("Infinity")
+            } else {
+                try container.encode(nsnumber.decimalValue)
+            }
             #if swift(>=5.0)
         @unknown default:
             fatalError("Data type not yet supported. Error in \(#file) at \(#line)")

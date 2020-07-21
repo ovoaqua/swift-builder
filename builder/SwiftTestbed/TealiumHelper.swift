@@ -75,16 +75,12 @@ class TealiumHelper: NSObject {
         ]
         
         config.hostedDataLayerKeys = ["hdl-test": "product_id"]
-        config.hostedDataLayerExpiry = (1, .minutes)
+        config.hostedDataLayerExpiry = (1, unit: .minutes)
         config.dispatchers = [Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
 //                              Dispatchers.RemoteCommands
         ]
-        
-//        config.dispatchValidators = HostedDataLayer(config: T##TealiumConfig, delegate: T##ModuleDelegate?, diskStorage: T##TealiumDiskStorageProtocol?, completion: T##(ModuleResult) -> Void)
-//        tealium?.dataLayerManager
-//        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
         #if os(iOS)
 //
@@ -182,13 +178,11 @@ class TealiumHelper: NSObject {
     }
 
     func track(title: String, data: [String: Any]?) {
-//        let dispatch = EventDispatch(title, dataLayer: data)
-        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"bcd234"])
+        let dispatch = EventDispatch(title, dataLayer: data)
         tealium?.track(dispatch)
     }
 
     func trackView(title: String, data: [String: Any]?) {
-//        let dispatch = ViewDispatch(title, dataLayer: data)
         let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"abc123"])
         tealium?.track(dispatch)
 
@@ -200,8 +194,6 @@ class TealiumHelper: NSObject {
 
     func leaveTrace() {
         self.tealium?.leaveTrace()
-//        self.tealium?.flushQueue()
-//        tealium?.dataLayer.
     }
     
     func crash() {

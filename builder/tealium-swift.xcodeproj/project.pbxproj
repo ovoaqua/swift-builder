@@ -2617,7 +2617,6 @@
 		D7187F1324768F5000CF0AB0 /* datalayer */ = {
 			isa = PBXGroup;
 			children = (
-				D7A853C724BC7FDB00784CCE /* hdl */,
 				D7187F1424768F5000CF0AB0 /* DataLayerTests.swift */,
 				D7187F1524768F5000CF0AB0 /* large-event-data.json */,
 				D7187F1624768F5000CF0AB0 /* SessionManagerTests.swift */,
@@ -2626,6 +2625,8 @@
 				D7187F1B24768F5000CF0AB0 /* MockDataLayerManager.swift */,
 				D7187F1C24768F5000CF0AB0 /* MockEventDataDiskStorage.swift */,
 				D7187F1D24768F5000CF0AB0 /* SessionStarterTests.swift */,
+				D7A853C324BC76D700784CCE /* HostedDataLayerTests.swift */,
+				D7D0BF3124BF480A006BEC88 /* MockHDLDiskStorage.swift */,
 			);
 			path = datalayer;
 			sourceTree = "<group>";
@@ -2897,15 +2898,6 @@
 				D7FE15A022E61080000ABF56 /* TealiumDispatchQueueExtensions.swift */,
 			);
 			path = dispatchmanager;
-			sourceTree = "<group>";
-		};
-		D7A853C724BC7FDB00784CCE /* hdl */ = {
-			isa = PBXGroup;
-			children = (
-				D7A853C324BC76D700784CCE /* HostedDataLayerTests.swift */,
-				D7D0BF3124BF480A006BEC88 /* MockHDLDiskStorage.swift */,
-			);
-			path = hdl;
 			sourceTree = "<group>";
 		};
 		D7AA280222D780B500254ADB /* utils */ = {
