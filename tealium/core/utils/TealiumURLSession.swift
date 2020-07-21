@@ -35,15 +35,17 @@ extension URLSession: URLSessionProtocol {
                 completionHandler(.failure(error))
                 return
             }
-            if let response = response as? HTTPURLResponse {
-                let status = response.statusCode
-                guard (200...299).contains(status) else {
-                    completionHandler(.failure(HTTPError.serverSideError(status)))
-                    return
-                }
-                completionHandler(.success((response, data)))
+            guard let response = response as? HTTPURLResponse else {
+                completionHandler(.failure(HTTPError.unknown))
+                return
             }
-            completionHandler(.failure(HTTPError.unknown))
+
+            let status = response.statusCode
+            guard (200...299).contains(status) else {
+                completionHandler(.failure(HTTPError.serverSideError(status)))
+                return
+            }
+            completionHandler(.success((response, data)))
         }
     }
 

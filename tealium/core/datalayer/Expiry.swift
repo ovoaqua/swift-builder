@@ -31,13 +31,22 @@ public enum Expiry {
             components.setValue(100, for: .year)
             return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
         case .afterCustom(let (unit, value)):
-            components.setValue(value, for: map(unit))
+            components.setValue(value, for: unit.component)
             return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
         }
     }
 
-    private func map(_ unit: TimeUnit) -> Calendar.Component {
-        switch unit {
+}
+
+public enum TimeUnit {
+    case minutes
+    case hours
+    case days
+    case months
+    case years
+
+    public var component: Calendar.Component {
+        switch self {
         case .minutes:
             return .minute
         case .hours:
@@ -50,13 +59,4 @@ public enum Expiry {
             return .year
         }
     }
-
-}
-
-public enum TimeUnit {
-    case minutes
-    case hours
-    case days
-    case months
-    case years
 }

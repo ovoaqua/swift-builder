@@ -14,7 +14,6 @@ import XCTest
 class HostedDataLayerTests: XCTestCase {
     
     static var shouldRetryExpectation: XCTestExpectation!
-    static var badDataExpectation: XCTestExpectation!
     
     var config: TealiumConfig {
         let config = TealiumConfig(account: "tealiummobile", profile: "demo", environment: "dev")
@@ -54,16 +53,24 @@ class HostedDataLayerTests: XCTestCase {
         XCTAssertEqual(hostedDataLayer.cache!.last!, cacheItem)
         XCTAssertFalse(hostedDataLayer.cache!.contains(firstItem)) // first item was removed
     }
-//
-//    func testRetryOnFailure() {
-//        let expectation = self.expectation(description: "testRetryOnFailure")
-//        let urlSession = HDLURLSessionFailure()
-//        let hostedDataLayer = HostedDataLayer(config: config, urlSession: urlSession)
-//        hostedDataLayer.requestData(for: URL(string: "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/abc123.json")!)
-//        // expectation fulfilled in URLSession when retries is incremented and second request is made by HDL manager
-//        self.wait(for: [expectation], timeout: 5.0)
-//
-//    }
+    
+    func testCacheItemsExpire() {
+        let diskStorage = MockHDLDiskStorageExpiringCache()
+        XCTAssertEqual(diskStorage.mockCache.count, 9)
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: diskStorage) { _ in }
+        hostedDataLayer.expireCache(referenceDate: diskStorage.referenceDate!)
+        XCTAssertEqual(diskStorage.mockCache.count, 5)
+    }
+    
+    func testCacheItemsExpireOnShouldQueue() {
+        let diskStorage = MockHDLDiskStorageExpiringCache()
+        XCTAssertEqual(diskStorage.mockCache.count, 9)
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: diskStorage) { _ in }
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
+        XCTAssertEqual(diskStorage.mockCache.count, 1)
+    }
+
     func testRetryOnHTTPError() {
         HostedDataLayerTests.shouldRetryExpectation = self.expectation(description: "testRetryOnHTTPError")
         let retriever = HostedDataLayerRetriever()
@@ -73,12 +80,11 @@ class HostedDataLayerTests: XCTestCase {
         hostedDataLayer.retriever = retriever
         let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
         _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
-        self.wait(for: [HostedDataLayerTests.shouldRetryExpectation], timeout: 5.0)
+        self.wait(for: [HostedDataLayerTests.shouldRetryExpectation], timeout: 500.0)
         
     }
     
     func testNoRetryIfUnableToDecode() {
-//        HostedDataLayerTests.shouldRetryExpectation = self.expectation(description: "testRetryOnHTTPError")
         let retriever = HostedDataLayerRetriever()
         let session = MockURLSessionBadResponse()
         retriever.session = session
@@ -86,13 +92,22 @@ class HostedDataLayerTests: XCTestCase {
         hostedDataLayer.retriever = retriever
         let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
         _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
-//        self.wait(for: [HostedDataLayerTests.shouldRetryExpectation], timeout: 5.0)
-        
+        XCTAssertTrue(hostedDataLayer.failingDataLayerItems.contains("abc123"), "unexpected success")
+    }
+    
+    func testCacheItemAddedOnSuccessfulResponse() {
+        let retriever = HostedDataLayerRetriever()
+        let session = MockURLSessionURLSuccess()
+        retriever.session = session
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageEmptyCache()) { _ in }
+        hostedDataLayer.retriever = retriever
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
+        XCTAssertNotNil(hostedDataLayer.cache!["abc123"]!, "Cache did not contain expected cache item")
     }
     
     
     func testNoRetryIfEmptyResponse() {
-//        HostedDataLayerTests.shouldRetryExpectation = self.expectation(description: "testRetryOnHTTPError")
         let retriever = HostedDataLayerRetriever()
         let session = MockURLSessionEmptyResponse()
         retriever.session = session
@@ -100,20 +115,9 @@ class HostedDataLayerTests: XCTestCase {
         hostedDataLayer.retriever = retriever
         let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
         _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
-//        self.wait(for: [HostedDataLayerTests.shouldRetryExpectation], timeout: 5.0)
+        XCTAssertTrue(hostedDataLayer.failingDataLayerItems.contains("abc123"), "unexpected success")
         
     }
-    
-//
-//    func testTrackingCallSentWithNoDataIfMaxRetriesReached() {
-//        let expectation = self.expectation(description: "testRetryOnFailure")
-//        let urlSession = HDLURLSessionFailure()
-//        let hostedDataLayer = HostedDataLayer(config: config, urlSession: urlSession)
-//        hostedDataLayer.requestData(url: URL(string: "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/abc123.json")!)
-//        // expectation fulfilled in ModuleDelegate when tracking call is sent successfully with no HDL data
-//        self.wait(for: [expectation], timeout: 5.0)
-//    }
-//
     
     func testRetrieverReturnsFailureIfBadResponse() {
         let retriever = HostedDataLayerRetriever()
@@ -167,7 +171,7 @@ class HostedDataLayerTests: XCTestCase {
         let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageEmptyCache()) { _ in }
         XCTAssertTrue((hostedDataLayer.shouldQueue(request: dispatch.trackRequest).0), "Should queue returned false unexpectedly")
     }
-//
+
     func testShouldQueueReturnsFalseWhenDispatchContainsRequiredKeysAndCachedDataAvailable() {
         let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
         let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageFullCache()) { _ in }
@@ -223,16 +227,6 @@ class MockHDLRetrieverFailingRequest: HostedDataLayerRetrieverProtocol {
     }
     
 }
-
-
-//class MockHDLRetrieverSuccessfulRequest: HostedDataLayerRetrieverProtocol {
-//    var session: URLSessionProtocol
-//    
-//    func getData(for url: URL, completion: @escaping ((Result<[String : Any], Error>) -> Void)) {
-//
-//    }
-//
-//}
 
 
 class MockURLSessionURLError: URLSessionProtocol {

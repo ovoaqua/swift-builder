@@ -25,6 +25,7 @@ public enum TealiumValue {
     public static let defaultBatchExpirationDays = 7
     public static let defaultMaxQueueSize = 40
     public static let hdlCacheSizeMax = 50
+    public static let defaultHDLExpiry: (Int, unit: TimeUnit) = (7, unit: .days)
 }
 
 public enum ModuleNames {
@@ -122,6 +123,7 @@ public enum TealiumKey {
     public static let dispatchers = "dispatchers"
     static let lifecycleAutotrackingEnabled = "enable_lifecycle_autotracking"
     static let hostedDataLayerKeys = "hosted_data_layer_keys"
+    static let hostedDataLayerExpiry = "hosted_data_layer_expiry"
 }
 
 public enum TealiumTrackType {

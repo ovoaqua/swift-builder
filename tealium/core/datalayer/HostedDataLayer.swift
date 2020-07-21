@@ -14,91 +14,13 @@ protocol HostedDataLayerProtocol: DispatchValidator, Collector {
     func getURL(for dispatch: TealiumTrackRequest) -> URL?
 }
 
-struct HostedDataLayerCacheItem: Codable, Equatable {
-    static func == (lhs: HostedDataLayerCacheItem, rhs: HostedDataLayerCacheItem) -> Bool {
-        if let lhsData = lhs.data, let rhsData = rhs.data {
-            return lhs.id == rhs.id && lhsData == rhsData
-        } else {
-            return lhs.id == rhs.id
-        }
-    }
-
-    var id: String
-    var data: [String: Any]?
-    var retrievalDate: Date?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case data
-        case retrievalDate
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        if let data = self.data?.encodable {
-            try container.encode(id, forKey: .id)
-            try container.encode(data, forKey: .data)
-            try container.encode(retrievalDate, forKey: .retrievalDate)
-        }
-    }
-
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        let id = try values.decode(String.self, forKey: .id)
-        if let cacheItem = try values.decode(AnyDecodable.self, forKey: .data).value as? [String: Any] {
-            self.id = id
-            self.data = cacheItem
-            self.retrievalDate = try values.decode(Date?.self, forKey: .retrievalDate) ?? Date()
-        } else {
-            throw HostedDataLayerError.unableToDecodeData
-        }
-    }
-
-    init(id: String,
-         data: [String: Any]) {
-        self.id = id
-        self.data = data
-        self.retrievalDate = Date()
-    }
-}
-
-extension Array where Element == HostedDataLayerCacheItem {
-    internal subscript(_ id: String) -> [String: Any]? {
-        self.first { $0.id == id }?.data
-    }
-}
-
-public extension TealiumConfig {
-
-    var hostedDataLayerKeys: [String: String]? {
-        get {
-            options[TealiumKey.hostedDataLayerKeys] as? [String: String]
-        }
-
-        set {
-            options[TealiumKey.hostedDataLayerKeys] = newValue
-        }
-    }
-
-    var hostedDataLayerTimeToLive: Int? {
-        get {
-            options["ttl"] as? Int
-        }
-
-        set {
-            options["ttl"] = newValue
-        }
-    }
-
-}
-
 public class HostedDataLayer: HostedDataLayerProtocol {
     var retriever: HostedDataLayerRetrieverProtocol = HostedDataLayerRetriever()
 
-    var tempCache: [HostedDataLayerCacheItem]? = []
+    var cacheBacking: [HostedDataLayerCacheItem]? = []
     var cache: [HostedDataLayerCacheItem]? {
         get {
-            self.tempCache
+            return cacheBacking
         }
 
         set {
@@ -107,7 +29,6 @@ public class HostedDataLayer: HostedDataLayerProtocol {
                 while newValue.count > TealiumValue.hdlCacheSizeMax {
                     newValue.removeFirst()
                 }
-                newValue = expireCache(newValue)
                 self.tempCache = newValue
                 self.diskStorage.save(newValue, completion: nil)
             }
@@ -129,27 +50,26 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "hdl")
         if let cache = self.diskStorage.retrieve(as: [HostedDataLayerCacheItem].self) {
-            self.tempCache = cache
+            self.cache = cache
         }
     }
 
-    func expireCache(_ cacheItems: [HostedDataLayerCacheItem]) -> [HostedDataLayerCacheItem] {
-
-        if let expiry = config.hostedDataLayerTimeToLive {
-            let currentDate = Date()
+    func expireCache(referenceDate date: Date = Date()) {
+        let expiry = config.hostedDataLayerExpiry
+        if let cache = self.cache,
+           !cache.isEmpty {
             var components = DateComponents()
             components.calendar = Calendar.autoupdatingCurrent
-            components.setValue(-expiry, for: .hour)
-            let sinceDate = Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)
+            components.setValue(-expiry.0, for: expiry.unit.component)
+            let sinceDate = Calendar(identifier: .gregorian).date(byAdding: components, to: date)
 
-            return cacheItems.filter({
+            self.cache = cache.filter({
                 guard let sinceDate = sinceDate else {
                     return true
                 }
                 return $0.retrievalDate ?? Date() > sinceDate
             })
         }
-        return cacheItems
     }
 
     public func shouldQueue(request: TealiumRequest) -> (Bool, [String: Any]?) {
@@ -178,31 +98,14 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return (false, ["hosted_data_layer_error": "Data layer item \(itemId).json does not exist"])
         }
 
+        expireCache()
+
         if let existingCache = cache?["\(itemId)"] {
             processed.append(dispatch.uuid)
             return(false, existingCache)
         }
 
-        // TODO: Expiry for data layer cache for each item - session or custom days
-
-        // TODO: Keep track of requests for specific cache items. If it fails after 5 attempts, always allow the request to complete. If empty response received, always release.
         // What happens if queue is released due to a release event but there's no data? Do we save the request for later and send it out of order?
-        //        retriever.getData(for: url) { result in
-        //            switch result {
-        //            case .failure(let error):
-        //                if error as? HostedDataLayerError == HostedDataLayerError.unableToDecodeData {
-        //                    self.processed.append(dispatch.uuid)
-        //                    self.failingDataLayerItems.insert("\(itemId)")
-        //                    return
-        //                }
-        //                self.failingRequests[dispatch.uuid] = self.failingRequests[dispatch.uuid] ?? 0
-        //                self.failingRequests[dispatch.uuid]? += 1
-        //                print(error.localizedDescription)
-        //            case .success(let data):
-        //                let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)
-        //                self.cache?.append(cacheItem)
-        //            }
-        //        }
 
         retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: 5)
 
@@ -223,10 +126,11 @@ public class HostedDataLayer: HostedDataLayerProtocol {
                     return
                 }
                 if current < maxRetries {
-                    self.retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: maxRetries, current: current + 1)
+                    TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: .now() + Double(Int.random(in: 10...30))) {
+                        self.retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: maxRetries, current: current + 1)
+                    }
                 } else {
                     self.failingDataLayerItems.insert(itemId)
-                    print(error.localizedDescription)
                 }
             case .success(let data):
                 let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)

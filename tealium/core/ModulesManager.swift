@@ -24,17 +24,22 @@ public class ModulesManager {
     var originalConfig: TealiumConfig
     var remotePublishSettingsRetriever: TealiumPublishSettingsRetriever?
     var collectorTypes: [Collector.Type] {
+        var enabledCollectors = [Collector.Type]()
         if let optionalCollectors = config.collectors {
-            return [AppDataModule.self,
-                    ConsentManagerModule.self,
+            enabledCollectors = [AppDataModule.self,
+                                 ConsentManagerModule.self,
             ] + optionalCollectors
         } else {
-            return [AppDataModule.self,
-                    DeviceDataModule.self,
-                    ConsentManagerModule.self,
-                    ConnectivityModule.self,
+            enabledCollectors = [AppDataModule.self,
+                                 DeviceDataModule.self,
+                                 ConsentManagerModule.self,
+                                 ConnectivityModule.self,
             ]
         }
+        if config.hostedDataLayerKeys != nil {
+            enabledCollectors += [HostedDataLayer.self]
+        }
+        return enabledCollectors
     }
     var collectors = [Collector]()
     var dispatchValidators = [DispatchValidator]() {

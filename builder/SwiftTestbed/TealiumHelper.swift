@@ -52,7 +52,7 @@ class TealiumHelper: NSObject {
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.shouldUseRemotePublishSettings = false
-        config.batchingEnabled = true
+        config.batchingEnabled = false
         config.batchSize = 5
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
@@ -64,7 +64,7 @@ class TealiumHelper: NSObject {
         config.collectors = [
             MyDateCollector.self,
 //            Collectors.Attribution,
-            Collectors.AutoTracking,
+//            Collectors.AutoTracking,
                              Collectors.Lifecycle,
 //                             Collectors.AppData,
                              Collectors.Connectivity,
@@ -72,11 +72,10 @@ class TealiumHelper: NSObject {
                              Collectors.Device,
 //                             Collectors.Location,
                              Collectors.VisitorService,
-            HostedDataLayer.self,
         ]
         
         config.hostedDataLayerKeys = ["hdl-test": "product_id"]
-        config.hostedDataLayerTimeToLive = 1
+        config.hostedDataLayerExpiry = (1, .minutes)
         config.dispatchers = [Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
@@ -184,7 +183,7 @@ class TealiumHelper: NSObject {
 
     func track(title: String, data: [String: Any]?) {
 //        let dispatch = EventDispatch(title, dataLayer: data)
-        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"bcsd234"])
+        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"bcd234"])
         tealium?.track(dispatch)
     }
 
