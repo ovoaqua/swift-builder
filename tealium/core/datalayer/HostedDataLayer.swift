@@ -105,8 +105,6 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, existingCache)
         }
 
-        // What happens if queue is released due to a release event but there's no data? Do we save the request for later and send it out of order?
-
         retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: 5)
 
         return (true, ["queue_reason": "Awaiting HDL response"])
