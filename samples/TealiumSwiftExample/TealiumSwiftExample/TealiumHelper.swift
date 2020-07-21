@@ -34,7 +34,7 @@ class TealiumHelper {
     var tealium: Tealium?
     
     // set this to change the example that loads - JSInterfaceExample
-    private var exampleType: WebViewExampleType = .withUtag
+    public var exampleType: WebViewExampleType = .withUtag
 
     // MARK: Tealium Initilization
     private init() {
