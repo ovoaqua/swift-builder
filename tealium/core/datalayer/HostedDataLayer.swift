@@ -11,7 +11,7 @@ import Foundation
 protocol HostedDataLayerProtocol: DispatchValidator {
     var cache: [HostedDataLayerCacheItem]? { get set }
     var retriever: HostedDataLayerRetrieverProtocol { get set }
-    func getURL(for dispatch: TealiumTrackRequest) -> URL?
+    func getURL(for itemId: String) -> URL?
 }
 
 public class HostedDataLayer: HostedDataLayerProtocol {
@@ -82,15 +82,15 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, nil)
         }
 
-        guard let url = getURL(for: dispatch) else {
-            return(false, nil)
-        }
-
         guard let dispatchKey = self.extractKey(from: dispatch) else {
             return(false, nil)
         }
 
-        guard let itemId = dispatch.trackDictionary[dispatchKey] as? String else {
+        guard let itemId = extractLookupValue(for: dispatchKey, dispatch: dispatch) else {
+            return(false, nil)
+        }
+
+        guard let url = getURL(for: itemId) else {
             return(false, nil)
         }
 
@@ -160,16 +160,31 @@ public class HostedDataLayer: HostedDataLayerProtocol {
         return dispatchKey
     }
 
-    func getURL(for dispatch: TealiumTrackRequest) -> URL? {
-        guard let dispatchKey = extractKey(from: dispatch) else {
+    func extractLookupValue(for key: String,
+                            dispatch: TealiumTrackRequest) -> String? {
+        var itemId = ""
+
+        guard let lookupValue = dispatch.trackDictionary[key] else {
             return nil
         }
 
-        guard let lookupValue = dispatch.trackDictionary[dispatchKey] else {
-            return nil
+        if let arrayItem = lookupValue as? [String] {
+            guard arrayItem.count > 0 else {
+                return nil
+            }
+            itemId = arrayItem[0]
+        } else if let stringItem = lookupValue as? String {
+            itemId = stringItem
         }
 
-        return URL(string: "\(baseURL)\(lookupValue).json")
+        guard itemId.isEmpty == false else {
+            return nil
+        }
+        return itemId
+    }
+
+    func getURL(for itemId: String) -> URL? {
+        return URL(string: "\(baseURL)\(itemId).json")
     }
 
 }

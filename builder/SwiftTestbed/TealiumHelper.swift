@@ -75,7 +75,7 @@ class TealiumHelper: NSObject {
         ]
         
         config.hostedDataLayerKeys = ["hdl-test": "product_id"]
-        config.hostedDataLayerExpiry = (1, unit: .minutes)
+//        config.hostedDataLayerExpiry = (1, unit: .minutes)
         config.dispatchers = [Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
@@ -178,12 +178,13 @@ class TealiumHelper: NSObject {
     }
 
     func track(title: String, data: [String: Any]?) {
-        let dispatch = EventDispatch(title, dataLayer: data)
+        let dispatch = EventDispatch("hdl-test", dataLayer: ["product_id":"bcd234"])
+//        let dispatch = EventDispatch(title, dataLayer: data)
         tealium?.track(dispatch)
     }
 
     func trackView(title: String, data: [String: Any]?) {
-        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":"abc123"])
+        let dispatch = ViewDispatch("hdl-test", dataLayer: ["product_id":["abc123"]])
         tealium?.track(dispatch)
 
     }

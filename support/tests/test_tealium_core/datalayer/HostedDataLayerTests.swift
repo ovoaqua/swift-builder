@@ -34,14 +34,14 @@ class HostedDataLayerTests: XCTestCase {
 
     override func tearDown() { }
     
-    func testGetURLForDispatch() {
+    func testGetURLForItemId() {
         let config = self.config
     
         let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: nil) { _ in }
         
-        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": "abc123"])
+        let itemId = "abc123"
         
-        XCTAssertEqual(hostedDataLayer.getURL(for: dispatch.trackRequest)!, URL(string: "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/abc123.json")!)
+        XCTAssertEqual(hostedDataLayer.getURL(for: itemId)!, URL(string: "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/abc123.json")!)
     }
 
     func testCacheExpiresWhenCacheSizeExceeded() {
@@ -106,6 +106,16 @@ class HostedDataLayerTests: XCTestCase {
         XCTAssertNotNil(hostedDataLayer.cache!["abc123"]!, "Cache did not contain expected cache item")
     }
     
+    func testCacheItemAddedOnSuccessfulResponseArray() {
+        let retriever = HostedDataLayerRetriever()
+        let session = MockURLSessionURLSuccess()
+        retriever.session = session
+        let hostedDataLayer = HostedDataLayer(config: config, delegate: nil, diskStorage: MockHDLDiskStorageEmptyCache()) { _ in }
+        hostedDataLayer.retriever = retriever
+        let dispatch = ViewDispatch("product_view", dataLayer: ["product_id": ["abc123"]])
+        _ = hostedDataLayer.shouldQueue(request: dispatch.trackRequest)
+        XCTAssertNotNil(hostedDataLayer.cache!["abc123"]!, "Cache did not contain expected cache item")
+    }
     
     func testNoRetryIfEmptyResponse() {
         let retriever = HostedDataLayerRetriever()
