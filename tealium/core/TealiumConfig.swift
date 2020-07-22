@@ -17,17 +17,6 @@ open class TealiumConfig {
     public let dataSource: String?
     public lazy var options = [String: Any]()
 
-    // Set to false to avoid collecting optional default data (AppData, DeviceData)
-    public var shouldCollectTealiumData: Bool {
-        get {
-            options[TealiumKey.shouldCollectTealiumData] as? Bool ?? true
-        }
-
-        set {
-            options[TealiumKey.shouldCollectTealiumData] = newValue
-        }
-    }
-
     /// Intended for internal use only. Provides access to the internal Tealium logger instance.
     public var logger: TealiumLoggerProtocol? {
         get {

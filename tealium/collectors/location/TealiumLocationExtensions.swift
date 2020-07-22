@@ -17,7 +17,7 @@ extension Tealium {
     /// Returns a LocationManager instance
     ///
     /// - Returns: `TealiumLocation?` instance (nil if disabled)
-    var location: TealiumLocationManager? {
+    public var location: TealiumLocationManager? {
         let module = (zz_internal_modulesManager?.modules.first { $0 is LocationModule }) as? LocationModule
 
         return module?.tealiumLocationManager

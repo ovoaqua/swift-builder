@@ -59,7 +59,7 @@ public extension DataLayer {
     }
 
     /// Checks if the session has expired in storage, if so, refreshes the session and saves the new data.
-    func sessionRefresh() {
+    func refreshSession() {
         guard let existingSessionId = sessionId else {
             numberOfTracks = 0
             refreshSessionData()

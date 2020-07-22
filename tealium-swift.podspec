@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-                   Supports Tealium's iQ and UDH suite of products on iOS, MacOS, tvOS and watchOS
+                   Supports Tealium's iQ and UDH suite of products on iOS, macOS, tvOS and watchOS
                    DESC
 
   s.homepage     = "https://github.com/Tealium/tealium-swift"
@@ -95,7 +95,6 @@ Pod::Spec.new do |s|
   s.subspec "TealiumFull" do |full|
     full.source_files  = "tealium/core/**/*","tealium/collectors/**/*","tealium/dispatchers/**/*","tealium/scripts/*"
     full.ios.exclude_files = "tealium/scripts/*", "tealium/collectors/crash/*"
-    # full.ios.dependency "TealiumCrashReporter" ??
     full.tvos.exclude_files = "tealium/dispatchers/tagmanagement/*","tealium/dispatchers/remotecommands/*","tealium/collectors/attribution/*","tealium/scripts/*","tealium/collectors/location/*" 
     full.watchos.exclude_files = "tealium/dispatchers/tagmanagement/*","tealium/collectors/autotracking/*","tealium/dispatchers/remotecommands/*","tealium/collectors/attribution/*","tealium/scripts/*","tealium/collectors/location/*"
     full.osx.exclude_files = "tealium/dispatchers/tagmanagement/*","tealium/collectors/autotracking/*","tealium/dispatchers/remotecommands/*","tealium/collectors/attribution/*","tealium/scripts/*","tealium/collectors/location/*"
@@ -106,110 +105,49 @@ Pod::Spec.new do |s|
     core.source_files  = "tealium/core/**/*"
   end
 
-  # s.subspec "TealiumAppData" do |appdata|
-  #   appdata.source_files = "tealium/appdata/*"
-  #   appdata.dependency "tealium-swift/Core"
-  # end
-
-  s.subspec "TealiumAttribution" do |attribution|
+  s.subspec "Attribution" do |attribution|
     attribution.platform = :ios, "9.0"
     attribution.source_files = "tealium/collectors/attribution/*"
     attribution.dependency "tealium-swift/Core"
   end
 
-  s.subspec "TealiumAutotracking" do |autotracking|
+  s.subspec "Autotracking" do |autotracking|
     autotracking.ios.deployment_target = "9.0"
     autotracking.tvos.deployment_target = "9.0"
     autotracking.source_files = "tealium/collectors/autotracking/*"
     autotracking.dependency "tealium-swift/Core"
   end
 
-  s.subspec "TealiumCollect" do |collect|
+  s.subspec "Collect" do |collect|
     collect.source_files = "tealium/dispatchers/collect/*"
     collect.dependency "tealium-swift/Core"
   end
 
-  # s.subspec "TealiumConnectivity" do |connectivity|
-  #   connectivity.ios.deployment_target = "9.0"
-  #   connectivity.osx.deployment_target = "10.11"
-  #   connectivity.tvos.deployment_target = "9.0"
-  #   connectivity.source_files = "tealium/connectivity/*"
-  #   connectivity.dependency "tealium-swift/Core"
-  # end
-
-  # s.subspec "TealiumConsentManager" do |consentmanager|
-  #   consentmanager.source_files = "tealium/consentmanager/*"
-  #   consentmanager.dependency "tealium-swift/Core"
-  # end
-
-  # s.subspec "TealiumDelegate" do |delegate|
-  #   delegate.source_files = "tealium/delegate/*"
-  #   delegate.dependency "tealium-swift/Core"
-  # end
-
-  # s.subspec "TealiumDeviceData" do |devicedata|
-  #   devicedata.source_files = "tealium/devicedata/*.swift"
-  #   devicedata.dependency "tealium-swift/Core"
-  #   devicedata.resources = "tealium/devicedata/device-names.json"
-  # end
-
-  # s.subspec "TealiumDispatchQueue" do |dispatchqueue|
-  #   dispatchqueue.source_files = "tealium/dispatchqueue/*"
-  #   dispatchqueue.dependency "tealium-swift/Core"
-  # end
-
-  s.subspec "TealiumLifecycle" do |lifecycle|
+  s.subspec "Lifecycle" do |lifecycle|
     lifecycle.source_files = "tealium/collectors/lifecycle/*"
     lifecycle.dependency "tealium-swift/Core"
   end
 
-  s.subspec "TealiumLocation" do |location|
+  s.subspec "Location" do |location|
     location.platform = :ios, "9.0"
     location.source_files = "tealium/collectors/location/*"
     location.dependency "tealium-swift/Core"
   end
 
-  # s.subspec "TealiumLogger" do |logger|
-  #   logger.source_files = "tealium/logger/*"
-  #   logger.dependency "tealium-swift/Core"
-  # end
-
-  s.subspec "TealiumRemoteCommands" do |remotecommands|
+  s.subspec "RemoteCommands" do |remotecommands|
     remotecommands.platform = :ios, "9.0"
     remotecommands.source_files = "tealium/dispatchers/remotecommands/*"
     remotecommands.dependency "tealium-swift/Core"
   end
 
-  s.subspec "TealiumTagManagement" do |tagmanagement|
+  s.subspec "TagManagement" do |tagmanagement|
     tagmanagement.platform = :ios, "9.0"
     tagmanagement.source_files = "tealium/dispatchers/tagmanagement/*"
     tagmanagement.dependency "tealium-swift/Core"
   end
 
-  # s.subspec "TealiumPersistentData" do |persistentdata|
-  #   persistentdata.source_files = "tealium/persistentdata/*"
-  #   persistentdata.dependency "tealium-swift/Core"
-  # end
-
-
-  # s.subspec "TealiumVolatileData" do |volatiledata|
-  #   volatiledata.source_files = "tealium/volatiledata/*"
-  #   volatiledata.dependency "tealium-swift/Core"
-  # end
-
-  s.subspec "TealiumVisitorService" do |visitorservice|
+  s.subspec "VisitorService" do |visitorservice|
     visitorservice.source_files = "tealium/collectors/visitorservice/*"
     visitorservice.dependency "tealium-swift/Core"
   end
-
-  # s.subspec "Crash" do |crash|
-  #   crash.platform = :ios, "9.0"
-  #   crash.ios.source_files = "tealium/collectors/crash/*"
-  #   crash.ios.dependency "tealium-swift/Core"
-  #   crash.ios.dependency "TealiumCrashReporter"
-  #   crash.tvos.exclude_files = "tealium/collectors/crash/*"
-  #   crash.watchos.exclude_files = "tealium/collectors/crash/*"
-  #   crash.osx.exclude_files = "tealium/collectors/crash/*"
-  # end
-
 end

@@ -4,15 +4,17 @@ options:
   carthageBuildPath: ../Carthage/Build
 configs:
   Release: release
-  Debug: debug  
+  Debug: debug
+groups:
+  - [core, collectors, dispatchers]
 targets:
   TealiumAttribution:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/attribution
+      - path: tealium/collectors/attribution
         buildPhase: sources
-      - path: tealium/attribution
+      - path: tealium/collectors/attribution
         buildPhase: headers
     settings:
       base:
@@ -34,6 +36,7 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
+      #- support/tests
       - path: support/tests/test_tealium_attribution
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
@@ -41,7 +44,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumAttribution
@@ -49,9 +52,10 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/autotracking
+      - path: tealium/collectors/autotracking
         buildPhase: sources
-      - path: tealium/autotracking
+        destination: tealium/collectors/autotracking
+      - path: tealium/collectors/autotracking
         buildPhase: headers
     settings:
       base:
@@ -80,7 +84,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumAutotracking
@@ -88,9 +92,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/Dispatchers/collect
+      - path: tealium/dispatchers/collect
         buildPhase: sources
-      - path: tealium/Dispatchers/collect
+      - path: tealium/dispatchers/collect
         buildPhase: headers
     settings:
       base:
@@ -121,7 +125,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumCollect
@@ -136,7 +140,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumCollect
@@ -151,7 +155,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumCollect
@@ -159,10 +163,11 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/Core
+      - tealium/core
+      - path: tealium/core
         buildPhase: sources
-      - path: tealium/Core
-        buildPhase: headers       
+      - path: tealium/core
+        buildPhase: headers
     settings:
       base:
           SDKROOT: ""
@@ -183,12 +188,12 @@ targets:
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
-      - path: support/tests/test_tealium_core/large-event-data.json
-        buildPhase: resources        
+      - path: support/tests/test_tealium_core/datalayer/large-event-data.json
+        buildPhase: resources
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""     
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumAttribution
       - target: TealiumAutotracking
@@ -206,12 +211,12 @@ targets:
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
-      - path: support/tests/test_tealium_core/large-event-data.json
-        buildPhase: resources        
+      - path: support/tests/test_tealium_core/datalayer/large-event-data.json
+        buildPhase: resources
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""          
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumCollect
@@ -225,69 +230,26 @@ targets:
         buildPhase: sources
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
-      - path: support/tests/test_tealium_core/large-event-data.json
-        buildPhase: resources            
+      - path: support/tests/test_tealium_core/datalayer/large-event-data.json
+        buildPhase: resources
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""          
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumAutotracking
       - target: TealiumCore
       - target: TealiumCollect
       - target: TealiumLifecycle
-      - target: TealiumVisitorService     
-  # TealiumCrash:
-  #   type: framework
-  #   platform: iOS
-  #   sources:
-  #     - path: tealium/Collectors/crash
-  #       buildPhase: sources
-  #     - path: tealium/Collectors/crash
-  #       buildPhase: headers
-  #   settings:
-  #     base:
-  #         SDKROOT: ""
-  #         INFOPLIST_FILE: "TealiumCrash-Info.plist"
-  #         SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash
-  #         SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
-  #         TARGETED_DEVICE_FAMILY: "1,2,3,4"
-  #         IPHONEOS_DEPLOYMENT_TARGET: 9.0
-  #         FRAMEWORK_SEARCH_PATHS: "$(PROJECT_DIR)/../Carthage/Build/iOS"
-  #     configs:
-  #       debug:
-  #         SWIFT_ACTIVE_COMPILATION_CONDITIONS: crash DEBUG
-  #   dependencies:
-  #     - target: TealiumCore
-  #     - carthage: TealiumCrashReporteriOS
-  #   info:
-  #     path: builder/TealiumCrash-Info.plist
-  # TealiumCrashTests-iOS:
-  #   type: bundle.unit-test
-  #   platform: iOS
-  #   directlyEmbedCarthageDependencies: false
-  #   sources:
-  #     - path: support/tests/test_tealium_crash
-  #       buildPhase: sources
-  #       excludes:
-  #         - "resources/*" 
-  #     - path: support/tests/test_tealium_crash/resources     
-  #       buildPhase: resources
-  #   settings:
-  #     base:
-  #       CODE_SIGN_STYLE: "Manual"
-  #       DEVELOPMENT_TEAM: ""         
-  #   dependencies:
-  #     - target: TealiumCrash
-  #       link: false
+      - target: TealiumVisitorService
   TealiumLifecycle:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/Collectors/lifecycle
+      - path: tealium/collectors/lifecycle
         buildPhase: sources
-      - path: tealium/Collectors/lifecycle
-        buildPhase: headers        
+      - path: tealium/collectors/lifecycle
+        buildPhase: headers
     settings:
       base:
           SDKROOT: ""
@@ -321,7 +283,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumLifecycle
@@ -340,7 +302,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumLifecycle
@@ -359,7 +321,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumLifecycle
@@ -367,9 +329,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/Collectors/location
+      - path: tealium/collectors/location
         buildPhase: sources
-      - path: tealium/Collectors/location
+      - path: tealium/collectors/location
         buildPhase: headers
     settings:
       base:
@@ -405,7 +367,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumLocation
@@ -413,9 +375,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/Dispatcher/remotecommands
+      - path: tealium/dispatchers/remotecommands
         buildPhase: sources
-      - path: tealium/Dispatcher/remotecommands
+      - path: tealium/dispatchers/remotecommands
         buildPhase: headers
     settings:
       base:
@@ -444,7 +406,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumRemoteCommands
@@ -452,9 +414,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/tagmanagement
+      - path: tealium/dispatchers/tagmanagement
         buildPhase: sources
-      - path: tealium/tagmanagement
+      - path: tealium/dispatchers/tagmanagement
         buildPhase: headers
     settings:
       base:
@@ -483,7 +445,7 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumTagManagement
@@ -491,9 +453,9 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: tealium/visitorservice
+      - path: tealium/collectors/visitorservice
         buildPhase: sources
-      - path: tealium/visitorservice
+      - path: tealium/collectors/visitorservice
         buildPhase: headers
     settings:
       base:
@@ -529,10 +491,12 @@ targets:
         buildPhase: resources
       - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
         buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
+        buildPhase: resources         
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumVisitorService
@@ -552,10 +516,12 @@ targets:
         buildPhase: resources
       - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
         buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
+        buildPhase: resources         
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumVisitorService
@@ -575,10 +541,12 @@ targets:
         buildPhase: resources
       - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
         buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
+        buildPhase: resources        
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
-        DEVELOPMENT_TEAM: ""         
+        DEVELOPMENT_TEAM: ""
     dependencies:
       - target: TealiumCore
       - target: TealiumVisitorService
@@ -608,18 +576,12 @@ schemes:
         TealiumCore: all
     run:
       config: Release
-  # TealiumCrash:
-  #   build:
-  #     targets:
-  #       TealiumCrash: all
-  #   run:
-  #     config: Release                                                
   TealiumLifecycle:
     build:
       targets:
         TealiumLifecycle: all
     run:
-      config: Release                                    
+      config: Release
   TealiumLocation:
     build:
       targets:
@@ -631,7 +593,7 @@ schemes:
       targets:
         TealiumRemoteCommands: all
     run:
-      config: Release                                    
+      config: Release
   TealiumTagManagement:
     build:
       targets:
@@ -643,8 +605,8 @@ schemes:
       targets:
         TealiumVisitorService: all
     run:
-      config: Release                                    
-  # TEST SCHEMES                     
+      config: Release
+  # TEST SCHEMES
   TealiumAttributionTests-iOS:
     build:
       targets:
@@ -724,17 +686,7 @@ schemes:
       targets:
         - TealiumCoreTests-tvOS
         - name: TealiumCoreTests-tvOS
-          parallelizable: true          
-  # TealiumCrashTests-iOS:
-  #   build:
-  #     targets:
-  #       TealiumCrashTests-iOS: [test]
-  #   test:
-  #     gatherCoverageData: true
-  #     targets:
-  #       - TealiumCrashTests-iOS
-  #       - name: TealiumCrashTests-iOS
-  #         parallelizable: true
+          parallelizable: true
   TealiumLifecycleTests-iOS:
     build:
       targets:

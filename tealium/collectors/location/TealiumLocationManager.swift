@@ -50,9 +50,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate {
             locationAccuracy = LocationKey.highAccuracy
         }
 
-        requestPermissions()
         clearMonitoredGeofences()
-        startLocationUpdates()
     }
 
     /// Builds a URL from a Tealium config pointing to a hosted JSON file on the Tealium DLE

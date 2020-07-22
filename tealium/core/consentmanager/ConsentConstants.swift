@@ -58,7 +58,7 @@ public enum TealiumConsentCategories: String, Codable {
     }
 
     /// - Returns: `[TealiumConsentCategories]` -  all currently-implemented consent categories
-    public static var allCategories: [TealiumConsentCategories] {
+    public static var all: [TealiumConsentCategories] {
         return [
             .analytics,
             .affiliates,

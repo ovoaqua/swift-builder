@@ -179,11 +179,13 @@ func copyPackage() {
 func copySourceFiles() {
     // Copy tealium folder over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
+    cleanctx.run(bash: "rm -rf tealium")
     cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/tealium ./")
     print("Tealium folder copied")
 
     // Copy unit tests folder over to public repo
     cleanctx.currentdirectory = publicRepoPath ?? ""
+    cleanctx.run(bash: "rm -rf support")
     cleanctx.run(bash: "rsync -arv \(builderRepoPath ?? "")/support ./")
     print("Support (unit tests) folder copied")
 }
@@ -205,6 +207,8 @@ func runTests() {
 
 func generateNewProject() {
     cleanctx.currentdirectory = publicRepoPath ?? ""
+    cleanctx.run(bash: "rm -rf builder")
+    cleanctx.run(bash: "mkdir builder")
     cleanctx.run(bash: "cp \(builderRepoPath ?? "")/project.yml ./")
     result = cleanctx.run(bash: "xcodegen generate -p ./builder")
     cleanctx.run(bash: "rm ./project.yml")
@@ -212,8 +216,9 @@ func generateNewProject() {
 }
 
 
-func removeUneccessaryFiles() {
-    cleanctx.run(bash: "rm -rf ./builder/TealiumCrash && rm -rf ./builder/TealiumSwift && rm -rf ./builder/docs && rm ./builder/README.md")
+func removeUnnecessaryFiles() {
+    cleanctx.currentdirectory = publicRepoPath ?? ""
+    cleanctx.run(bash: "rm -rf ./builder/TealiumCrash && rm -rf ./builder/TealiumSwift && rm -rf ./builder/docs && rm ./builder/README.md && rm -rf ./tealium/collectors/crash")
     print("Extra folders/files removed")
 }
 
@@ -249,9 +254,10 @@ func commitAndPush(_ version: String) {
             🎉🎉 All Done! 🎉🎉 Don't forget to do the following:
             1. Create a PR on both the builder and the public repos
             2. Once PR is merged...Create a Release on GitHub
-            3. Push to Cocoapods
-            4. Update documentation/release notes
-            5. Announce the new release in #support_mobile (slack)
+            3. Run the xcframeworks.sh script in the builder repo and upload the TealiumBinary.zip to the release
+            4. Push to Cocoapods
+            5. Update documentation/release notes
+            6. Announce the new release in #support_mobile (slack)
           """)
 
     // Remind them to publish release/tag on github <--script using github api // https://github.community/t5/How-to-use-Git-and-GitHub/How-to-create-full-release-from-command-line-not-just-a-tag/td-p/6895
@@ -281,12 +287,12 @@ guard let version = version else {
 }
 checkIfBranchAlreadyExists(version)
 copySourceFiles()
+removeUnnecessaryFiles()
 checkForNewModules(version)
 copyPackage()
 copyPodspec(version)
 commitAndPushToBuilder(version)
 generateNewProject()
-removeUneccessaryFiles()
 commitAndPush(version)
 
 RunLoop.main.run()

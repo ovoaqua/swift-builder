@@ -7,7 +7,7 @@
 //
 
 @testable import TealiumCore
-@testable import TealiumLogger
+//@testable import TealiumLogger
 import XCTest
 
 class TealiumLoggerTests: XCTestCase {
@@ -22,63 +22,49 @@ class TealiumLoggerTests: XCTestCase {
         super.tearDown()
     }
 
-    func testDescriptions() {
-        XCTAssertTrue(TealiumLogLevel.errors.description == "errors")
-        XCTAssertTrue(TealiumLogLevel.none.description == "none")
-        XCTAssertTrue(TealiumLogLevel.warnings.description == "warnings")
-        XCTAssertTrue(TealiumLogLevel.verbose.description == "verbose")
+    func testTealiumLogLevelError() {
+        let logLevel = TealiumLogLevel.error
+        let logger = TealiumLogger(config: testTealiumConfig)
+        let message = "test"
+        let logRequest = TealiumLogRequest(title: message, message: message, info: nil, logLevel: logLevel, category: .general)
+
+        XCTAssertTrue(message == logRequest.messages.first)
     }
 
-    func testFromString() {
-        XCTAssertTrue(TealiumLogLevel.fromString("errors") == TealiumLogLevel.errors)
-        XCTAssertTrue(TealiumLogLevel.fromString("none") == TealiumLogLevel.none)
-        XCTAssertTrue(TealiumLogLevel.fromString("warnings") == TealiumLogLevel.warnings)
-        XCTAssertTrue(TealiumLogLevel.fromString("verbose") == TealiumLogLevel.verbose)
+    func testTealiumLogLevelSilent() {
+        let logLevel = TealiumLogLevel.silent
+        let logger = TealiumLogger(config: testTealiumConfig)
+        let message = "test"
+        let logRequest = TealiumLogRequest(title: message, message: message, info: nil, logLevel: logLevel, category: .general)
+        
+        XCTAssertTrue(message == logRequest.messages.first)
     }
 
-    func testTealiumLogLevelErrors() {
-        let logLevel = TealiumLogLevel.errors
-        let logger = TealiumLogger(loggerId: "test", logLevel: logLevel)
+    func testTealiumLogLevelDebug () {
+        let logLevel = TealiumLogLevel.debug
+        let logger = TealiumLogger(config: testTealiumConfig)
         let message = "test"
-        let string = logger.log(message: message, logLevel: logLevel)
-
-        XCTAssertTrue(message == string)
+        let logRequest = TealiumLogRequest(title: message, message: message, info: nil, logLevel: logLevel, category: .general)
+        
+        XCTAssertTrue(message == logRequest.messages.first)
     }
 
-    func testTealiumLogLevelWarnings() {
-        let logLevel = TealiumLogLevel.warnings
-        let logger = TealiumLogger(loggerId: "test", logLevel: logLevel)
+    func testTealiumLogLevelFault () {
+        let logLevel = TealiumLogLevel.fault
+        let logger = TealiumLogger(config: testTealiumConfig)
         let message = "test"
-        let string = logger.log(message: message, logLevel: logLevel)
-
-        XCTAssertTrue(message == string)
+        let logRequest = TealiumLogRequest(title: message, message: message, info: nil, logLevel: logLevel, category: .general)
+        
+        XCTAssertTrue(message == logRequest.messages.first)
     }
-
-    func testTealiumLogLevelVerbose () {
-
-        let logLevel = TealiumLogLevel.verbose
-        let logger = TealiumLogger(loggerId: "test", logLevel: logLevel)
+    
+    func testTealiumLogLevelInfo () {
+        let logLevel = TealiumLogLevel.info
+        let logger = TealiumLogger(config: testTealiumConfig)
         let message = "test"
-        let string = logger.log(message: message, logLevel: logLevel)
-
-        XCTAssertTrue(message == string)    }
-
-    func testTealiumLogLevelNone () {
-        let logLevel = TealiumLogLevel.none
-        let logger = TealiumLogger(loggerId: "test", logLevel: logLevel)
-        let message = "test"
-        let string = logger.log(message: message, logLevel: logLevel)
-
-        XCTAssertTrue(message == string)
-    }
-
-    func testLogMessageSuppressed() {
-        let logLevel = TealiumLogLevel.warnings
-        let logger = TealiumLogger(loggerId: "test", logLevel: logLevel)
-        let message = "test"
-        let string = logger.log(message: message, logLevel: TealiumLogLevel.verbose)
-
-        XCTAssertTrue(string == nil)
+        let logRequest = TealiumLogRequest(title: message, message: message, info: nil, logLevel: logLevel, category: .general)
+        
+        XCTAssertTrue(message == logRequest.messages.first)
     }
 
 }

@@ -1,313 +1,129 @@
 //
-//  TealiumAppDataTests.swift
+//  AppDataModuleTests.swift
 //  tealium-swift
 //
-//  Created by Jonathan Wong on 1/19/18.
-//  Copyright © 2018 Tealium, Inc. All rights reserved.
+//  Created by Christina S on 05/20/20.
+//  Copyright © 2016 Tealium, Inc. All rights reserved.
 //
 
-@testable import TealiumAppData
 @testable import TealiumCore
 import XCTest
 
-class TealiumAppDataTests: XCTestCase {
+class AppDataModuleTests: XCTestCase {
 
-    var appData: TealiumAppData?
-    var bundle: Bundle?
+    var appDataModule: AppDataModule?
+    let mockDiskStorage = MockAppDataDiskStorage()
 
     override func setUp() {
-        super.setUp()
-        bundle = Bundle(for: TealiumAppData.self)
-        appData = TealiumAppData(diskStorage: MockDiskStorage(), bundle: bundle!)
+        appDataModule = AppDataModule(config: TestTealiumHelper().getConfig(), delegate: self, diskStorage: mockDiskStorage, bundle: Bundle(for: type(of: self)))
     }
 
-    override func tearDown() {
-        appData = nil
-        super.tearDown()
-    }
-
-    func testSetExistingAppDataLegacyData() {
-        appData = TealiumAppData(diskStorage: MockDiskStorage(), legacyMigrator: MockTealiumMigratorWithData.self)
-        appData?.setExistingAppData()
-        XCTAssertEqual("legacyVID", appData?.appData.persistentData?.visitorId, "Visitor ID Mismatch")
-        XCTAssertEqual("legacyUUID", appData?.appData.persistentData?.uuid, "UUID Mismatch")
-    }
-
-    func testSetExistingAppDataNewData() {
-        appData = TealiumAppData(diskStorage: MockDiskStorage(), legacyMigrator: MockTealiumMigratorNoData.self)
-        appData?.setExistingAppData()
-        XCTAssertEqual(TealiumTestValue.visitorID, appData?.appData.persistentData?.visitorId, "Visitor ID Mismatch")
-        XCTAssertEqual(TealiumTestValue.visitorID, appData?.appData.persistentData?.uuid, "UUID Mismatch")
+    func testInitSetsExistingAppData() {
+        XCTAssertEqual(mockDiskStorage.retrieveCount, 1)
+        guard let data = appDataModule?.data, let visId = data[TealiumKey.visitorId] as? String else {
+            XCTFail("Nothing in persistent app data and there should be a test visitor id.")
+            return
+        }
+        XCTAssertEqual(visId, "someVisitorId")
     }
 
     func testDeleteAllData() {
-        appData?.setLoadedAppData(data: PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID))
-        XCTAssertEqual(6, appData?.count, "tealiumAppData counts do not match")
-        appData?.deleteAllData()
-
-        XCTAssertEqual(0, appData?.count, "tealiumAppData did not deleteAllData")
+        appDataModule?.deleteAll()
+        XCTAssertEqual(mockDiskStorage.deleteCount, 1)
     }
 
     func testIsMissingPersistentKeys() {
-        let emptyDict = [String: Any]()
-        let failingDict = ["blah": "hah"]
-        let numericDict = ["23": 56]
-        let passingDict = ["app_uuid": "abc123",
-                           "tealium_visitor_id": "abc123"]
+        let missingUUID = [TealiumKey.visitorId: "someVisitorId"]
+        XCTAssertTrue(AppDataModule.isMissingPersistentKeys(data: missingUUID))
+        let missingVisitorID = [TealiumKey.uuid: "someUUID"]
+        XCTAssertTrue(AppDataModule.isMissingPersistentKeys(data: missingVisitorID))
+        let neitherMissing = [TealiumKey.visitorId: "someVisitorId", TealiumKey.uuid: "someUUID"]
+        XCTAssertFalse(AppDataModule.isMissingPersistentKeys(data: neitherMissing))
+    }
 
-        XCTAssertTrue(TealiumAppData.isMissingPersistentKeys(data: emptyDict))
-        XCTAssertTrue(TealiumAppData.isMissingPersistentKeys(data: failingDict))
-        XCTAssertTrue(TealiumAppData.isMissingPersistentKeys(data: numericDict))
-        XCTAssertFalse(TealiumAppData.isMissingPersistentKeys(data: passingDict))
+    func testVisitorIdFromUUID() {
+        let uuid = UUID().uuidString
+        guard let visitorId = appDataModule?.visitorId(from: uuid) else {
+            XCTFail("Visitor id should not be null")
+            return
+        }
+        XCTAssertTrue(!visitorId.contains("-"))
     }
 
     func testNewPersistentData() {
-        let testUuid = "123e4567-e89b-12d3-a456-426655440000"
-        let manualVid = "123e4567e89b12d3a456426655440000"
-        let vid = appData?.visitorId(from: testUuid)
+        let uuid = UUID().uuidString
+        let data = appDataModule?.newPersistentData(for: uuid)
+        XCTAssertEqual(mockDiskStorage.saveToDefaultsCount, 1)
+        XCTAssertEqual(mockDiskStorage.saveCount, 1)
+        XCTAssertEqual(data?.dictionary.keys.sorted(), [TealiumKey.visitorId, TealiumKey.uuid].sorted())
+    }
 
-        XCTAssertTrue(manualVid == vid, "VisitorId method does not modify string correctly. \n Returned:\(String(describing: vid)) \n Expected:\(manualVid)")
-        guard let newData = appData?.newPersistentData(for: testUuid).toDictionary() else {
-
-            XCTFail("Could not create newPersistent data from appDataModule")
+    func testNewVolatileData() {
+        appDataModule?.newVolatileData()
+        guard let appData = appDataModule?.appData else {
+            XCTFail("AppData should not be nil")
             return
         }
-
-        let checkData = [
-            "app_uuid": testUuid as AnyObject,
-            "tealium_visitor_id": manualVid as AnyObject
-        ]
-
-        XCTAssertTrue(checkData == newData, "Mismatch between newPersistentData:\n\(newData) \nAnd manualCheckData:\n\(checkData)")
+        XCTAssertEqual(appData.name, "xctest")
+        XCTAssertEqual(appData.rdns, "com.apple.dt.xctest.tool")
+        XCTAssertNil(appData.version)
+        XCTAssertNotNil(appData.build)
     }
 
-    func testVisitorId() {
-        let testUuid = "123e4567-e89b-12d3-a456-426655440000"
-        let vid = appData?.visitorId(from: testUuid)
-
-        let vidCheck = "123e4567e89b12d3a456426655440000"
-
-        XCTAssertTrue(vidCheck == vid, "Visitor id mismatch between returned vid:\(String(describing: vid)) \nAnd manual check:\(vidCheck)")
+    func testSetNewAppData() {
+        appDataModule?.storeNewAppData()
+        XCTAssertEqual(mockDiskStorage.saveToDefaultsCount, 1)
+        XCTAssertEqual(mockDiskStorage.saveCount, 1)
+        XCTAssertNotNil(appDataModule?.appData.persistentData?.visitorId)
+        XCTAssertNotNil(appDataModule?.appData.persistentData?.uuid)
     }
 
-    func testForMissingKeys() {
-        guard let appData = appData else {
-            XCTFail("TealiumAppData not initialized correctly")
+    func testSetLoadedAppData() {
+        let config = TestTealiumHelper().getConfig()
+        config.existingVisitorId = "someOtherVisitorId"
+        let module = AppDataModule(config: config, delegate: self, diskStorage: mockDiskStorage, bundle: Bundle(for: type(of: self)))
+        let testPersistentData = PersistentAppData(visitorId: "someVisitorId", uuid: "someUUID")
+        module.loadPersistentAppData(data: testPersistentData)
+        // 2x because of init in setUp
+        XCTAssertEqual(mockDiskStorage.saveToDefaultsCount, 2)
+        XCTAssertEqual(mockDiskStorage.saveCount, 2)
+        guard let appData = appDataModule?.appData else {
+            XCTFail("AppData should not be nil")
             return
         }
-        appData.setNewAppData()
-        let expectedKeys = ["app_build",
-                            "app_name",
-                            "app_rdns",
-                            "app_version",
-                            "app_uuid",
-                            "tealium_visitor_id"
-        ]
-
-        let result = appData.getData()
-        for key in expectedKeys where result[key] == nil {
-            XCTFail("Missing key: \(key). AppData: \(appData)")
-        }
+        XCTAssertNotNil(appData.name)
+        XCTAssertNotNil(appData.rdns)
+        XCTAssertNotNil(appData.build)
     }
 
-    func testNewVolatileDataHasCorrectKeys() {
-        guard let appData = appData else {
-            XCTFail("appData not initailized correctly")
-            return
-        }
-
-        appData.newVolatileData()
-
-        let appDataVolatile = appData.appData
-        XCTAssertNotNil(appDataVolatile.name)
-        XCTAssertNotNil(appDataVolatile.rdns)
-        XCTAssertNotNil(appDataVolatile.version)
-        XCTAssertNotNil(appDataVolatile.build)
+    func testPersistentDataInitFromDictionary() {
+        let data = [TealiumKey.visitorId: "someVisitorId", TealiumKey.uuid: "someUUID"]
+        let persistentData = PersistentAppData.new(from: data)
+        XCTAssertEqual(persistentData?.visitorId, "someVisitorId")
+        XCTAssertEqual(persistentData?.uuid, "someUUID")
     }
 
-    func testSetNewAppDataAddsPersistentData() {
-        guard let appData = appData else {
-            XCTFail("appData not initialized correctly")
-            return
-        }
-        appData.setNewAppData()
-        let result = appData.getData()
-
-        XCTAssertNotNil(result[TealiumKey.uuid] as? String)
-        XCTAssertNotNil(result[TealiumKey.visitorId] as? String)
-    }
-
-    func testSetNewAppDataHasUniqueUuids() {
-        guard let appData = appData else {
-            XCTFail("appData not initialized correctly")
-            return
-        }
-        appData.setNewAppData()
-        let result1 = appData.getData()
-
-        appData.setNewAppData()
-        let result2 = appData.getData()
-        XCTAssertNotEqual(result1[TealiumKey.uuid] as? String, result2[TealiumKey.uuid] as? String)
-    }
-
-    func testSetNewAppDataAddsVolatileData() {
-        guard let appData = appData else {
-            XCTFail("TealiumAppData not initialized correctly")
-            return
-        }
-        appData.setNewAppData()
-        let result = appData.getData()
-
-        XCTAssertNotNil(result[TealiumAppDataKey.name] as? String)
-        XCTAssertNotNil(result[TealiumAppDataKey.rdns] as? String)
-        XCTAssertNotNil(result[TealiumAppDataKey.version] as? String)
-        XCTAssertNotNil(result[TealiumAppDataKey.build] as? String)
-    }
-
-    func testSetLoadedAppDataAddsNewVolatileData() {
-        guard let appData = appData else {
-            XCTFail("TealiumAppData not initialized correctly")
-            return
-        }
-        XCTAssertEqual(6, appData.count)
-        appData.setLoadedAppData(data: PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID))
-        let result = appData.getData()
-        XCTAssertNotNil(result[TealiumAppDataKey.name] as? String)
-
-        XCTAssertEqual(TealiumTestValue.visitorID, result[TealiumKey.visitorId] as? String)
-
-        XCTAssertEqual(TealiumTestValue.visitorID, result[TealiumKey.uuid] as? String)
-        XCTAssertNotNil(result[TealiumAppDataKey.rdns] as? String)
-        XCTAssertNotNil(result[TealiumAppDataKey.version] as? String)
-        XCTAssertNotNil(result[TealiumAppDataKey.build] as? String)
-    }
-}
-
-extension TealiumAppDataTests: TealiumModuleDelegate {
-    func tealiumModuleFinished(module: TealiumModule, process: TealiumRequest) {
-        if process is TealiumEnableRequest {
-            return
-        }
-    }
-
-    func tealiumModuleRequests(module: TealiumModule?, process: TealiumRequest) {
-    }
-}
-
-class MockDiskStorage: TealiumDiskStorageProtocol {
-
-    func append(_ data: [String: Any], fileName: String, completion: TealiumCompletion?) {
-
-    }
-
-    func update<T>(value: Any, for key: String, as type: T.Type, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
-
-    }
-
-    func save(_ data: AnyCodable, completion: TealiumCompletion?) {
-
-    }
-
-    func save(_ data: AnyCodable, fileName: String, completion: TealiumCompletion?) {
-    }
-
-    func save<T>(_ data: T, completion: TealiumCompletion?) where T: Encodable {
-    }
-
-    func save<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Encodable {
-    }
-
-    func append<T>(_ data: T, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
-    }
-
-    func append<T>(_ data: T, fileName: String, completion: TealiumCompletion?) where T: Decodable, T: Encodable {
-    }
-
-    func retrieve<T>(as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
-        guard T.self == PersistentAppData.self,
-            let completion = completion as? (Bool, PersistentAppData?, Error?) -> Void
-            else {
-                return
-        }
-        completion(true, PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID), nil)
-    }
-
-    func retrieve<T>(_ fileName: String, as type: T.Type, completion: @escaping (Bool, T?, Error?) -> Void) where T: Decodable {
-    }
-
-    func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
-        guard T.self == PersistentAppData.self else {
-            return nil
-        }
-        return PersistentAppData(visitorId: TealiumTestValue.visitorID, uuid: TealiumTestValue.visitorID) as? T
-    }
-
-    func retrieve<T>(_ fileName: String, as type: T.Type) -> T? where T: Decodable {
-        return nil
-    }
-
-    func retrieve(fileName: String, completion: (Bool, [String: Any]?, Error?) -> Void) {
-
-    }
-
-    func append(_ data: [String: Any], forKey: String, fileName: String, completion: TealiumCompletion?) {
-
-    }
-
-    func delete(completion: TealiumCompletion?) {
-        completion?(true, nil, nil)
-    }
-
-    func totalSizeSavedData() -> String? {
-        return "1000"
-    }
-
-    func saveStringToDefaults(key: String, value: String) {
-
-    }
-
-    func getStringFromDefaults(key: String) -> String? {
-        return ""
-    }
-
-    func saveToDefaults(key: String, value: Any) {
-
-    }
-
-    func getFromDefaults(key: String) -> Any? {
-        return ""
-    }
-
-    func removeFromDefaults(key: String) {
-
-    }
-
-    func canWrite() -> Bool {
-        return true
-    }
-}
-
-class MockTealiumMigratorWithData: TealiumLegacyMigratorProtocol {
-    static func getLegacyData(forModule module: String) -> [String: Any]? {
-        return [
-            TealiumKey.visitorId: "legacyVID",
-            TealiumKey.uuid: "legacyUUID"
-        ]
-    }
-
-    static func getLegacyDataArray(forModule module: String) -> [[String: Any]]? {
-        return nil
+    func testAppDataDictionary() {
+        let appDataDict = appDataModule?.appData.dictionary
+        XCTAssertNotNil(appDataDict?[TealiumKey.appName])
+        XCTAssertNotNil(appDataDict?[TealiumKey.appRDNS])
+        XCTAssertNotNil(appDataDict?[TealiumKey.visitorId])
+        XCTAssertNotNil(appDataDict?[TealiumKey.uuid])
     }
 
 }
 
-class MockTealiumMigratorNoData: TealiumLegacyMigratorProtocol {
-    static func getLegacyData(forModule module: String) -> [String: Any]? {
-        return nil
+extension AppDataModuleTests: ModuleDelegate {
+    func processRemoteCommandRequest(_ request: TealiumRequest) {
+
     }
 
-    static func getLegacyDataArray(forModule module: String) -> [[String: Any]]? {
-        return nil
+    func requestTrack(_ track: TealiumTrackRequest) {
+
+    }
+
+    func requestDequeue(reason: String) {
+
     }
 
 }

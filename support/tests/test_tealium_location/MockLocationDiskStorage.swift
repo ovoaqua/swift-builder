@@ -11,10 +11,10 @@ import Foundation
 @testable import TealiumLocation
 class MockLocationDiskStorage: TealiumDiskStorageProtocol {
 
-    var locationData: TealiumLocation!
+    var locationData: TealiumLocationManager!
 
     init(config: TealiumConfig) {
-        locationData = TealiumLocation(config: config)
+        locationData = TealiumLocationManager(config: config)
     }
 
     func save(_ data: AnyCodable, completion: TealiumCompletion?) {
@@ -26,8 +26,8 @@ class MockLocationDiskStorage: TealiumDiskStorageProtocol {
     }
 
     func save<T>(_ data: T, completion: TealiumCompletion?) where T: Encodable {
-        guard T.self == TealiumLocation.self,
-              let data = data as? TealiumLocation else {
+        guard T.self == TealiumLocationManager.self,
+              let data = data as? TealiumLocationManager else {
             return
         }
         self.locationData = data
@@ -51,7 +51,7 @@ class MockLocationDiskStorage: TealiumDiskStorageProtocol {
     }
 
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
-        guard T.self == TealiumLocation.self
+        guard T.self == TealiumLocationManager.self
         else {
             return nil
         }
