@@ -27,11 +27,9 @@ public class ConnectivityModule: Collector, ConnectivityDelegate {
     public var data: [String: Any]? {
         if let connectionType = self.connectivityMonitor?.currentConnnectionType {
             return [ConnectivityKey.connectionType: connectionType,
-                    ConnectivityKey.connectionTypeLegacy: connectionType,
             ]
         } else {
             return [ConnectivityKey.connectionType: ConnectivityKey.connectionTypeUnknown,
-                    ConnectivityKey.connectionTypeLegacy: ConnectivityKey.connectionTypeUnknown,
             ]
         }
     }

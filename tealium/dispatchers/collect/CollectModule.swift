@@ -58,7 +58,7 @@ public class CollectModule: Dispatcher {
         switch request {
         case let request as TealiumTrackRequest:
             guard !isConsentEvent(request.trackDictionary) else {
-                //                completion?((.failure(TealiumCollectError.trackNotApplicableForCollectModule), nil))
+                completion?((.failure(CollectError.trackNotApplicableForCollectModule), nil))
                 return
             }
             self.track(prepareForDispatch(request), completion: completion)
@@ -73,7 +73,7 @@ public class CollectModule: Dispatcher {
                 completion?((.failure(CollectError.invalidBatchRequest), nil))
                 return
             }
-            let newRequest = TealiumBatchTrackRequest(trackRequests: requests, completion: request.completion)
+            let newRequest = TealiumBatchTrackRequest(trackRequests: requests)
             self.batchTrack(newRequest, completion: completion)
         default:
             completion?((.failure(CollectError.trackNotApplicableForCollectModule), nil))
@@ -108,7 +108,7 @@ public class CollectModule: Dispatcher {
         }
 
         newTrack[TealiumKey.dispatchService] = CollectKey.moduleName
-        return TealiumTrackRequest(data: newTrack, completion: request.completion)
+        return TealiumTrackRequest(data: newTrack)
     }
 
     /// Adds relevant info to the track request, then passes the request to a dipatcher for processing￼.

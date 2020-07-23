@@ -83,7 +83,7 @@ extension DispatchManager: TealiumLifecycleEvents {
         }
 
         TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-            self.handleDequeueRequest(reason: "App Launch")
+            self.handleDequeueRequest(reason: "App Sleep")
         }
         if let taskId = backgroundTaskId {
             TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
@@ -96,7 +96,7 @@ extension DispatchManager: TealiumLifecycleEvents {
         pInfo.performExpiringActivity(withReason: "Tealium Swift: Dispatch Queued Events") { willBeSuspended in
             if !willBeSuspended {
                 TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-                    self.handleDequeueRequest(reason: "App Launch")
+                    self.handleDequeueRequest(reason: "App Sleep")
                 }
             }
         }
@@ -113,7 +113,7 @@ extension DispatchManager: TealiumLifecycleEvents {
 
     func launch(at date: Date) {
         TealiumQueues.backgroundSerialQueue.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-            self.handleDequeueRequest(reason: "App Sleep")
+            self.handleDequeueRequest(reason: "App Launch")
         }
     }
 

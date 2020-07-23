@@ -59,7 +59,6 @@ class SessionManagerTests: XCTestCase {
 
     func testRefreshSessionData() {
         eventDataManager.refreshSessionData()
-        XCTAssertEqual(eventDataManager.sessionData.count, 1)
         XCTAssertNotNil(eventDataManager.sessionId)
         XCTAssertTrue(eventDataManager.shouldTriggerSessionRequest)
     }
@@ -72,7 +71,7 @@ class SessionManagerTests: XCTestCase {
     }
 
     func testSessionRefreshWhenSessionIdNotNil() {
-        eventDataManager.sessionRefresh()
+        eventDataManager.refreshSession()
         XCTAssertNotNil(eventDataManager.allEventData["tealium_session_id"] as! String)
     }
 

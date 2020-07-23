@@ -13,10 +13,9 @@
 import XCTest
 #if os(iOS)
 @testable import TealiumAttribution
-@testable import TealiumAutotrackingManager
-//@testable import TealiumCrash
-@testable import TealiumLocationManager
-// @testable import TealiumRemoteCommands
+@testable import TealiumAutotracking
+@testable import TealiumLocation
+//@testable import TealiumRemoteCommands
 @testable import TealiumTagManagement
 #endif
 
@@ -61,20 +60,20 @@ class PerformanceTests: XCTestCase {
     func testTimeToInitializeTealiumConfigWithOptionalData() {
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", datasource: "testDatasource", options: [TealiumCollectKey.overrideCollectUrl: "https://6372509c65ca83cb33983be9c6f8f204.m.pipedream.net",
-                                                                                                                                                           TealiumVisitorServiceConstants.visitorServiceDelegate: self])
+            config = TealiumConfig(account: "testAccount", profile: "testProfile", environment: "testEnvironment", dataSource: "testDatasource", options: [CollectKey.overrideCollectUrl: "https://6372509c65ca83cb33983be9c6f8f204.m.pipedream.net",
+                                                                                                                                                           VisitorServiceConstants.visitorServiceDelegate: self])
             self.stopMeasuring()
         }
     }
 
     func testModulesManagerInitPerformance() {
-        let eventDataManager = EventDataManager(config: defaultTealiumConfig)
+        let eventDataManager = DataLayer(config: defaultTealiumConfig)
 
         let config = defaultTealiumConfig.copy
         //        config.loggerType = .custom(DummyLogger(config: config))
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = ModulesManager(config, eventDataManager: eventDataManager)
+            _ = ModulesManager(config, dataLayer: eventDataManager)
             self.stopMeasuring()
         }
     }
@@ -82,7 +81,7 @@ class PerformanceTests: XCTestCase {
     func testTimeToInitializeTealiumWithBaseModules() {
         let optionalCollectors = [String]()
         let knownDispatchers = ["TealiumCollect.TealiumCollectModule"]
-        let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil)
+        let modulesManager = ModulesManager(defaultTealiumConfig, dataLayer: nil)
         defaultTealiumConfig.shouldUseRemotePublishSettings = false
         if #available(iOS 13.0, *) {
             self.measure(metrics: [//XCTCPUMetric(),
@@ -119,15 +118,14 @@ class PerformanceTests: XCTestCase {
     func testTimeToDispatchTrackInCollect() {
         let optionalCollectors = [String]()
         let knownDispatchers = ["TealiumCollect.TealiumCollectModule"]
-        let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
+        let modulesManager = ModulesManager(defaultTealiumConfig, dataLayer: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
         defaultTealiumConfig.shouldUseRemotePublishSettings = false
         defaultTealiumConfig.batchingEnabled = false
         tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager, enableCompletion: nil)
-        tealium.eventDataManager.deleteAll()
-        tealium.consentManager?.setUserConsentStatus(.consented)
+        tealium.dataLayer.deleteAll()
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            tealium.track(title: "tester")
+            tealium.track(EventDispatch("tester"))
             self.stopMeasuring()
         }
 
@@ -138,15 +136,14 @@ class PerformanceTests: XCTestCase {
 
         let optionalCollectors = [String]()
         let knownDispatchers = ["TealiumTagManagement.TealiumTagManagementModule"]
-        let modulesManager = ModulesManager(defaultTealiumConfig, eventDataManager: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
+        let modulesManager = ModulesManager(defaultTealiumConfig, dataLayer: nil, optionalCollectors: optionalCollectors, knownDispatchers: knownDispatchers)
         defaultTealiumConfig.shouldUseRemotePublishSettings = false
         defaultTealiumConfig.batchingEnabled = false
         tealium = Tealium(config: defaultTealiumConfig, modulesManager: modulesManager, enableCompletion: nil)
-        tealium.eventDataManager.deleteAll()
-        tealium.consentManager?.setUserConsentStatus(.consented)
+        tealium.dataLayer.deleteAll()
 
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            tealium.track(title: "tester")
+            tealium.track(EventDispatch("tester"))
             self.stopMeasuring()
         }
 
@@ -167,7 +164,8 @@ class PerformanceTests: XCTestCase {
             self.stopMeasuring()
         }
     }
-
+    
+    #if os(iOS)
     func testAttributionModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = AttributionModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
@@ -185,35 +183,36 @@ class PerformanceTests: XCTestCase {
 
     func testAutotrackingModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumAutotrackingModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+            _ = AutotrackingModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
             self.stopMeasuring()
         }
     }
 
     func testAutotrackingDataCollection() {
-        let module = TealiumAutotrackingModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+        let module = AutotrackingModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = module.data
             self.stopMeasuring()
         }
     }
+    #endif
 
     func testCollectModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumCollectModule(config: defaultTealiumConfig, delegate: self, completion: { _ in })
+            _ = CollectModule(config: defaultTealiumConfig, delegate: self, completion: { _ in })
             self.stopMeasuring()
         }
     }
 
     func testConnectivityModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+            _ = ConnectivityModule(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
             self.stopMeasuring()
         }
     }
 
     func testConnectivityHasViableConnection() {
-        let module = TealiumConnectivity(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        let module = ConnectivityModule(config: testTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             //            _ = module.hasViableConnection
             self.stopMeasuring()
@@ -235,21 +234,6 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    //    func testCrashModuleInit() {
-    //        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-    //            _ = TealiumCrashModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
-    //            self.stopMeasuring()
-    //        }
-    //    }
-
-    //    func testCrashDataCollection() {
-    //        let module = TealiumCrashModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
-    //        self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-    //            _ = module.data
-    //            self.stopMeasuring()
-    //        }
-    //    }
-
     func testDeviceDataModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = DeviceDataModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
@@ -266,9 +250,9 @@ class PerformanceTests: XCTestCase {
     }
 
     func testDispatchManagerInit() {
-        let collect = TealiumCollectModule(config: defaultTealiumConfig, delegate: self, completion: { _ in })
+        let collect = CollectModule(config: defaultTealiumConfig, delegate: self, completion: { _ in })
         let dispatchers = [collect]
-        let connectivity = TealiumConnectivity(config: defaultTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
+        let connectivity = ConnectivityModule(config: defaultTealiumConfig, delegate: nil, diskStorage: nil) { _ in }
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = DispatchManager(dispatchers: dispatchers, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: connectivity, config: defaultTealiumConfig)
             self.stopMeasuring()
@@ -277,7 +261,7 @@ class PerformanceTests: XCTestCase {
 
     func testEventDataManagerInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = EventDataManager(config: defaultTealiumConfig)
+            _ = DataLayer(config: defaultTealiumConfig)
             self.stopMeasuring()
         }
     }
@@ -292,7 +276,7 @@ class PerformanceTests: XCTestCase {
     //    }
 
     func testEventDataCollectionWithLargePersistentDataSet() {
-        let eventDataManager = EventDataManager(config: defaultTealiumConfig)
+        let eventDataManager = DataLayer(config: defaultTealiumConfig)
         eventDataManager.deleteAll()
         let json = loadStub(from: "large-event-data", with: "json")
         let decoder = JSONDecoder()
@@ -303,7 +287,7 @@ class PerformanceTests: XCTestCase {
             return
         }
         decoded.forEach {
-            eventDataManager.add(key: $0.key, value: $0.value, expiration: .forever)
+            eventDataManager.add(key: $0.key, value: $0.value, expiry: .forever)
         }
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = eventDataManager.allEventData
@@ -313,33 +297,35 @@ class PerformanceTests: XCTestCase {
 
     func testLifecycleModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumLifecycleModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+            _ = LifecycleModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
             self.stopMeasuring()
         }
     }
 
     func testLifecycleDataCollection() {
-        let module = TealiumLifecycleModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+        let module = LifecycleModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = module.data
             self.stopMeasuring()
         }
     }
 
+    #if os(iOS)
     func testLocationModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumLocationModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+            _ = LocationModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
             self.stopMeasuring()
         }
     }
 
     func testLocationDataCollection() {
-        let module = TealiumLocationModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+        let module = LocationModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
             _ = module.data
             self.stopMeasuring()
         }
     }
+    #endif
 
     func testLoggerModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
@@ -378,16 +364,18 @@ class PerformanceTests: XCTestCase {
         }
     }
 
+    #if os(iOS)
     func testTagManagementModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumTagManagementModule(config: defaultTealiumConfig, delegate: self, completion: { _ in })
+            _ = TagManagementModule(config: defaultTealiumConfig, delegate: self, completion: { _ in })
             self.stopMeasuring()
         }
     }
+    #endif
 
     func testVisitorServiceModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {
-            _ = TealiumVisitorServiceModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
+            _ = VisitorServiceModule(config: defaultTealiumConfig, delegate: self, diskStorage: nil, completion: { _ in })
             self.stopMeasuring()
         }
     }

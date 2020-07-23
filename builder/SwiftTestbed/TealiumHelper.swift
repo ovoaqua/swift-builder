@@ -51,28 +51,32 @@ class TealiumHelper: NSObject {
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.shouldUseRemotePublishSettings = false
-        config.batchingEnabled = false
+        config.batchingEnabled = true
+        config.batchSize = 5
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
         //config.visitorServiceDelegate = self
-        config.remoteAPIEnabled = false
-        config.shouldCollectTealiumData = true
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
-        config.remoteAPIEnabled = true
+        config.remoteAPIEnabled = false
         logger = config.logger
-        config.collectors = [Collectors.Attribution,
-//                             Collectors.Lifecycle,
+        config.collectors = [
+            MyDateCollector.self,
+//            Collectors.Attribution,
+                             Collectors.Lifecycle,
+//                             Collectors.AppData,
                              Collectors.Connectivity,
  //                            Collectors.Crash,
                              Collectors.Device,
-//                             Collectors.Location,
+                             Collectors.Location,
                              Collectors.VisitorService,
         ]
         
         config.dispatchers = [Dispatchers.Collect,
+//                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
-                              Dispatchers.RemoteCommands]
+//                              Dispatchers.RemoteCommands
+        ]
 //        tealium?.dataLayerManager
 //        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
@@ -91,7 +95,8 @@ class TealiumHelper: NSObject {
 //        }
 //        config.addRemoteCommand(remoteCommand)
         #endif
-        
+//        config.diskStorageDirectory = .documents
+//        config.loggerType = .custom(<#T##TealiumLoggerProtocol#>)
         tealium = Tealium(config: config) { [weak self] response in
             guard let self = self,
                 let teal = self.tealium else {
@@ -102,7 +107,6 @@ class TealiumHelper: NSObject {
 //            self.track(title: "init", data: nil)
             let dataLayer = teal.dataLayer
             teal.consentManager?.userConsentStatus = .consented
-            
             dataLayer.add(key: "myvarforever", value: 123456, expiry: .forever)
 
             // dataLayer.add(data: ["some_key1": "some_val1"])
@@ -125,13 +129,15 @@ class TealiumHelper: NSObject {
 
             dataLayer.add(key: "hello", value: "itsme", expiry: .afterCustom((.months, 1)))
 
-            print("Session Data: \(String(describing: dataLayer.allSessionData))")
-
-            print("Persistent Data: \(String(describing: dataLayer.allEventData))")
-
+//            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
+//
+//            print("Persistent Data: \(String(describing: persitence.dictionary))")
+//            print("Visitor ID: \(self.tealium?.visitorId ?? "not ready")")
+//            print("Tealium Ready: \(self.tealium!.isReady)")
         }
-        tealium?.lifecycle
-//        let dispatch = EventDispatch("hello")
+        
+//        print("Tealium Ready: \(self.tealium!.isReady)")
+//        let dispatch = EventDispatch("hello-post-open")
 //
 //        tealium?.track(dispatch)
         let dispatch = ViewDispatch("VIEW_NAME", dataLayer: ["key": "value"])
@@ -150,11 +156,21 @@ class TealiumHelper: NSObject {
             print("Remote Command data: hello = \(hello), key = \(key), tealium = \(tealium) 🎉🎊")
         }
         remoteCommands.add(remoteCommand)
+        
+        
         #endif
+        
+        
     }
     
     func resetConsentPreferences() {
         tealium?.consentManager?.resetUserConsentPreferences()
+    }
+    
+    func requestLocationPermission() {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1.0) {
+            self.tealium?.location?.requestPermissions()
+        }
     }
     
     
@@ -186,6 +202,8 @@ class TealiumHelper: NSObject {
 
     func leaveTrace() {
         self.tealium?.leaveTrace()
+//        self.tealium?.flushQueue()
+//        tealium?.dataLayer.
     }
     
     func crash() {
@@ -228,4 +246,56 @@ extension TealiumHelper: DispatchValidator {
     }
 
 
+}
+
+class MyDateCollector: Collector {
+    
+    var id = "MyDateCollector"
+    
+    var data: [String : Any]? {
+        ["day_of_week": dayOfWeek]
+    }
+    
+    var config: TealiumConfig
+    
+    
+    required init(config: TealiumConfig,
+                  delegate: ModuleDelegate?,
+                  diskStorage: TealiumDiskStorageProtocol?,
+                  completion: (ModuleResult) -> Void) {
+        self.config = config
+    }
+    
+    
+    var dayOfWeek: String {
+        return "\(Calendar.current.dateComponents([.weekday], from: Date()).weekday ?? -1)"
+    }
+
+}
+
+
+class MyCustomDispatcher: Dispatcher {
+    var isReady: Bool
+    
+    var id = "MyCustomDispatcher"
+    
+    var config: TealiumConfig
+    
+    required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
+        self.config = config
+        self.isReady = true
+    }
+    
+    func dynamicTrack(_ request: TealiumRequest, completion: ModuleCompletion?) {
+        switch request {
+        case let request as TealiumTrackRequest:
+            print("Track received: \(request.event ?? "no event name")")
+            // perform track action, e.g. send to custom endpoint
+        case _ as TealiumBatchTrackRequest:
+            print("Batch track received")
+            // perform batch track action, e.g. send to custom endpoint
+        default:
+            return
+        }
+    }
 }

@@ -54,8 +54,8 @@ class VisitorServiceModuleTests: XCTestCase {
         expectations.append(expectation(description: "testBatchTrackRetreiveProfileExecuted"))
         let module = VisitorServiceModule(config: config, delegate: self, diskStorage: mockDiskStorage, visitorServiceManager: mockVisitorServiceManager)
         module.firstEventSent = true
-        let trackRequest = TealiumTrackRequest(data: ["hello": "world", "tealium_visitor_id": "test"], completion: nil)
-        let batchTrackRequest = TealiumBatchTrackRequest(trackRequests: [trackRequest], completion: nil)
+        let trackRequest = TealiumTrackRequest(data: ["hello": "world", "tealium_visitor_id": "test"])
+        let batchTrackRequest = TealiumBatchTrackRequest(trackRequests: [trackRequest])
         module.willTrack(request: batchTrackRequest)
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             XCTAssertEqual(1, self.mockVisitorServiceManager.requestVisitorProfileCount)
@@ -67,7 +67,7 @@ class VisitorServiceModuleTests: XCTestCase {
         expectations.append(expectation(description: "testTrackRetreiveProfileExecuted"))
         let module = VisitorServiceModule(config: config, delegate: self, diskStorage: mockDiskStorage, visitorServiceManager: mockVisitorServiceManager)
         module.firstEventSent = true
-        let trackRequest = TealiumTrackRequest(data: ["hello": "world", "tealium_visitor_id": "test"], completion: nil)
+        let trackRequest = TealiumTrackRequest(data: ["hello": "world", "tealium_visitor_id": "test"])
         module.willTrack(request: trackRequest)
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             XCTAssertEqual(1, self.mockVisitorServiceManager.requestVisitorProfileCount)

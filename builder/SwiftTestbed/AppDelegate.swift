@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let cookieStore = HTTPCookieStorage.shared
             cookieStore.cookieAcceptPolicy = .always
         TealiumHelper.shared.start()
+        TealiumHelper.shared.requestLocationPermission()
         return true
     }
     

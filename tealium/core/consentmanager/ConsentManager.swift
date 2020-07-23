@@ -29,7 +29,7 @@ public class ConsentManager {
             let status = newValue
             var categories = [TealiumConsentCategories]()
             if status == .consented {
-                categories = TealiumConsentCategories.allCategories
+                categories = TealiumConsentCategories.all
             }
             setUserConsentStatusWithCategories(status: status, categories: categories)
         }
@@ -91,7 +91,7 @@ public class ConsentManager {
             if consentLoggingEnabled, currentPolicy.shouldLogConsentStatus {
                 // call type must be set to override "link" or "view"
                 consentData[TealiumKey.callType] = consentData[TealiumKey.event]
-                delegate?.requestTrack(TealiumTrackRequest(data: consentData, completion: nil))
+                delegate?.requestTrack(TealiumTrackRequest(data: consentData))
             }
             // in all cases, update the cookie data in TiQ/webview
             updateTIQCookie()
@@ -110,7 +110,7 @@ public class ConsentManager {
             // collect module ignores this hit
             consentData[TealiumKey.event] = currentPolicy.updateConsentCookieEventName
             consentData[TealiumKey.callType] = currentPolicy.updateConsentCookieEventName
-            delegate?.requestTrack(TealiumTrackRequest(data: consentData, completion: nil))
+            delegate?.requestTrack(TealiumTrackRequest(data: consentData))
         }
     }
 

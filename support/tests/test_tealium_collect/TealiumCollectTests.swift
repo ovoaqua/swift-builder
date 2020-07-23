@@ -102,7 +102,7 @@ class TealiumCollectTests: XCTestCase {
     }
 
     func testGetURLSessionReturnsEphemeralSession() {
-        let session = CollectEventDispatcher.getURLSession()
+        let session = CollectEventDispatcher.urlSession
 
         XCTAssertNotEqual(session.configuration.httpCookieStorage!.debugDescription, URLSessionConfiguration.default.httpCookieStorage!.debugDescription)
         XCTAssertEqual(session.configuration.httpCookieStorage!.debugDescription, URLSessionConfiguration.ephemeral.httpCookieStorage!.debugDescription)

@@ -65,7 +65,7 @@ struct GDPRConsentPolicy: ConsentPolicy {
         if preferences.consentStatus == .notConsented {
             return ConsentKey.consentDeclinedEventName
         }
-        if let currentCategories = preferences.consentCategories?.count, currentCategories < TealiumConsentCategories.allCategories.count {
+        if let currentCategories = preferences.consentCategories?.count, currentCategories < TealiumConsentCategories.all.count {
             return ConsentKey.consentPartialEventName
         } else {
             return ConsentKey.consentGrantedEventName

@@ -102,7 +102,7 @@ class ConsentManagerModule: Collector, DispatchValidator {
         if let consentDictionary = consentManager?.currentPolicy.consentPolicyStatusInfo {
             newTrack += consentDictionary
         }
-        return TealiumTrackRequest(data: newTrack, completion: track.completion)
+        return TealiumTrackRequest(data: newTrack)
     }
 
 }

@@ -44,7 +44,7 @@ public extension TealiumConfig {
         if let overrideWebviewURL = tagManagementOverrideURL {
             return URL(string: overrideWebviewURL)
         } else {
-            return URL(string: "\(TagManagementKey.defaultUrlStringPrefix)/\(self.account)/\(self.profile)/\(self.environment)/mobile.html")
+            return URL(string: "\(TagManagementKey.defaultUrlStringPrefix)/\(self.account)/\(self.profile)/\(self.environment)/\(TealiumValue.tiqURLSuffix)")
         }
     }
 
