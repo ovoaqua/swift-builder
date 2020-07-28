@@ -33,7 +33,7 @@ class MockAttributionData: AttributionDataProtocol {
     }
 
     var allAttributionData: [String: Any] {
-        var allData = appleAttributionDetails!.dictionary() as [String: Any]
+        var allData = appleAttributionDetails!.dictionary as [String: Any]
         allData += volatileData
         return allData
     }
