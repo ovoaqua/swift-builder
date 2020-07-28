@@ -12,7 +12,7 @@ public typealias DataLayerCollection = Set<DataLayerItem>
 
 public extension DataLayerCollection {
 
-    /// Inserts a new `DataLayerItem` into the `EventData` store
+    /// Inserts a new `DataLayerItem` into the `DataLayerCollection` store
     /// If a value for that key already exists, it will be removed before
     /// the new value is inserted.
     /// - Parameters:
@@ -20,7 +20,6 @@ public extension DataLayerCollection {
     ///   - expires: `Date` expiration date
     mutating func insert(from dictionary: [String: Any], expires: Date) {
         dictionary.forEach { item in
-
             if let existing = self.first(where: { value -> Bool in
                 value.key == item.key
             }) {
@@ -31,7 +30,7 @@ public extension DataLayerCollection {
         }
     }
 
-    /// Inserts a new `DataLayerItem` into the `EventData` store
+    /// Inserts a new `DataLayerItem` into the `DataLayerCollection` store
     /// If a value for that key already exists, it will be removed before
     /// the new value is inserted.
     /// - Parameters:
@@ -52,8 +51,8 @@ public extension DataLayerCollection {
         }
     }
 
-    /// Removes expired data from the `EventData` store
-    /// - Returns: `EventData` after removal
+    /// Removes expired data from the `DataLayerCollection` store
+    /// - Returns: `DataLayerCollection` after removal
     func removeExpired() -> DataLayerCollection {
         let currentDate = Date()
         let newDataLayer = self.filter {

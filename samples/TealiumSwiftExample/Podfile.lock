@@ -21,10 +21,6 @@ EXTERNAL SOURCES:
   tealium-swift:
     :path: "../.."
 
-EXTERNAL SOURCES:
-  tealium-swift:
-    :path: "../../"
-
 SPEC CHECKSUMS:
   tealium-swift: e8d8d365af0b197075aed4cc2948fb18a1060545
 

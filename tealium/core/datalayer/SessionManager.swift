@@ -38,14 +38,12 @@ public extension DataLayer {
     // swiftlint:enable unused_setter_value
 
     /// - Returns: `String` session id for the active session.
-    var sessionId: String? {
+    var sessionId: String {
         get {
-            persistentDataStorage?.removeExpired().all[TealiumKey.sessionId] as? String
+            persistentDataStorage?.removeExpired().all[TealiumKey.sessionId] as? String ?? Date().unixTimeMilliseconds
         }
         set {
-            if let newValue = newValue {
-                add(data: [TealiumKey.sessionId: newValue], expiry: .session)
-            }
+            add(data: [TealiumKey.sessionId: newValue], expiry: .session)
         }
     }
 
@@ -55,7 +53,7 @@ public extension DataLayer {
         sessionData = [String: Any]()
         sessionId = Date().unixTimeMilliseconds
         shouldTriggerSessionRequest = true
-        add(key: TealiumKey.sessionId, value: sessionId!, expiry: .session)
+        add(key: TealiumKey.sessionId, value: sessionId, expiry: .session)
     }
 
     /// Checks if the session has expired in storage, if so, refreshes the session and saves the new data.
