@@ -28,12 +28,10 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
     /// - Parameters:
     ///     - commandId: `String` identifier for command block.
     ///     - description: `String?` description of command.
-    ///     - urlSession: `URLSessionProtocol`
     ///     - completion: The completion block to run when this remote command is triggered.
     public init(commandId: String,
                 description: String?,
                 completion : @escaping TealiumRemoteCommandCompletion) {
-
         self.commandId = commandId
         self.description = description
         self.remoteCommandCompletion = completion
@@ -41,7 +39,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
 
     /// Called when a Remote Command is ready for execution.
     ///￼
-    /// - Parameter response: `TealiumRemoteCommandResponse` object containing information from the TiQ webview
+    /// - Parameter response: `TealiumRemoteCommandResponseProtocol` object containing information from the TiQ webview
     public func complete(with response: TealiumRemoteCommandResponseProtocol) {
 
         delegate?.tealiumRemoteCommandRequestsExecution(self,
@@ -53,7 +51,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
     ///
     /// - Parameters:
     ///     - commandId: `String` identifier for the Remote Command
-    ///     - response: `TealiumRemoteCommandResponse` from the remote command to be passed back to the TiQ webview
+    ///     - response: `TealiumRemoteCommandResponseProtocol` from the remote command to be passed back to the TiQ webview
     ///     - Returns: `[String: Any]?`  containing the encoded JavaScript string for the TiQ webview.
     class func remoteCommandResponse(for commandId: String,
                                      response: TealiumRemoteCommandResponseProtocol) -> [String: Any]? {
@@ -76,7 +74,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
     ///
     /// - Parameters:
     ///     - commandId: `String` identifier for the Remote Command
-    ///     - response: `TealiumRemoteCommandResponse` from the remote command to be passed back to the TiQ webview
+    ///     - response: `TealiumRemoteCommandResponseProtocol` from the remote command to be passed back to the TiQ webview
     ///     - delegate: `ModuleDelegate?`
     public class func sendRemoteCommandResponse(for commandId: String,
                                                 response: TealiumRemoteCommandResponseProtocol,

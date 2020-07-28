@@ -16,7 +16,7 @@ public extension DataLayerCollection {
     /// If a value for that key already exists, it will be removed before
     /// the new value is inserted.
     /// - Parameters:
-    ///   - dictionary: `[String: Any]` values being inserted into the `EventData` store
+    ///   - dictionary: `[String: Any]` values being inserted into the `DataLayerCollection` store
     ///   - expires: `Date` expiration date
     mutating func insert(from dictionary: [String: Any], expires: Date) {
         dictionary.forEach { item in
@@ -61,7 +61,7 @@ public extension DataLayerCollection {
         return newDataLayer
     }
 
-    /// - Returns: `[String: Any]` all the data currently in the `EventData` store
+    /// - Returns: `[String: Any]` all the data currently in the `DataLayerCollection` store
     var all: [String: Any] {
         var returnData = [String: Any]()
         self.forEach { eventDataItem in

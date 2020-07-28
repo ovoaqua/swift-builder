@@ -156,7 +156,6 @@ extension TealiumConfig: Equatable {
         if lhs.environment != rhs.environment { return false }
         let lhsKeys = lhs.options.keys.sorted()
         let rhsKeys = rhs.options.keys.sorted()
-        //        if lhs.modulesList != rhs.modulesList { return false }
         if lhsKeys.count != rhsKeys.count { return false }
         for (index, key) in lhsKeys.enumerated() {
             if key != rhsKeys[index] { return false }

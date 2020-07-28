@@ -93,7 +93,7 @@ public class AppDataModule: Collector, AppDataCollection {
         diskStorage.delete(completion: nil)
     }
 
-    /// - Returns: Count of total items in app data
+    /// - Returns: `Int` Count of total items in app data
     var count: Int {
         return appData.count
     }
@@ -120,7 +120,7 @@ public class AppDataModule: Collector, AppDataCollection {
     /// is set here as it based off app_uuid.
     ///
     /// - Parameter uuid: The uuid string to use for new persistent data.
-    /// - Returns: `[String:Any]`
+    /// - Returns: `PersistentAppData`
     func newPersistentData(for uuid: String) -> PersistentAppData {
         let visitorId = existingVisitorId ?? self.visitorId(from: uuid)
         let persistentData = PersistentAppData(visitorId: visitorId, uuid: uuid)

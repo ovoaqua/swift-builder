@@ -108,6 +108,12 @@ public class AutotrackingModule: Collector {
     weak var delegate: ModuleDelegate?
     public var config: TealiumConfig
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig,
                          delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,

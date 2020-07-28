@@ -54,8 +54,6 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
     }
 
     /// Builds a URL from a Tealium config pointing to a hosted JSON file on the Tealium DLE
-    ///
-    /// - parameter config: `TealiumConfig` tealium config to be read from
     var geofencesUrl: String {
         return "\(LocationKey.dleBaseUrl)\(config.account)/\(config.profile)/\(LocationKey.fileName).json"
     }
@@ -115,7 +113,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
     /// updating the monitored geofences based on the users last location. (Dynamic Geofencing)
     ///
     /// - parameter manager: `CLLocationManager` instance
-    /// - parameter locations: `CLLocation` array of recent locations, includes most recent
+    /// - parameter locations: `[CLLocation]` array of recent locations, includes most recent
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locations.last {
             self.lastLocation = lastLocation
@@ -206,7 +204,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
 
     /// Adds geofences to the Location Client to be monitored
     ///
-    /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be added
+    /// - parameter geofences: `[CLCircularRegion]` Geofences to be added
     public func startMonitoring(_ geofences: [CLCircularRegion]) {
         if geofences.capacity == 0 {
             return
@@ -229,7 +227,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
 
     /// Removes geofences from being monitored by the Location Client
     ///
-    /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be removed
+    /// - parameter geofences: `[CLCircularRegion]` Geofences to be removed
     public func stopMonitoring(_ geofences: [CLCircularRegion]) {
         if geofences.capacity == 0 {
             return
@@ -252,7 +250,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
 
     /// Returns the names of all the geofences that are currently being monitored
     ///
-    /// - return: `[String]` Array containing the names of monitored geofences
+    /// - return: `[String]?` Array containing the names of monitored geofences
     public var monitoredGeofences: [String]? {
         guard locationServiceEnabled else {
             return nil
@@ -262,7 +260,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
 
     /// Returns the names of all the created geofences (those currently being monitored and those that are not)
     ///
-    /// - return: `[String]` Array containing the names of all geofences
+    /// - return: `[String]?` Array containing the names of all geofences
     public var createdGeofences: [String]? {
         guard locationServiceEnabled else {
             return nil

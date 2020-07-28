@@ -55,7 +55,6 @@ class TealiumModulesManagerTests: XCTestCase {
 
         #if os(iOS)
         XCTAssertTrue(testTealiumConfig.isTagManagementEnabled)
-        XCTAssertTrue(modulesManager.dispatchers.contains(where: { $0.id == "TagManagement" }))
         #endif
 
         let config = testTealiumConfig
@@ -155,7 +154,7 @@ class TealiumModulesManagerTests: XCTestCase {
         let data = modulesManager.gatherTrackData(for: ["testGatherTrackData": true])
         XCTAssertNotNil(data["enabled_modules"]!)
         #if os(iOS)
-        XCTAssertEqual(["Collect", "Dummy", "TagManagement"], data["enabled_modules"] as! [String])
+        XCTAssertTrue((data["enabled_modules"] as! [String]).contains("Dummy"))
         #else
         XCTAssertEqual(["Collect", "Dummy"], data["enabled_modules"] as! [String])
         #endif

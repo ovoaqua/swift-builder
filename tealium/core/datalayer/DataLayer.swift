@@ -16,7 +16,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
     var config: TealiumConfig
     public var lastTrackDate: Date?
     public var minutesBetweenSessionIdentifier: TimeInterval
-    public var numberOfTracksBacking = 0
+    public var numberOfTrackRequests = 0
     public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
     public var sessionData = [String: Any]()
     var sessionStarter: SessionStarterProtocol
@@ -86,7 +86,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
         ]
     }
 
-    /// - Returns: `EventData` containing all stored event data.
+    /// - Returns: `DataLayerCollection` containing all stored event data.
     public var persistentDataStorage: DataLayerCollection? {
         get {
             TealiumQueues.backgroundConcurrentQueue.read {
@@ -111,7 +111,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
         return String(format: "%i", offsetHours)
     }
 
-    /// Adds data to be stored based on the `Expiraton`.
+    /// Adds data to be stored based on the `Expiry`.
     /// - Parameters:
     ///   - key: `String` name of key to be stored.
     ///   - value: `Any` should be `String` or `[String]`.
@@ -122,7 +122,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
         self.add(data: [key: value], expiry: expiry)
     }
 
-    /// Adds data to be stored based on the `Expiraton`.
+    /// Adds data to be stored based on the `Expiry`.
     /// - Parameters:
     ///   - data: `[String: Any]` to be stored.
     ///   - expiration: `Expiry` level.

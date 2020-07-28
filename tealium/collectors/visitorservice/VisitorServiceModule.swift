@@ -32,6 +32,12 @@ public class VisitorServiceModule: Collector, DispatchListener {
         self.visitorServiceManager = visitorServiceManager
     }
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `ModuleDelegate?` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol?` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig,
                          delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,

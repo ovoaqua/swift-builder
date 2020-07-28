@@ -48,8 +48,8 @@ public protocol TealiumRemoteCommandDelegate: class {
     /// Triggers the completion block registered for a specific remote command
     ///
     /// - Parameters:
-    ///     - command: `TealiumRemoteCommandd` to be executed
-    ///     - response: `TealiumRemoteCommandResponse` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
+    ///     - command: `TealiumRemoteCommandProtocol` to be executed
+    ///     - response: `TealiumRemoteCommandResponseProtocol` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
     ///      it must set the "hasCustomCompletionHandler" flag, otherwise the completion notification will be sent automatically
     func tealiumRemoteCommandRequestsExecution(_ command: TealiumRemoteCommandProtocol,
                                                response: TealiumRemoteCommandResponseProtocol)

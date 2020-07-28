@@ -15,29 +15,29 @@ public extension DataLayer {
     // swiftlint:disable unused_setter_value
     var numberOfTracks: Int {
         get {
-            numberOfTracksBacking
+            numberOfTrackRequests
         }
         set {
             let current = Date()
             if let lastTrackDate = lastTrackDate {
                 if let date = lastTrackDate.addSeconds(secondsBetweenTrackEvents),
                     date > current {
-                    let tracks = numberOfTracksBacking + 1
+                    let tracks = numberOfTrackRequests + 1
                     if tracks == 2 {
                         startNewSession(with: sessionStarter)
                     }
                 } else {
                     self.lastTrackDate = Date()
-                    numberOfTracksBacking = 0
+                    numberOfTrackRequests = 0
                 }
             }
             self.lastTrackDate = Date()
-            numberOfTracksBacking += 1
+            numberOfTrackRequests += 1
         }
     }
     // swiftlint:enable unused_setter_value
 
-    /// - Returns: `String` session id for the active session.
+    /// - Returns: `String?` session id for the active session.
     var sessionId: String? {
         get {
             persistentDataStorage?.removeExpired().all[TealiumKey.sessionId] as? String
@@ -50,7 +50,6 @@ public extension DataLayer {
     }
 
     /// Removes session data, generates a new session id, and sets the trigger session request flag.
-    /// - Parameter initial: `Bool` If the current event is the initial launch.
     func refreshSessionData() {
         sessionData = [String: Any]()
         sessionId = Date().unixTimeMilliseconds
@@ -77,7 +76,7 @@ public extension DataLayer {
                 switch result {
                 case .success:
                     self?.shouldTriggerSessionRequest = false
-                    self?.numberOfTracksBacking = 0
+                    self?.numberOfTrackRequests = 0
                     self?.lastTrackDate = nil
                 default:
                     break

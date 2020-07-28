@@ -85,7 +85,6 @@ public class ModulesManager {
                     return
                 }
             }
-
         }
     }
     var config: TealiumConfig {
@@ -118,7 +117,6 @@ public class ModulesManager {
             }
         }
         self.logger = self.config.logger
-        //        self.setupDispatchers(config: self.config)
         self.setupDispatchValidators(config: self.config)
         self.setupDispatchListeners(config: self.config)
 

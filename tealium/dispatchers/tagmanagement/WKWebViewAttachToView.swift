@@ -21,7 +21,7 @@ extension TagManagementWKWebView {
     /// Attaches the webview to the current UIView (required to ensure proper operation of JavaScript operations).
     ///
     /// - Parameters:
-    ///     - specificView: `UIView` instance to use
+    ///     - specificView: `UIView?` instance to use
     ///     - completion: Completion block to be called when webview was successfully attached to the UIView
     func attachToUIView(specificView: UIView?,
                         withCompletion completion: (_ success: Bool) -> Void) {

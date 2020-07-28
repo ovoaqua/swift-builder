@@ -45,7 +45,6 @@ public class TealiumRepeatingTimer {
     private var state: State = .suspended
 
     deinit {
-        //        readWriteQueue.write {
         self.timer.setEventHandler {}
         /*
          If the timer is suspended, calling cancel without resuming
@@ -55,8 +54,6 @@ public class TealiumRepeatingTimer {
             self.timer.resume()
         }
         self.timer.cancel()
-        //            self.eventHandler = nil
-        //        }
     }
 
     /// Resumes this timer instance if suspended

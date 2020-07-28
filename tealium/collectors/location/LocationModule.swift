@@ -34,6 +34,12 @@ public class LocationModule: Collector {
         return newData
     }
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
         self.delegate = delegate
@@ -63,7 +69,7 @@ public class LocationModule: Collector {
 
     /// Returns the names of all the created geofences (those currently being monitored and those that are not)
     ///
-    /// - return: `[String]` Array containing the names of all geofences
+    /// - return: `[String]?` Array containing the names of all geofences
     public var createdGeofences: [String]? {
         var created: [String]?
         TealiumQueues.mainQueue.async { [weak self] in
@@ -87,7 +93,7 @@ public class LocationModule: Collector {
 
     /// Gets the user's last known location
     ///
-    /// - returns: `CLLocation` location object
+    /// - returns: `CLLocation?` location object
     public var latestLocation: CLLocation? {
         var latest: CLLocation?
         TealiumQueues.mainQueue.async { [weak self] in
@@ -115,7 +121,7 @@ public class LocationModule: Collector {
 
     /// Returns the names of all the geofences that are currently being monitored
     ///
-    /// - return: `[String]` Array containing the names of monitored geofences
+    /// - return: `[String]?` Array containing the names of monitored geofences
     public var monitoredGeofences: [String]? {
         var monitored: [String]?
         TealiumQueues.mainQueue.async { [weak self] in
@@ -163,7 +169,7 @@ public class LocationModule: Collector {
 
     /// Adds geofences to the Location Client to be monitored
     ///
-    /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be added
+    /// - parameter geofences: `[CLCircularRegion]` Geofences to be added
     public func startMonitoring(geofences: [CLCircularRegion]) {
         TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
@@ -175,7 +181,7 @@ public class LocationModule: Collector {
 
     /// Removes geofences from being monitored by the Location Client
     ///
-    /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be removed
+    /// - parameter geofences: `[CLCircularRegion]` Geofences to be removed
     public func stopMonitoring(geofences: [CLCircularRegion]) {
         TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {

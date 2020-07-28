@@ -28,7 +28,7 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
 
     /// Adds a remote command for later execution.
     ///
-    /// - Parameter remoteCommand: `TealiumRemoteCommand` to be added for later execution
+    /// - Parameter remoteCommand: `TealiumRemoteCommandProtocol` to be added for later execution
     public func add(_ remoteCommand: TealiumRemoteCommandProtocol) {
         // NOTE: Multiple commands with the same command id are possible - OK
         var remoteCommand = remoteCommand
@@ -48,6 +48,8 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
         commands.removeAll()
     }
 
+    /// If the request contains a notification form the webview, triggers the remote command
+    /// - Parameter data: `[String: Any]` data from track call
     public func triggerCommand(with data: [String: Any]) {
         guard let request = data[TealiumKey.tagmanagementNotification] as? URLRequest else {
             return
@@ -58,7 +60,7 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
     /// Trigger an associated remote command from a url request.
     ///￼
     /// - Parameter request: `URLRequest` to check for a remote command.
-    /// - Returns: `TealiumRemoteCommandsError` if unable to trigger a remote command. If nil is returned,
+    /// - Returns: `TealiumRemoteCommandsError?` if unable to trigger a remote command. If nil is returned,
     ///     then call was a successfully triggered remote command.
     @discardableResult
     public func triggerCommand(from request: URLRequest) -> TealiumRemoteCommandsError? {
@@ -87,8 +89,8 @@ extension TealiumRemoteCommandsManager: TealiumRemoteCommandDelegate {
     /// Triggers the completion block registered for a specific remote command.
     ///
     /// - Parameters:
-    ///     - command: `TealiumRemoteCommand` to be executed
-    ///     - response: `TealiumRemoteCommandResponse` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
+    ///     - command: `TealiumRemoteCommandProtocol` to be executed
+    ///     - response: `TealiumRemoteCommandResponseProtocol` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
     ///      it must set the "hasCustomCompletionHandler" flag, otherwise the completion notification will be sent automatically
     public func tealiumRemoteCommandRequestsExecution(_ command: TealiumRemoteCommandProtocol,
                                                       response: TealiumRemoteCommandResponseProtocol) {

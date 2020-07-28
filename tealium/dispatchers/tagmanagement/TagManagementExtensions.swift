@@ -59,6 +59,7 @@ public extension TealiumConfig {
         }
     }
 
+    /// If `true` a cookie observer should be added in order to successfully migrate all cookies. If `false`, multiple cookie observers are present which may cause some cookies to not migrate.
     var shouldAddCookieObserver: Bool {
         get {
             return options[TagManagementConfigKey.cookieObserver] as? Bool ?? true

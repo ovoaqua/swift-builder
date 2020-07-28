@@ -45,7 +45,7 @@ class TagManagementWKWebView: NSObject, TagManagementProtocol {
     ///
     /// - Parameters:
     ///     - webviewURL: `URL?` (typically for "mobile.html") to be loaded by the webview
-    ///     - delegates: `[AnyObject]?` Array of delegates, downcast fromAnyObject to account for any future potential changes in WebView APIs
+    ///     - delegates: `[WKNavigationDelegate]?` Array of delegates
     ///     - shouldAddCookieObserver: `Bool` indicating whether the cookie observer should be added. Default `true`.
     ///     - view: `UIView? ` - required `WKWebView`, if one is not provided we attach to the window object
     ///     - completion: completion block to be called when the webview has finished loading
@@ -82,7 +82,7 @@ class TagManagementWKWebView: NSObject, TagManagementProtocol {
 
     /// Adds optional delegates to the WebView instance.
     ///￼
-    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject to account for any future potential changes in WebView APIs
+    /// - Parameter delegates: `[WKNavigationDelegate]` Array of delegates
     func setWebViewDelegates(_ delegates: [WKNavigationDelegate]) {
         delegates.forEach {
             self.delegates?.add($0)
@@ -91,7 +91,7 @@ class TagManagementWKWebView: NSObject, TagManagementProtocol {
 
     /// Removes optional delegates for the WebView instance.
     ///￼
-    /// - Parameter delegates: `[AnyObject]` Array of delegates, downcast from AnyObject to account for any future potential changes in WebView APIs
+    /// - Parameter delegates: `[WKNavigationDelegate]` Array of delegates
     func removeWebViewDelegates(_ delegates: [WKNavigationDelegate]) {
         delegates.forEach {
             self.delegates?.remove($0)
@@ -102,6 +102,7 @@ class TagManagementWKWebView: NSObject, TagManagementProtocol {
     ///￼
     /// - Parameters:
     ///    - url: `URL` (typically for mobile.html) to load in the webview
+    ///    - shouldAddCookieObserver: `Bool` Whether or not to attach a cookie observer
     ///    - specificView: `UIView?` to attach to
     func setupWebview(forURL url: URL?,
                       shouldAddCookieObserver: Bool,
@@ -266,7 +267,7 @@ class TagManagementWKWebView: NSObject, TagManagementProtocol {
     /// Called by the WKWebView delegate when the page finishes loading.
     ///￼
     /// - Parameters:
-    ///     - state: `TealiumWebViewState` -  The webview state after the state change
+    ///     - state: `WebViewState` -  The webview state after the state change
     ///     - error: `Error?`
     func webviewStateDidChange(_ state: WebViewState,
                                withError error: Error?) {

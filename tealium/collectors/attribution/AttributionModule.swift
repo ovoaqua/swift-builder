@@ -25,14 +25,20 @@ public class AttributionModule: Collector {
     /// Provided for unit testing￼.
     ///
     /// - Parameter attributionData: Class instance conforming to `TealiumAttributionDataProtocol`
-    convenience init (config: TealiumConfig,
-                      delegate: ModuleDelegate?,
-                      diskStorage: TealiumDiskStorageProtocol?,
-                      attributionData: AttributionDataProtocol) {
+    convenience init(config: TealiumConfig,
+                     delegate: ModuleDelegate?,
+                     diskStorage: TealiumDiskStorageProtocol?,
+                     attributionData: AttributionDataProtocol) {
         self.init(config: config, delegate: delegate, diskStorage: diskStorage) { _ in }
         self.attributionData = attributionData
     }
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
+    /// - Parameter diskStorage: `TealiumDiskStorageProtocol` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     required public init(config: TealiumConfig,
                          delegate: ModuleDelegate?,
                          diskStorage: TealiumDiskStorageProtocol?,

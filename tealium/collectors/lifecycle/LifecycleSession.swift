@@ -55,7 +55,6 @@ public struct LifecycleSession: Codable, Equatable {
         return Bundle.main.version ?? "(unknown)"
     }
 
-    // Is this being used anywhere? Move to unit tests?
     public static func == (lhs: LifecycleSession, rhs: LifecycleSession ) -> Bool {
         if lhs.wakeDate != rhs.wakeDate { return false }
         if lhs.sleepDate != rhs.sleepDate { return false }

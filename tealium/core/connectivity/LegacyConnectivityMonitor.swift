@@ -224,7 +224,6 @@ class LegacyConnectivityMonitor: ConnectivityMonitorProtocol {
 
     /// Stops scheduled checks for connectivity.
     func cancelAutoStatusRefresh() {
-        //        timer = nil
         timer?.suspend()
     }
 

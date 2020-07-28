@@ -30,6 +30,11 @@ public class RemoteCommandsModule: Dispatcher {
         self.remoteCommands = remoteCommands
     }
 
+    /// Initializes the module
+    ///
+    /// - Parameter config: `TealiumConfig` instance
+    /// - Parameter delegate: `ModuleDelegate` instance
+    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     public required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
         remoteCommands = remoteCommands ?? TealiumRemoteCommandsManager(delegate: delegate)
@@ -85,7 +90,6 @@ public class RemoteCommandsModule: Dispatcher {
         // No further processing required - HTTP remote command already up.
     }
 
-    @available(*, deprecated, message: "Reserved for future use.")
     public func dynamicTrack(_ request: TealiumRequest,
                              completion: ModuleCompletion?) {
         guard let incoming = request as? TealiumRemoteCommandRequest else {

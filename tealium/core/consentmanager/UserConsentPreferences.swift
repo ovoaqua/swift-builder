@@ -23,7 +23,7 @@ public struct UserConsentPreferences: Equatable, Codable {
         self.consentStatus = consentStatus
     }
 
-    /// Initializes `TealiumConsentPreferences` from a dictionary. Used for initialization from previously-stored preferences.￼
+    /// Initializes `UserConsentPreferences` from a dictionary. Used for initialization from previously-stored preferences.￼
     ///
     /// - Parameter preferencesDictionary: `[String: Any]` containing a valid consent preferences dictionary.
     public mutating func initWithDictionary(preferencesDictionary: [String: Any]) {

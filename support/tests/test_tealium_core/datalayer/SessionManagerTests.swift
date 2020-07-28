@@ -26,13 +26,13 @@ class SessionManagerTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        eventDataManager.numberOfTracksBacking = 0
+        eventDataManager.numberOfTrackRequests = 0
     }
 
     func testLastTrackDateNilIncrementsNumberOfTracksBackingAndSetsLastTrackDate() {
         eventDataManager.lastTrackDate = nil
         eventDataManager.numberOfTracks = 0
-        XCTAssertEqual(eventDataManager.numberOfTracksBacking, 2)
+        XCTAssertEqual(eventDataManager.numberOfTrackRequests, 2)
         XCTAssertNotNil(eventDataManager.lastTrackDate)
     }
 
@@ -66,7 +66,7 @@ class SessionManagerTests: XCTestCase {
     func testSessionRefreshWhenSessionIdNil() {
         eventDataManager.sessionId = nil
         eventDataManager.lastTrackDate = nil
-        XCTAssertEqual(eventDataManager.numberOfTracksBacking, 1)
+        XCTAssertEqual(eventDataManager.numberOfTrackRequests, 1)
         XCTAssertTrue(eventDataManager.shouldTriggerSessionRequest)
     }
 

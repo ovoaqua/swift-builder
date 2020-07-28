@@ -79,7 +79,7 @@ public class AttributionData: AttributionDataProtocol {
     public lazy var allAttributionData: [String: Any] = {
         var all = [String: Any]()
         if let persistentAttributionData = persistentAttributionData {
-            all += persistentAttributionData.toDictionary()
+            all += persistentAttributionData.dictionary
         }
         all += volatileData
         return all

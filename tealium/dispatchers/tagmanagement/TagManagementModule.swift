@@ -40,7 +40,7 @@ public class TagManagementModule: Dispatcher {
     ///
     /// - Parameter config: `TealiumConfig` instance
     /// - Parameter delegate: `ModuleDelegate` instance
-    /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
+    /// - Parameter completion: `ModuleCompletion?` block to be called when init is finished
     public required init(config: TealiumConfig,
                          delegate: ModuleDelegate,
                          completion: ModuleCompletion?) {
@@ -71,8 +71,8 @@ public class TagManagementModule: Dispatcher {
 
     /// Sends the track request to the webview.
     ///￼
-    /// - Parameter track: `TealiumTrackRequest` to be sent to the webview
-    /// - Parameter completion: `ModuleCompletion` block to be called when the request has been processed
+    /// - Parameter track: `TealiumRequest` to be sent to the webview
+    /// - Parameter completion: `ModuleCompletion?` block to be called when the request has been processed
     func dispatchTrack(_ request: TealiumRequest,
                        completion: ModuleCompletion?) {
         switch request {
@@ -117,7 +117,7 @@ public class TagManagementModule: Dispatcher {
     /// Detects track type and dispatches appropriately.
     ///
     /// - Parameter track: `TealiumRequest`, which is expected to be a `TealiumTrackRequest`, `TealiumBatchTrackRequest` or a `TealiumRemoteCommandRequestResponse`
-    /// - Parameter completion: `ModuleCompletion` block to be called when the request has been processed
+    /// - Parameter completion: `ModuleCompletion?` block to be called when the request has been processed
     public func dynamicTrack(_ track: TealiumRequest,
                              completion: ModuleCompletion?) {
         if self.errorState.value > 0 {
@@ -166,7 +166,7 @@ public class TagManagementModule: Dispatcher {
     /// Enqueues a request for later dispatch if the webview isn't ready.
     ///
     /// - Parameter request: `TealiumRequest` to be enqueued
-    /// - Parameter completion: `ModuleCompletion` block to be called when the request has been processed
+    /// - Parameter completion: `ModuleCompletion?` block to be called when the request has been processed
     func enqueue(_ request: TealiumRequest,
                  completion: ModuleCompletion?) {
         guard request is TealiumTrackRequest || request is TealiumBatchTrackRequest || request is TealiumRemoteAPIRequest else {

@@ -130,7 +130,7 @@ public struct Lifecycle: Codable {
 
     /// Seconds app was awake since last launch. Available only during launch calls.
     ///
-    /// - Returns: String of Int Seconds elapsed
+    /// - Returns: `String?` of Int Seconds elapsed
     var priorSecondsAwake: String? {
         var secondsAggregate = 0
         var count = sessions.count - 1
@@ -151,6 +151,7 @@ public struct Lifecycle: Codable {
     /// - Parameters:
     ///     - type: `String` containing the lifecycle type to be tracked
     ///     - date: `Date` for the lifecycle event
+    /// - Returns: `[String: Any]` of lifecycle data
     public func asDictionary(type: String?,
                              for date: Date) -> [String: Any] {
         var dict = [String: Any]()
@@ -208,7 +209,7 @@ public struct Lifecycle: Codable {
     /// - Parameters:
     ///     - earlierDate: `Date?`
     ///     - laterDate: `Date`
-    /// - Returns: `String` containing the number of days between the 2 dates
+    /// - Returns: `String?` containing the number of days between the 2 dates
     func daysFrom(earlierDate: Date?, laterDate: Date) -> String? {
         guard let earlierDate = earlierDate else {
             return nil
@@ -233,6 +234,7 @@ public struct Lifecycle: Codable {
     /// - Parameters:
     ///     - type: `String?` containing the lifecycle type
     ///     - date: `Date` - the current date for this event
+    /// - Returns: `String?` of days since last awake
     func daysSinceLastWake(type: String?,
                            toDate date: Date) -> String? {
         if type == "sleep" {
@@ -255,7 +257,7 @@ public struct Lifecycle: Codable {
     }
 
     /// - Parameter type: `String` containing the current lifecycle type
-    /// - Returns: `Date` containing the last launch date
+    /// - Returns: `Date?` containing the last launch date
     func lastLaunchDate(type: String?) -> Date? {
         guard let lastSession = sessions.last else {
             return nil
@@ -313,7 +315,7 @@ public struct Lifecycle: Codable {
     ///
     /// - Parameters:
     ///   - date: `Date` to trigger launch from.
-    ///   - overrideSession: `TealiumLifecycleSession? `override session. Mainly for testing.
+    ///   - overrideSession: `LifecycleSession? `override session. Mainly for testing.
     /// - Returns: `[String:Any]` containing lifecycle launch variables
     public mutating func newLaunch(at date: Date,
                                    overrideSession: LifecycleSession?) -> [String: Any] {
@@ -378,7 +380,7 @@ public struct Lifecycle: Codable {
     ///
     /// - Parameters:
     ///   - date: `Date` to trigger wake from.
-    ///   - overrideSession: `TealiumLifecycleSession? `override session. Mainly for testing.
+    ///   - overrideSession: `LifecycleSession?` override session. Mainly for testing.
     /// - Returns: `[String:Any]` containing lifecycle wake variables
     public mutating func newWake(at date: Date, overrideSession: LifecycleSession?) -> [String: Any] {
         autotracked = "true"

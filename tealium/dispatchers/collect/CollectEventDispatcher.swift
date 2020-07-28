@@ -28,7 +28,7 @@ class CollectEventDispatcher: CollectProtocol {
     /// - Parameters:
     ///     - dispatchURL:`String` representation of the dispatch URL￼
     ///     - urlSession: `URLSession` to use for the dispatch (overridable for unit tests)￼
-    ///     - completion: Completion handler to run when the dispatcher has finished initializing
+    ///     - completion: `ModuleCompletion?` Completion handler to run when the dispatcher has finished initializing
     init(dispatchURL: String,
          urlSession: URLSessionProtocol = CollectEventDispatcher.urlSession,
          completion: ModuleCompletion? = nil) {
@@ -99,7 +99,7 @@ class CollectEventDispatcher: CollectProtocol {
     /// - Parameters:
     ///     - data: `[String:Any]` of variables to be dispatched￼
     ///     - url: `String?` containing the dispatch URL to use. Defaults to single event dispatch url.￼
-    ///     - completion: Optional completion block to be called when operation complete
+    ///     - completion: `ModuleCompletion?` Optional completion block to be called when operation complete
     func dispatch(data: [String: Any],
                   url: String? = nil,
                   completion: ModuleCompletion?) {
@@ -116,7 +116,7 @@ class CollectEventDispatcher: CollectProtocol {
     ///
     /// - Parameters:
     ///     - data: `[String:Any]` containing the nested data structure for a bulk dispatch
-    ///     - completion: Optional completion block to be called when operation complete
+    ///     - completion: `ModuleCompletion?` Optional completion block to be called when operation complete
     func dispatchBulk(data: [String: Any],
                       completion: ModuleCompletion?) {
         dispatch(data: data, url: bulkEventDispatchURL, completion: completion)
@@ -126,7 +126,7 @@ class CollectEventDispatcher: CollectProtocol {
     ///
     /// - Parameters:
     ///     - request: `URLRequest` object￼
-    ///     - completion: Optional completion block to handle success/failure
+    ///     - completion: `ModuleCompletion?` Optional completion block to handle success/failure
     func sendURLRequest(_ request: URLRequest,
                         _ completion: ModuleCompletion?) {
         if let urlSession = self.urlSession {

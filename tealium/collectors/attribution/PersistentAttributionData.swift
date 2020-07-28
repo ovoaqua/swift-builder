@@ -31,7 +31,7 @@ public struct PersistentAttributionData: Codable {
     region: String?
 
     public subscript(_ key: String) -> String? {
-        return self.toDictionary()[key]
+        return self.dictionary[key]
     }
 
     public enum CodingKeys: String, CodingKey {
@@ -69,8 +69,8 @@ public struct PersistentAttributionData: Codable {
         }
     }
 
-    /// - Returns: `[String: Any]`
-    public func toDictionary() -> [String: String] {
+    /// - Returns: `[String: String]`
+    public var dictionary: [String: String] {
         // note: compiler cannot type-check in reasonable time, so assignment and return split up into separate statements
         let attributionData: [String: String] = [AttributionKey.clickedWithin30D: clickedWithin30D ?? "",
                                                  AttributionKey.clickedDate: clickedDate ?? "",

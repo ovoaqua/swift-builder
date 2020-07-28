@@ -31,7 +31,7 @@ public class TealiumLogger: TealiumLoggerProtocol {
     /// Modules may initialize their own loggers, passing in the log level from the TealiumConfig object￼.
     ///
     /// - Parameters:
-    ///     - logLevel: `TealiumLogLevel` indicating the type of errors that should be logged
+    ///     - config: `TealiumConfig` object
     required public init(config: TealiumConfig) {
         self.config = config
     }
@@ -40,7 +40,7 @@ public class TealiumLogger: TealiumLoggerProtocol {
     ///
     /// - Parameters:
     ///     - message: `String` containing the message to be logged￼
-    ///     - logLevel: `TealiumLogLevel` indicating the severity of the message to be logged
+    ///     - request: `TealiumLogRequest` to log
     public func log(_ request: TealiumLogRequest) {
         switch loggerType {
         case .os:

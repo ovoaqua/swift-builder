@@ -73,8 +73,9 @@ public class LifecycleModule: Collector {
     /// Determines if a lifecycle event should be triggered and requests a track.
     ///
     /// - Parameters:
-    ///     - type: `TealiumLifecycleType`
+    ///     - type: `LifecycleType`
     ///     - date: `Date` at which the event occurred
+    ///     - autotracked: `Bool` indicates whether or not the lifecycle call was autotracked
     public func process(type: LifecycleType,
                         at date: Date, autotracked: Bool = false) {
         guard var lifecycle = self.lifecycle else {
@@ -101,7 +102,7 @@ public class LifecycleModule: Collector {
 
     /// Prevent manual spanning of repeated lifecycle calls to system.
     ///
-    /// - Parameter type: `TealiumLifecycleType`
+    /// - Parameter type: `LifecycleType`
     /// - Returns: `Bool` `true` if process should be allowed to continue
     public func lifecycleAcceptable(type: LifecycleType) -> Bool {
         switch type {
@@ -123,7 +124,7 @@ public class LifecycleModule: Collector {
 
     /// Lifecycle event detected.
     /// - Parameters:
-    ///   - type: `TealiumLifecycleType` launch, sleep, wake
+    ///   - type: `LifecycleType` launch, sleep, wake
     ///   - date: `Date` of lifecycle event
     public func lifecycleDetected(type: LifecycleType,
                                   at date: Date = Date()) {

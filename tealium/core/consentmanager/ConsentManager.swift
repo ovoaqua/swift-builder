@@ -83,7 +83,7 @@ public class ConsentManager {
 
     /// Sends a track call containing the consent settings if consent logging is enabled￼.
     ///
-    /// - Parameter preferences: `TealiumUserConsentPreferences?`
+    /// - Parameter preferences: `UserConsentPreferences?`
     func trackUserConsentPreferences(_ preferences: UserConsentPreferences?) {
         if var consentData = currentPolicy.consentPolicyStatusInfo {
             consentData[TealiumKey.event] = currentPolicy.consentTrackingEventName
