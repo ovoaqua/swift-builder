@@ -45,9 +45,15 @@ public extension TealiumKey {
     static let timestamp = "timestamp"
     static let timestampLocal = "timestamp_local"
     static let timestampOffset = "timestamp_offset"
+}
+
+public extension TealiumValue {
     static let defaultMinutesBetweenSession = 30
     static let defaultsSecondsBetweenTrackEvents = 30.0
     static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
+    static let hdlMaxRetries = 3
+    static let hdlCacheSizeMax = 50
+    static let defaultHDLExpiry: (Int, unit: TimeUnit) = (7, unit: .days)
 }
 
 extension Date {

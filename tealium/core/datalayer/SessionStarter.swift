@@ -28,7 +28,7 @@ public struct SessionStarter: SessionStarterProtocol {
     /// - Returns: `String` The session url.
     public var sessionURL: String {
         let timestamp = Date().unixTimeMilliseconds
-        return "\(TealiumKey.sessionBaseURL)\(config.account)/\(config.profile)/\(timestamp)&cb=\(timestamp)"
+        return "\(TealiumValue.sessionBaseURL)\(config.account)/\(config.profile)/\(timestamp)&cb=\(timestamp)"
     }
 
     /// Makes a request to the Tealium CDN session registry.

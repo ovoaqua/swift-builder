@@ -24,8 +24,6 @@ public enum TealiumValue {
     public static let tiqURLSuffix = "mobile.html?sdk_session_count=true"
     public static let defaultBatchExpirationDays = 7
     public static let defaultMaxQueueSize = 40
-    public static let hdlCacheSizeMax = 50
-    public static let defaultHDLExpiry: (Int, unit: TimeUnit) = (7, unit: .days)
 }
 
 public enum ModuleNames {

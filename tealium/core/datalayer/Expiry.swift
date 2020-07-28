@@ -23,7 +23,7 @@ public enum Expiry {
         case .after(let date):
             return date
         case .session:
-            components.setValue(TealiumKey.defaultMinutesBetweenSession, for: .minute)
+            components.setValue(TealiumValue.defaultMinutesBetweenSession, for: .minute)
             return Calendar(identifier: .gregorian).date(byAdding: components, to: currentDate)!
         case .untilRestart:
             return currentDate

@@ -81,7 +81,7 @@ class TealiumHelper: NSObject {
                               Dispatchers.TagManagement,
 //                              Dispatchers.RemoteCommands
         ]
-
+        
         #if os(iOS)
 //
 //        let remoteCommand = TealiumRemoteCommand(commandId: "display",

@@ -41,13 +41,14 @@ public class HostedDataLayer: HostedDataLayerProtocol {
     public var data: [String: Any]?
     var diskStorage: TealiumDiskStorageProtocol
     var failingDataLayerItems = Set<String>()
-
+    weak var delegate: ModuleDelegate?
     var baseURL: String {
         return "https://tags.tiqcdn.com/dle/\(config.account)/\(config.profile)/"
     }
 
     required public init(config: TealiumConfig, delegate: ModuleDelegate?, diskStorage: TealiumDiskStorageProtocol?, completion: (ModuleResult) -> Void) {
         self.config = config
+        self.delegate = delegate
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "hdl")
         if let cache = self.diskStorage.retrieve(as: [HostedDataLayerCacheItem].self) {
             self.cache = cache
@@ -105,7 +106,7 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             return(false, existingCache)
         }
 
-        retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: 5)
+        retrieveAndRetry(url: url, dispatch: dispatch, itemId: itemId, maxRetries: TealiumValue.hdlMaxRetries)
 
         return (true, ["queue_reason": "Awaiting HDL response"])
     }
@@ -133,6 +134,7 @@ public class HostedDataLayer: HostedDataLayerProtocol {
             case .success(let data):
                 let cacheItem = HostedDataLayerCacheItem(id: "\(itemId)", data: data)
                 self.cache?.append(cacheItem)
+                self.delegate?.requestDequeue(reason: "HDL Response Received")
             }
         }
     }

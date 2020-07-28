@@ -17,7 +17,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
     public var lastTrackDate: Date?
     public var minutesBetweenSessionIdentifier: TimeInterval
     public var numberOfTracksBacking = 0
-    public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
+    public var secondsBetweenTrackEvents: TimeInterval = TealiumValue.defaultsSecondsBetweenTrackEvents
     public var sessionData = [String: Any]()
     var sessionStarter: SessionStarterProtocol
     public var shouldTriggerSessionRequest = false
@@ -29,7 +29,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "eventdata")
         self.sessionStarter = sessionStarter ?? SessionStarter(config: config)
-        self.minutesBetweenSessionIdentifier = TimeInterval(TealiumKey.defaultMinutesBetweenSession)
+        self.minutesBetweenSessionIdentifier = TimeInterval(TealiumValue.defaultMinutesBetweenSession)
         var currentStaticData = [TealiumKey.account: config.account,
                                  TealiumKey.profile: config.profile,
                                  TealiumKey.environment: config.environment,

@@ -127,6 +127,7 @@ public class AppDataModule: Collector, AppDataCollection {
         diskStorage.saveToDefaults(key: TealiumKey.visitorId, value: visitorId)
         diskStorage?.save(persistentData, completion: nil)
         return persistentData
+        TealiumInstanceManager.shared.removeInstance(config: <#T##TealiumConfig#>)
     }
 
     /// Generates a new set of Volatile Data (usually once per app launch)
