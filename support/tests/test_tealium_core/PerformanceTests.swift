@@ -164,7 +164,7 @@ class PerformanceTests: XCTestCase {
             self.stopMeasuring()
         }
     }
-    
+
     #if os(iOS)
     func testAttributionModuleInit() {
         self.measureMetrics(allMetrics, automaticallyStartMeasuring: true) {

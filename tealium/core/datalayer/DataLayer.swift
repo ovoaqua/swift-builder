@@ -89,10 +89,12 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
     /// - Returns: `EventData` containing all stored event data.
     public var persistentDataStorage: DataLayerCollection? {
         get {
-            guard let storedData = self.diskStorage.retrieve(as: DataLayerCollection.self) else {
-                return DataLayerCollection()
+            TealiumQueues.backgroundConcurrentQueue.read {
+                guard let storedData = self.diskStorage.retrieve(as: DataLayerCollection.self) else {
+                    return DataLayerCollection()
+                }
+                return storedData
             }
-            return storedData
         }
         set {
             if let newData = newValue?.removeExpired() {
@@ -129,14 +131,16 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
         guard let expiry = expiry else {
             return
         }
-        switch expiry {
-        case .session:
-            self.persistentDataStorage?.insert(from: data, expires: expiry.date)
-        case .untilRestart:
-            self.restartData += data
-            self.persistentDataStorage?.insert(from: self.restartData, expires: expiry.date)
-        default:
-            self.persistentDataStorage?.insert(from: data, expires: expiry.date)
+        TealiumQueues.backgroundConcurrentQueue.write {
+            switch expiry {
+            case .session:
+                self.persistentDataStorage?.insert(from: data, expires: expiry.date)
+            case .untilRestart:
+                self.restartData += data
+                self.persistentDataStorage?.insert(from: self.restartData, expires: expiry.date)
+            default:
+                self.persistentDataStorage?.insert(from: data, expires: expiry.date)
+            }
         }
     }
 
