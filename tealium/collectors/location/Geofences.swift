@@ -3,7 +3,7 @@
 //  TealiumLocation
 //
 //  Created by Harry Cassell on 02/09/2019..
-//  Copyright © 2019 Harry Cassell. All rights reserved.
+//  Copyright © 2019 Tealium. All rights reserved.
 //
 #if os(iOS)
 import CoreLocation
@@ -124,14 +124,18 @@ public struct GeofenceData: Codable {
     /// Logs verbose information about events occuring in the `TealiumLocation` module
     /// - Parameter message: `String` message to log to the console
     func logError(message: String) {
-        let logRequest = TealiumLogRequest(title: "Tealium Location", message: message, info: nil, logLevel: .error, category: .general)
+        let logRequest = TealiumLogRequest(title: "Tealium Location",
+                                           message: message, info: nil,
+                                           logLevel: .error, category: .general)
         logger?.log(logRequest)
     }
 
     /// Logs verbose information about events occuring in the `TealiumLocation` module
     /// - Parameter message: `String` message to log to the console
     func logInfo(message: String) {
-        let logRequest = TealiumLogRequest(title: "Tealium Location", message: message, info: nil, logLevel: .debug, category: .general)
+        let logRequest = TealiumLogRequest(title: "Tealium Location",
+                                           message: message, info: nil,
+                                           logLevel: .debug, category: .general)
         logger?.log(logRequest)
     }
 

@@ -100,13 +100,14 @@
 		CFC657BA2370B17700A61F6D /* TealiumLifecycle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7881EFF21998DAD002CDCC1 /* TealiumLifecycle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CFC657C52370B17700A61F6D /* TealiumVisitorService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7805836233A65FB00DAD90E /* TealiumVisitorService.framework */; };
 		CFC657C62370B17700A61F6D /* TealiumVisitorService.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7805836233A65FB00DAD90E /* TealiumVisitorService.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CFE5D86224D09C1C007E092C /* MockTealiumLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5D85F24D09BC0007E092C /* MockTealiumLocationManager.swift */; };
 		CFF242A523CE774C0091B7BF /* TealiumLocation.h in Headers */ = {isa = PBXBuildFile; fileRef = CFF242A323CE774C0091B7BF /* TealiumLocation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CFF242A823CE774C0091B7BF /* TealiumLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFF242A123CE774C0091B7BF /* TealiumLocation.framework */; };
 		CFF242A923CE774C0091B7BF /* TealiumLocation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CFF242A123CE774C0091B7BF /* TealiumLocation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CFF242C823CE77F10091B7BF /* LocationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C023CE77F10091B7BF /* LocationModule.swift */; };
 		CFF242CA23CE77F10091B7BF /* Geofences.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C123CE77F10091B7BF /* Geofences.swift */; };
 		CFF242CC23CE77F10091B7BF /* TealiumLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C223CE77F10091B7BF /* TealiumLocationExtensions.swift */; };
-		CFF242CE23CE77F10091B7BF /* LocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C323CE77F10091B7BF /* LocationManagerProtocol.swift */; };
+		CFF242CE23CE77F10091B7BF /* LocationManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C323CE77F10091B7BF /* LocationManagerProtocols.swift */; };
 		CFF242D023CE77F10091B7BF /* TealiumLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C423CE77F10091B7BF /* TealiumLocationManager.swift */; };
 		CFF242D223CE77F10091B7BF /* LocationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C523CE77F10091B7BF /* LocationDelegate.swift */; };
 		CFF242D423CE77F10091B7BF /* TealiumLocationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF242C623CE77F10091B7BF /* TealiumLocationConstants.swift */; };
@@ -1377,6 +1378,7 @@
 		CFC657972370B14600A61F6D /* TVOSTealiumHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVOSTealiumHelper.swift; sourceTree = "<group>"; };
 		CFE2561D23CFDD89001F5E2B /* SanDiego.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SanDiego.gpx; sourceTree = "<group>"; };
 		CFE49EDA229DA3A400FD6A68 /* TealiumRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumRegistration.swift; sourceTree = "<group>"; };
+		CFE5D85F24D09BC0007E092C /* MockTealiumLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTealiumLocationManager.swift; sourceTree = "<group>"; };
 		CFF2429B23CE76F90091B7BF /* WalkAroundReading.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = WalkAroundReading.gpx; sourceTree = "<group>"; };
 		CFF242A123CE774C0091B7BF /* TealiumLocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumLocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFF242A323CE774C0091B7BF /* TealiumLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TealiumLocation.h; sourceTree = "<group>"; };
@@ -1385,7 +1387,7 @@
 		CFF242C023CE77F10091B7BF /* LocationModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationModule.swift; sourceTree = "<group>"; };
 		CFF242C123CE77F10091B7BF /* Geofences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geofences.swift; sourceTree = "<group>"; };
 		CFF242C223CE77F10091B7BF /* TealiumLocationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLocationExtensions.swift; sourceTree = "<group>"; };
-		CFF242C323CE77F10091B7BF /* LocationManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerProtocol.swift; sourceTree = "<group>"; };
+		CFF242C323CE77F10091B7BF /* LocationManagerProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerProtocols.swift; sourceTree = "<group>"; };
 		CFF242C423CE77F10091B7BF /* TealiumLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLocationManager.swift; sourceTree = "<group>"; };
 		CFF242C523CE77F10091B7BF /* LocationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDelegate.swift; sourceTree = "<group>"; };
 		CFF242C623CE77F10091B7BF /* TealiumLocationConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLocationConstants.swift; sourceTree = "<group>"; };
@@ -2512,7 +2514,7 @@
 				CFF242C023CE77F10091B7BF /* LocationModule.swift */,
 				CFF242C123CE77F10091B7BF /* Geofences.swift */,
 				CFF242C223CE77F10091B7BF /* TealiumLocationExtensions.swift */,
-				CFF242C323CE77F10091B7BF /* LocationManagerProtocol.swift */,
+				CFF242C323CE77F10091B7BF /* LocationManagerProtocols.swift */,
 				CFF242C423CE77F10091B7BF /* TealiumLocationManager.swift */,
 				CFF242C523CE77F10091B7BF /* LocationDelegate.swift */,
 				CFF242C623CE77F10091B7BF /* TealiumLocationConstants.swift */,
@@ -2530,6 +2532,7 @@
 				CFF242DB23CE78390091B7BF /* MockLocationManager.swift */,
 				CFF242D923CE78390091B7BF /* TealiumLocationTests.swift */,
 				CF7F948324650F9300399774 /* MockLocationDiskStorage.swift */,
+				CFE5D85F24D09BC0007E092C /* MockTealiumLocationManager.swift */,
 			);
 			path = test_tealium_location;
 			sourceTree = "<group>";
@@ -4831,7 +4834,7 @@
 				CFF242D223CE77F10091B7BF /* LocationDelegate.swift in Sources */,
 				CFF242C823CE77F10091B7BF /* LocationModule.swift in Sources */,
 				CFF242CC23CE77F10091B7BF /* TealiumLocationExtensions.swift in Sources */,
-				CFF242CE23CE77F10091B7BF /* LocationManagerProtocol.swift in Sources */,
+				CFF242CE23CE77F10091B7BF /* LocationManagerProtocols.swift in Sources */,
 				CFF242D423CE77F10091B7BF /* TealiumLocationConstants.swift in Sources */,
 				CFF242D023CE77F10091B7BF /* TealiumLocationManager.swift in Sources */,
 				CFF242CA23CE77F10091B7BF /* Geofences.swift in Sources */,
@@ -5011,6 +5014,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFE5D86224D09C1C007E092C /* MockTealiumLocationManager.swift in Sources */,
 				CFF242E723CE78390091B7BF /* TealiumLocationTests.swift in Sources */,
 				D762FC3A232F97EF00CBC4D0 /* TestTealiumHelper.swift in Sources */,
 				CFF242ED23CE78390091B7BF /* MockLocationManager.swift in Sources */,

@@ -129,6 +129,8 @@ class TealiumHelper: NSObject {
 
             dataLayer.add(key: "hello", value: "itsme", expiry: .afterCustom((.months, 1)))
 
+            teal.location?.requestPermissions()
+            
 //            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
 //
 //            print("Persistent Data: \(String(describing: persitence.dictionary))")
@@ -156,8 +158,6 @@ class TealiumHelper: NSObject {
             print("Remote Command data: hello = \(hello), key = \(key), tealium = \(tealium) 🎉🎊")
         }
         remoteCommands.add(remoteCommand)
-        
-        
         #endif
         
         
@@ -166,13 +166,6 @@ class TealiumHelper: NSObject {
     func resetConsentPreferences() {
         tealium?.consentManager?.resetUserConsentPreferences()
     }
-    
-    func requestLocationPermission() {
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1.0) {
-            self.tealium?.location?.requestPermissions()
-        }
-    }
-    
     
     func toggleConsentStatus() {
         if let consentStatus = tealium?.consentManager?.userConsentStatus {

@@ -12,15 +12,13 @@ import TealiumCore
 #endif
 
 // MARK: EXTENSIONS
-extension Tealium {
+public extension Tealium {
 
     /// Returns a LocationManager instance
     ///
     /// - Returns: `TealiumLocation?` instance (nil if disabled)
-    public var location: TealiumLocationManager? {
-        let module = (zz_internal_modulesManager?.modules.first { $0 is LocationModule }) as? LocationModule
-
-        return module?.tealiumLocationManager
+    var location: LocationModule? {
+        return (zz_internal_modulesManager?.modules.first { $0 is LocationModule }) as? LocationModule
     }
 }
 

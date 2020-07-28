@@ -3,7 +3,7 @@
 //  TealiumLocation
 //
 //  Created by Harry Cassell on 02/09/2019.
-//  Copyright © 2019 Harry Cassell. All rights reserved.
+//  Copyright © 2019 Tealium. All rights reserved.
 //
 #if os(iOS)
 import CoreLocation
@@ -12,7 +12,7 @@ import Foundation
 import TealiumCore
 #endif
 
-public class TealiumLocationManager: NSObject, CLLocationManagerDelegate {
+public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, TealiumLocationManagerProtocol {
     var config: TealiumConfig
     var logger: TealiumLoggerProtocol? {
         config.logger
@@ -22,7 +22,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate {
     var geofences = Geofences()
     weak var locationDelegate: LocationDelegate?
     var didEnterRegionWorking = false
-    var locationAccuracy = LocationKey.lowAccuracy
+    public var locationAccuracy = LocationKey.lowAccuracy
 
     init(config: TealiumConfig,
          bundle: Bundle = Bundle.main,
@@ -207,15 +207,13 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate {
     /// Adds geofences to the Location Client to be monitored
     ///
     /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be added
-    public func startMonitoring(geofences: [CLCircularRegion]) {
+    public func startMonitoring(_ geofences: [CLCircularRegion]) {
         if geofences.capacity == 0 {
             return
         }
 
         geofences.forEach {
-            if !(locationManager.monitoredRegions.contains($0)) {
-                locationManager.startMonitoring(for: $0)
-            }
+            startMonitoring(geofence: $0)
         }
     }
 
@@ -232,15 +230,13 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate {
     /// Removes geofences from being monitored by the Location Client
     ///
     /// - parameter geofences: `Array<CLCircularRegion>` Geofences to be removed
-    public func stopMonitoring(geofences: [CLCircularRegion]) {
+    public func stopMonitoring(_ geofences: [CLCircularRegion]) {
         if geofences.capacity == 0 {
             return
         }
 
         geofences.forEach {
-            if locationManager.monitoredRegions.contains($0) {
-                locationManager.stopMonitoring(for: $0)
-            }
+            stopMonitoring(geofence: $0)
         }
     }
 

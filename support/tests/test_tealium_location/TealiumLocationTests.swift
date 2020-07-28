@@ -17,17 +17,23 @@ class TealiumLocationTests: XCTestCase {
     var locationManager: MockLocationManager!
     var config: TealiumConfig!
     var locationModule: LocationModule?
+    var locationModuleWithMock: LocationModule?
+    var mockTealiumLocationManager = MockTealiumLocaitonManager()
 
     override func setUp() {
         guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
-            XCTFail()
+            XCTFail("MockLocationManager did not init properly - shouldn't happen")
             return
         }
 
         self.locationManager = locationManager
         TealiumLocationTests.expectations = [XCTestExpectation]()
         config = TealiumConfig(account: "tealiummobile", profile: "location", environment: "dev")
-        locationModule = LocationModule(config: config, delegate: self, diskStorage: MockLocationDiskStorage(config: config), completion: { _ in })
+        let mockDisk = MockLocationDiskStorage(config: config)
+        locationModule = LocationModule(config: config,
+                                        delegate: self,
+                                        diskStorage: mockDisk,
+                                        completion: { _ in })
     }
 
     override func tearDown() {
@@ -140,7 +146,7 @@ class TealiumLocationTests: XCTestCase {
         locationManager.delegate = tealiumLocation
 
         let regions = tealiumLocation.geofences.regions
-        tealiumLocation.startMonitoring(geofences: regions)
+        tealiumLocation.startMonitoring(regions)
 
         XCTAssertEqual(tealiumLocation.locationManager.monitoredRegions.contains(regions[0]), true)
         XCTAssertEqual(tealiumLocation.locationManager.monitoredRegions.contains(regions[1]), true)
@@ -152,7 +158,7 @@ class TealiumLocationTests: XCTestCase {
 
         locationManager.delegate = tealiumLocation
 
-        tealiumLocation.startMonitoring(geofences: [CLCircularRegion]())
+        tealiumLocation.startMonitoring([CLCircularRegion]())
 
         XCTAssertEqual(tealiumLocation.locationManager.monitoredRegions.count, 0)
     }
@@ -165,26 +171,9 @@ class TealiumLocationTests: XCTestCase {
 
         let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), radius: CLLocationDistance(100.0), identifier: "Good_Geofence")
 
-        tealiumLocation.startMonitoring(geofences: [region])
+        tealiumLocation.startMonitoring([region])
 
         XCTAssertEqual(tealiumLocation.locationManager.monitoredRegions.contains(region), true)
-    }
-
-    func testStartLocationUpdatesWithDefaults() {
-        let tealiumLocation = TealiumLocationManager(config: config,
-                                                     locationManager: locationManager)
-        locationManager.delegate = tealiumLocation
-        XCTAssert(MockLocationManager.authorizationStatusCount > 0)
-        XCTAssertEqual(1, locationManager.startMonitoringSignificantLocationChangesCount)
-    }
-
-    func testStartLocationUpdatesWithHighAccuracy() {
-        config.useHighAccuracy = true
-        let tealiumLocation = TealiumLocationManager(config: config,
-                                                     locationManager: locationManager)
-        locationManager.delegate = tealiumLocation
-        XCTAssert(MockLocationManager.authorizationStatusCount > 0)
-        XCTAssertEqual(1, locationManager.startUpdatingLocationCount)
     }
 
     func testStopLocationUpdates() {
@@ -291,7 +280,7 @@ class TealiumLocationTests: XCTestCase {
 
         let region3 = CLCircularRegion(center: coordinate, radius: 10.0, identifier: "testRegion")
 
-        tealiumLocation.startMonitoring(geofences: [region1, region2])
+        tealiumLocation.startMonitoring([region1, region2])
         XCTAssertEqual(2, locationManager.startMonitoringCount)
 
         tealiumLocation.startMonitoring(geofence: region3)
@@ -320,9 +309,9 @@ class TealiumLocationTests: XCTestCase {
 
         let region3 = CLCircularRegion(center: coordinate, radius: 10.0, identifier: "testRegion3")
 
-        tealiumLocation.startMonitoring(geofences: [region1, region2, region3])
+        tealiumLocation.startMonitoring([region1, region2, region3])
 
-        tealiumLocation.stopMonitoring(geofences: [region1, region2])
+        tealiumLocation.stopMonitoring([region1, region2])
         XCTAssertEqual(2, locationManager.stopMonitoringCount)
 
         tealiumLocation.stopMonitoring(geofence: region3)
@@ -337,7 +326,7 @@ class TealiumLocationTests: XCTestCase {
 
         let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), radius: CLLocationDistance(100.0), identifier: "Good_Geofence")
 
-        tealiumLocation.startMonitoring(geofences: [region])
+        tealiumLocation.startMonitoring([region])
 
         XCTAssertEqual(["Good_Geofence"], tealiumLocation.monitoredGeofences!)
     }
@@ -352,7 +341,7 @@ class TealiumLocationTests: XCTestCase {
 
         let region2 = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 10.0, longitude: 10.0), radius: CLLocationDistance(200.0), identifier: "Another_Good_Geofence")
 
-        tealiumLocation.startMonitoring(geofences: [region1, region2])
+        tealiumLocation.startMonitoring([region1, region2])
         tealiumLocation.clearMonitoredGeofences()
 
         XCTAssertEqual(2, locationManager.stopMonitoringCount)
@@ -376,11 +365,98 @@ class TealiumLocationTests: XCTestCase {
 
     // MARK: Location Module Tests
 
+    func testModuleCreatedGeofences() {
+        locationModule?.tealLocationManager = mockTealiumLocationManager
+        _ = locationModule?.createdGeofences
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.createdGeofencesCallCount, 1)
+        }
+    }
+
+    func testModuleLatestLocation() {
+        _ = locationModuleWithMock?.latestLocation
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.latestLocationCallCount, 1)
+        }
+    }
+
+    func testModuleLocationServiceEnabled() {
+        _ = locationModuleWithMock?.locationServiceEnabled
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.locationServiceEnabledCallCount, 1)
+        }
+    }
+
+    func testModuleMonitoredGeofences() {
+        _ = locationModuleWithMock?.monitoredGeofences
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.monitoredGeofencesCallCount, 1)
+        }
+    }
+
+    func testModuleClearMonitoredGeofences() {
+        _ = locationModuleWithMock?.clearMonitoredGeofences()
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.clearMonitoredGeofencesCallCount, 1)
+        }
+    }
+
+    func testModuleDisable() {
+        _ = locationModuleWithMock?.disable()
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.disableCallCount, 1)
+        }
+    }
+
+    func testModuleRequestPermissions() {
+        _ = locationModuleWithMock?.requestPermissions()
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.requestPermissionsCallCount, 1)
+        }
+    }
+
+    func testModuleSendGeofenceTrackingEvent() {
+        locationModuleWithMock?.sendGeofenceTrackingEvent(region: CLRegion(), triggeredTransition: "test")
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.sendGeofenceTrackingEventCallCount, 1)
+        }
+    }
+
+    func testModuleStartLocationUpdates() {
+        locationModuleWithMock?.startLocationUpdates()
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.startLocationUpdatesCallCount, 1)
+        }
+    }
+
+    func testModuleStartMonitoring() {
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), radius: CLLocationDistance(100.0), identifier: "Good_Geofence")
+        locationModuleWithMock?.startMonitoring(geofences: [region])
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.startMonitoringCallCount, 1)
+        }
+    }
+
+    func testModuleStopLocationUpdates() {
+        locationModuleWithMock?.stopLocationUpdates()
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.stopLocationUpdatesCallCount, 1)
+        }
+    }
+
+    func testModuleStopMonitoring() {
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), radius: CLLocationDistance(100.0), identifier: "Good_Geofence")
+        locationModuleWithMock?.stopMonitoring(geofences: [region])
+        TealiumQueues.mainQueue.async { [weak self] in
+            XCTAssertEqual(self?.mockTealiumLocationManager.stopMonitoringCallCount, 1)
+        }
+    }
+
     func testDidEnterGeofence() {
         let expect = expectation(description: "testDidEnterGeofence")
         TealiumLocationTests.expectations.append(expect)
         guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
-            XCTFail()
+            XCTFail("MockLocationManager did not init properly - shouldn't happen")
             return
         }
         self.locationManager = locationManager
@@ -403,7 +479,7 @@ class TealiumLocationTests: XCTestCase {
         let expect = expectation(description: "testDidExitGeofence")
         TealiumLocationTests.expectations.append(expect)
         guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
-            XCTFail()
+            XCTFail("MockLocationManager did not init properly - shouldn't happen")
             return
         }
         self.locationManager = locationManager
@@ -442,7 +518,7 @@ extension TealiumLocationTests: ModuleDelegate {
                     $0.description == "testDidExitGeofence" ||
                     $0.description == "testSendGeofenceTrackingEvent"
             }
-            .forEach { $0.fulfill() }
+        .forEach { $0.fulfill() }
     }
 }
 
@@ -469,7 +545,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys.sorted(), data.keys.sorted())
         data.forEach {
             guard let value = $0.value as? String,
-                  let expected = expected[$0.key] as? String else { return }
+                let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations
@@ -484,7 +560,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys, data.keys)
         data.forEach {
             guard let value = $0.value as? String,
-                  let expected = expected[$0.key] as? String else { return }
+                let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations

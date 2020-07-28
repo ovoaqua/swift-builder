@@ -1,13 +1,29 @@
 //
-//  LocationManagerProtocol.swift
+//  LocationManagerProtocols.swift
 //  TealiumLocation
 //
 //  Created by Harry Cassell on 10/09/2019.
-//  Copyright © 2019 Harry Cassell. All rights reserved.
+//  Copyright © 2019 Tealium. All rights reserved.
 //
 #if os(iOS)
 import CoreLocation
 import Foundation
+
+public protocol TealiumLocationManagerProtocol {
+    var createdGeofences: [String]? { get }
+    var latestLocation: CLLocation { get }
+    var locationAccuracy: String { get set }
+    var locationServiceEnabled: Bool { get }
+    var monitoredGeofences: [String]? { get }
+    func clearMonitoredGeofences()
+    func disable()
+    func requestPermissions()
+    func sendGeofenceTrackingEvent(region: CLRegion, triggeredTransition: String)
+    func startLocationUpdates()
+    func startMonitoring(_ geofences: [CLCircularRegion])
+    func stopLocationUpdates()
+    func stopMonitoring(_ geofences: [CLCircularRegion])
+}
 
 public protocol LocationManager {
     static func locationServicesEnabled() -> Bool
@@ -26,4 +42,5 @@ public protocol LocationManager {
 }
 
 extension CLLocationManager: LocationManager { }
+
 #endif
