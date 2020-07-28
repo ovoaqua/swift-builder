@@ -51,9 +51,8 @@ class MockLocationDiskStorage: TealiumDiskStorageProtocol {
     }
 
     func retrieve<T>(as type: T.Type) -> T? where T: Decodable {
-        guard T.self == TealiumLocationManager.self
-            else {
-                return nil
+        guard T.self == TealiumLocationManager.self else {
+            return nil
         }
         if let locationData = self.locationData {
             return locationData as? T

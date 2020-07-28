@@ -14,9 +14,9 @@ import TealiumCore
 // MARK: EXTENSIONS
 public extension Tealium {
 
-    /// Returns a LocationManager instance
+    /// Returns a LocationModule instance
     ///
-    /// - Returns: `TealiumLocation?` instance (nil if disabled)
+    /// - Returns: `LocationModule?` instance (nil if disabled)
     var location: LocationModule? {
         return (zz_internal_modulesManager?.modules.first { $0 is LocationModule }) as? LocationModule
     }
@@ -85,7 +85,7 @@ public extension TealiumConfig {
         }
     }
 
-    /// `TealiumLocationConfig`: The Geofences data retrieved from either a local file, url, or DLE
+    /// `LocationConfig`: The Geofences data retrieved from either a local file, url, or DLE
     var initializeGeofenceDataFrom: LocationConfig {
         if let geofenceAsset = self.geofenceFileName {
             return .localFile(geofenceAsset)

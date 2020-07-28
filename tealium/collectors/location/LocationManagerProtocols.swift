@@ -42,5 +42,4 @@ public protocol LocationManager {
 }
 
 extension CLLocationManager: LocationManager { }
-
 #endif

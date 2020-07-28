@@ -18,18 +18,18 @@ public class LocationModule: Collector {
     public let id: String = ModuleNames.location
     public var config: TealiumConfig
     weak var delegate: ModuleDelegate?
-    var tealLocationManager: TealiumLocationManagerProtocol?
+    public var tealiumLocationManager: TealiumLocationManagerProtocol?
 
     public var data: [String: Any]? {
         var newData = [String: Any]()
-        guard let tealLocationManager = tealLocationManager else {
+        guard let tealiumLocationManager = tealiumLocationManager else {
             return nil
         }
-        let location = tealLocationManager.latestLocation
+        let location = tealiumLocationManager.latestLocation
         if location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
             newData = [LocationKey.deviceLatitude: "\(location.coordinate.latitude)",
                 LocationKey.deviceLongitude: "\(location.coordinate.longitude)",
-                LocationKey.accuracy: tealLocationManager.locationAccuracy]
+                LocationKey.accuracy: tealiumLocationManager.locationAccuracy]
         }
         return newData
     }
@@ -39,13 +39,13 @@ public class LocationModule: Collector {
         self.delegate = delegate
 
         if Thread.isMainThread {
-            tealLocationManager = TealiumLocationManager(config: config, locationDelegate: self)
+            tealiumLocationManager = TealiumLocationManager(config: config, locationDelegate: self)
         } else {
             TealiumQueues.mainQueue.async { [weak self] in
                 guard let self = self else {
                     return
                 }
-                self.tealLocationManager = TealiumLocationManager(config: config, locationDelegate: self)
+                self.tealiumLocationManager = TealiumLocationManager(config: config, locationDelegate: self)
             }
         }
 
@@ -57,7 +57,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.clearMonitoredGeofences()
+            self.tealiumLocationManager?.clearMonitoredGeofences()
         }
     }
 
@@ -70,7 +70,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            created = self.tealLocationManager?.createdGeofences
+            created = self.tealiumLocationManager?.createdGeofences
         }
         return created
     }
@@ -81,9 +81,8 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.disable()
+            self.tealiumLocationManager?.disable()
         }
-
     }
 
     /// Gets the user's last known location
@@ -95,7 +94,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            latest = self.tealLocationManager?.latestLocation
+            latest = self.tealiumLocationManager?.latestLocation
         }
         return latest
     }
@@ -109,7 +108,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            enabled = self.tealLocationManager?.locationServiceEnabled ?? false
+            enabled = self.tealiumLocationManager?.locationServiceEnabled ?? false
         }
         return enabled
     }
@@ -123,7 +122,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            monitored = self.tealLocationManager?.monitoredGeofences
+            monitored = self.tealiumLocationManager?.monitoredGeofences
         }
         return monitored
     }
@@ -137,7 +136,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.sendGeofenceTrackingEvent(region: region, triggeredTransition: triggeredTransition)
+            self.tealiumLocationManager?.sendGeofenceTrackingEvent(region: region, triggeredTransition: triggeredTransition)
         }
     }
 
@@ -148,7 +147,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.startLocationUpdates()
+            self.tealiumLocationManager?.startLocationUpdates()
         }
     }
 
@@ -158,7 +157,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.stopLocationUpdates()
+            self.tealiumLocationManager?.stopLocationUpdates()
         }
     }
 
@@ -170,7 +169,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.startMonitoring(geofences)
+            self.tealiumLocationManager?.startMonitoring(geofences)
         }
     }
 
@@ -182,7 +181,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.stopMonitoring(geofences)
+            self.tealiumLocationManager?.stopMonitoring(geofences)
         }
     }
 
@@ -192,7 +191,7 @@ public class LocationModule: Collector {
             guard let self = self else {
                 return
             }
-            self.tealLocationManager?.requestPermissions()
+            self.tealiumLocationManager?.requestPermissions()
         }
     }
 
