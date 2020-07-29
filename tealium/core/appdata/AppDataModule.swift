@@ -167,7 +167,7 @@ public class AppDataModule: Collector, AppDataCollection {
 
         appData.persistentData = data
         if let existingVisitorId = self.existingVisitorId,
-           let persistentData = appData.persistentData {
+            let persistentData = appData.persistentData {
             let newPersistentData = PersistentAppData(visitorId: existingVisitorId, uuid: persistentData.uuid)
             diskStorage.saveToDefaults(key: TealiumKey.visitorId, value: existingVisitorId)
             diskStorage.save(newPersistentData, completion: nil)

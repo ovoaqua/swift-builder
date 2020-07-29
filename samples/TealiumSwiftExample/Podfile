@@ -25,9 +25,9 @@ target 'TealiumSwiftWatchExample Extension' do
 
   # Pods for TealiumSwiftWatchExample Extension
   pod "tealium-swift/Core", :path=> "../.."
-  pod "tealium-swift/TealiumCollect", :path=> "../.."
-  pod "tealium-swift/TealiumLifecycle", :path=> "../.."
-  pod "tealium-swift/TealiumVisitorService", :path=> "../.."
+  pod "tealium-swift/Collect", :path=> "../.."
+  pod "tealium-swift/Lifecycle", :path=> "../.."
+  pod "tealium-swift/VisitorService", :path=> "../.."
 end
 
 target 'TealiumSwiftTVExample' do
@@ -36,7 +36,7 @@ target 'TealiumSwiftTVExample' do
 
   # Pods for TealiumSwiftWatchExample Extension
   pod "tealium-swift/Core", :path=> "../.."
-  pod "tealium-swift/TealiumCollect", :path=> "../.."
-  pod "tealium-swift/TealiumLifecycle", :path=> "../.."
-  pod "tealium-swift/TealiumVisitorService", :path=> "../.."
+  pod "tealium-swift/Collect", :path=> "../.."
+  pod "tealium-swift/Lifecycle", :path=> "../.."
+  pod "tealium-swift/VisitorService", :path=> "../.."
 end  

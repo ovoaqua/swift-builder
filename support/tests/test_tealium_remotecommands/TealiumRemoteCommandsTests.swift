@@ -16,9 +16,7 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        let rc = TealiumRemoteCommand(commandId: "webview", description: "test") { _ in
-            // ..
-        }
+        let rc = TealiumRemoteCommand(commandId: "webview", description: "test") { _ in }
         tealiumRemoteCommandsManager = TealiumRemoteCommandsManager(delegate: self)
         tealiumRemoteCommandsManager.add(rc)
     }
@@ -31,10 +29,7 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
     func testRemove() {
         let commandId = "test"
         let command = TealiumRemoteCommand(commandId: commandId,
-                                           description: "") { _ in
-
-            // Unused
-        }
+                                           description: "") { _ in }
 
         let remoteCommandsManager = TealiumRemoteCommandsManager(delegate: nil)
         remoteCommandsManager.queue = OperationQueue.current?.underlyingQueue
@@ -50,9 +45,7 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
     func testCommandForId() {
         let commandId = "test"
         let remoteCommand = TealiumRemoteCommand(commandId: commandId,
-                                                 description: "test") { _ in
-            //
-        }
+                                                 description: "test") { _ in }
 
         let array = [remoteCommand]
 

@@ -64,8 +64,8 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
     public var locationServiceEnabled: Bool {
         let permissionStatus = type(of: locationManager).self.authorizationStatus()
         guard (permissionStatus == .authorizedAlways || permissionStatus == .authorizedWhenInUse),
-              type(of: locationManager).self.locationServicesEnabled() else {
-            return false
+            type(of: locationManager).self.locationServicesEnabled() else {
+                return false
         }
         return true
     }

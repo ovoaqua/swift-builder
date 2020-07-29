@@ -267,17 +267,17 @@ class DispatchManager: DispatchManagerProtocol {
                 }
 
                 guard !self.checkShouldQueue(request: &request),
-                      !self.checkShouldDrop(request: request),
-                      !self.checkShouldPurge(request: request) else {
-                    return
+                    !self.checkShouldDrop(request: request),
+                    !self.checkShouldPurge(request: request) else {
+                        return
                 }
 
                 if let count = self.persistentQueue.peek()?.count, count > 0 {
                     let logRequest = TealiumLogRequest(title: "Dispatch Manager",
                                                        message: "Releasing queued dispatches. Reason: \(reason)",
-                                                       info: nil,
-                                                       logLevel: .info,
-                                                       category: .track)
+                        info: nil,
+                        logLevel: .info,
+                        category: .track)
                     self.logger?.log(logRequest)
 
                     self.dequeue()
@@ -437,7 +437,7 @@ extension DispatchManager {
         return dispatchValidators.filter {
             let response = $0.shouldQueue(request: request)
             if response.0 == true,
-               let data = response.1 {
+                let data = response.1 {
                 request = TealiumBatchTrackRequest(trackRequests: request.trackRequests.map { request in
                     let singleRequestUUID = request.uuid
                     var newData = request.trackDictionary

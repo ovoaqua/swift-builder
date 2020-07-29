@@ -25,7 +25,7 @@ class VisitorServiceRetrieverTests: XCTestCase {
 
     func testVisitorServiceURL() {
         XCTAssertEqual("https://visitor-service.tealiumiq.com/\(tealConfig.account)/\(tealConfig.profile)/\(visitorServiceRetriever.tealiumVisitorId)",
-                       visitorServiceRetriever.visitorServiceURL)
+            visitorServiceRetriever.visitorServiceURL)
     }
 
     func testIntervalSince() {

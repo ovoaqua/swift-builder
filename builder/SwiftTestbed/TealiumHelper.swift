@@ -38,7 +38,7 @@ class TealiumHelper: NSObject {
     func start() {
         // REQUIRED Config object for lib
         let config = TealiumConfig(account: "tealiummobile",
-                                   profile: "ccpa-test",
+                                   profile: "demo",
                                    environment: "dev",
                                    dataSource: "test12",
                                    options: nil)
@@ -104,12 +104,10 @@ class TealiumHelper: NSObject {
                 
             }
 
-//            self.track(title: "init", data: nil)
             let dataLayer = teal.dataLayer
             teal.consentManager?.userConsentStatus = .consented
             dataLayer.add(key: "myvarforever", value: 123456, expiry: .forever)
 
-            // dataLayer.add(data: ["some_key1": "some_val1"])
             dataLayer.add(data: ["some_key1": "some_val1"], expiry: .session)
 
             dataLayer.add(data: ["some_key_forever":"some_val_forever"], expiry: .forever) // forever
@@ -123,7 +121,6 @@ class TealiumHelper: NSObject {
             dataLayer.add(data: ["hello": "world"], expiry: .untilRestart)
 
             dataLayer.add(key: "test", value: 123, expiry: .session)
-            //dataLayer.add(key: "test", value: 123)
 
             dataLayer.delete(for: ["hello", "test"])
 
@@ -138,10 +135,6 @@ class TealiumHelper: NSObject {
 //            print("Tealium Ready: \(self.tealium!.isReady)")
         }
         
-//        print("Tealium Ready: \(self.tealium!.isReady)")
-//        let dispatch = EventDispatch("hello-post-open")
-//
-//        tealium?.track(dispatch)
         let dispatch = ViewDispatch("VIEW_NAME", dataLayer: ["key": "value"])
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
@@ -195,8 +188,6 @@ class TealiumHelper: NSObject {
 
     func leaveTrace() {
         self.tealium?.leaveTrace()
-//        self.tealium?.flushQueue()
-//        tealium?.dataLayer.
     }
     
     func crash() {

@@ -76,6 +76,10 @@ class TealiumHelper {
             // Optional post init processing
             self.tealium?.dataLayer.add(data: ["somekey": "someval"], expiry: .afterCustom((.months, 1)))
             self.tealium?.dataLayer.add(key: "someotherkey", value: "someotherval", expiry: .forever)
+            #if os(iOS)
+            // Location
+            self.tealium?.location?.requestPermissions()
+            #endif
         }
 
     }

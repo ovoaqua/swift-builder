@@ -527,8 +527,7 @@ extension TealiumLocationTests: ModuleDelegate {
                     $0.description == "testDidEnterGeofence" ||
                     $0.description == "testDidExitGeofence" ||
                     $0.description == "testSendGeofenceTrackingEvent"
-            }
-            .forEach { $0.fulfill() }
+            }.forEach { $0.fulfill() }
     }
 }
 

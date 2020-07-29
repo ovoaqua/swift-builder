@@ -111,7 +111,7 @@ class VisitorProfileTests: XCTestCase {
         }
 
         if let tally = visitor.tallies?["8481"],
-           let tallyValue = tally["category 3"] {
+            let tallyValue = tally["category 3"] {
             XCTAssertEqual(1.0, tallyValue)
         }
 
@@ -314,7 +314,7 @@ class VisitorProfileTests: XCTestCase {
     func testTallyValueSubscriptNoResult() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
         if let tally = visitor.tallies?["9999"],
-           let tallyValue = tally["category 4"] {
+            let tallyValue = tally["category 4"] {
             XCTAssertNil(tallyValue)
         }
     }
@@ -322,7 +322,7 @@ class VisitorProfileTests: XCTestCase {
     func testTallyValueSubscriptSuccess() {
         visitor = try! decoder.decode(TealiumVisitorProfile.self, from: visitorJSON)
         if let tally = visitor.tallies?["8481"],
-           let tallyValue = tally["category 4"] {
+            let tallyValue = tally["category 4"] {
             XCTAssertEqual(1.0, tallyValue)
         }
     }
