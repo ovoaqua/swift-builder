@@ -16,7 +16,7 @@ class MockURLSession: URLSessionProtocol {
     }
 
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return DataTask(completionHandler: completionHandler, url: with request.url!)
+        return DataTask(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
@@ -45,7 +45,7 @@ class MockURLSessionError: URLSessionProtocol {
     }
 
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return DataTaskError(completionHandler: completionHandler, url: with request.url!)
+        return DataTaskError(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
@@ -76,7 +76,7 @@ class MockURLSessionNon200: URLSessionProtocol {
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
-        return DataTaskErrorNon200(completionHandler: completionHandler, url: with request.url!)
+        return DataTaskErrorNon200(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
@@ -105,7 +105,7 @@ class MockURLSessionURLError: URLSessionProtocol {
     }
 
     func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return DataTaskURLError(completionHandler: completionHandler, url: with request.url!)
+        return DataTaskURLError(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {

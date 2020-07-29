@@ -528,7 +528,7 @@ extension TealiumLocationTests: ModuleDelegate {
                     $0.description == "testDidExitGeofence" ||
                     $0.description == "testSendGeofenceTrackingEvent"
             }
-        .forEach { $0.fulfill() }
+            .forEach { $0.fulfill() }
     }
 }
 
@@ -555,7 +555,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys.sorted(), data.keys.sorted())
         data.forEach {
             guard let value = $0.value as? String,
-                let expected = expected[$0.key] as? String else { return }
+                  let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations
@@ -570,7 +570,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys, data.keys)
         data.forEach {
             guard let value = $0.value as? String,
-                let expected = expected[$0.key] as? String else { return }
+                  let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations
