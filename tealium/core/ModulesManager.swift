@@ -106,9 +106,9 @@ public class ModulesManager {
           knownDispatchers: [String]? = nil) {
         self.originalConfig = config.copy
         self.config = config
-        self.dataLayerManager = dataLayer
         self.connectivityManager = ConnectivityModule(config: self.config, delegate: nil, diskStorage: nil) { _ in
         }
+        self.dataLayerManager = dataLayer
         connectivityManager.addConnectivityDelegate(delegate: self)
         if config.shouldUseRemotePublishSettings {
             self.remotePublishSettingsRetriever = TealiumPublishSettingsRetriever(config: self.config, delegate: self)

@@ -24,14 +24,24 @@ class ConnectivityDataTaskNoConnection: URLSessionDataTaskProtocol {
 }
 
 class MockURLSessionConnectivityNoConnection: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return ConnectivityDataTaskNoConnection(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+    
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return ConnectivityDataTaskNoConnection(completionHandler: completionHandler, url: url)
     }
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
-        return ConnectivityDataTaskNoConnection(completionHandler: completionHandler, url: with.url!)
+        return ConnectivityDataTaskNoConnection(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {
@@ -54,14 +64,24 @@ class ConnectivityDataTaskWithConnection: URLSessionDataTaskProtocol {
 }
 
 class MockURLSessionConnectivityWithConnection: URLSessionProtocol {
+    func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
+        return ConnectivityDataTaskWithConnection(completionHandler: { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+            } else if let data = data, let response = response {
+                completionHandler(.success((response as? HTTPURLResponse, data)))
+            }
+        }, url: url)
+    }
+    
     func tealiumDataTask(with url: URL, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         return ConnectivityDataTaskWithConnection(completionHandler: completionHandler, url: url)
     }
 
     // typealias DataTaskCompletion = (Data?, URLResponse?, Error?) -> Void
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
         //        let completion = DataTaskCompletion(nil, nil, nil)
-        return ConnectivityDataTaskWithConnection(completionHandler: completionHandler, url: with.url!)
+        return ConnectivityDataTaskWithConnection(completionHandler: completionHandler, url: request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() {

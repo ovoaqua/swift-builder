@@ -22,11 +22,13 @@ public extension Dictionary where Key == String, Value == Any {
             let encoder = Tealium.jsonEncoder
             encoder.outputFormatting = writingOptions
             let encodable = self.encodable
-            if let jsonData = try? encoder.encode(encodable) {
+            do {
+                let jsonData = try encoder.encode(encodable)
                 return String(data: jsonData, encoding: .utf8)
-            } else {
+            } catch {
                 return nil
             }
+
         }
     }
 }

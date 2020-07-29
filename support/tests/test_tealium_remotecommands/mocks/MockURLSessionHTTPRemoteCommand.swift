@@ -14,8 +14,8 @@ class MockURLSessionHTTPRemoteCommand: URLSessionProtocol {
         return HTTPRemoteCommandDataTask(completionHandler: completionHandler, url: url)
     }
 
-    func tealiumDataTask(with: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
-        return HTTPRemoteCommandDataTask(completionHandler: completionHandler, url: with.url!)
+    func tealiumDataTask(with request: URLRequest, completionHandler: @escaping DataTaskCompletion) -> URLSessionDataTaskProtocol {
+        return HTTPRemoteCommandDataTask(completionHandler: completionHandler, url: with request.url!)
     }
 
     func finishTealiumTasksAndInvalidate() { }

@@ -29,7 +29,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
         self.config = config
         self.diskStorage = diskStorage ?? TealiumDiskStorage(config: config, forModule: "eventdata")
         self.sessionStarter = sessionStarter ?? SessionStarter(config: config)
-        self.minutesBetweenSessionIdentifier = TimeInterval(TealiumKey.defaultMinutesBetweenSession)
+        self.minutesBetweenSessionIdentifier = TimeInterval(TealiumValue.defaultMinutesBetweenSession)
         var currentStaticData = [TealiumKey.account: config.account,
                                  TealiumKey.profile: config.profile,
                                  TealiumKey.environment: config.environment,
