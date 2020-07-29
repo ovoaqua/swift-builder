@@ -17,14 +17,17 @@ public extension Tealium {
 
 }
 
+public extension TealiumValue {
+    static let defaultMinutesBetweenSession = 30
+    static let defaultsSecondsBetweenTrackEvents = 30.0
+    static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
+}
+
 public extension TealiumKey {
     static let timestampEpoch = "tealium_timestamp_epoch"
     static let timestamp = "timestamp"
     static let timestampLocal = "timestamp_local"
     static let timestampOffset = "timestamp_offset"
-    static let defaultMinutesBetweenSession = 30
-    static let defaultsSecondsBetweenTrackEvents = 30.0
-    static let sessionBaseURL = "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js?a="
 }
 
 extension Date {

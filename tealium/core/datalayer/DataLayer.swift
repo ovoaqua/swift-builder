@@ -17,7 +17,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
     public var lastTrackDate: Date?
     public var minutesBetweenSessionIdentifier: TimeInterval
     public var numberOfTrackRequests = 0
-    public var secondsBetweenTrackEvents: TimeInterval = TealiumKey.defaultsSecondsBetweenTrackEvents
+    public var secondsBetweenTrackEvents: TimeInterval = TealiumValue.defaultsSecondsBetweenTrackEvents
     public var sessionData = [String: Any]()
     var sessionStarter: SessionStarterProtocol
     public var shouldTriggerSessionRequest = false
