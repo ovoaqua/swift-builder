@@ -71,8 +71,8 @@ public class VisitorServiceModule: Collector, DispatchListener {
             retrieveProfile(visitorId: visitorId)
         case let request as TealiumBatchTrackRequest:
             guard let lastRequest = request.trackRequests.last,
-                let visitorId = lastRequest.visitorId else {
-                    return
+                  let visitorId = lastRequest.visitorId else {
+                return
             }
             retrieveProfile(visitorId: visitorId)
         default:

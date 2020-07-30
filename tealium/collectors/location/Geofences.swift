@@ -89,7 +89,7 @@ public struct GeofenceData: Codable {
             let jsonString = try String(contentsOf: geofenceUrl)
             guard let data = jsonString.data(using: .utf8),
                   let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
-                    return
+                return
             }
             geofences = filter(geofences: geofenceData)
             logInfo(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎")
@@ -104,9 +104,9 @@ public struct GeofenceData: Codable {
             return
         }
         guard let data = json.data(using: .utf8),
-            let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
-                logError(message: LocationErrors.couldNotDecode)
-                return
+              let geofenceData = try? Tealium.jsonDecoder.decode(Geofences.self, from: data) else {
+            logError(message: LocationErrors.couldNotDecode)
+            return
         }
         geofences = filter(geofences: geofenceData)
         logInfo(message: "🌎🌎 \(String(describing: geofences?.count)) Geofences Created 🌎🌎")

@@ -135,7 +135,6 @@ class TealiumHelper: NSObject {
 //            print("Tealium Ready: \(self.tealium!.isReady)")
         }
         
-        let dispatch = ViewDispatch("VIEW_NAME", dataLayer: ["key": "value"])
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
             return
