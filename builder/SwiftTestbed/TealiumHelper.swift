@@ -51,8 +51,8 @@ class TealiumHelper: NSObject {
         config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.shouldUseRemotePublishSettings = false
-        config.batchingEnabled = true
-        config.batchSize = 5
+        config.batchingEnabled = false
+        config.batchSize = 1
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
         //config.visitorServiceDelegate = self

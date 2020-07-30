@@ -277,6 +277,8 @@
 		D777EDAE1FB0B87300181B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D777EDAD1FB0B87300181B11 /* Assets.xcassets */; };
 		D777EDB11FB0B87300181B11 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D777EDAF1FB0B87300181B11 /* LaunchScreen.storyboard */; };
 		D77DBC50248EA6FB00B4A1AE /* ConsentPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77DBC4F248EA6FB00B4A1AE /* ConsentPolicies.swift */; };
+		D77DD21124D1C8DC0099658B /* TealiumRemoteCommands.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B04D17219994D400C87E22 /* TealiumRemoteCommands.framework */; };
+		D77DD21224D1C8DC0099658B /* TealiumRemoteCommands.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7B04D17219994D400C87E22 /* TealiumRemoteCommands.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D77E0B1C24521F0200A3E0C1 /* TealiumRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0187CF20067A890057E281 /* TealiumRequests.swift */; };
 		D7805842233A672800DAD90E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D7805861233A68DD00DAD90E /* VisitorProfileManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805850233A68DC00DAD90E /* VisitorProfileManagerTests.swift */; };
@@ -741,6 +743,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = D755DC9821945E41003C6BA1;
 			remoteInfo = TealiumCore;
+		};
+		D77DD21324D1C8DC0099658B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7B04D08219994D400C87E22;
+			remoteInfo = TealiumRemoteCommands;
 		};
 		D7805827233A65FB00DAD90E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5588,6 +5597,11 @@
 			isa = PBXTargetDependency;
 			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
 			targetProxy = D762FC34232F97EF00CBC4D0 /* PBXContainerItemProxy */;
+		};
+		D77DD21424D1C8DC0099658B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7B04D08219994D400C87E22 /* TealiumRemoteCommands */;
+			targetProxy = D77DD21324D1C8DC0099658B /* PBXContainerItemProxy */;
 		};
 		D7805826233A65FB00DAD90E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -66,7 +66,7 @@ class DispatchManager: DispatchManagerProtocol {
     }
 
     var isBatchingEnabled: Bool {
-        config.batchingEnabled ?? true
+        config.batchingEnabled ?? false
     }
 
     var batchingBypassKeys: [String]? {
