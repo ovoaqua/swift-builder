@@ -12,3 +12,9 @@ Cartfile.resolved
 Pods/
 build/
 .swiftpm/*
+TealiumBinary/
+TealiumBinary.zip
+builder/TealiumBinary/
+builder/TealiumBinary.zip
+build/
+builder/build/

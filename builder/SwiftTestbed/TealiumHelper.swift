@@ -9,19 +9,12 @@
 import Foundation
 import TealiumCore
 import TealiumCollect
-import TealiumConnectivity
-import TealiumAttribution
-import TealiumConsentManager
-import TealiumDispatchQueue
-import TealiumDelegate
-import TealiumDeviceData
-import TealiumRemoteCommands
 import TealiumTagManagement
-import TealiumPersistentData
-import TealiumVolatileData
+import TealiumAttribution
+import TealiumRemoteCommands
 import TealiumVisitorService
-import TealiumLocation
 import TealiumLifecycle
+import TealiumLocation
 
 extension String: Error {}
 
@@ -34,8 +27,9 @@ class TealiumHelper: NSObject {
 
     static let shared = TealiumHelper()
     var tealium: Tealium?
-    var enableHelperLogs = false
+    var enableHelperLogs = true
     var traceId = "04136"
+    var logger: TealiumLoggerProtocol?
 
     override private init () {
 
@@ -46,99 +40,149 @@ class TealiumHelper: NSObject {
         let config = TealiumConfig(account: "tealiummobile",
                                    profile: "demo",
                                    environment: "dev",
-                                   datasource: "test12",
-                                   optionalData: nil)
-
+                                   dataSource: "test12",
+                                   options: nil)
         config.connectivityRefreshInterval = 5
-        config.logLevel = .verbose
+        config.loggerType = .os
+        config.logLevel = .debug
+        config.consentPolicy = nil
         config.consentLoggingEnabled = true
+        config.dispatchListeners = [self]
+        config.dispatchValidators = [self]
         config.searchAdsEnabled = true
-        config.initialUserConsentStatus = .consented
-        config.shouldAddCookieObserver = false
         config.shouldUseRemotePublishSettings = false
-        config.batchSize = 5
-        config.dispatchAfter = 5
-//        config.dispatchQueueLimit = 200
         config.batchingEnabled = false
-        config.visitorServiceRefreshInterval = 0
-        config.visitorServiceOverrideProfile = "main"
-        // OPTIONALLY add an external delegate
-        config.addDelegate(self)
+        config.batchSize = 1
         config.memoryReportingEnabled = true
-
-        #if AUTOTRACKING
-//        print("*** TealiumHelper: Autotracking enabled.")
-        #else
-        // OPTIONALLY disable a particular module by name
-        
-        let list = TealiumModulesList(isWhitelist: false,
-                                      moduleNames: ["autotracking"])
-        config.modulesList = list
         config.diskStorageEnabled = true
-        config.addVisitorServiceDelegate(self)
-        config.remoteAPIEnabled = true
-        config.logLevel = .verbose
+        //config.visitorServiceDelegate = self
+        config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
-        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
-        #endif
-        #if os(iOS)
+        config.remoteAPIEnabled = false
+        logger = config.logger
+        config.collectors = [
+            MyDateCollector.self,
+//            Collectors.Attribution,
+                             Collectors.Lifecycle,
+//                             Collectors.AppData,
+                             Collectors.Connectivity,
+ //                            Collectors.Crash,
+                             Collectors.Device,
+                             Collectors.Location,
+                             Collectors.VisitorService,
+        ]
         
-        let remoteCommand = TealiumRemoteCommand(commandId: "hello",
-                                                 description: "test") { response in
-                                                    if TealiumHelper.shared.enableHelperLogs {
-//                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
-                                                    }
-                                                    let dict = ["hello":"from helper"]
-                                                    // set some JSON response data to be passed back to the webview
-                                                    let myJson = try? JSONSerialization.data(withJSONObject: dict, options: [])
-                                                    response.data = myJson
-        }
-        config.addRemoteCommand(remoteCommand)
-        #endif
+        config.dispatchers = [Dispatchers.Collect,
+//                              MyCustomDispatcher.self,
+                              Dispatchers.TagManagement,
+//                              Dispatchers.RemoteCommands
+        ]
+//        tealium?.dataLayerManager
+//        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
-        // REQUIRED Initialization
+        #if os(iOS)
+//
+//        let remoteCommand = TealiumRemoteCommand(commandId: "display",
+//                                                 description: "test") { response in
+//                                                    var response = response
+//                                                    if TealiumHelper.shared.enableHelperLogs {
+//                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
+//                                                    }
+//                                                    let dict = ["hello":"from helper"]
+//                                                    // set some JSON response data to be passed back to the webview
+//                                                    let myJson = try? JSONSerialization.data(withJSONObject: dict, options: [])
+//                                                    response.data = myJson
+//        }
+//        config.addRemoteCommand(remoteCommand)
+        #endif
+//        config.diskStorageDirectory = .documents
+//        config.loggerType = .custom(<#T##TealiumLoggerProtocol#>)
         tealium = Tealium(config: config) { [weak self] response in
-        // Optional processing post init.
-        // Optionally, join a trace. Trace ID must be generated server-side in UDH.
-//        self.tealium?.leaveTrace(killVisitorSession: true)
-        self?.tealium?.persistentData()?.add(data: ["testPersistentKey": "testPersistentValue"])
+            guard let self = self,
+                let teal = self.tealium else {
+                return
+                
+            }
+
+            let dataLayer = teal.dataLayer
+            teal.consentManager?.userConsentStatus = .consented
+            dataLayer.add(key: "myvarforever", value: 123456, expiry: .forever)
+
+            dataLayer.add(data: ["some_key1": "some_val1"], expiry: .session)
+
+            dataLayer.add(data: ["some_key_forever":"some_val_forever"], expiry: .forever) // forever
+
+            dataLayer.add(data: ["until": "restart"], expiry: .untilRestart)
+
+            dataLayer.add(data: ["custom": "expire in 3 min"], expiry: .afterCustom((.minutes, 3)))
+
+            dataLayer.delete(for: ["myvarforever"])
+
+            dataLayer.add(data: ["hello": "world"], expiry: .untilRestart)
+
+            dataLayer.add(key: "test", value: 123, expiry: .session)
+
+            dataLayer.delete(for: ["hello", "test"])
+
+            dataLayer.add(key: "hello", value: "itsme", expiry: .afterCustom((.months, 1)))
+
+            teal.location?.requestPermissions()
             
-        self?.tealium?.persistentData()?.deleteData(forKeys: ["user_name", "testPersistentKey", "newPersistentKey"])
-            
-                            self?.tealium?.persistentData()?.add(data: ["newPersistentKey": "testPersistentValue"])
-                            self?.tealium?.volatileData()?.add(data: ["testVolatileKey": "testVolatileValue"])
-            
-            print("Persistent Data: \(String(describing: self?.tealium?.persistentData()?.dictionary))")
-            
-            print("Lifecycle Data: \(String(describing: self?.tealium?.lifecycle()?.dictionary))")
+//            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
+//
+//            print("Persistent Data: \(String(describing: persitence.dictionary))")
+//            print("Visitor ID: \(self.tealium?.visitorId ?? "not ready")")
+//            print("Tealium Ready: \(self.tealium!.isReady)")
+        }
+        
+        #if os(iOS)
+        guard let remoteCommands = tealium?.remoteCommands else {
+            return
+        }
+        let remoteCommand = TealiumRemoteCommand(commandId: "display", description: "Test") { response in
+            let payload = response.payload()
+            guard let hello = payload["hello"] as? String,
+                let key = payload["key"] as? String,
+                let tealium = payload["tealium"] as? String else {
+                print("Remote Command didnt work 👎 \(payload)")
+                return
+            }
+            print("Remote Command data: hello = \(hello), key = \(key), tealium = \(tealium) 🎉🎊")
+        }
+        remoteCommands.add(remoteCommand)
+        #endif
+        
+        
+    }
+    
+    func resetConsentPreferences() {
+        tealium?.consentManager?.resetUserConsentPreferences()
+    }
+    
+    func toggleConsentStatus() {
+        if let consentStatus = tealium?.consentManager?.userConsentStatus {
+            switch consentStatus {
+            case .consented:
+                TealiumHelper.shared.tealium?.consentManager?.userConsentStatus = .notConsented
+            default:
+                TealiumHelper.shared.tealium?.consentManager?.userConsentStatus = .consented
+            }
         }
     }
 
     func track(title: String, data: [String: Any]?) {
-        tealium?.track(title: title,
-                       data: data,
-                       completion: { (success, info, error) in
-                        // Optional post processing
-                        if self.enableHelperLogs == false {
-                            return
-                        }
-        })
+        let dispatch = EventDispatch(title, dataLayer: data)
+        tealium?.track(dispatch)
     }
 
     func trackView(title: String, data: [String: Any]?) {
-        tealium?.trackView(title: title,
-                       data: data,
-                       completion: { (success, info, error) in
-                        // Optional post processing
-                        if self.enableHelperLogs == false {
-                            return
-                        }
-        })
+        let dispatch = ViewDispatch(title, dataLayer: data)
+        tealium?.track(dispatch)
 
     }
     
     func joinTrace(_ traceID: String) {
-        self.tealium?.joinTrace(traceId: traceID)
+        self.tealium?.joinTrace(id: traceID)
     }
 
     func leaveTrace() {
@@ -150,30 +194,91 @@ class TealiumHelper: NSObject {
     }
 }
 
-extension TealiumHelper: TealiumDelegate {
-
-    func tealiumShouldTrack(data: [String: Any]) -> Bool {
-        return true
-    }
-
-    func tealiumTrackCompleted(success: Bool, info: [String: Any]?, error: Error?) {
-        if enableHelperLogs == false {
-            return
-        }
-        print("\n*** Tealium Helper: Tealium Delegate : tealiumTrackCompleted *** Track finished. Was successful:\(success)\nInfo:\(info as AnyObject)\((error != nil) ? "\nError:\(String(describing: error))":"")")
-    }
-}
-
-extension TealiumHelper: TealiumVisitorServiceDelegate {
-    func profileDidUpdate(profile: TealiumVisitorProfile?) {
-        guard let profile = profile else {
-            return
-        }
-        if let json = try? JSONEncoder().encode(profile), let string = String(data: json, encoding: .utf8) {
+extension TealiumHelper: VisitorServiceDelegate {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             if self.enableHelperLogs {
                 print(string)
             }
         }
     }
+
+}
+
+extension TealiumHelper: DispatchListener {
+    public func willTrack(request: TealiumRequest) {
+        print("helper - willtrack")
+    }
+}
+
+extension TealiumHelper: DispatchValidator {
+    var id: String {
+        return "Helper"
+    }
+
+    func shouldQueue(request: TealiumRequest) -> (Bool, [String : Any]?) {
+        (false, nil)
+    }
+
+    func shouldDrop(request: TealiumRequest) -> Bool {
+        false
+    }
+
+    func shouldPurge(request: TealiumRequest) -> Bool {
+        false
+    }
+
+
+}
+
+class MyDateCollector: Collector {
     
+    var id = "MyDateCollector"
+    
+    var data: [String : Any]? {
+        ["day_of_week": dayOfWeek]
+    }
+    
+    var config: TealiumConfig
+    
+    
+    required init(config: TealiumConfig,
+                  delegate: ModuleDelegate?,
+                  diskStorage: TealiumDiskStorageProtocol?,
+                  completion: (ModuleResult) -> Void) {
+        self.config = config
+    }
+    
+    
+    var dayOfWeek: String {
+        return "\(Calendar.current.dateComponents([.weekday], from: Date()).weekday ?? -1)"
+    }
+
+}
+
+
+class MyCustomDispatcher: Dispatcher {
+    var isReady: Bool
+    
+    var id = "MyCustomDispatcher"
+    
+    var config: TealiumConfig
+    
+    required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
+        self.config = config
+        self.isReady = true
+    }
+    
+    func dynamicTrack(_ request: TealiumRequest, completion: ModuleCompletion?) {
+        switch request {
+        case let request as TealiumTrackRequest:
+            print("Track received: \(request.event ?? "no event name")")
+            // perform track action, e.g. send to custom endpoint
+        case _ as TealiumBatchTrackRequest:
+            print("Batch track received")
+            // perform batch track action, e.g. send to custom endpoint
+        default:
+            return
+        }
+    }
 }

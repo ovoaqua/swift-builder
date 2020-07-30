@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TealiumCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             cookieStore.cookieAcceptPolicy = .always
         TealiumHelper.shared.start()
         return true
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

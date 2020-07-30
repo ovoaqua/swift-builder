@@ -1,0 +1,778 @@
+name: tealium-swift
+options:
+  bundleIdPrefix: com.tealium
+  carthageBuildPath: ../Carthage/Build
+configs:
+  Release: release
+  Debug: debug
+groups:
+  - [core, collectors, dispatchers]
+targets:
+  TealiumAttribution:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/collectors/attribution
+        buildPhase: sources
+      - path: tealium/collectors/attribution
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumAttribution-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: attribution
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+          SUPPORTS_MACCATALYST: YES
+          TARGETED_DEVICE_FAMILY: "1,2"
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: attribution DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumAttribution-Info.plist
+  TealiumAttributionTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      #- support/tests
+      - path: support/tests/test_tealium_attribution
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumAttribution
+  TealiumAutotracking:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/collectors/autotracking
+        buildPhase: sources
+        destination: tealium/collectors/autotracking
+      - path: tealium/collectors/autotracking
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumAutotracking-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: autotracking
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos appletvsimulator appletvos"
+          TARGETED_DEVICE_FAMILY: "1,2,3,4"
+          TVOS_DEPLOYMENT_TARGET: 9.0
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: autotracking DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumAutotracking-Info.plist
+  TealiumAutotrackingTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_autotracking
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumAutotracking
+  TealiumCollect:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/dispatchers/collect
+        buildPhase: sources
+      - path: tealium/dispatchers/collect
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumCollect-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: collect
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
+          TARGETED_DEVICE_FAMILY: "1,2,3,4"
+          TVOS_DEPLOYMENT_TARGET: 9.0
+          WATCHOS_DEPLOYMENT_TARGET: 3.0
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+          MACOSX_DEPLOYMENT_TARGET: 10.11
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: collect DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumCollect-Info.plist
+  TealiumCollectTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_collect
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumCollect
+  TealiumCollectTests-macOS:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: support/tests/test_tealium_collect
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumCollect
+  TealiumCollectTests-tvOS:
+    type: bundle.unit-test
+    platform: tvOS
+    sources:
+      - path: support/tests/test_tealium_collect
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumCollect
+  TealiumCore:
+    type: framework
+    platform: iOS
+    sources:
+      - tealium/core
+      - path: tealium/core
+        buildPhase: sources
+      - path: tealium/core
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumCore-Info.plist"
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
+          TARGETED_DEVICE_FAMILY: "1,2,3,4"
+          TVOS_DEPLOYMENT_TARGET: 9.0
+          WATCHOS_DEPLOYMENT_TARGET: 3.0
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+          MACOSX_DEPLOYMENT_TARGET: 10.11
+    info:
+      path: builder/TealiumCore-Info.plist
+  TealiumCoreTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_core
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_core/datalayer/large-event-data.json
+        buildPhase: resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumAttribution
+      - target: TealiumAutotracking
+      - target: TealiumCore
+      - target: TealiumCollect
+      - target: TealiumTagManagement
+      - target: TealiumLifecycle
+      - target: TealiumLocation
+      - target: TealiumVisitorService
+  TealiumCoreTests-macOS:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: support/tests/test_tealium_core
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_core/datalayer/large-event-data.json
+        buildPhase: resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumCollect
+      - target: TealiumLifecycle
+      - target: TealiumVisitorService
+  TealiumCoreTests-tvOS:
+    type: bundle.unit-test
+    platform: tvOS
+    sources:
+      - path: support/tests/test_tealium_core
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_core/datalayer/large-event-data.json
+        buildPhase: resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumAutotracking
+      - target: TealiumCore
+      - target: TealiumCollect
+      - target: TealiumLifecycle
+      - target: TealiumVisitorService
+  TealiumLifecycle:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/collectors/lifecycle
+        buildPhase: sources
+      - path: tealium/collectors/lifecycle
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumLifecycle-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: lifecycle
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
+          TARGETED_DEVICE_FAMILY: "1,2,3,4"
+          TVOS_DEPLOYMENT_TARGET: 9.0
+          WATCHOS_DEPLOYMENT_TARGET: 3.0
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+          MACOSX_DEPLOYMENT_TARGET: 10.11
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: lifecycle DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumLifecycle-Info.plist
+  TealiumLifecycleTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_lifecycle
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_lifecycle/lifecycle_events_with_crashes.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_lifecycle/lifecycle_events.json
+        buildPhase: resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumLifecycle
+  TealiumLifecycleTests-macOS:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: support/tests/test_tealium_lifecycle
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_lifecycle/lifecycle_events_with_crashes.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_lifecycle/lifecycle_events.json
+        buildPhase: resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumLifecycle
+  TealiumLifecycleTests-tvOS:
+    type: bundle.unit-test
+    platform: tvOS
+    sources:
+      - path: support/tests/test_tealium_lifecycle
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_lifecycle/lifecycle_events_with_crashes.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_lifecycle/lifecycle_events.json
+        buildPhase: resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumLifecycle
+  TealiumLocation:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/collectors/location
+        buildPhase: sources
+      - path: tealium/collectors/location
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumLocation-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: location
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+          TARGETED_DEVICE_FAMILY: "1,2,3,4"
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: location DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumLocation-Info.plist
+  TealiumLocationTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_location
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_location/geofences.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_location/invalidGeofences.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_location/validAndInvalidGeofences.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_location/validGeofences.json
+        buildPhase: resources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumLocation
+  TealiumRemoteCommands:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/dispatchers/remotecommands
+        buildPhase: sources
+      - path: tealium/dispatchers/remotecommands
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumRemoteCommands-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: remotecommands
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+          SUPPORTS_MACCATALYST: YES
+          TARGETED_DEVICE_FAMILY: "1,2,3,4"
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: remotecommands DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumRemoteCommands-Info.plist
+  TealiumRemoteCommandsTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_remotecommands
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumRemoteCommands
+  TealiumTagManagement:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/dispatchers/tagmanagement
+        buildPhase: sources
+      - path: tealium/dispatchers/tagmanagement
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumTagManagement-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: tagmanagement
+          SUPPORTS_MACCATALYST: YES
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+          TARGETED_DEVICE_FAMILY: "1,2"
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: tagmanagement DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumTagManagement-Info.plist
+  TealiumTagManagementTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_tagmanagement
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumTagManagement
+  TealiumVisitorService:
+    type: framework
+    platform: iOS
+    sources:
+      - path: tealium/collectors/visitorservice
+        buildPhase: sources
+      - path: tealium/collectors/visitorservice
+        buildPhase: headers
+    settings:
+      base:
+          SDKROOT: ""
+          INFOPLIST_FILE: "TealiumVisitorService-Info.plist"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: visitorservice
+          SUPPORTED_PLATFORMS: "iphonesimulator iphoneos watchsimulator watchos macosx appletvsimulator appletvos"
+          TARGETED_DEVICE_FAMILY: "1,2,3,4"
+          TVOS_DEPLOYMENT_TARGET: 9.0
+          WATCHOS_DEPLOYMENT_TARGET: 3.0
+          IPHONEOS_DEPLOYMENT_TARGET: 9.0
+          MACOSX_DEPLOYMENT_TARGET: 10.11
+      configs:
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: visitorservice DEBUG
+    dependencies:
+      - target: TealiumCore
+    info:
+      path: builder/TealiumVisitorService-Info.plist
+  TealiumVisitorServiceTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_visitorservice
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-all-nil.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-empties.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-nils.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
+        buildPhase: resources         
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumVisitorService
+  TealiumVisitorServiceTests-macOS:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: support/tests/test_tealium_visitorservice
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-all-nil.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-empties.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-nils.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
+        buildPhase: resources         
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumVisitorService
+  TealiumVisitorServiceTests-tvOS:
+    type: bundle.unit-test
+    platform: tvOS
+    sources:
+      - path: support/tests/test_tealium_visitorservice
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-all-nil.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-empties.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor-nils.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
+        buildPhase: resources
+      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
+        buildPhase: resources        
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+      - target: TealiumVisitorService
+schemes:
+  # BUILD SCHEMES
+  TealiumAttribution:
+    build:
+      targets:
+        TealiumAttribution: all
+    run:
+      config: Release
+  TealiumAutotracking:
+    build:
+      targets:
+        TealiumAutotracking: all
+    run:
+      config: Release
+  TealiumCollect:
+    build:
+      targets:
+        TealiumCollect: all
+    run:
+      config: Release
+  TealiumCore:
+    build:
+      targets:
+        TealiumCore: all
+    run:
+      config: Release
+  TealiumLifecycle:
+    build:
+      targets:
+        TealiumLifecycle: all
+    run:
+      config: Release
+  TealiumLocation:
+    build:
+      targets:
+        TealiumLocation: all
+    run:
+      config: Release
+  TealiumRemoteCommands:
+    build:
+      targets:
+        TealiumRemoteCommands: all
+    run:
+      config: Release
+  TealiumTagManagement:
+    build:
+      targets:
+        TealiumTagManagement: all
+    run:
+      config: Release
+  TealiumVisitorService:
+    build:
+      targets:
+        TealiumVisitorService: all
+    run:
+      config: Release
+  # TEST SCHEMES
+  TealiumAttributionTests-iOS:
+    build:
+      targets:
+        TealiumAttributionTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumAttributionTests-iOS
+        - name: TealiumAttributionTests-iOS
+          parallelizable: true
+  TealiumAutotrackingTests-iOS:
+    build:
+      targets:
+        TealiumAutotrackingTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumAutotrackingTests-iOS
+        - name: TealiumAutotrackingTests-iOS
+          parallelizable: true
+  TealiumCollectTests-iOS:
+    build:
+      targets:
+        TealiumCollectTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumCollectTests-iOS
+        - name: TealiumCollectTests-iOS
+          parallelizable: true
+  TealiumCollectTests-macOS:
+    build:
+      targets:
+        TealiumCollectTests-macOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumCollectTests-macOS
+        - name: TealiumCollectTests-macOS
+          parallelizable: true
+  TealiumCollectTests-tvOS:
+    build:
+      targets:
+        TealiumCollectTests-tvOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumCollectTests-tvOS
+        - name: TealiumCollectTests-tvOS
+          parallelizable: true
+  TealiumCoreTests-iOS:
+    build:
+      targets:
+        TealiumCoreTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumCoreTests-iOS
+        - name: TealiumCoreTests-iOS
+          parallelizable: true
+  TealiumCoreTests-macOS:
+    build:
+      targets:
+        TealiumCoreTests-macOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumCoreTests-macOS
+        - name: TealiumCoreTests-macOS
+          parallelizable: true
+  TealiumCoreTests-tvOS:
+    build:
+      targets:
+        TealiumCoreTests-tvOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumCoreTests-tvOS
+        - name: TealiumCoreTests-tvOS
+          parallelizable: true
+  TealiumLifecycleTests-iOS:
+    build:
+      targets:
+        TealiumLifecycleTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumLifecycleTests-iOS
+        - name: TealiumLifecycleTests-iOS
+          parallelizable: true
+  TealiumLifecycleTests-macOS:
+    build:
+      targets:
+        TealiumLifecycleTests-macOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumLifecycleTests-macOS
+        - name: TealiumLifecycleTests-macOS
+          parallelizable: true
+  TealiumLifecycleTests-tvOS:
+    build:
+      targets:
+        TealiumLifecycleTests-tvOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumLifecycleTests-tvOS
+        - name: TealiumLifecycleTests-tvOS
+          parallelizable: true
+  TealiumLocationTests-iOS:
+    build:
+      targets:
+        TealiumLocationTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumLocationTests-iOS
+        - name: TealiumLocationTests-iOS
+          parallelizable: true
+  TealiumRemoteCommandsTests-iOS:
+    build:
+      targets:
+        TealiumRemoteCommandsTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumRemoteCommandsTests-iOS
+        - name: TealiumRemoteCommandsTests-iOS
+          parallelizable: true
+  TealiumTagManagementTests-iOS:
+    build:
+      targets:
+        TealiumTagManagementTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumTagManagementTests-iOS
+        - name: TealiumTagManagementTests-iOS
+          parallelizable: true
+  TealiumVisitorServiceTests-iOS:
+    build:
+      targets:
+        TealiumVisitorServiceTests-iOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumVisitorServiceTests-iOS
+        - name: TealiumVisitorServiceTests-iOS
+          parallelizable: true
+  TealiumVisitorServiceTests-macOS:
+    build:
+      targets:
+        TealiumVisitorServiceTests-macOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumVisitorServiceTests-macOS
+        - name: TealiumVisitorServiceTests-macOS
+          parallelizable: true
+  TealiumVisitorServiceTests-tvOS:
+    build:
+      targets:
+        TealiumVisitorServiceTests-tvOS: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - TealiumVisitorServiceTests-tvOS
+        - name: TealiumVisitorServiceTests-tvOS

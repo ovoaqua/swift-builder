@@ -10,10 +10,10 @@ import Foundation
 import TealiumCore
 import TealiumCollect
 import TealiumConnectivity
-import TealiumConsentManager
+import ConsentManager
 import TealiumDispatchQueue
 import TealiumDelegate
-import TealiumDeviceData
+import DeviceData
 import TealiumPersistentData
 import TealiumVolatileData
 import TealiumVisitorService
@@ -42,13 +42,13 @@ class OSXTealiumHelper: NSObject {
                                    profile: "demo",
                                    environment: "dev",
                                    datasource: "test12",
-                                   optionalData: nil)
+                                   options: nil)
 
         // OPTIONALLY set log level
         config.setConnectivityRefreshInterval(5)
         config.setLogLevel(.verbose)
-        config.setConsentLoggingEnabled(true)
-        config.setInitialUserConsentStatus(.consented)
+        config.consentLoggingEnabled = true
+        config.enableConsentManager = true
         //config.setBatchSize(5)
         //config.setDispatchAfter(numberOfEvents: 5)
         config.setMaxQueueSize(200)
@@ -138,11 +138,8 @@ extension OSXTealiumHelper: TealiumDelegate {
 }
 
 extension OSXTealiumHelper: TealiumVisitorServiceDelegate {
-    func profileDidUpdate(profile: TealiumVisitorProfile?) {
-        guard let profile = profile else {
-            return
-        }
-        if let json = try? JSONEncoder().encode(profile), let string = String(data: json, encoding: .utf8) {
+    func didUpdate(visitorProfile: TealiumVisitorProfile) {
+        if let json = try? JSONEncoder().encode(visitorProfile), let string = String(data: json, encoding: .utf8) {
             if self.enableHelperLogs {
                 print(string)
             }

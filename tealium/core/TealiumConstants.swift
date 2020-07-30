@@ -10,24 +10,37 @@ import UIKit
 // MARK: VALUES
 #endif
 
+public enum Collectors {}
+
+public enum Dispatchers {}
+
 public enum TealiumValue {
     public static let libraryName = "swift"
-    public static let libraryVersion = "1.9.6"
+    public static let libraryVersion = "2.0.0"
     // This is the current limit for performance reasons. May be increased in future
     public static let maxEventBatchSize = 10
     public static let defaultMinimumDiskSpace: Int32 = 20_000_000
     public static let tiqBaseURL = "https://tags.tiqcdn.com/utag/"
-    public static let tiqURLSuffix = "mobile.html"
+    public static let tiqURLSuffix = "mobile.html?sdk_session_count=true"
     public static let defaultBatchExpirationDays = 7
     public static let defaultMaxQueueSize = 40
 }
 
-// MARK: ENUMS
-#if os(iOS)
-public extension Notification.Name {
-     static let tagmanagement = Notification.Name(TealiumKey.tagmanagementNotification)
+public enum ModuleNames {
+    public static let autotracking = "AutoTracking"
+    public static let appdata = "AppData"
+    public static let attribution = "Attribution"
+    public static let collect = "Collect"
+    public static let connectivity = "Connectivity"
+    public static let consentmanager = "ConsentManager"
+    public static let crash = "Crash"
+    public static let devicedata = "DeviceData"
+    public static let lifecycle = "Lifecycle"
+    public static let location = "Location"
+    public static let remotecommands = "RemoteCommands"
+    public static let tagmanagement = "TagManagement"
+    public static let visitorservice = "VisitorService"
 }
-#endif
 
 public enum TealiumKey {
     public static let account = "tealium_account"
@@ -42,7 +55,7 @@ public enum TealiumKey {
     public static let queueReason = "queue_reason"
     public static let wasQueued = "was_queued"
     public static let dispatchService = "dispatch_service"
-    public static let updateConsentCookieEventName = "update_consent_cookie"
+    public static let updateConsentCookieEventNames = ["update_consent_cookie", "set_dns_state"]
     public static let jsNotificationName = "com.tealium.tagmanagement.jscommand"
     public static let tagmanagementNotification = "com.tealium.tagmanagement.urlrequest"
     public static let jsCommand = "js"
@@ -55,6 +68,7 @@ public enum TealiumKey {
     public static let visitorId = "tealium_visitor_id"
     public static let random = "tealium_random"
     public static let uuid = "app_uuid"
+    public static let requestUUID = "request_uuid"
     public static let simpleModel = "model_name" // e.g. iPhone 5s // OLD: device
     public static let device = "device" // == model_name
     public static let deviceType = "device_type"
@@ -98,29 +112,21 @@ public enum TealiumKey {
     public static let minutesBetweenRefresh = "minutes_between_refresh"
     public static let collectModuleName = "collect"
     public static let tagManagementModuleName = "tagmanagement"
-}
-
-public enum TealiumModulesManagerError: Error {
-    case isDisabled
-    case noModules
-    case noModuleConfigs
-    case duplicateModuleConfigs
-}
-
-public enum TealiumModuleError: Error {
-    case failedToEnable
-    case failedToDisable
-    case failedToTrack
-    case missingConfigData
-    case missingTrackData
-    case isDisabled
+    public static let loggerType = "logger_type"
+    public static let logLevel = "log_level"
+    public static let logger = "com.tealium.logger"
+    public static let dispatchValidators = "dispatch_validators"
+    public static let dispatchListeners = "dispatch_listeners"
+    public static let collectors = "collectors"
+    public static let dispatchers = "dispatchers"
+    static let lifecycleAutotrackingEnabled = "enable_lifecycle_autotracking"
 }
 
 public enum TealiumTrackType {
     case view           // Whenever content is displayed to the user.
     case event
 
-    func description() -> String {
+    var description: String {
         switch self {
         case .view:
             return "view"
@@ -132,3 +138,11 @@ public enum TealiumTrackType {
 }
 
 public typealias TealiumCompletion = ((_ successful: Bool, _ info: [String: Any]?, _ error: Error?) -> Void)
+
+public enum TealiumConstants {
+    static let libraryVersion = "2.0.0"
+    static let defaultBatchSize = 10
+    static let defaultLoggerType: TealiumLoggerType = .os
+    static let defaultMinimumDiskSpace: Int32 = 20_000_000
+    static let connectionRestoredReason = "Connection Restored"
+}
