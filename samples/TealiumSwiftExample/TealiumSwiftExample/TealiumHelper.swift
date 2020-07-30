@@ -39,7 +39,7 @@ class TealiumHelper {
     // MARK: Tealium Initilization
     private init() {
         // Optional Config Settings
-        if enableLogs { config.logLevel = .debug }
+        if enableLogs { config.logLevel = .info }
 
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
@@ -58,7 +58,7 @@ class TealiumHelper {
         // config.batchSize = 5
         // config.batchingEnabled = true
         
-        // Location
+        // Location - Geofence Monitoring
         // config.geofenceUrl = "http://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
         
         // Remote Commands
@@ -78,7 +78,7 @@ class TealiumHelper {
             self.tealium?.dataLayer.add(key: "someotherkey", value: "someotherval", expiry: .forever)
             #if os(iOS)
             // Location
-            self.tealium?.location?.requestPermissions()
+            // self.tealium?.location?.requestPermissions()
             #endif
         }
 
