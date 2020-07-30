@@ -57,15 +57,11 @@ public class DeviceDataModule: Collector {
     var enableTimeData: [String: Any] {
         var result = [String: Any]()
 
-        result[TealiumKey.architectureLegacy] = deviceDataCollection.architecture()
-        result[TealiumKey.architecture] = result[TealiumKey.architectureLegacy] ?? ""
-        result[DeviceDataKey.osBuildLegacy] = DeviceData.oSBuild
+        result[TealiumKey.architecture] = deviceDataCollection.architecture()
         result[DeviceDataKey.osBuild] = DeviceData.oSBuild
-        result[TealiumKey.cpuTypeLegacy] = deviceDataCollection.cpuType
-        result[TealiumKey.cpuType] = result[TealiumKey.cpuTypeLegacy] ?? ""
+        result[TealiumKey.cpuType] = deviceDataCollection.cpuType
         result += deviceDataCollection.model
-        result[DeviceDataKey.osVersionLegacy] = DeviceData.oSVersion
-        result[DeviceDataKey.osVersion] = result[DeviceDataKey.osVersionLegacy] ?? ""
+        result[DeviceDataKey.osVersion] = DeviceData.oSVersion
         result[TealiumKey.osName] = DeviceData.oSName
         result[TealiumKey.platform] = result[TealiumKey.osName] ?? ""
         result[TealiumKey.resolution] = DeviceData.resolution
@@ -78,12 +74,9 @@ public class DeviceDataModule: Collector {
     var trackTimeData: [String: Any] {
         var result = [String: Any]()
 
-        result[DeviceDataKey.batteryPercentLegacy] = DeviceData.batteryPercent
-        result[DeviceDataKey.batteryPercent] = result[DeviceDataKey.batteryPercentLegacy] ?? ""
-        result[DeviceDataKey.isChargingLegacy] = DeviceData.isCharging
-        result[DeviceDataKey.isCharging] = result[DeviceDataKey.isChargingLegacy] ?? ""
-        result[TealiumKey.languageLegacy] = DeviceData.iso639Language
-        result[TealiumKey.language] = result[TealiumKey.languageLegacy] ?? ""
+        result[DeviceDataKey.batteryPercent] = DeviceData.batteryPercent
+        result[DeviceDataKey.isCharging] = DeviceData.isCharging
+        result[TealiumKey.language] = DeviceData.iso639Language
         if isMemoryReportingEnabled {
             result += deviceDataCollection.memoryUsage
         }

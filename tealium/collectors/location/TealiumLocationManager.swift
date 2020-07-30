@@ -64,8 +64,8 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
     public var locationServiceEnabled: Bool {
         let permissionStatus = type(of: locationManager).self.authorizationStatus()
         guard (permissionStatus == .authorizedAlways || permissionStatus == .authorizedWhenInUse),
-              type(of: locationManager).self.locationServicesEnabled() else {
-            return false
+            type(of: locationManager).self.locationServicesEnabled() else {
+                return false
         }
         return true
     }
@@ -123,9 +123,9 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
             let geofenceLocation = CLLocation(latitude: $0.center.latitude, longitude: $0.center.longitude)
 
             guard let distance = lastLocation?.distance(from: geofenceLocation),
-                  distance.isLess(than: LocationKey.additionRange) else {
-                stopMonitoring(geofence: $0)
-                return
+                distance.isLess(than: LocationKey.additionRange) else {
+                    stopMonitoring(geofence: $0)
+                    return
             }
             startMonitoring(geofence: $0)
         }
@@ -138,7 +138,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
     /// - parameter error: `error` an error that has occured
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = error as? CLError,
-           error.code == .denied {
+            error.code == .denied {
             logError(message: "🌎🌎 An error has occured: \(String(describing: error.localizedDescription)) 🌎🌎")
             locationManager.stopUpdatingLocation()
         }

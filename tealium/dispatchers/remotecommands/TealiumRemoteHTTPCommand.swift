@@ -17,35 +17,34 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
     class func create(with delegate: ModuleDelegate?) -> TealiumRemoteCommandProtocol {
         return TealiumRemoteCommand(commandId: TealiumRemoteCommandsKey.commandId,
                                     description: "For processing tag-triggered HTTP requests") { response in
-            var response = response
-            response.hasCustomCompletionHandler = true
-            let requestInfo = TealiumRemoteHTTPCommand.httpRequest(from: response.payload())
+                                        var response = response
+                                        response.hasCustomCompletionHandler = true
+                                        let requestInfo = TealiumRemoteHTTPCommand.httpRequest(from: response.payload())
 
-            guard let request = requestInfo.request else {
-                return
-            }
+                                        guard let request = requestInfo.request else {
+                                            return
+                                        }
 
-            let task = TealiumRemoteCommand.urlSession.tealiumDataTask(with: request,
-                                                                       completionHandler: { data, urlResponse, error in
-                                                                        // Legacy status reporting
-                                                                        if let err = error {
-                                                                            response.error = err
-                                                                            response.status = TealiumRemoteCommandStatusCode.failure.rawValue
-                                                                        } else {
-                                                                            response.status = TealiumRemoteCommandStatusCode.success.rawValue
-                                                                        }
-                                                                        if data == nil {
-                                                                            response.status = TealiumRemoteCommandStatusCode.noContent.rawValue
-                                                                        }
-                                                                        if urlResponse == nil {
-                                                                            response.status = TealiumRemoteCommandStatusCode.failure.rawValue
-                                                                        }
-                                                                        response.urlResponse = urlResponse
-                                                                        response.data = data
-                                                                        TealiumRemoteCommand.sendRemoteCommandResponse(for: TealiumRemoteCommandsKey.commandId, response: response, delegate: delegate)
-                                                                       })
+                                        let task = TealiumRemoteCommand.urlSession.tealiumDataTask(with: request,
+                                                                                                   completionHandler: { data, urlResponse, error in
+                                                                                                    if let err = error {
+                                                                                                        response.error = err
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.failure.rawValue
+                                                                                                    } else {
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.success.rawValue
+                                                                                                    }
+                                                                                                    if data == nil {
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.noContent.rawValue
+                                                                                                    }
+                                                                                                    if urlResponse == nil {
+                                                                                                        response.status = TealiumRemoteCommandStatusCode.failure.rawValue
+                                                                                                    }
+                                                                                                    response.urlResponse = urlResponse
+                                                                                                    response.data = data
+                                                                                                    TealiumRemoteCommand.sendRemoteCommandResponse(for: TealiumRemoteCommandsKey.commandId, response: response, delegate: delegate)
+                                        })
 
-            task.resume()
+                                        task.resume()
         }
     }
 
@@ -92,7 +91,7 @@ class TealiumRemoteHTTPCommand: TealiumRemoteCommand {
 
         if let authenticationData = payload[TealiumRemoteCommandsKey.authenticate] as? [String: Any] {
             if let username = authenticationData[TealiumRemoteCommandsKey.username] as? String,
-               let password = authenticationData[TealiumRemoteCommandsKey.password] as? String {
+                let password = authenticationData[TealiumRemoteCommandsKey.password] as? String {
                 let loginString = "\(username):\(password)"
                 let loginData = loginString.data(using: String.Encoding.utf8)!
                 let base64LoginString = loginData.base64EncodedString()

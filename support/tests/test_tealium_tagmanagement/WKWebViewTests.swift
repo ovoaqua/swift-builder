@@ -55,7 +55,7 @@ class WKWebViewTests: XCTestCase {
         tagManagementWKWebView.track(data) { _, info, error in
             XCTAssertNil(error, "Error returned from track call")
             if let jsFromInfoDictionary = info[TagManagementKey.jsCommand] as? String,
-               let payload = info[TagManagementKey.payload] as? [String: Any] {
+                let payload = info[TagManagementKey.payload] as? [String: Any] {
                 XCTAssertEqual(expectedJS, jsFromInfoDictionary, "Track call contained invalid data")
                 XCTAssertEqual(data.description, payload.description, "Data and Payload should be equal")
                 expectation.fulfill()

@@ -29,22 +29,14 @@ extension DeviceData {
             DeviceDataKey.carrierMNC: "00",
             DeviceDataKey.carrierMCC: "000",
             DeviceDataKey.carrierISO: "us",
-            DeviceDataKey.carrier: "simulator",
-            DeviceDataKey.carrierMNCLegacy: "00",
-            DeviceDataKey.carrierMCCLegacy: "000",
-            DeviceDataKey.carrierISOLegacy: "us",
-            DeviceDataKey.carrierLegacy: "simulator"
+            DeviceDataKey.carrier: "simulator"
         ]
         #elseif targetEnvironment(macCatalyst)
         carrierInfo = [
             DeviceDataKey.carrierMNC: "00",
             DeviceDataKey.carrierMCC: "000",
             DeviceDataKey.carrierISO: "us",
-            DeviceDataKey.carrier: "macCatalyst",
-            DeviceDataKey.carrierMNCLegacy: "00",
-            DeviceDataKey.carrierMCCLegacy: "000",
-            DeviceDataKey.carrierISOLegacy: "us",
-            DeviceDataKey.carrierLegacy: "macCatalyst"
+            DeviceDataKey.carrier: "macCatalyst"
         ]
         #else
         let networkInfo = CTTelephonyNetworkInfo()
@@ -61,13 +53,9 @@ extension DeviceData {
             carrier = networkInfo.subscriberCellularProvider
         }
         carrierInfo = [
-            DeviceDataKey.carrierMNCLegacy: carrier?.mobileNetworkCode ?? "",
             DeviceDataKey.carrierMNC: carrier?.mobileNetworkCode ?? "",
-            DeviceDataKey.carrierMCCLegacy: carrier?.mobileCountryCode ?? "",
             DeviceDataKey.carrierMCC: carrier?.mobileCountryCode ?? "",
-            DeviceDataKey.carrierISOLegacy: carrier?.isoCountryCode ?? "",
             DeviceDataKey.carrierISO: carrier?.isoCountryCode ?? "",
-            DeviceDataKey.carrierLegacy: carrier?.carrierName ?? "",
             DeviceDataKey.carrier: carrier?.carrierName ?? ""
         ]
         #endif

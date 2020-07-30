@@ -73,11 +73,8 @@ public enum TealiumKey {
     public static let device = "device" // == model_name
     public static let deviceType = "device_type"
     public static let fullModel = "model_variant" // e.g. CDMA, GSM
-    public static let architectureLegacy = "cpu_architecture"
     public static let architecture = "device_architecture"
-    public static let cpuTypeLegacy = "cpu_type"
     public static let cpuType = "device_cputype"
-    public static let languageLegacy = "user_locale"
     public static let language = "device_language"
     public static let osName = "os_name"
     public static let platform = "platform"

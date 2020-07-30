@@ -28,7 +28,7 @@ class TealiumHelper: NSObject {
     static let shared = TealiumHelper()
     var tealium: Tealium?
     var enableHelperLogs = true
-    var traceId = "04136"
+    var traceId = "bWcscvOA"
     var logger: TealiumLoggerProtocol?
 
     override private init () {
@@ -55,7 +55,7 @@ class TealiumHelper: NSObject {
         config.batchSize = 1
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
-        //config.visitorServiceDelegate = self
+        config.visitorServiceDelegate = self
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
         config.remoteAPIEnabled = false
@@ -64,7 +64,7 @@ class TealiumHelper: NSObject {
             MyDateCollector.self,
 //            Collectors.Attribution,
                              Collectors.Lifecycle,
-//                             Collectors.AppData,
+                             Collectors.AppData,
                              Collectors.Connectivity,
  //                            Collectors.Crash,
                              Collectors.Device,
@@ -78,7 +78,7 @@ class TealiumHelper: NSObject {
 //                              Dispatchers.RemoteCommands
         ]
 //        tealium?.dataLayerManager
-//        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
         #if os(iOS)
 //
@@ -127,7 +127,7 @@ class TealiumHelper: NSObject {
             dataLayer.add(key: "hello", value: "itsme", expiry: .afterCustom((.months, 1)))
 
             teal.location?.requestPermissions()
-            
+            teal.joinTrace(id: self.traceId)
 //            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
 //
 //            print("Persistent Data: \(String(describing: persitence.dictionary))")

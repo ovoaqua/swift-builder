@@ -116,8 +116,7 @@ public class AppDataModule: Collector, AppDataCollection {
         return uuid.replacingOccurrences(of: "-", with: "")
     }
 
-    /// Prepares new Tealium default App related data. Legacy Visitor Id data
-    /// is set here as it based off app_uuid.
+    /// Prepares new Tealium default App related data. 
     ///
     /// - Parameter uuid: The uuid string to use for new persistent data.
     /// - Returns: `PersistentAppData`
@@ -167,7 +166,7 @@ public class AppDataModule: Collector, AppDataCollection {
 
         appData.persistentData = data
         if let existingVisitorId = self.existingVisitorId,
-           let persistentData = appData.persistentData {
+            let persistentData = appData.persistentData {
             let newPersistentData = PersistentAppData(visitorId: existingVisitorId, uuid: persistentData.uuid)
             diskStorage.saveToDefaults(key: TealiumKey.visitorId, value: existingVisitorId)
             diskStorage.save(newPersistentData, completion: nil)
