@@ -25,8 +25,8 @@ public class LocationModule: Collector {
         guard let tealiumLocationManager = tealiumLocationManager else {
             return nil
         }
-        let location = tealiumLocationManager.latestLocation
-        if location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
+        if let location = tealiumLocationManager.lastLocation,
+            location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
             newData = [LocationKey.deviceLatitude: "\(location.coordinate.latitude)",
                 LocationKey.deviceLongitude: "\(location.coordinate.longitude)",
                 LocationKey.accuracy: tealiumLocationManager.locationAccuracy]
@@ -94,13 +94,13 @@ public class LocationModule: Collector {
     /// Gets the user's last known location
     ///
     /// - returns: `CLLocation?` location object
-    public var latestLocation: CLLocation? {
+    public var lastLocation: CLLocation? {
         var latest: CLLocation?
         TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
                 return
             }
-            latest = self.tealiumLocationManager?.latestLocation
+            latest = self.tealiumLocationManager?.lastLocation
         }
         return latest
     }
@@ -192,12 +192,12 @@ public class LocationModule: Collector {
     }
 
     /// Prompts the user to enable permission for location servies
-    public func requestPermissions() {
+    public func requestAuthorization() {
         TealiumQueues.mainQueue.async { [weak self] in
             guard let self = self else {
                 return
             }
-            self.tealiumLocationManager?.requestPermissions()
+            self.tealiumLocationManager?.requestAuthorization()
         }
     }
 

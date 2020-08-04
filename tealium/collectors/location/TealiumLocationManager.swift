@@ -13,16 +13,17 @@ import TealiumCore
 #endif
 
 public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, TealiumLocationManagerProtocol {
+
     var config: TealiumConfig
     var logger: TealiumLoggerProtocol? {
         config.logger
     }
     var locationManager: LocationManager
-    var lastLocation: CLLocation?
     var geofences = Geofences()
     weak var locationDelegate: LocationDelegate?
     var didEnterRegionWorking = false
     public var locationAccuracy = LocationKey.lowAccuracy
+    private var _lastLocation: CLLocation?
 
     init(config: TealiumConfig,
          bundle: Bundle = Bundle.main,
@@ -71,7 +72,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
     }
 
     /// Prompts the user to enable permission for location servies
-    public func requestPermissions() {
+    public func requestAuthorization() {
         let permissionStatus = type(of: locationManager).self.authorizationStatus()
 
         if permissionStatus != .authorizedAlways {
@@ -123,7 +124,7 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
             let geofenceLocation = CLLocation(latitude: $0.center.latitude, longitude: $0.center.longitude)
 
             guard let distance = lastLocation?.distance(from: geofenceLocation),
-                distance.isLess(than: LocationKey.additionRange) else {
+                distance.isLess(than: config.updateDistance) else {
                     stopMonitoring(geofence: $0)
                     return
             }
@@ -195,11 +196,18 @@ public class TealiumLocationManager: NSObject, CLLocationManagerDelegate, Tealiu
     /// Gets the user's last known location
     ///
     /// - returns: `CLLocation` location object
-    public var latestLocation: CLLocation {
-        guard let lastLocation = lastLocation else {
-            return CLLocation()
+    public var lastLocation: CLLocation? {
+        get {
+            guard locationServiceEnabled else {
+                return nil
+            }
+            return _lastLocation
         }
-        return lastLocation
+        set {
+            if let newValue = newValue {
+                _lastLocation = newValue
+            }
+        }
     }
 
     /// Adds geofences to the Location Client to be monitored

@@ -13,13 +13,13 @@ import Foundation
 class MockTealiumLocaitonManager: TealiumLocationManagerProtocol {
 
     var createdGeofencesCallCount = 0
-    var latestLocationCallCount = 0
+    var lastLocationCallCount = 0
     var locationAccuracyCallCount = 0
     var locationServiceEnabledCallCount = 0
     var monitoredGeofencesCallCount = 0
     var clearMonitoredGeofencesCallCount = 0
     var disableCallCount = 0
-    var requestPermissionsCallCount = 0
+    var requestAuthorizationCallCount = 0
     var sendGeofenceTrackingEventCallCount = 0
     var startLocationUpdatesCallCount = 0
     var startMonitoringCallCount = 0
@@ -31,8 +31,8 @@ class MockTealiumLocaitonManager: TealiumLocationManagerProtocol {
         return ["geofence"]
     }
 
-    var latestLocation: CLLocation {
-        latestLocationCallCount += 1
+    var lastLocation: CLLocation? {
+        lastLocationCallCount += 1
         return CLLocation()
     }
 
@@ -64,8 +64,8 @@ class MockTealiumLocaitonManager: TealiumLocationManagerProtocol {
         disableCallCount += 1
     }
 
-    func requestPermissions() {
-        requestPermissionsCallCount += 1
+    func requestAuthorization() {
+        requestAuthorizationCallCount += 1
     }
 
     func sendGeofenceTrackingEvent(region: CLRegion, triggeredTransition: String) {

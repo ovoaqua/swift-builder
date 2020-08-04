@@ -116,7 +116,7 @@ public class AppDataModule: Collector, AppDataCollection {
         return uuid.replacingOccurrences(of: "-", with: "")
     }
 
-    /// Prepares new Tealium default App related data. 
+    /// Prepares new Tealium default App related data.
     ///
     /// - Parameter uuid: The uuid string to use for new persistent data.
     /// - Returns: `PersistentAppData`

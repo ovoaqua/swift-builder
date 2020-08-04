@@ -228,7 +228,7 @@ class TealiumLocationTests: XCTestCase {
         waitForExpectations(timeout: 3.0, handler: nil)
     }
 
-    func testLatestLocationWhenLastLocationPopulated() {
+    func testLastLocationPopulated() {
         let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: self,
                                                      locationManager: locationManager)
 
@@ -243,18 +243,7 @@ class TealiumLocationTests: XCTestCase {
         let location = CLLocation(coordinate: coordinate, altitude: 10.0, horizontalAccuracy: 10.0, verticalAccuracy: 10.0, course: 10.0, speed: 40.0, timestamp: someDateTime!)
 
         tealiumLocation.lastLocation = location
-        XCTAssertEqual(tealiumLocation.latestLocation, location)
-    }
-
-    func testLatestLocationWhenLastLocationNotPopulated() {
-        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: self,
-                                                     locationManager: locationManager)
-
-        locationManager.delegate = tealiumLocation
-        let latest = tealiumLocation.latestLocation
-        XCTAssertEqual(latest.coordinate.latitude, 0.0)
-        XCTAssertEqual(latest.coordinate.longitude, 0.0)
-        XCTAssertEqual(latest.speed, -1.0)
+        XCTAssertEqual(tealiumLocation.lastLocation, location)
     }
 
     func testStartMonitoring() {
@@ -374,9 +363,9 @@ class TealiumLocationTests: XCTestCase {
 
     func testModuleLatestLocation() {
         locationModule?.tealiumLocationManager = mockTealiumLocationManager
-        _ = locationModule?.latestLocation
+        _ = locationModule?.lastLocation
         TealiumQueues.mainQueue.async { [weak self] in
-            XCTAssertEqual(self?.mockTealiumLocationManager.latestLocationCallCount, 1)
+            XCTAssertEqual(self?.mockTealiumLocationManager.lastLocationCallCount, 1)
         }
     }
 
@@ -414,9 +403,9 @@ class TealiumLocationTests: XCTestCase {
 
     func testModuleRequestPermissions() {
         locationModule?.tealiumLocationManager = mockTealiumLocationManager
-        locationModule?.requestPermissions()
+        locationModule?.requestAuthorization()
         TealiumQueues.mainQueue.async { [weak self] in
-            XCTAssertEqual(self?.mockTealiumLocationManager.requestPermissionsCallCount, 1)
+            XCTAssertEqual(self?.mockTealiumLocationManager.requestAuthorizationCallCount, 1)
         }
     }
 
@@ -554,7 +543,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys.sorted(), data.keys.sorted())
         data.forEach {
             guard let value = $0.value as? String,
-                  let expected = expected[$0.key] as? String else { return }
+                let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations
@@ -569,7 +558,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys, data.keys)
         data.forEach {
             guard let value = $0.value as? String,
-                  let expected = expected[$0.key] as? String else { return }
+                let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations

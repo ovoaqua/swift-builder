@@ -47,6 +47,7 @@
 		CFD4E04C24B3DF6800A8C0CA /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD4E04824B3DF6800A8C0CA /* ViewModel.swift */; };
 		CFD4E04D24B3DF6800A8C0CA /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD4E04924B3DF6800A8C0CA /* WebView.swift */; };
 		CFD4E04E24B3DF6800A8C0CA /* TealiumMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD4E04A24B3DF6800A8C0CA /* TealiumMessageHandler.swift */; };
+		CFF4CF3024D8DB3700B9EF1C /* SanDiego.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CFF4CF2F24D8DB3700B9EF1C /* SanDiego.gpx */; };
 		ECFFF1448B30BA18783FBB64 /* Pods_TealiumJSInterfaceExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E7886D43818A1A12C12AFF /* Pods_TealiumJSInterfaceExample.framework */; };
 /* End PBXBuildFile section */
 
@@ -147,6 +148,7 @@
 		CFD4E04824B3DF6800A8C0CA /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		CFD4E04924B3DF6800A8C0CA /* WebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		CFD4E04A24B3DF6800A8C0CA /* TealiumMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumMessageHandler.swift; sourceTree = "<group>"; };
+		CFF4CF2F24D8DB3700B9EF1C /* SanDiego.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = SanDiego.gpx; sourceTree = "<group>"; };
 		F16284CA5679F5C7A466ED5D /* Pods-TealiumSwiftTVExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TealiumSwiftTVExample.debug.xcconfig"; path = "Target Support Files/Pods-TealiumSwiftTVExample/Pods-TealiumSwiftTVExample.debug.xcconfig"; sourceTree = "<group>"; };
 		F640233419B31A1D913E4525 /* Pods-TealiumSwiftWatchExample Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TealiumSwiftWatchExample Extension.release.xcconfig"; path = "Target Support Files/Pods-TealiumSwiftWatchExample Extension/Pods-TealiumSwiftWatchExample Extension.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -208,6 +210,7 @@
 		CF2E3108237622A9000CEDD3 = {
 			isa = PBXGroup;
 			children = (
+				CFF4CF2F24D8DB3700B9EF1C /* SanDiego.gpx */,
 				CF2E3113237622A9000CEDD3 /* TealiumSwiftExample */,
 				CF2E312D2376313D000CEDD3 /* TealiumSwiftWatchExample */,
 				CF2E313C2376313E000CEDD3 /* TealiumSwiftWatchExample Extension */,
@@ -516,6 +519,7 @@
 				CF2E3121237622AB000CEDD3 /* LaunchScreen.storyboard in Resources */,
 				CF2E311E237622AB000CEDD3 /* Preview Assets.xcassets in Resources */,
 				CF2E311B237622AB000CEDD3 /* Assets.xcassets in Resources */,
+				CFF4CF3024D8DB3700B9EF1C /* SanDiego.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

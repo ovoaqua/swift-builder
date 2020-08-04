@@ -56,5 +56,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This is an example of using the LocationModule to request always authorization.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This is an example of using the LocationModule to request when in use authorization.</string>
 </dict>
 </plist>

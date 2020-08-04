@@ -41,6 +41,7 @@ class TealiumHelper {
         // Optional Config Settings
         if enableLogs { config.logLevel = .info }
 
+        config.shouldUseRemotePublishSettings = false
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
         config.visitorServiceDelegate = self
@@ -49,7 +50,7 @@ class TealiumHelper {
         
         // Add collectors
         #if os(iOS)
-        config.collectors = [Collectors.Attribution, Collectors.VisitorService]
+        config.collectors = [Collectors.Attribution, Collectors.VisitorService, Collectors.Location]
         
         // Add dispatchers
         config.dispatchers = [Dispatchers.TagManagement, Dispatchers.RemoteCommands]
@@ -59,7 +60,9 @@ class TealiumHelper {
         // config.batchingEnabled = true
         
         // Location - Geofence Monitoring
-        // config.geofenceUrl = "http://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+        config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
+        config.useHighAccuracy = true
+        config.updateDistance = 200.0
         
         // Remote Commands
         let remoteCommand = TealiumRemoteCommand(commandId: "hello", description: "world") { response in
@@ -78,7 +81,7 @@ class TealiumHelper {
             self.tealium?.dataLayer.add(key: "someotherkey", value: "someotherval", expiry: .forever)
             #if os(iOS)
             // Location
-            // self.tealium?.location?.requestPermissions()
+            self.tealium?.location?.requestAuthorization()
             #endif
         }
 

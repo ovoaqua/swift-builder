@@ -11,13 +11,13 @@ import Foundation
 
 public protocol TealiumLocationManagerProtocol {
     var createdGeofences: [String]? { get }
-    var latestLocation: CLLocation { get }
+    var lastLocation: CLLocation? { get }
     var locationAccuracy: String { get set }
     var locationServiceEnabled: Bool { get }
     var monitoredGeofences: [String]? { get }
     func clearMonitoredGeofences()
     func disable()
-    func requestPermissions()
+    func requestAuthorization()
     func sendGeofenceTrackingEvent(region: CLRegion, triggeredTransition: String)
     func startLocationUpdates()
     func startMonitoring(_ geofences: [CLCircularRegion])
