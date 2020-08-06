@@ -39,6 +39,12 @@ let package = Package(
       path: "tealium/core/"
     ),
     .target(
+      name: "TealiumAttribution",
+      dependencies: ["TealiumCore"],
+      path: "tealium/collectors/attribution/",
+      swiftSettings: [.define("attribution")]
+    ),
+    .target(
       name: "TealiumCollect",
       dependencies: ["TealiumCore"],
       path: "tealium/dispatchers/collect/",
