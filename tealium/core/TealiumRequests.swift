@@ -288,7 +288,7 @@ public protocol TealiumDispatch {
     var trackRequest: TealiumTrackRequest { get }
 }
 
-public struct EventDispatch: TealiumDispatch {
+public struct TealiumEvent: TealiumDispatch {
     internal var eventName: String
     internal var dataLayer: [String: Any]?
 
@@ -305,7 +305,7 @@ public struct EventDispatch: TealiumDispatch {
     }
 }
 
-public struct ViewDispatch: TealiumDispatch {
+public struct TealiumView: TealiumDispatch {
     internal var viewName: String
     internal var dataLayer: [String: Any]?
 

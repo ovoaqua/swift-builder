@@ -46,7 +46,7 @@ public extension Tealium {
         guard let traceId = self.zz_internal_modulesManager?.config.options[TealiumKey.traceId] as? String else {
             return
         }
-        let dispatch = EventDispatch(TealiumKey.killVisitorSession, dataLayer: ["event": TealiumKey.killVisitorSession, "call_type": TealiumKey.killVisitorSession, TealiumKey.traceId: traceId])
+        let dispatch = TealiumEvent(TealiumKey.killVisitorSession, dataLayer: ["event": TealiumKey.killVisitorSession, "call_type": TealiumKey.killVisitorSession, TealiumKey.traceId: traceId])
         self.track(dispatch)
     }
 }

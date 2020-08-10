@@ -126,7 +126,7 @@ class TealiumHelper: NSObject {
 
             dataLayer.add(key: "hello", value: "itsme", expiry: .afterCustom((.months, 1)))
 
-            teal.location?.requestPermissions()
+            teal.location?.requestAuthorization()
             teal.joinTrace(id: self.traceId)
 //            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
 //
@@ -171,12 +171,12 @@ class TealiumHelper: NSObject {
     }
 
     func track(title: String, data: [String: Any]?) {
-        let dispatch = EventDispatch(title, dataLayer: data)
+        let dispatch = TealiumEvent(title, dataLayer: data)
         tealium?.track(dispatch)
     }
 
     func trackView(title: String, data: [String: Any]?) {
-        let dispatch = ViewDispatch(title, dataLayer: data)
+        let dispatch = TealiumView(title, dataLayer: data)
         tealium?.track(dispatch)
 
     }

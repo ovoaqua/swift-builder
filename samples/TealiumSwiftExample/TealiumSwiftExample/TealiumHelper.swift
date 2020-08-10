@@ -48,12 +48,16 @@ class TealiumHelper {
         config.consentLoggingEnabled = true
         config.consentPolicy = .ccpa
         
+        #if os(iOS)
+        // Add dispatchers
+        config.dispatchers = [Dispatchers.TagManagement, Dispatchers.RemoteCommands]
+        #else
+        config.dispatchers = [Dispatchers.Collect]
+        #endif
+        
         // Add collectors
         #if os(iOS)
         config.collectors = [Collectors.Attribution, Collectors.VisitorService, Collectors.Location]
-        
-        // Add dispatchers
-        config.dispatchers = [Dispatchers.TagManagement, Dispatchers.RemoteCommands]
         
         // To enable batching:
         // config.batchSize = 5
@@ -92,12 +96,12 @@ class TealiumHelper {
     }
 
     class func trackView(title: String, dataLayer: [String: Any]?) {
-        let dispatch = ViewDispatch(title, dataLayer: dataLayer)
+        let dispatch = TealiumView(title, dataLayer: dataLayer)
         TealiumHelper.shared.tealium?.track(dispatch)
     }
 
     class func trackEvent(title: String, dataLayer: [String: Any]?) {
-        let dispatch = EventDispatch(title, dataLayer: dataLayer)
+        let dispatch = TealiumEvent(title, dataLayer: dataLayer)
         TealiumHelper.shared.tealium?.track(dispatch)
     }
     
