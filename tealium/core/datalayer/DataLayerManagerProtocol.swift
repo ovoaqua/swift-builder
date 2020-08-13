@@ -19,6 +19,8 @@ public protocol DataLayerManagerProtocol {
     var sessionData: [String: Any] { get set }
     func add(data: [String: Any], expiry: Expiry?)
     func add(key: String, value: Any, expiry: Expiry?)
+    func joinTrace(id: String)
+    func leaveTrace()
     func delete(for keys: [String])
     func delete(for key: String)
     func deleteAll()
@@ -29,8 +31,6 @@ protocol SessionManagerProtocol {
     var minutesBetweenSessionIdentifier: TimeInterval { get set }
     var secondsBetweenTrackEvents: TimeInterval { get set }
     var sessionStarter: SessionStarterProtocol { get }
-    func joinTrace(id: String)
-    func leaveTrace()
     func refreshSessionData()
     func refreshSession()
     func startNewSession(with sessionStarter: SessionStarterProtocol)

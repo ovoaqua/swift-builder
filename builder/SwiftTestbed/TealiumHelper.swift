@@ -48,11 +48,11 @@ class TealiumHelper: NSObject {
         config.consentPolicy = nil
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
-        config.dispatchValidators = [self]
+//        config.dispatchValidators = [self]
         config.searchAdsEnabled = true
         config.shouldUseRemotePublishSettings = false
-        config.batchingEnabled = false
-        config.batchSize = 1
+        config.batchingEnabled = true
+        config.batchSize = 5
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
         config.visitorServiceDelegate = self
@@ -72,7 +72,8 @@ class TealiumHelper: NSObject {
                              Collectors.VisitorService,
         ]
         
-        config.dispatchers = [Dispatchers.Collect,
+        config.dispatchers = [
+             Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
 //                              Dispatchers.RemoteCommands

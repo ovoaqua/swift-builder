@@ -8,7 +8,7 @@
 
 import Foundation
 import TealiumCore
-// swiftlint:disable function_body_length
+
 class MockURLSessionPublishSettings: URLSessionProtocol {
     func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
         return DataTask(completionHandler: { data, response, error in
@@ -204,7 +204,7 @@ class DataTaskExtraContent: URLSessionDataTaskProtocol {
     }
 
 }
-// swiftlint:enable function_body_length
+
 class MockURLSessionPublishSettingsNoContent: URLSessionProtocol {
     func tealiumDataTask(with url: URL, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTaskProtocol {
         return DataTaskNoContent(completionHandler: { data, response, error in

@@ -347,3 +347,27 @@ public extension TealiumConfig {
     }
 
 }
+
+// MARK: Deep Linking/QR Trace
+public extension TealiumConfig {
+
+    var deepLinkTrackingEnabled: Bool {
+        get {
+            options[TealiumKey.deepLinkTrackingEnabled] as? Bool ?? true
+        }
+
+        set {
+            options[TealiumKey.deepLinkTrackingEnabled] = newValue
+        }
+    }
+
+    var qrTraceEnabled: Bool {
+        get {
+            options[TealiumKey.qrTraceEnabled] as? Bool ?? true
+        }
+
+        set {
+            options[TealiumKey.qrTraceEnabled] = newValue
+        }
+    }
+}

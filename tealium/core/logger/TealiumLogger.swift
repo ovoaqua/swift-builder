@@ -98,8 +98,8 @@ public class TealiumLogger: TealiumLoggerProtocol {
 
     func textLog(_ request: TealiumLogRequest) {
         guard logThreshold > .silent,
-            request.logLevel >= logThreshold else {
-                return
+              request.logLevel >= logThreshold else {
+            return
         }
         print(request.formattedString)
     }

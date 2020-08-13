@@ -59,8 +59,6 @@ public enum TealiumKey {
     public static let jsNotificationName = "com.tealium.tagmanagement.jscommand"
     public static let tagmanagementNotification = "com.tealium.tagmanagement.urlrequest"
     public static let jsCommand = "js"
-    public static let traceId = "cp.trace_id"
-    public static let killVisitorSession = "kill_visitor_session"
     // used for remote commands
     public static let tealiumURLScheme = "tealium"
     public static let dataSource = "tealium_datasource"
@@ -117,6 +115,15 @@ public enum TealiumKey {
     public static let collectors = "collectors"
     public static let dispatchers = "dispatchers"
     static let lifecycleAutotrackingEnabled = "enable_lifecycle_autotracking"
+    static let deepLinkTrackingEnabled = "deep_link_tracking_enabled"
+    static let qrTraceEnabled = "qr_trace_enabled"
+    static let deepLinkURL = "deep_link_url"
+    static let deepLinkQueryPrefix = "deep_link_param"
+    static let killVisitorSession = "kill_visitor_session"
+    static let killVisitorSessionEvent = "event"
+    static let leaveTraceQueryParam = "leave_trace"
+    static let traceIdQueryParam = "tealium_trace_id"
+    public static let traceId = "cp.trace_id"
 }
 
 public enum TealiumTrackType {
