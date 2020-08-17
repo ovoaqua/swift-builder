@@ -73,7 +73,7 @@ class TealiumHelper: NSObject {
         ]
         
         config.dispatchers = [
-             Dispatchers.Collect,
+//            Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
                               Dispatchers.TagManagement,
 //                              Dispatchers.RemoteCommands

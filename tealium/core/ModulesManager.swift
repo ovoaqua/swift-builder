@@ -214,10 +214,11 @@ public class ModulesManager {
     func setupDispatchers(config: TealiumConfig) {
         self.config.dispatchers?.forEach { dispatcherType in
             let dispatcherTypeDescription = String(describing: dispatcherType)
-            if dispatcherTypeDescription.contains(ModuleNames.tagmanagement),
-               config.isTagManagementEnabled == false {
-                return
-            } else {
+
+            if dispatcherTypeDescription.contains(ModuleNames.tagmanagement) {
+                if config.isTagManagementEnabled == false {
+                    return
+                }
                 self.sessionManager?.isTagManagementEnabled = true
             }
 
