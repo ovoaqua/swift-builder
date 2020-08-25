@@ -78,7 +78,7 @@ class TealiumNWPathMonitor: ConnectivityMonitorProtocol {
             }
             switch path.status {
             case .satisfied:
-                if config.wifiOnlySending == true, path.isExpensive {
+                if self.config.wifiOnlySending == true, path.isExpensive {
                     self.completion(.failure(TealiumConnectivityError.noConnection))
                 } else {
                     self.completion(.success(true))

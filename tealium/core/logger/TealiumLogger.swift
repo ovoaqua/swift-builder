@@ -20,13 +20,13 @@ extension OSLog {
 public class TealiumLogger: TealiumLoggerProtocol {
 
     var logThreshold: TealiumLogLevel {
-        config.logLevel ?? TealiumConstants.defaultLogLevel
+        config?.logLevel ?? TealiumConstants.defaultLogLevel
     }
-    var loggerType: TealiumLoggerType {
-        config.loggerType
+    var loggerType: TealiumLoggerType? {
+        config?.loggerType ?? .os
     }
 
-    public var config: TealiumConfig
+    public weak var config: TealiumConfig?
 
     /// Modules may initialize their own loggers, passing in the log level from the TealiumConfig object￼.
     ///

@@ -29,7 +29,6 @@ class TealiumHelper: NSObject {
     var tealium: Tealium?
     var enableHelperLogs = true
     var traceId = "bWcscvOA"
-    var logger: TealiumLoggerProtocol?
 
     override private init () {
 
@@ -59,7 +58,6 @@ class TealiumHelper: NSObject {
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
         config.remoteAPIEnabled = false
-        logger = config.logger
         config.collectors = [
             MyDateCollector.self,
 //            Collectors.Attribution,

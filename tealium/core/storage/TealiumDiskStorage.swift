@@ -36,7 +36,6 @@ public class TealiumDiskStorage: TealiumDiskStorageProtocol {
     public init(config: TealiumConfig,
                 forModule module: String,
                 isCritical: Bool = false) {
-        //        self.logger = TealiumLogger(loggerId: "TealiumDiskStorage", logLevel: config.logLevel ?? defaultTealiumLogLevel)
         self.logger = config.logger
         // The subdirectory to use for this data
         filePrefix = "\(config.account).\(config.profile)/"

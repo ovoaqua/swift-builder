@@ -12,7 +12,7 @@ public protocol TimestampCollection {
     var currentTimeStamps: [String: Any] { get }
 }
 
-public protocol DataLayerManagerProtocol {
+public protocol DataLayerManagerProtocol: class {
     var allEventData: [String: Any] { get set }
     var allSessionData: [String: Any] { get }
     var sessionId: String? { get set }

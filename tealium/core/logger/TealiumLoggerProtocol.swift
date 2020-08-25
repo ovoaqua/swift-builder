@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol TealiumLoggerProtocol {
-    var config: TealiumConfig { get set }
+    var config: TealiumConfig? { get set }
     init(config: TealiumConfig)
     func log(_ request: TealiumLogRequest)
 }
