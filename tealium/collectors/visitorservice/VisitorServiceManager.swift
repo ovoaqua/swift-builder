@@ -58,7 +58,7 @@ public class VisitorServiceManager: VisitorServiceManagerProtocol {
 
     /// - Returns: `TealiumVisitorProfile?` - the currrent cached profile from persistent storage.
     ///             As long as a previous fetch has been made, this should always return a profile, even if the device is offline
-    var cachedProfile: TealiumVisitorProfile? {
+    public var cachedProfile: TealiumVisitorProfile? {
         diskStorage.retrieve(as: TealiumVisitorProfile.self)
     }
 

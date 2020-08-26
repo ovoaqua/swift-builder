@@ -44,9 +44,9 @@ class TealiumVisitorServiceManagerTests: XCTestCase {
 
     func testInitialVisitorProfileSettingsFromConfig() {
         let config = tealHelper.getConfig()
-        config.visitorServiceRefreshInterval = 10
-        let interval = config.visitorServiceRefreshInterval!
-        XCTAssertEqual(interval, 10)
+        config.visitorServiceRefresh = .every(10, .minutes)
+        let refresh = config.visitorServiceRefresh!
+        XCTAssertEqual(refresh.interval, 600)
     }
 
     func testRequestVisitorProfile() {

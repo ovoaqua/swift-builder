@@ -11,14 +11,6 @@ import Foundation
 import TealiumCore
 #endif
 
-extension Int64 {
-
-    /// Converts minutes to milliseconds
-    var milliseconds: Int64 {
-        return self * 60 * 1000
-    }
-}
-
 public extension Tealium {
 
     /// - Returns: `VisitorServiceManager` instance
@@ -35,11 +27,11 @@ public extension Collectors {
 
 public extension TealiumConfig {
 
-    /// Sets the default refresh interval for visitor profile retrieval. Default is 5 minutes
-    /// Set to `0` if the profile should always be fetched following a track request.
-    var visitorServiceRefreshInterval: Int64? {
+    /// Sets the default refresh interval for visitor profile retrieval. Default is `.every(5, .minutes)`
+    /// Set to `.every(0, .seconds)` if the profile should always be fetched following a track request.
+    var visitorServiceRefresh: TealiumRefreshInterval? {
         get {
-            options[VisitorServiceConstants.refreshInterval] as? Int64
+            options[VisitorServiceConstants.refreshInterval] as? TealiumRefreshInterval ?? .every(5, .minutes)
         }
 
         set {

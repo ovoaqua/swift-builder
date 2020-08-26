@@ -94,10 +94,10 @@ public class VisitorServiceRetriever {
 
     /// Should fetch visitor profile based on interval set in the config or defaults to every 5 minutes
     var shouldFetchVisitorProfile: Bool {
-        guard let refresh = tealiumConfig.visitorServiceRefreshInterval else {
+        guard let refresh = tealiumConfig.visitorServiceRefresh else {
             return shouldFetch(basedOn: lastFetch, interval: VisitorServiceConstants.defaultRefreshInterval.milliseconds, environment: tealiumConfig.environment)
         }
-        return shouldFetch(basedOn: lastFetch, interval: refresh.milliseconds, environment: tealiumConfig.environment)
+        return shouldFetch(basedOn: lastFetch, interval: refresh.interval.milliseconds, environment: tealiumConfig.environment)
     }
 
     /// Calculates the milliseconds since the last time the visitor profile was fetched

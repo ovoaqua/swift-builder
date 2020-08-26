@@ -25,7 +25,7 @@ class VisitorServiceRetrieverTests: XCTestCase {
 
     func testVisitorServiceURL() {
         XCTAssertEqual("https://visitor-service.tealiumiq.com/\(tealConfig.account)/\(tealConfig.profile)/\(visitorServiceRetriever.tealiumVisitorId)",
-            visitorServiceRetriever.visitorServiceURL)
+                       visitorServiceRetriever.visitorServiceURL)
     }
 
     func testIntervalSince() {
@@ -73,7 +73,7 @@ class VisitorServiceRetrieverTests: XCTestCase {
         XCTAssertEqual(true, visitorServiceRetriever.shouldFetchVisitorProfile)
 
         tealConfig = TealiumConfig(account: "test", profile: "test", environment: "prod")
-        tealConfig.visitorServiceRefreshInterval = 0
+        tealConfig.visitorServiceRefresh = .every(0, .seconds)
         visitorServiceRetriever = VisitorServiceRetriever(config: tealConfig, visitorId: "test")
         visitorServiceRetriever.lastFetch = timeTraveler.travel(by: (60 * 2 + 1) * -1)
         XCTAssertEqual(true, visitorServiceRetriever.shouldFetchVisitorProfile)
@@ -85,7 +85,7 @@ class VisitorServiceRetrieverTests: XCTestCase {
 
         tealConfig = TealiumConfig(account: "test", profile: "test", environment: "prod")
         // resetting back to default
-        tealConfig.visitorServiceRefreshInterval = 300
+        tealConfig.visitorServiceRefresh = .every(5, .minutes)
         visitorServiceRetriever = VisitorServiceRetriever(config: tealConfig, visitorId: "test")
         visitorServiceRetriever.lastFetch = timeTraveler.travel(by: (60 * 2 + 1) * -1)
         XCTAssertEqual(false, visitorServiceRetriever.shouldFetchVisitorProfile)

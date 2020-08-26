@@ -1,37 +1,12 @@
 //
-//  TealiumExtensions.swift
-//  tealium-swift
+//  Date+Tealium.swift
+//  TealiumCore
 //
-//  Created by Jason Koo on 11/1/16.
-//  Copyright © 2016 Tealium, Inc. All rights reserved.
+//  Created by Jonathan Wong on 8/25/20.
+//  Copyright © 2020 Tealium, Inc. All rights reserved.
 //
 
-/// General Extensions that may be used by multiple objects.
 import Foundation
-
-/// Extend boolvalue NSString function to Swift strings.
-extension String {
-    var boolValue: Bool {
-        return NSString(string: self).boolValue
-    }
-}
-
-extension Dictionary where Key == String, Value == Any {
-
-    mutating func safelyAdd(key: String, value: Any?) {
-        if let value = value {
-            self += [key: value]
-        }
-    }
-
-}
-
-/// Allows use of plus operator for array reduction calls.
-func +<Key, Value> (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
-    var result = lhs
-    rhs.forEach { result[$0] = $1 }
-    return result
-}
 
 public extension Date {
 
@@ -102,14 +77,5 @@ public extension Date {
 
     func millisecondsFrom(earlierDate: Date) -> Int64 {
         return Int64(self.timeIntervalSince(earlierDate) * 1000)
-    }
-}
-
-public extension Array {
-    // Credit: https://gist.github.com/ericdke/fa262bdece59ff786fcb#gistcomment-2045033
-    func chunks(_ chunkSize: Int) -> [[Element]] {
-        return stride(from: 0, to: self.count, by: chunkSize).map {
-            Array(self[$0..<Swift.min($0 + chunkSize, self.count)])
-        }
     }
 }
