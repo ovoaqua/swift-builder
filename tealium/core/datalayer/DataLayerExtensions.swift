@@ -12,7 +12,7 @@ public extension Tealium {
 
     /// - Returns: `String` The Tealium Visitor Id
     var visitorId: String? {
-        dataLayer.allEventData[TealiumKey.visitorId] as? String
+        dataLayer.all[TealiumKey.visitorId] as? String
     }
 
 }

@@ -124,6 +124,7 @@ public enum TealiumKey {
     static let leaveTraceQueryParam = "leave_trace"
     static let traceIdQueryParam = "tealium_trace_id"
     public static let traceId = "cp.trace_id"
+    static let appDelegateProxy = "app_delegate_proxy"
 }
 
 public enum TealiumTrackType {

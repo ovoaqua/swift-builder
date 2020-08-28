@@ -17,7 +17,7 @@ class MockDataLayerManager: DataLayerManagerProtocol {
     var deleteMultiCount = 0
     var deleteAllCount = 0
     
-    var allEventData: [String: Any] {
+    var all: [String: Any] {
         get {
             ["all": "eventdata"]
         }

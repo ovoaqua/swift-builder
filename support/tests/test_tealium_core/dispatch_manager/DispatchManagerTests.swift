@@ -177,7 +177,6 @@ extension TealiumDispatchQueueModuleTests: ModuleDelegate {
 }
 
 class DummyDispatcher: Dispatcher {
-    var isReady: Bool = true
     
     required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
         self.config = config

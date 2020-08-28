@@ -20,8 +20,6 @@ public class Tealium {
     // swiftlint:disable identifier_name
     public var zz_internal_modulesManager: ModulesManager?
     // swiftlint:enable identifier_name
-    /// Returns `true` if Tealium has finished loading all modules.
-    public var isReady = false
 
     /// Initializer.
     ///
@@ -34,14 +32,20 @@ public class Tealium {
         defer {
             TealiumQueues.backgroundSerialQueue.async {
                 enableCompletion?(.success(true))
-                self.isReady = true
             }
         }
 
         self.enableCompletion = enableCompletion
         self.dataLayer = dataLayer ?? DataLayer(config: config)
+        if config.appDelegateProxyEnabled {
+            let context = TealiumContext(config: config, dataLayer: self.dataLayer, tealium: self)
+            TealiumAppDelegateProxy.setup(context: context)
+        }
 
-        TealiumQueues.backgroundSerialQueue.async {
+        TealiumQueues.backgroundSerialQueue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.zz_internal_modulesManager = modulesManager ?? ModulesManager(config, dataLayer: self.dataLayer)
         }
 
@@ -84,6 +88,10 @@ public class Tealium {
             self.zz_internal_modulesManager?.sendTrack(dispatch.trackRequest)
 
         }
+    }
+
+    deinit {
+        TealiumAppDelegateProxy.tearDown()
     }
 
 }

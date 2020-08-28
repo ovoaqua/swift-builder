@@ -99,6 +99,10 @@ class TealiumNWPathMonitor: ConnectivityMonitorProtocol {
         }
     }
 
+    deinit {
+        monitor.cancel()
+    }
+
 }
 
 enum TealiumConnectivityError: String, LocalizedError {

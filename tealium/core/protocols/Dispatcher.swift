@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol Dispatcher: TealiumModule {
-    var isReady: Bool { get }
+
     init(config: TealiumConfig,
          delegate: ModuleDelegate,
          completion: ModuleCompletion?)

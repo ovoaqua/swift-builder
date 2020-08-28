@@ -28,6 +28,18 @@ open class TealiumConfig {
         }
     }
 
+    /// Set to `false` to disable the Tealium AppDelegate proxy for deep link handling.
+    /// Default `true`.
+    public var appDelegateProxyEnabled: Bool {
+        get {
+            options[TealiumKey.appDelegateProxy] as? Bool ?? true
+        }
+
+        set {
+            options[TealiumKey.appDelegateProxy] = newValue
+        }
+    }
+
     /// Provides the option to add custom `DispatchValidator`s to control whether events should be dispatched, queued, or dropped
     public var dispatchValidators: [DispatchValidator]? {
         get {
@@ -148,7 +160,7 @@ open class TealiumConfig {
 
 }
 
-extension TealiumConfig: Equatable {
+extension TealiumConfig: Equatable, Hashable {
 
     public static func == (lhs: TealiumConfig, rhs: TealiumConfig ) -> Bool {
         if lhs.account != rhs.account { return false }
@@ -165,6 +177,12 @@ extension TealiumConfig: Equatable {
         }
 
         return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(account)
+        hasher.combine(profile)
+        hasher.combine(environment)
     }
 
 }

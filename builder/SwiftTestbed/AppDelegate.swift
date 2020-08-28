@@ -13,7 +13,7 @@ import TealiumCore
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
             let cookieStore = HTTPCookieStorage.shared
@@ -51,14 +51,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        TealiumHelper.shared.tealium?.handleDeepLink(url)
         return true
     }
     
     func application(_ application: UIApplication, didUpdate userActivity: NSUserActivity) {
-        if let url = userActivity.webpageURL {
-            TealiumHelper.shared.tealium?.handleDeepLink(url)
-        }
+
     }
 
 }

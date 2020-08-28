@@ -16,7 +16,6 @@ public class RemoteCommandsModule: Dispatcher {
 
     public var id: String = ModuleNames.remotecommands
     public var config: TealiumConfig
-    public var isReady: Bool = false
     public var remoteCommands: TealiumRemoteCommandsManagerProtocol?
     var reservedCommandsAdded = false
 

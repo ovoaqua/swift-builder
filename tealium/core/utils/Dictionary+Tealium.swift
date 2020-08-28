@@ -14,5 +14,3 @@ func +<Key, Value> (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
     rhs.forEach { result[$0] = $1 }
     return result
 }
-
-

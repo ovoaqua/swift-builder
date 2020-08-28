@@ -44,7 +44,7 @@ public class DataLayer: DataLayerManagerProtocol, SessionManagerProtocol, Timest
     }
 
     /// - Returns: `[String: Any]` containing all stored event data.
-    public var allEventData: [String: Any] {
+    public var all: [String: Any] {
         get {
             var allData = [String: Any]()
             if let persistentData = self.persistentDataStorage {

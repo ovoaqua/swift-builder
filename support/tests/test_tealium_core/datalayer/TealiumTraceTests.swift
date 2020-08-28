@@ -130,9 +130,9 @@ class TealiumTraceTests: XCTestCase {
     func testHandleDeepLink() {
         let link = URL(string: "https://tealium.com?tealium_trace_id=abc123&utm_param_1=hello&utm_param_2=test")!
         tealium.handleDeepLink(link)
-        XCTAssertEqual(mockDataLayer.allEventData[TealiumKey.deepLinkURL] as! String, link.absoluteString)
-        XCTAssertEqual(mockDataLayer.allEventData["deep_link_param_utm_param_1"] as! String, "hello")
-        XCTAssertEqual(mockDataLayer.allEventData["deep_link_param_utm_param_2"] as! String, "test")
+        XCTAssertEqual(mockDataLayer.all[TealiumKey.deepLinkURL] as! String, link.absoluteString)
+        XCTAssertEqual(mockDataLayer.all["deep_link_param_utm_param_1"] as! String, "hello")
+        XCTAssertEqual(mockDataLayer.all["deep_link_param_utm_param_2"] as! String, "test")
     }
     
     func testHandleDeepLinkDoesNotAddDataIfDisabled() {
@@ -144,9 +144,9 @@ class TealiumTraceTests: XCTestCase {
         tealiumForConfig(config: config) { tealium in
             let link = URL(string: "https://tealium.com?tealium_trace_id=\(testTraceId)&utm_param_1=hello&utm_param_2=test")!
             tealium.handleDeepLink(link)
-            XCTAssertNil(mockDataLayer.allEventData[TealiumKey.deepLinkURL])
-            XCTAssertNil(mockDataLayer.allEventData["deep_link_param_utm_param_1"])
-            XCTAssertNil(mockDataLayer.allEventData["deep_link_param_utm_param_2"])
+            XCTAssertNil(mockDataLayer.all[TealiumKey.deepLinkURL])
+            XCTAssertNil(mockDataLayer.all["deep_link_param_utm_param_1"])
+            XCTAssertNil(mockDataLayer.all["deep_link_param_utm_param_2"])
             TealiumTraceTests.expectation.fulfill()
         }
 
@@ -166,10 +166,14 @@ extension TealiumTraceTests: DispatchListener {
 class DummyDataManagerTrace: DataLayerManagerProtocol {
     var traceId: String? {
         willSet {
-            allEventData["cp.trace_id"] = newValue
+            all["cp.trace_id"] = newValue
         }
     }
-    var allEventData: [String: Any] = [:]
+    var all: [String: Any] = [:] {
+        willSet {
+            print("Willset to:\(self.all.debugDescription)")
+        }
+    }
 
     var allSessionData: [String: Any] = ["sessionData": true]
 
@@ -190,7 +194,7 @@ class DummyDataManagerTrace: DataLayerManagerProtocol {
     }
 
     func add(key: String, value: Any, expiry: Expiry?) {
-        allEventData[key] = value
+        all[key] = value
         switch expiry {
         case .session:
             return

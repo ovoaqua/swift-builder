@@ -15,7 +15,6 @@ import TealiumCore
 public class TagManagementModule: Dispatcher {
 
     public let id: String = ModuleNames.tagmanagement
-    public var isReady = false
     public var config: TealiumConfig
     var errorState = AtomicInteger(value: 0)
     var pendingTrackRequests = [(TealiumRequest, ModuleCompletion?)]()

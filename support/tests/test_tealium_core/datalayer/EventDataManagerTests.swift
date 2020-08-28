@@ -44,7 +44,7 @@ class EventDataManagerTests: XCTestCase {
                                        "singleDataItemKey1": "singleDataItemValue1",
                                        "singleDataItemKey2": "singleDataItemValue2",
                                        "tealium_datasource": "testDatasource"]
-        let actual = eventDataManager.allEventData
+        let actual = eventDataManager.all
         XCTAssertEqual(actual.count, expected.count)
         XCTAssertEqual(actual.keys.sorted(), expected.keys.sorted())
         XCTAssertNotNil(actual[TealiumKey.sessionId])
@@ -68,8 +68,8 @@ class EventDataManagerTests: XCTestCase {
         let sessionData: [String: Any] = ["hello": "session"]
         let eventDataItem = DataLayerItem(key: "hello", value: "session", expires: .distantFuture)
         eventDataManager.add(data: sessionData, expiry: .session)
-        XCTAssertNotNil(eventDataManager.allEventData["hello"])
-        XCTAssertEqual(eventDataManager.allEventData["hello"] as! String, "session")
+        XCTAssertNotNil(eventDataManager.all["hello"])
+        XCTAssertEqual(eventDataManager.all["hello"] as! String, "session")
         let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
@@ -78,8 +78,8 @@ class EventDataManagerTests: XCTestCase {
         let restartData: [String: Any] = ["hello": "restart"]
         let eventDataItem = DataLayerItem(key: "hello", value: "restart", expires: .init(timeIntervalSinceNow: 60 * 60 * 12))
         eventDataManager.add(data: restartData, expiry: .untilRestart)
-        XCTAssertNotNil(eventDataManager.allEventData["hello"])
-        XCTAssertEqual(eventDataManager.allEventData["hello"] as! String, "restart")
+        XCTAssertNotNil(eventDataManager.all["hello"])
+        XCTAssertEqual(eventDataManager.all["hello"] as! String, "restart")
         let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
@@ -88,8 +88,8 @@ class EventDataManagerTests: XCTestCase {
         let foreverData: [String: Any] = ["hello": "forever"]
         let eventDataItem = DataLayerItem(key: "hello", value: "forever", expires: .distantFuture)
         eventDataManager.add(data: foreverData, expiry: .forever)
-        XCTAssertNotNil(eventDataManager.allEventData["hello"])
-        XCTAssertEqual(eventDataManager.allEventData["hello"] as! String, "forever")
+        XCTAssertNotNil(eventDataManager.all["hello"])
+        XCTAssertEqual(eventDataManager.all["hello"] as! String, "forever")
         let retrieved = mockDiskStorage.retrieve(as: DataLayerCollection.self)
         XCTAssertTrue(((retrieved?.contains(eventDataItem)) != nil))
     }
@@ -136,7 +136,7 @@ class EventDataManagerTests: XCTestCase {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
-            let data = self.tealium?.dataLayer.allEventData
+            let data = self.tealium?.dataLayer.all
             expect.fulfill()
             self.largeDataSet.forEach {
                 XCTAssertNotNil(data![$0.key], "Expected data missing: \($0.key)")
@@ -161,7 +161,7 @@ class EventDataManagerTests: XCTestCase {
             for i in 0...100 {
                 self.tealium?.dataLayer.delete(for: "testkey\(i)")
             }
-            let data = self.tealium?.dataLayer.allEventData
+            let data = self.tealium?.dataLayer.all
             expect.fulfill()
             self.largeDataSet.forEach {
                 XCTAssertNil(data![$0.key], "Expected data missing: \($0.key)")
@@ -185,7 +185,7 @@ class EventDataManagerTests: XCTestCase {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
-            let data = self.tealium?.dataLayer.allEventData
+            let data = self.tealium?.dataLayer.all
             expect.fulfill()
             self.largeDataSet.forEach {
                 XCTAssertNotNil(data![$0.key], "Expected data missing: \($0.key)")

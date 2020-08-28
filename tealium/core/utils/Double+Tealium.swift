@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Double {
+public extension Double {
 
     /// Converts seconds to milliseconds
     var milliseconds: Int64 {

@@ -28,7 +28,6 @@ class TealiumHelper: NSObject {
     static let shared = TealiumHelper()
     var tealium: Tealium?
     var enableHelperLogs = true
-    var traceId = "bWcscvOA"
 
     override private init () {
 
@@ -43,12 +42,13 @@ class TealiumHelper: NSObject {
                                    options: nil)
         config.connectivityRefreshInterval = 5
         config.loggerType = .os
-        config.logLevel = .debug
+        config.logLevel = .info
         config.consentPolicy = nil
         config.consentLoggingEnabled = true
         config.dispatchListeners = [self]
 //        config.dispatchValidators = [self]
         config.searchAdsEnabled = true
+//        config.appDelegateProxyEnabled = false
         config.shouldUseRemotePublishSettings = false
         config.batchingEnabled = true
         config.batchSize = 5
@@ -71,9 +71,9 @@ class TealiumHelper: NSObject {
         ]
         
         config.dispatchers = [
-//            Dispatchers.Collect,
+            Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
-                              Dispatchers.TagManagement,
+//                              Dispatchers.TagManagement,
 //                              Dispatchers.RemoteCommands
         ]
 //        tealium?.dataLayerManager
@@ -126,14 +126,8 @@ class TealiumHelper: NSObject {
             dataLayer.add(key: "hello", value: "itsme", expiry: .afterCustom((.months, 1)))
 
             teal.location?.requestAuthorization()
-            teal.joinTrace(id: self.traceId)
-//            print("Volatile Data: \(String(describing: sessionPersistence.dictionary))")
-//
-//            print("Persistent Data: \(String(describing: persitence.dictionary))")
-//            print("Visitor ID: \(self.tealium?.visitorId ?? "not ready")")
-//            print("Tealium Ready: \(self.tealium!.isReady)")
         }
-        
+
         #if os(iOS)
         guard let remoteCommands = tealium?.remoteCommands else {
             return
@@ -150,8 +144,6 @@ class TealiumHelper: NSObject {
         }
         remoteCommands.add(remoteCommand)
         #endif
-        
-        
     }
     
     func resetConsentPreferences() {
@@ -257,7 +249,6 @@ class MyDateCollector: Collector {
 
 
 class MyCustomDispatcher: Dispatcher {
-    var isReady: Bool
     
     var id = "MyCustomDispatcher"
     
@@ -265,7 +256,6 @@ class MyCustomDispatcher: Dispatcher {
     
     required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
-        self.isReady = true
     }
     
     func dynamicTrack(_ request: TealiumRequest, completion: ModuleCompletion?) {

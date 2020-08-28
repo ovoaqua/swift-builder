@@ -72,7 +72,7 @@ class SessionManagerTests: XCTestCase {
 
     func testSessionRefreshWhenSessionIdNotNil() {
         eventDataManager.refreshSession()
-        XCTAssertNotNil(eventDataManager.allEventData["tealium_session_id"] as! String)
+        XCTAssertNotNil(eventDataManager.all["tealium_session_id"] as! String)
     }
 
     func testStartNewSessionWhenTagManageMentEnabledTriggerNewSessionFalse() {

@@ -373,7 +373,7 @@ class DummyCollector: Collector, DispatchListener, DispatchValidator {
 }
 
 class DummyDataManager: DataLayerManagerProtocol {
-    var allEventData: [String: Any] = ["eventData": true, "sessionData": true]
+    var all: [String: Any] = ["eventData": true, "sessionData": true]
 
     var allSessionData: [String: Any] = ["sessionData": true]
 
@@ -556,7 +556,7 @@ class DummyDispatchManagerSendTrack: DispatchManagerProtocol {
 }
 
 class DummyDataManagerNoData: DataLayerManagerProtocol {
-    var allEventData: [String: Any] = [:]
+    var all: [String: Any] = [:]
 
     var allSessionData: [String: Any] = [:]
 
