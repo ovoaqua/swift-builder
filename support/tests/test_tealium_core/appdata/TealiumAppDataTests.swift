@@ -58,22 +58,6 @@ class AppDataModuleTests: XCTestCase {
         XCTAssertEqual(data?.dictionary.keys.sorted(), [TealiumKey.visitorId, TealiumKey.uuid].sorted())
     }
 
-    func testNewVolatileData() {
-        appDataModule?.newVolatileData()
-        guard let appData = appDataModule?.appData else {
-            XCTFail("AppData should not be nil")
-            return
-        }
-        if appData.name == nil {
-            XCTFail("app_name should not be nil")
-            return
-        }
-        XCTAssertTrue(appData.name!.contains("TealiumCoreTests"))
-        XCTAssertEqual(appData.rdns, "com.tealium.TealiumTests")
-        XCTAssertEqual(appData.version, "1.0")
-        XCTAssertNotNil(appData.build)
-    }
-
     func testSetNewAppData() {
         appDataModule?.storeNewAppData()
         XCTAssertEqual(mockDiskStorage.saveToDefaultsCount, 1)

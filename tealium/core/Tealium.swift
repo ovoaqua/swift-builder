@@ -93,7 +93,7 @@ public class Tealium {
 
     deinit {
         #if os(iOS)
-            TealiumAppDelegateProxy.tearDown()
+        TealiumAppDelegateProxy.tearDown()
         #endif
     }
 

@@ -79,6 +79,7 @@
 		CFA19E2D245756EC00C455EA /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E2C245756EC00C455EA /* SessionManager.swift */; };
 		CFA19E2F24575F3200C455EA /* SessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E2E24575F3200C455EA /* SessionStarter.swift */; };
 		CFA19E31245792E200C455EA /* DataLayerManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E30245792E200C455EA /* DataLayerManagerProtocol.swift */; };
+		CFADC90524FEBD9F00566C0F /* RemoteCommandsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFADC90424FEBD9F00566C0F /* RemoteCommandsConstants.swift */; };
 		CFB1ED88244F9088005CC6F1 /* DataLayerCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED86244F905C005CC6F1 /* DataLayerCollection.swift */; };
 		CFB1ED89244F908D005CC6F1 /* DataLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED84244F79B8005CC6F1 /* DataLayer.swift */; };
 		CFB1ED8F2450A6E0005CC6F1 /* DataLayerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED8D2450A6D1005CC6F1 /* DataLayerExtensions.swift */; };
@@ -212,7 +213,6 @@
 		D719956322B8E97E005BE543 /* TealiumDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE5A0823C14DB89DFE8069 /* TealiumDiskStorage.swift */; };
 		D7215F0E22BCEA0F00DC5EA9 /* TealiumDiskStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7215F0922BCEA0F00DC5EA9 /* TealiumDiskStorageProtocol.swift */; };
 		D724971024B35112006AD829 /* AppDataModuleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D724970F24B35112006AD829 /* AppDataModuleExtensions.swift */; };
-		D724D85B2230295100883C1E /* RemoteCommandsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D724D8592230295100883C1E /* RemoteCommandsKey.swift */; };
 		D72DB0C024F7BF4000183D48 /* AppDelegateProxyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72DB0BF24F7BF4000183D48 /* AppDelegateProxyTests.swift */; };
 		D72E8C142361E50100BA3786 /* WatchOSTestBed WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D72E8C132361E50100BA3786 /* WatchOSTestBed WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D72E8C1A2361E50100BA3786 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D72E8C182361E50100BA3786 /* Interface.storyboard */; };
@@ -507,7 +507,6 @@
 		D7E4184D22831EFD00BD8EB9 /* CollectExtensions.swift in Headers */ = {isa = PBXBuildFile; fileRef = D70FF57922416C5700854F22 /* CollectExtensions.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4184E22831EFD00BD8EB9 /* CollectError.swift in Headers */ = {isa = PBXBuildFile; fileRef = D70FF58022416CAD00854F22 /* CollectError.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7E4184F22831EFD00BD8EB9 /* CollectConstants.swift in Headers */ = {isa = PBXBuildFile; fileRef = D70FF58722416CD100854F22 /* CollectConstants.swift */; settings = {ATTRIBUTES = (Public, ); }; };
-		D7E4185822831F5E00BD8EB9 /* RemoteCommandsKey.swift in Headers */ = {isa = PBXBuildFile; fileRef = D724D8592230295100883C1E /* RemoteCommandsKey.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7F1EBD52361CBF80088B103 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F1EBD42361CBF80088B103 /* Atomic.swift */; };
 		D7F2DED3233279A1000D0E0F /* TealiumConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D101DDBC3A500512C99 /* TealiumConfigTests.swift */; };
 		D7F2DED4233279A1000D0E0F /* TealiumConstantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D111DDBC3A500512C99 /* TealiumConstantsTests.swift */; };
@@ -1380,6 +1379,7 @@
 		CFA19E2E24575F3200C455EA /* SessionStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStarter.swift; sourceTree = "<group>"; };
 		CFA19E30245792E200C455EA /* DataLayerManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayerManagerProtocol.swift; sourceTree = "<group>"; };
 		CFA19E4E2458C9C400C455EA /* TagManagementModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagementModule.swift; sourceTree = "<group>"; };
+		CFADC90424FEBD9F00566C0F /* RemoteCommandsConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandsConstants.swift; sourceTree = "<group>"; };
 		CFB1ED84244F79B8005CC6F1 /* DataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayer.swift; sourceTree = "<group>"; };
 		CFB1ED86244F905C005CC6F1 /* DataLayerCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayerCollection.swift; sourceTree = "<group>"; };
 		CFB1ED8D2450A6D1005CC6F1 /* DataLayerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayerExtensions.swift; sourceTree = "<group>"; };
@@ -1471,7 +1471,6 @@
 		D7229CF7230BF185002E9F60 /* DeviceDataCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataCollection.swift; sourceTree = "<group>"; };
 		D724970F24B35112006AD829 /* AppDataModuleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataModuleExtensions.swift; sourceTree = "<group>"; };
 		D724D856223022CC00883C1E /* RemoteCommandResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandResponse.swift; sourceTree = "<group>"; };
-		D724D8592230295100883C1E /* RemoteCommandsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandsKey.swift; sourceTree = "<group>"; };
 		D724D85F2231207700883C1E /* TagManagementConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagementConstants.swift; sourceTree = "<group>"; };
 		D724D8622231224100883C1E /* TagManagementExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagementExtensions.swift; sourceTree = "<group>"; };
 		D724D86622313D0E00883C1E /* TagManagementWKWebViewCookieMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagementWKWebViewCookieMigrator.swift; sourceTree = "<group>"; };
@@ -2443,8 +2442,8 @@
 				4BB091242022756800DCA625 /* RemoteCommandsManager.swift */,
 				71F63A481E799C0D006A723F /* RemoteCommandsModule.swift */,
 				D724D856223022CC00883C1E /* RemoteCommandResponse.swift */,
-				D724D8592230295100883C1E /* RemoteCommandsKey.swift */,
 				D73B4B962236BAE60039AEB9 /* RemoteCommandsExtensions.swift */,
+				CFADC90424FEBD9F00566C0F /* RemoteCommandsConstants.swift */,
 				CF75E5442486FB0B0086FF26 /* RemoteCommandProtocols.swift */,
 			);
 			path = remotecommands;
@@ -3062,7 +3061,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7E4185822831F5E00BD8EB9 /* RemoteCommandsKey.swift in Headers */,
 				D783DFF6234FC891007DD9E4 /* TealiumRegistration.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5349,13 +5347,13 @@
 			files = (
 				CF75E5412486D3EE0086FF26 /* RemoteCommandResponse.swift in Sources */,
 				CF75E53D2486D3D90086FF26 /* RemoteCommandsManager.swift in Sources */,
+				CFADC90524FEBD9F00566C0F /* RemoteCommandsConstants.swift in Sources */,
 				CF75E5402486D3E80086FF26 /* RemoteHTTPCommand.swift in Sources */,
 				CF75E5462486FB830086FF26 /* RemoteCommandProtocols.swift in Sources */,
 				CF75E53E2486D3DB0086FF26 /* RemoteCommand.swift in Sources */,
 				CF75E5422486D3F40086FF26 /* RemoteCommandsExtensions.swift in Sources */,
 				CF75E53F2486D3E20086FF26 /* RemoteCommandsModule.swift in Sources */,
 				D783DFF7234FC8B9007DD9E4 /* TealiumRegistration.swift in Sources */,
-				D724D85B2230295100883C1E /* RemoteCommandsKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

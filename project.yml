@@ -186,10 +186,14 @@ targets:
     sources:
       - path: support/tests/test_tealium_core
         buildPhase: sources
+        excludes:
+          - "PerformanceTests.swift"
+          - "AppDelegateProxyTests.swift"
+          - "datalayer/TealiumTraceTests.swift"
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
       - path: support/tests/test_tealium_core/datalayer/large-event-data.json
-        buildPhase: resources
+        buildPhase: resources 
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
@@ -209,6 +213,10 @@ targets:
     sources:
       - path: support/tests/test_tealium_core
         buildPhase: sources
+        excludes:
+          - "PerformanceTests.swift"
+          - "AppDelegateProxyTests.swift"
+          - "datalayer/TealiumTraceTests.swift"
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
       - path: support/tests/test_tealium_core/datalayer/large-event-data.json
@@ -228,6 +236,10 @@ targets:
     sources:
       - path: support/tests/test_tealium_core
         buildPhase: sources
+        excludes:
+          - "PerformanceTests.swift"
+          - "AppDelegateProxyTests.swift"
+          - "datalayer/TealiumTraceTests.swift"
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
       - path: support/tests/test_tealium_core/datalayer/large-event-data.json
