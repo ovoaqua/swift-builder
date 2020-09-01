@@ -27,7 +27,7 @@ class TealiumRemoteCommandExtensionsTests: XCTestCase {
 
     func testRemoveCommand() {
         var commands = RemoteCommandArray()
-        let command = TealiumRemoteCommand(commandId: "test123", description: "test") { _ in
+        let command = RemoteCommand(commandId: "test123", description: "test") { _ in
             // ...
         }
         commands = [command]
@@ -38,7 +38,7 @@ class TealiumRemoteCommandExtensionsTests: XCTestCase {
     func testAddRemoteCommand() {
         let testHelper = TestTealiumHelper()
         let config = testHelper.getConfig()
-        let command = TealiumRemoteCommand(commandId: "test123", description: "test") { _ in
+        let command = RemoteCommand(commandId: "test123", description: "test") { _ in
             // ...
         }
         config.addRemoteCommand(command)

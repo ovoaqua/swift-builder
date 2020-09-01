@@ -25,18 +25,18 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
             return
         }
 
-        guard let response = TealiumRemoteCommandResponse(urlString: escapedString) else {
+        guard let response = RemoteCommandResponse(urlString: escapedString) else {
             XCTFail("Something went wrong when creating the response")
             return
         }
 
-        XCTAssert(NSDictionary(dictionary: response.payload()).isEqual(to: ["hello": "world"]))
+        XCTAssert(NSDictionary(dictionary: response.payload!).isEqual(to: ["hello": "world"]))
 
     }
 
     func testInitWithBadURLStringReturnsNil() {
         let unescapedURLString = "tealium://test?request={\"config\":{\"response_id\":\"123\"}, \"payload\":{\"hello\": \"world\"}}"
-        let response = TealiumRemoteCommandResponse(urlString: unescapedURLString)
+        let response = RemoteCommandResponse(urlString: unescapedURLString)
         XCTAssertNil(response)
     }
 
@@ -52,7 +52,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
         }
         let urlRequest = URLRequest(url: url)
 
-        let response = TealiumRemoteCommandResponse(request: urlRequest)
+        let response = RemoteCommandResponse(request: urlRequest)
 
         XCTAssertNil(response)
     }
@@ -69,7 +69,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
         }
         let urlRequest = URLRequest(url: url)
 
-        let response = TealiumRemoteCommandResponse(request: urlRequest)
+        let response = RemoteCommandResponse(request: urlRequest)
 
         XCTAssertNil(response)
     }
@@ -86,7 +86,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
         }
         let urlRequest = URLRequest(url: url)
 
-        let response = TealiumRemoteCommandResponse(request: urlRequest)
+        let response = RemoteCommandResponse(request: urlRequest)
 
         XCTAssertNil(response)
     }
@@ -100,7 +100,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
             return
         }
 
-        guard let response = TealiumRemoteCommandResponse(urlString: escapedString) else {
+        guard let response = RemoteCommandResponse(urlString: escapedString) else {
             XCTFail("Something went wrong when creating the response")
             return
         }
@@ -113,7 +113,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
             return
         }
 
-        guard let responseEmpty = TealiumRemoteCommandResponse(urlString: escapedStringEmpty) else {
+        guard let responseEmpty = RemoteCommandResponse(urlString: escapedStringEmpty) else {
             XCTFail("Something went wrong when creating the response")
             return
         }
@@ -132,7 +132,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
             return
         }
 
-        guard let response = TealiumRemoteCommandResponse(urlString: escapedString), let responseId = response.responseId else {
+        guard let response = RemoteCommandResponse(urlString: escapedString), let responseId = response.responseId else {
             XCTFail("Something went wrong when creating the response")
             return
         }
@@ -146,7 +146,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
             return
         }
 
-        guard let responseEmpty = TealiumRemoteCommandResponse(urlString: escapedStringEmpty) else {
+        guard let responseEmpty = RemoteCommandResponse(urlString: escapedStringEmpty) else {
             XCTFail("Something went wrong when creating the response")
             return
         }
@@ -162,7 +162,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
             return
         }
 
-        guard let response = TealiumRemoteCommandResponse(urlString: escapedString) else {
+        guard let response = RemoteCommandResponse(urlString: escapedString) else {
             XCTFail("Something went wrong when creating the response")
             return
         }
@@ -176,7 +176,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
 
     func testDescription() {
 
-        let expected = "<TealiumRemoteCommandResponse: config:[\"response_id\": 123],\nstatus:204,\npayload:[\"hello\": world],\nresponse: nil,\ndata:nil\nerror:nil>".replacingOccurrences(of: " ", with: "")
+        let expected = "<RemoteCommandResponse: config:[\"response_id\": 123],\nstatus:204,\npayload:Optional([\"hello\": world]),\nresponse: nil,\ndata:nil\nerror:nil>".replacingOccurrences(of: " ", with: "")
 
         let urlString = "tealium://test?request={\"config\":{\"response_id\":\"123\"}, \"payload\":{\"hello\": \"world\"}}"
         guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
@@ -184,7 +184,7 @@ class TealiumRemoteCommandResponseTests: XCTestCase {
             return
         }
 
-        guard let response = TealiumRemoteCommandResponse(urlString: escapedString) else {
+        guard let response = RemoteCommandResponse(urlString: escapedString) else {
             XCTFail("Something went wrong when creating the response")
             return
         }

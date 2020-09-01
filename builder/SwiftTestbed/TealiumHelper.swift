@@ -57,7 +57,7 @@ class TealiumHelper: NSObject {
         config.visitorServiceDelegate = self
         config.memoryReportingEnabled = true
         config.batterySaverEnabled = true
-        config.remoteAPIEnabled = false
+        config.remoteAPIEnabled = true
         config.collectors = [
             MyDateCollector.self,
 //            Collectors.Attribution,
@@ -73,26 +73,24 @@ class TealiumHelper: NSObject {
         config.dispatchers = [
             Dispatchers.Collect,
 //                              MyCustomDispatcher.self,
-//                              Dispatchers.TagManagement,
-//                              Dispatchers.RemoteCommands
+                              Dispatchers.TagManagement,
+                              Dispatchers.RemoteCommands
         ]
 //        tealium?.dataLayerManager
         config.geofenceUrl = "https://tags.tiqcdn.com/dle/tealiummobile/location/geofences.json"
 
         #if os(iOS)
-//
-//        let remoteCommand = TealiumRemoteCommand(commandId: "display",
-//                                                 description: "test") { response in
-//                                                    var response = response
-//                                                    if TealiumHelper.shared.enableHelperLogs {
-//                                                        print("*** TealiumHelper: Remote Command Executed: response:\(response)")
-//                                                    }
-//                                                    let dict = ["hello":"from helper"]
-//                                                    // set some JSON response data to be passed back to the webview
-//                                                    let myJson = try? JSONSerialization.data(withJSONObject: dict, options: [])
-//                                                    response.data = myJson
-//        }
-//        config.addRemoteCommand(remoteCommand)
+        let remoteCommand = RemoteCommand(commandId: "display", description: "Test") { response in
+            guard let payload = response.payload,
+                  let hello = payload["hello"] as? String,
+                let key = payload["key"] as? String,
+                let tealium = payload["tealium"] as? String else {
+                print("Remote Command didnt work 👎")
+                return
+            }
+            print("Remote Command data: hello = \(hello), key = \(key), tealium = \(tealium) 🎉🎊")
+        }
+        config.addRemoteCommand(remoteCommand)
         #endif
 //        config.diskStorageDirectory = .documents
 //        config.loggerType = .custom(<#T##TealiumLoggerProtocol#>)
@@ -127,23 +125,25 @@ class TealiumHelper: NSObject {
 
             teal.location?.requestAuthorization()
         }
-
-        #if os(iOS)
-        guard let remoteCommands = tealium?.remoteCommands else {
-            return
-        }
-        let remoteCommand = TealiumRemoteCommand(commandId: "display", description: "Test") { response in
-            let payload = response.payload()
-            guard let hello = payload["hello"] as? String,
-                let key = payload["key"] as? String,
-                let tealium = payload["tealium"] as? String else {
-                print("Remote Command didnt work 👎 \(payload)")
-                return
-            }
-            print("Remote Command data: hello = \(hello), key = \(key), tealium = \(tealium) 🎉🎊")
-        }
-        remoteCommands.add(remoteCommand)
-        #endif
+        
+//        #if os(iOS)
+//        guard let remoteCommands = tealium?.remoteCommands else {
+//            return
+//        }
+//        let remoteCommand = RemoteCommand(commandId: "display", description: "Test") { response in
+//            let payload = response.payload()
+//            guard let hello = payload["hello"] as? String,
+//                let key = payload["key"] as? String,
+//                let tealium = payload["tealium"] as? String else {
+//                print("Remote Command didnt work 👎 \(payload)")
+//                return
+//            }
+//            print("Remote Command data: hello = \(hello), key = \(key), tealium = \(tealium) 🎉🎊")
+//        }
+//        remoteCommands.add(remoteCommand)
+//        #endif
+        
+        
     }
     
     func resetConsentPreferences() {

@@ -1,5 +1,5 @@
 //
-//  TealiumRemoteCommandsManager.swift
+//  RemoteCommandsManager.swift
 //  tealium-swift
 //
 //  Created by Jonathan Wong on 1/31/18.
@@ -11,10 +11,10 @@ import Foundation
 import TealiumCore
 #endif
 
-public typealias RemoteCommandArray = [TealiumRemoteCommandProtocol]
+public typealias RemoteCommandArray = [RemoteCommandProtocol]
 
-/// Manages instances of TealiumRemoteCommand
-public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManagerProtocol {
+/// Manages instances of RemoteCommand
+public class RemoteCommandsManager: NSObject, RemoteCommandsManagerProtocol {
 
     weak var queue = TealiumQueues.backgroundSerialQueue
     public var commands = RemoteCommandArray()
@@ -28,8 +28,8 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
 
     /// Adds a remote command for later execution.
     ///
-    /// - Parameter remoteCommand: `TealiumRemoteCommandProtocol` to be added for later execution
-    public func add(_ remoteCommand: TealiumRemoteCommandProtocol) {
+    /// - Parameter remoteCommand: `RemoteCommandProtocol` to be added for later execution
+    public func add(_ remoteCommand: RemoteCommandProtocol) {
         // NOTE: Multiple commands with the same command id are possible - OK
         var remoteCommand = remoteCommand
         remoteCommand.delegate = self
@@ -73,34 +73,34 @@ public class TealiumRemoteCommandsManager: NSObject, TealiumRemoteCommandsManage
         guard let command = commands[commandId] else {
             return TealiumRemoteCommandsError.noCommandForCommandIdFound
         }
-        guard let response = TealiumRemoteCommandResponse(request: request) else {
+        guard let response = RemoteCommandResponse(request: request) else {
             return TealiumRemoteCommandsError.requestNotProperlyFormatted
         }
         if let responseId = response.responseId {
-            TealiumRemoteCommandsManager.pendingResponses.value[responseId] = true
+            RemoteCommandsManager.pendingResponses.value[responseId] = true
         }
         command.complete(with: response)
         return nil
     }
 }
 
-extension TealiumRemoteCommandsManager: TealiumRemoteCommandDelegate {
+extension RemoteCommandsManager: RemoteCommandDelegate {
 
     /// Triggers the completion block registered for a specific remote command.
     ///
     /// - Parameters:
-    ///     - command: `TealiumRemoteCommandProtocol` to be executed
-    ///     - response: `TealiumRemoteCommandResponseProtocol` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
+    ///     - command: `RemoteCommandProtocol` to be executed
+    ///     - response: `RemoteCommandResponseProtocol` object passed back from TiQ. If the command needs to explictly handle the response (e.g. data needs passing back to webview),
     ///      it must set the "hasCustomCompletionHandler" flag, otherwise the completion notification will be sent automatically
-    public func tealiumRemoteCommandRequestsExecution(_ command: TealiumRemoteCommandProtocol,
-                                                      response: TealiumRemoteCommandResponseProtocol) {
+    public func remoteCommandRequestsExecution(_ command: RemoteCommandProtocol,
+                                               response: RemoteCommandResponseProtocol) {
         self.queue?.async {
             command.remoteCommandCompletion(response)
             // this will send the completion notification, if it wasn't explictly handled by the command
             if !response.hasCustomCompletionHandler {
-                TealiumRemoteCommand.sendRemoteCommandResponse(for: command.commandId,
-                                                               response: response,
-                                                               delegate: self.moduleDelegate)
+                RemoteCommand.sendRemoteCommandResponse(for: command.commandId,
+                                                        response: response,
+                                                        delegate: self.moduleDelegate)
             }
         }
     }

@@ -1,5 +1,5 @@
 //
-//  TealiumRemoteCommandsExtensions.swift
+//  RemoteCommandsExtensions.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 11/03/2019.
@@ -14,7 +14,7 @@ import TealiumCore
 public extension Tealium {
 
     /// Returns an instance of TealiumRemoteCommands to allow new commands to be registered.
-    var remoteCommands: TealiumRemoteCommandsManagerProtocol? {
+    var remoteCommands: RemoteCommandsManagerProtocol? {
         (zz_internal_modulesManager?.modules.first {
             type(of: $0) == RemoteCommandsModule.self
         } as? RemoteCommandsModule)?.remoteCommands
@@ -30,18 +30,18 @@ public extension TealiumConfig {
     /// Enables or disables the built-in HTTP command. Default `false` (command is ENABLED). Set to `true` to disable
     var remoteHTTPCommandDisabled: Bool {
         get {
-            options[TealiumRemoteCommandsKey.disableHTTP] as? Bool ?? false
+            options[RemoteCommandsKey.disableHTTP] as? Bool ?? false
         }
 
         set {
-            options[TealiumRemoteCommandsKey.disableHTTP] = newValue
+            options[RemoteCommandsKey.disableHTTP] = newValue
         }
     }
 
     /// Registers a Remote Command for later execution
     ///
     /// - Parameter command: `TealiumRemoteCommandProtocol` instance
-    func addRemoteCommand(_ command: TealiumRemoteCommandProtocol) {
+    func addRemoteCommand(_ command: RemoteCommandProtocol) {
         var commands = remoteCommands ?? RemoteCommandArray()
         commands.append(command)
         remoteCommands = commands
@@ -49,22 +49,22 @@ public extension TealiumConfig {
 
     var remoteCommands: RemoteCommandArray? {
         get {
-            options[TealiumRemoteCommandsKey.allCommands] as? RemoteCommandArray
+            options[RemoteCommandsKey.allCommands] as? RemoteCommandArray
         }
 
         set {
-            options[TealiumRemoteCommandsKey.allCommands]  = newValue
+            options[RemoteCommandsKey.allCommands]  = newValue
         }
     }
 }
 
-extension Array where Element: TealiumRemoteCommand {
+extension Array where Element: RemoteCommand {
 
     /// Retrieves a command for a specific command ID
     ///
     /// - Parameter commandId: `String`
     /// - Returns: `TealiumRemoteCommand?`
-    func commandForId(_ commandId: String) -> TealiumRemoteCommand? {
+    func commandForId(_ commandId: String) -> RemoteCommand? {
         return self.first(where: { $0.commandId == commandId })
     }
 
@@ -80,7 +80,7 @@ extension Array where Element: TealiumRemoteCommand {
 }
 
 public extension RemoteCommandArray {
-    subscript(_ id: String) -> TealiumRemoteCommandProtocol? {
+    subscript(_ id: String) -> RemoteCommandProtocol? {
         return self.first {
             $0.commandId == id
         }

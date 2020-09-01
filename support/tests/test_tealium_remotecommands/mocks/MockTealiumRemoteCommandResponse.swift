@@ -9,8 +9,8 @@
 import Foundation
 @testable import TealiumRemoteCommands
 
-class MockTealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol {
-
+class MockTealiumRemoteCommandResponse: RemoteCommandResponseProtocol {
+    
     var responseId: String?
     
     var status: Int = 200
@@ -23,8 +23,13 @@ class MockTealiumRemoteCommandResponse: TealiumRemoteCommandResponseProtocol {
     
     private var customCompletionBacking = false
     
-    func payload() -> [String : Any] {
-        ["test": "payload"]
+    var payload: [String : Any]? {
+        get {
+          return ["test": "payload"]
+        }
+        set {
+            
+        }
     }
     
     var hasCustomCompletionHandler: Bool {

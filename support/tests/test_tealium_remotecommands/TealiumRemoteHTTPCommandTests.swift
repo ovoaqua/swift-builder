@@ -43,7 +43,7 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
                                       "parameters": params,
                                       "body": body,
                                       "method": method]
-        let result = TealiumRemoteHTTPCommand.httpRequest(from: payload)
+        let result = RemoteHTTPCommand.httpRequest(from: payload)
         XCTAssertTrue(result.error == nil, "Unexpected error: \(String(describing: result.error))")
 
         guard let request = result.request else {
@@ -88,7 +88,7 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
                                      "array": ["x", "y", "z"]
         ]
 
-        let queryItems = TealiumRemoteHTTPCommand.queryItems(from: params)
+        let queryItems = RemoteHTTPCommand.queryItems(from: params)
 
         let itemA = URLQueryItem(name: "1", value: "2")
         let itemB = URLQueryItem(name: "a", value: "b")
@@ -102,10 +102,10 @@ class TealiumRemoteHTTPCommandTests: XCTestCase {
     }
 
     func testHTTPCommand() {
-        let expected = TealiumRemoteCommand(commandId: "_http", description: "For processing tag-triggered HTTP requests") { _ in
+        let expected = RemoteCommand(commandId: "_http", description: "For processing tag-triggered HTTP requests") { _ in
             // ....
         }
-        let actual = TealiumRemoteHTTPCommand.create(with: nil)
+        let actual = RemoteHTTPCommand.create(with: nil)
         XCTAssertEqual(expected.description, actual.description)
     }
 

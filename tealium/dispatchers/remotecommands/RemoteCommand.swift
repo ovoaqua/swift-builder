@@ -1,5 +1,5 @@
 //
-//  TealiumRemoteCommand.swift
+//  RemoteCommand.swift
 //  tealium-swift
 //
 //  Created by Jonathan Wong on 1/31/18.
@@ -11,14 +11,14 @@ import Foundation
 import TealiumCore
 #endif
 
-public typealias TealiumRemoteCommandCompletion = ((_ response: TealiumRemoteCommandResponseProtocol) -> Void)
+public typealias TealiumRemoteCommandCompletion = ((_ response: RemoteCommandResponseProtocol) -> Void)
 
 /// Designed to be subclassed. Allows Remote Commands to be created by host apps,
 /// and called on-demand by the Tag Management module
-open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
+open class RemoteCommand: RemoteCommandProtocol {
 
     public let commandId: String
-    weak public var delegate: TealiumRemoteCommandDelegate?
+    weak public var delegate: RemoteCommandDelegate?
     public var description: String?
     static var urlSession: URLSessionProtocol = URLSession.shared
     public var remoteCommandCompletion: TealiumRemoteCommandCompletion
@@ -39,11 +39,15 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
 
     /// Called when a Remote Command is ready for execution.
     ///￼
-    /// - Parameter response: `TealiumRemoteCommandResponseProtocol` object containing information from the TiQ webview
-    public func complete(with response: TealiumRemoteCommandResponseProtocol) {
-
-        delegate?.tealiumRemoteCommandRequestsExecution(self,
-                                                        response: response)
+    /// - Parameter response: `RemoteCommandResponseProtocol` object containing information from the TiQ webview
+    public func complete(with response: RemoteCommandResponseProtocol) {
+        TealiumQueues.backgroundSerialQueue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.delegate?.remoteCommandRequestsExecution(self,
+                                                          response: response)
+        }
 
     }
 
@@ -51,10 +55,10 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
     ///
     /// - Parameters:
     ///     - commandId: `String` identifier for the Remote Command
-    ///     - response: `TealiumRemoteCommandResponseProtocol` from the remote command to be passed back to the TiQ webview
+    ///     - response: `RemoteCommandResponseProtocol` from the remote command to be passed back to the TiQ webview
     ///     - Returns: `[String: Any]?`  containing the encoded JavaScript string for the TiQ webview.
     class func remoteCommandResponse(for commandId: String,
-                                     response: TealiumRemoteCommandResponseProtocol) -> [String: Any]? {
+                                     response: RemoteCommandResponseProtocol) -> [String: Any]? {
         guard let responseId = response.responseId else {
             return nil
         }
@@ -66,7 +70,7 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
             responseStr = "(null)"
         }
         let jsString = "try { utag.mobile.remote_api.response['\(commandId)']['\(responseId)']('\(String(describing: response.status))','\(responseStr)')} catch(err) {console.error(err)}"
-        return [TealiumRemoteCommandsKey.jsCommand: jsString]
+        return [RemoteCommandsKey.jsCommand: jsString]
     }
 
     /// Sends Remote Command response data to the TiQ webview when
@@ -77,15 +81,15 @@ open class TealiumRemoteCommand: TealiumRemoteCommandProtocol {
     ///     - response: `TealiumRemoteCommandResponseProtocol` from the remote command to be passed back to the TiQ webview
     ///     - delegate: `ModuleDelegate?`
     public class func sendRemoteCommandResponse(for commandId: String,
-                                                response: TealiumRemoteCommandResponseProtocol,
+                                                response: RemoteCommandResponseProtocol,
                                                 delegate: ModuleDelegate?) {
         guard let responseId = response.responseId else {
             return
         }
-        guard TealiumRemoteCommandsManager.pendingResponses.value[responseId] == true else {
+        guard RemoteCommandsManager.pendingResponses.value[responseId] == true else {
             return
         }
-        TealiumRemoteCommandsManager.pendingResponses.value[responseId] = nil
+        RemoteCommandsManager.pendingResponses.value[responseId] = nil
         guard let response = remoteCommandResponse(for: commandId,
                                                    response: response) else {
             return

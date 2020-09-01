@@ -12,12 +12,12 @@ import XCTest
 
 class TealiumRemoteCommandTests: XCTestCase {
 
-    var remoteCommand: TealiumRemoteCommand!
+    var remoteCommand: RemoteCommand!
     var helper = TestTealiumHelper()
     var processRemoteCommandRequestCounter = 0
 
     override func setUpWithError() throws {
-        remoteCommand = TealiumRemoteCommand(commandId: "test", description: "Test", completion: { _ in
+        remoteCommand = RemoteCommand(commandId: "test", description: "Test", completion: { _ in
             // ...
         })
     }
@@ -29,7 +29,7 @@ class TealiumRemoteCommandTests: XCTestCase {
     func testDelegateMethod() {
         let expect = expectation(description: "delegate method is executed via the complete method")
         let mockDelegate = MockRemoteCommandDelegate()
-        TealiumRemoteCommandsManager.pendingResponses.value["123"] = true
+        RemoteCommandsManager.pendingResponses.value["123"] = true
         let urlString = "tealium://test?request={\"config\":{\"response_id\":\"123\"}, \"payload\":{}}"
         guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             XCTFail("Could not encode url string: \(urlString)")
@@ -41,7 +41,7 @@ class TealiumRemoteCommandTests: XCTestCase {
         }
         let urlRequest = URLRequest(url: url)
 
-        guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
+        guard let response = RemoteCommandResponse(request: urlRequest) else {
             return
         }
         remoteCommand.delegate = mockDelegate
@@ -63,7 +63,7 @@ class TealiumRemoteCommandTests: XCTestCase {
     }
 
     func testSendRemoteCommandResponse() {
-        TealiumRemoteCommandsManager.pendingResponses.value["123"] = true
+        RemoteCommandsManager.pendingResponses.value["123"] = true
         let urlString = "tealium://test?request={\"config\":{\"response_id\":\"123\"}, \"payload\":{}}"
         guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             XCTFail("Could not encode url string: \(urlString)")
@@ -75,17 +75,17 @@ class TealiumRemoteCommandTests: XCTestCase {
         }
         let urlRequest = URLRequest(url: url)
 
-        guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
+        guard let response = RemoteCommandResponse(request: urlRequest) else {
             return
         }
-        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: response, delegate: self)
-        XCTAssertNil(TealiumRemoteCommandsManager.pendingResponses.value["123"])
+        RemoteCommand.sendRemoteCommandResponse(for: "test", response: response, delegate: self)
+        XCTAssertNil(RemoteCommandsManager.pendingResponses.value["123"])
     }
 
     func testSendRemoteCommandResponseReturns() {
-        // Returns when response is not expected type of `TealiumRemoteCommandResponse`
+        // Returns when response is not expected type of `RemoteCommandResponse`
         let mockResponse = MockTealiumRemoteCommandResponse()
-        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: mockResponse, delegate: self)
+        RemoteCommand.sendRemoteCommandResponse(for: "test", response: mockResponse, delegate: self)
         XCTAssertEqual(self.processRemoteCommandRequestCounter, 0)
 
         // Returns when responseId is nil
@@ -100,11 +100,11 @@ class TealiumRemoteCommandTests: XCTestCase {
         }
         let urlRequest = URLRequest(url: url)
 
-        guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
+        guard let response = RemoteCommandResponse(request: urlRequest) else {
             return
         }
 
-        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: response, delegate: self)
+        RemoteCommand.sendRemoteCommandResponse(for: "test", response: response, delegate: self)
         XCTAssertEqual(self.processRemoteCommandRequestCounter, 0)
 
         // Returns when pendingResponse is false
@@ -119,13 +119,13 @@ class TealiumRemoteCommandTests: XCTestCase {
         }
         let urlRequest2 = URLRequest(url: url2)
 
-        guard let response2 = TealiumRemoteCommandResponse(request: urlRequest2) else {
+        guard let response2 = RemoteCommandResponse(request: urlRequest2) else {
             return
         }
 
-        TealiumRemoteCommandsManager.pendingResponses.value["123"] = false
-        TealiumRemoteCommand.sendRemoteCommandResponse(for: "test", response: response2, delegate: self)
-        XCTAssertNotNil(TealiumRemoteCommandsManager.pendingResponses.value["123"])
+        RemoteCommandsManager.pendingResponses.value["123"] = false
+        RemoteCommand.sendRemoteCommandResponse(for: "test", response: response2, delegate: self)
+        XCTAssertNotNil(RemoteCommandsManager.pendingResponses.value["123"])
         XCTAssertEqual(self.processRemoteCommandRequestCounter, 0)
 
     }
@@ -145,7 +145,7 @@ class TealiumRemoteCommandTests: XCTestCase {
             return
         }
         let urlRequest = URLRequest(url: url)
-        guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
+        guard let response = RemoteCommandResponse(request: urlRequest) else {
             return
         }
         let dict = ["hello": "world"]
@@ -157,8 +157,8 @@ class TealiumRemoteCommandTests: XCTestCase {
             print(error)
         }
 
-        let commandResponseDict = TealiumRemoteCommand.remoteCommandResponse(for: commandId, response: response)!
-        let actualJSKey = (commandResponseDict[TealiumRemoteCommandsKey.jsCommand] as! String).replacingOccurrences(of: " ", with: "")
+        let commandResponseDict = RemoteCommand.remoteCommandResponse(for: commandId, response: response)!
+        let actualJSKey = (commandResponseDict[RemoteCommandsKey.jsCommand] as! String).replacingOccurrences(of: " ", with: "")
 
         XCTAssertEqual(actualJSKey, expectedJSKey)
     }
@@ -176,11 +176,11 @@ class TealiumRemoteCommandTests: XCTestCase {
         }
         let urlRequest = URLRequest(url: url)
 
-        guard let response = TealiumRemoteCommandResponse(request: urlRequest) else {
+        guard let response = RemoteCommandResponse(request: urlRequest) else {
             return
         }
 
-        let result = TealiumRemoteCommand.remoteCommandResponse(for: "test", response: response)
+        let result = RemoteCommand.remoteCommandResponse(for: "test", response: response)
 
         XCTAssertNil(result)
 

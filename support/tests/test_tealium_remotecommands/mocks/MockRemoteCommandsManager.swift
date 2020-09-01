@@ -10,7 +10,7 @@ import Foundation
 @testable import TealiumCore
 @testable import TealiumRemoteCommands
 
-class MockRemoteCommandsManager: TealiumRemoteCommandsManagerProtocol {
+class MockRemoteCommandsManager: RemoteCommandsManagerProtocol {
     
     var addCount = 0
     var removeCommandWithIdCount = 0
@@ -23,7 +23,7 @@ class MockRemoteCommandsManager: TealiumRemoteCommandsManagerProtocol {
         moduleDelegate = self
     }
 
-    func add(_ remoteCommand: TealiumRemoteCommandProtocol) {
+    func add(_ remoteCommand: RemoteCommandProtocol) {
         addCount += 1
     }
 

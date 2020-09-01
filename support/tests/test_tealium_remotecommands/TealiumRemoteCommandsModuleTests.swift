@@ -48,8 +48,8 @@ class RemoteCommandsModuleTests: XCTestCase {
         module = RemoteCommandsModule(config: config, delegate: self, completion: { _ in })
         // Add remote command
         let commandId = "test"
-        let remoteCommand = TealiumRemoteCommand(commandId: commandId,
-                                                 description: "") { _ in }
+        let remoteCommand = RemoteCommand(commandId: commandId,
+                                          description: "") { _ in }
         module.remoteCommands?.add(remoteCommand)
 
         // Send trigger
@@ -75,7 +75,7 @@ class RemoteCommandsModuleTests: XCTestCase {
         config.remoteHTTPCommandDisabled = false
         module = RemoteCommandsModule(config: config, delegate: self, completion: { _ in })
         XCTAssertEqual(module.remoteCommands?.commands.count, 1)
-        var newRemoteCommand = TealiumRemoteCommand(commandId: "test", description: "test") { _ in
+        var newRemoteCommand = RemoteCommand(commandId: "test", description: "test") { _ in
 
         }
         var newConfig = config.copy
@@ -83,7 +83,7 @@ class RemoteCommandsModuleTests: XCTestCase {
         var updateRequest = TealiumUpdateConfigRequest(config: newConfig)
         module.updateConfig(updateRequest)
         XCTAssertEqual(module.remoteCommands?.commands.count, 1)
-        newRemoteCommand = TealiumRemoteCommand(commandId: "test2", description: "test") { _ in
+        newRemoteCommand = RemoteCommand(commandId: "test2", description: "test") { _ in
 
         }
         newConfig.remoteCommands = nil

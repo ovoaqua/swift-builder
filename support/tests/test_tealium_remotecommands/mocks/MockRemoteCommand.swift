@@ -10,11 +10,11 @@ import Foundation
 @testable import TealiumCore
 @testable import TealiumRemoteCommands
 
-class MockRemoteCommand: TealiumRemoteCommandProtocol {
+class MockRemoteCommand: RemoteCommandProtocol {
 
     var commandId: String
     var remoteCommandCompletion: TealiumRemoteCommandCompletion
-    weak var delegate: TealiumRemoteCommandDelegate?
+    weak var delegate: RemoteCommandDelegate?
     var description: String?
     var completionRunCount = 0
 
@@ -26,11 +26,11 @@ class MockRemoteCommand: TealiumRemoteCommandProtocol {
         }
     }
 
-    func complete(with response: TealiumRemoteCommandResponseProtocol) {
+    func complete(with response: RemoteCommandResponseProtocol) {
 
     }
     
-    static func sendRemoteCommandResponse(for commandId: String, response: TealiumRemoteCommandResponseProtocol, delegate: ModuleDelegate?) {
+    static func sendRemoteCommandResponse(for commandId: String, response: RemoteCommandResponseProtocol, delegate: ModuleDelegate?) {
         
     }
 

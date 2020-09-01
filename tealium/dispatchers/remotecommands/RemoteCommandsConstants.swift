@@ -1,5 +1,5 @@
 //
-//  TealiumRemoteCommandsConstants.swift
+//  RemoteCommandsConstants.swift
 //  tealium-swift
 //
 //  Created by Craig Rouse on 3/6/2019.
@@ -8,7 +8,7 @@
 #if os(iOS)
 import Foundation
 
-enum TealiumRemoteCommandsKey {
+enum RemoteCommandsKey {
     static let moduleName = "remotecommands"
     static let disable = "disable_remote_commands"
     static let disableHTTP = "disable_remote_command_http"
@@ -29,7 +29,7 @@ enum TealiumRemoteCommandsKey {
     static let jsCommand = "js"
 }
 
-enum TealiumRemoteCommandStatusCode: Int {
+enum RemoteCommandStatusCode: Int {
     case unknown = 0
     case success = 200
     case noContent = 204

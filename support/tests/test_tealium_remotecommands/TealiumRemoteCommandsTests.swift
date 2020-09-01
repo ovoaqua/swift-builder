@@ -12,12 +12,12 @@ import XCTest
 
 class TealiumRemoteCommandsManagerTests: XCTestCase {
 
-    var tealiumRemoteCommandsManager: TealiumRemoteCommandsManager!
+    var tealiumRemoteCommandsManager: RemoteCommandsManager!
 
     override func setUp() {
         super.setUp()
-        let rc = TealiumRemoteCommand(commandId: "webview", description: "test") { _ in }
-        tealiumRemoteCommandsManager = TealiumRemoteCommandsManager(delegate: self)
+        let rc = RemoteCommand(commandId: "webview", description: "test") { _ in }
+        tealiumRemoteCommandsManager = RemoteCommandsManager(delegate: self)
         tealiumRemoteCommandsManager.add(rc)
     }
 
@@ -28,10 +28,10 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
 
     func testRemove() {
         let commandId = "test"
-        let command = TealiumRemoteCommand(commandId: commandId,
-                                           description: "") { _ in }
+        let command = RemoteCommand(commandId: commandId,
+                                    description: "") { _ in }
 
-        let remoteCommandsManager = TealiumRemoteCommandsManager(delegate: nil)
+        let remoteCommandsManager = RemoteCommandsManager(delegate: nil)
         remoteCommandsManager.queue = OperationQueue.current?.underlyingQueue
         remoteCommandsManager.add(command)
 
@@ -44,8 +44,8 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
 
     func testCommandForId() {
         let commandId = "test"
-        let remoteCommand = TealiumRemoteCommand(commandId: commandId,
-                                                 description: "test") { _ in }
+        let remoteCommand = RemoteCommand(commandId: commandId,
+                                          description: "test") { _ in }
 
         let array = [remoteCommand]
 
@@ -156,7 +156,7 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
 
             tealiumRemoteCommandsManager.triggerCommand(from: urlRequest)
 
-            XCTAssertEqual(TealiumRemoteCommandsManager.pendingResponses.value["123"], true)
+            XCTAssertEqual(RemoteCommandsManager.pendingResponses.value["123"], true)
         }
         waitForExpectations(timeout: 2) { error in
             if let error = error {
@@ -169,7 +169,7 @@ class TealiumRemoteCommandsManagerTests: XCTestCase {
             }
 
             XCTAssertNotNil(result)
-            XCTAssertFalse(result.payload().isEmpty)
+            XCTAssertFalse(result.payload!.isEmpty)
         }
     }
 

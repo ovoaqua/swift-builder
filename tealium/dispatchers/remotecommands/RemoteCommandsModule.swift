@@ -16,15 +16,15 @@ public class RemoteCommandsModule: Dispatcher {
 
     public var id: String = ModuleNames.remotecommands
     public var config: TealiumConfig
-    public var remoteCommands: TealiumRemoteCommandsManagerProtocol?
+    public var remoteCommands: RemoteCommandsManagerProtocol?
     var reservedCommandsAdded = false
 
     /// Provided for unit testing￼.
     ///
-    /// - Parameter remoteCommands: Class instance conforming to `TealiumRemoteCommandsManagerProtocol`
+    /// - Parameter remoteCommands: Class instance conforming to `RemoteCommandsManagerProtocol`
     convenience init (config: TealiumConfig,
                       delegate: ModuleDelegate,
-                      remoteCommands: TealiumRemoteCommandsManagerProtocol? = nil) {
+                      remoteCommands: RemoteCommandsManagerProtocol? = nil) {
         self.init(config: config, delegate: delegate) { _ in }
         self.remoteCommands = remoteCommands
     }
@@ -36,7 +36,7 @@ public class RemoteCommandsModule: Dispatcher {
     /// - Parameter completion: `ModuleCompletion` block to be called when init is finished
     public required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
-        remoteCommands = remoteCommands ?? TealiumRemoteCommandsManager(delegate: delegate)
+        remoteCommands = remoteCommands ?? RemoteCommandsManager(delegate: delegate)
         updateReservedCommands(config: config)
         addCommandsFromConfig(config)
     }
@@ -75,14 +75,14 @@ public class RemoteCommandsModule: Dispatcher {
         // Default option
         var shouldDisable = false
 
-        if let shouldDisableSetting = config.options[TealiumRemoteCommandsKey.disableHTTP] as? Bool {
+        if let shouldDisableSetting = config.options[RemoteCommandsKey.disableHTTP] as? Bool {
             shouldDisable = shouldDisableSetting
         }
 
         if shouldDisable == true {
-            remoteCommands?.remove(commandWithId: TealiumRemoteCommandsKey.commandId)
-        } else if remoteCommands?.commands[TealiumRemoteCommandsKey.commandId] == nil {
-            let httpCommand = TealiumRemoteHTTPCommand.create(with: remoteCommands?.moduleDelegate)
+            remoteCommands?.remove(commandWithId: RemoteCommandsKey.commandId)
+        } else if remoteCommands?.commands[RemoteCommandsKey.commandId] == nil {
+            let httpCommand = RemoteHTTPCommand.create(with: remoteCommands?.moduleDelegate)
             remoteCommands?.add(httpCommand)
         }
         reservedCommandsAdded = true
