@@ -27,7 +27,7 @@ public class ModulesManager {
         if let optionalCollectors = config.collectors {
             return [AppDataModule.self,
                     ConsentManagerModule.self,
-            ] + optionalCollectors
+                ] + optionalCollectors
         } else {
             return [AppDataModule.self,
                     DeviceDataModule.self,
@@ -117,6 +117,7 @@ public class ModulesManager {
             }
         }
         self.logger = self.config.logger
+        self.setupHostedDataLayer(config: self.config)
         self.setupDispatchValidators(config: self.config)
         self.setupDispatchListeners(config: self.config)
 
@@ -128,10 +129,10 @@ public class ModulesManager {
         self.setupCollectors(config: self.config)
         TealiumQueues.backgroundSerialQueue.async {
             let logRequest = TealiumLogRequest(title: ModulesManagerLogMessages.modulesManagerInitialized, messages:
-                                                ["\(ModulesManagerLogMessages.collectorsInitialized): \(self.collectors.map { $0.id })",
-                                                 "\(ModulesManagerLogMessages.dispatchValidatorsInitialized): \(self.dispatchValidators.map { $0.id })",
-                                                 "\(ModulesManagerLogMessages.dispatchersInitialized): \(self.dispatchers.map { $0.id })"
-                                                ], info: nil, logLevel: .info, category: .`init`)
+                ["\(ModulesManagerLogMessages.collectorsInitialized): \(self.collectors.map { $0.id })",
+                    "\(ModulesManagerLogMessages.dispatchValidatorsInitialized): \(self.dispatchValidators.map { $0.id })",
+                    "\(ModulesManagerLogMessages.dispatchersInitialized): \(self.dispatchers.map { $0.id })"
+            ], info: nil, logLevel: .info, category: .`init`)
             self.logger?.log(logRequest)
         }
     }
@@ -223,7 +224,7 @@ public class ModulesManager {
             }
 
             if dispatcherTypeDescription.contains(ModuleNames.collect),
-               config.isCollectEnabled == false {
+                config.isCollectEnabled == false {
                 return
             }
 
@@ -252,6 +253,13 @@ public class ModulesManager {
     func setupDispatchValidators(config: TealiumConfig) {
         config.dispatchValidators?.forEach {
             self.addDispatchValidator($0)
+        }
+    }
+
+    func setupHostedDataLayer(config: TealiumConfig) {
+        if config.hostedDataLayerKeys != nil {
+            let hostedDataLayer = HostedDataLayer(config: config, delegate: self, diskStorage: nil) { _ in }
+            addDispatchValidator(hostedDataLayer)
         }
     }
 

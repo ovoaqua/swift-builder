@@ -50,8 +50,8 @@ class TealiumHelper: NSObject {
         config.searchAdsEnabled = true
 //        config.appDelegateProxyEnabled = false
         config.shouldUseRemotePublishSettings = false
-        config.batchingEnabled = true
-        config.batchSize = 5
+        //config.batchingEnabled = true
+        //config.batchSize = 5
         config.memoryReportingEnabled = true
         config.diskStorageEnabled = true
         config.visitorServiceDelegate = self
@@ -69,6 +69,8 @@ class TealiumHelper: NSObject {
                              Collectors.Location,
                              Collectors.VisitorService,
         ]
+        
+        config.hostedDataLayerKeys = ["hdl-test": "product_id"]
         
         config.dispatchers = [
             Dispatchers.Collect,

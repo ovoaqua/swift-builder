@@ -24,6 +24,9 @@ public enum TealiumValue {
     public static let tiqURLSuffix = "mobile.html?sdk_session_count=true"
     public static let defaultBatchExpirationDays = 7
     public static let defaultMaxQueueSize = 40
+    static let hdlMaxRetries = 3
+    static let hdlCacheSizeMax = 50
+    static let defaultHDLExpiry: (Int, unit: TimeUnit) = (7, unit: .days)
 }
 
 public enum ModuleNames {
@@ -125,6 +128,8 @@ public enum TealiumKey {
     static let traceIdQueryParam = "tealium_trace_id"
     public static let traceId = "cp.trace_id"
     static let appDelegateProxy = "app_delegate_proxy"
+    static let hostedDataLayerKeys = "hosted_data_layer_keys"
+    static let hostedDataLayerExpiry = "hosted_data_layer_expiry"
 }
 
 public enum TealiumTrackType {

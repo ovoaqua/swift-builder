@@ -26,6 +26,7 @@ struct SwiftUIView: View {
                 Button(action: {
                     print("Track Event")
                     TealiumHelper.shared.track(title: "iOS Event", data: nil)
+                    TealiumHelper.shared.track(title: "hdl-test", data: ["product_id":"abc123"])
                 },
                        label: {
                         Text("Track Event")

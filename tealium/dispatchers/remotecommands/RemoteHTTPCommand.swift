@@ -17,35 +17,35 @@ class RemoteHTTPCommand: RemoteCommand {
     class func create(with delegate: ModuleDelegate?) -> RemoteCommandProtocol {
         return RemoteCommand(commandId: RemoteCommandsKey.commandId,
                              description: "For processing tag-triggered HTTP requests") { response in
-            var response = response
-            response.hasCustomCompletionHandler = true
-            guard let payload = response.payload else {
-                return
-            }
-            let requestInfo = RemoteHTTPCommand.httpRequest(from: payload)
-            guard let request = requestInfo.request else {
-                return
-            }
-            let task = RemoteCommand.urlSession.tealiumDataTask(with: request,
-                                                                completionHandler: { data, urlResponse, error in
-                                                                    if let err = error {
-                                                                        response.error = err
-                                                                        response.status = RemoteCommandStatusCode.failure.rawValue
-                                                                    } else {
-                                                                        response.status = RemoteCommandStatusCode.success.rawValue
-                                                                    }
-                                                                    if data == nil {
-                                                                        response.status = RemoteCommandStatusCode.noContent.rawValue
-                                                                    }
-                                                                    if urlResponse == nil {
-                                                                        response.status = RemoteCommandStatusCode.failure.rawValue
-                                                                    }
-                                                                    response.urlResponse = urlResponse
-                                                                    response.data = data
-                                                                    RemoteCommand.sendRemoteCommandResponse(for: RemoteCommandsKey.commandId, response: response, delegate: delegate)
-                                                                })
+                                var response = response
+                                response.hasCustomCompletionHandler = true
+                                guard let payload = response.payload else {
+                                    return
+                                }
+                                let requestInfo = RemoteHTTPCommand.httpRequest(from: payload)
+                                guard let request = requestInfo.request else {
+                                    return
+                                }
+                                let task = RemoteCommand.urlSession.tealiumDataTask(with: request,
+                                                                                    completionHandler: { data, urlResponse, error in
+                                                                                        if let err = error {
+                                                                                            response.error = err
+                                                                                            response.status = RemoteCommandStatusCode.failure.rawValue
+                                                                                        } else {
+                                                                                            response.status = RemoteCommandStatusCode.success.rawValue
+                                                                                        }
+                                                                                        if data == nil {
+                                                                                            response.status = RemoteCommandStatusCode.noContent.rawValue
+                                                                                        }
+                                                                                        if urlResponse == nil {
+                                                                                            response.status = RemoteCommandStatusCode.failure.rawValue
+                                                                                        }
+                                                                                        response.urlResponse = urlResponse
+                                                                                        response.data = data
+                                                                                        RemoteCommand.sendRemoteCommandResponse(for: RemoteCommandsKey.commandId, response: response, delegate: delegate)
+                                })
 
-            task.resume()
+                                task.resume()
         }
     }
 
@@ -92,7 +92,7 @@ class RemoteHTTPCommand: RemoteCommand {
 
         if let authenticationData = payload[RemoteCommandsKey.authenticate] as? [String: Any] {
             if let username = authenticationData[RemoteCommandsKey.username] as? String,
-               let password = authenticationData[RemoteCommandsKey.password] as? String {
+                let password = authenticationData[RemoteCommandsKey.password] as? String {
                 let loginString = "\(username):\(password)"
                 let loginData = loginString.data(using: String.Encoding.utf8)!
                 let base64LoginString = loginData.base64EncodedString()

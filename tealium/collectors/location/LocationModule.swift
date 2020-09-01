@@ -26,10 +26,10 @@ public class LocationModule: Collector {
             return nil
         }
         if let location = tealiumLocationManager.lastLocation,
-           location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
+            location.coordinate.latitude != 0.0 && location.coordinate.longitude != 0.0 {
             newData = [LocationKey.deviceLatitude: "\(location.coordinate.latitude)",
-                       LocationKey.deviceLongitude: "\(location.coordinate.longitude)",
-                       LocationKey.accuracy: tealiumLocationManager.locationAccuracy]
+                LocationKey.deviceLongitude: "\(location.coordinate.longitude)",
+                LocationKey.accuracy: tealiumLocationManager.locationAccuracy]
         }
         return newData
     }

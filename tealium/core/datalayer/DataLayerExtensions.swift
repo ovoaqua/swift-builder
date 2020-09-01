@@ -17,6 +17,29 @@ public extension Tealium {
 
 }
 
+public extension TealiumConfig {
+
+    var hostedDataLayerKeys: [String: String]? {
+        get {
+            options[TealiumKey.hostedDataLayerKeys] as? [String: String]
+        }
+
+        set {
+            options[TealiumKey.hostedDataLayerKeys] = newValue
+        }
+    }
+
+    var hostedDataLayerExpiry: (Int, unit: TimeUnit) {
+        get {
+            options[TealiumKey.hostedDataLayerExpiry] as? (Int, unit: TimeUnit) ?? TealiumValue.defaultHDLExpiry
+        }
+
+        set {
+            options[TealiumKey.hostedDataLayerExpiry] = newValue
+        }
+    }
+}
+
 public extension TealiumValue {
     static let defaultMinutesBetweenSession = 30
     static let defaultsSecondsBetweenTrackEvents = 30.0

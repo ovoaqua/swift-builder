@@ -92,7 +92,7 @@ open class RemoteCommand: RemoteCommandProtocol {
         RemoteCommandsManager.pendingResponses.value[responseId] = nil
         guard let response = remoteCommandResponse(for: commandId,
                                                    response: response) else {
-            return
+                                                    return
         }
         let request = TealiumRemoteCommandRequestResponse(data: response)
         delegate?.processRemoteCommandRequest(request)

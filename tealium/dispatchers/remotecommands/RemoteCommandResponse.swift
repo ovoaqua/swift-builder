@@ -50,9 +50,9 @@ public class RemoteCommandResponse: RemoteCommandResponseProtocol, CustomStringC
     public init?(request: URLRequest) {
         self.urlRequest = request
         guard let requestData = requestData(from: request),
-              let _ = configData(from: requestData),
-              let payload = payload(from: requestData) else {
-            return nil
+            let _ = configData(from: requestData),
+            let payload = payload(from: requestData) else {
+                return nil
         }
         self.payload = payload
     }
@@ -63,9 +63,9 @@ public class RemoteCommandResponse: RemoteCommandResponseProtocol, CustomStringC
     /// - Returns: `[String: Any]?` containing key-value pairs to add to the RemoteCommandResponse
     func requestData(from request: URLRequest) -> [String: Any]? {
         guard let parameters = parameters(from: request),
-              let requestString = parameters[RemoteCommandsKey.request] as? String,
-              let dictionary = dictionary(from: requestString) else {
-            return nil
+            let requestString = parameters[RemoteCommandsKey.request] as? String,
+            let dictionary = dictionary(from: requestString) else {
+                return nil
         }
         return dictionary
     }
@@ -100,9 +100,9 @@ public class RemoteCommandResponse: RemoteCommandResponseProtocol, CustomStringC
     ///  or an empty dictionary
     public var config: [String: Any] {
         guard let request = self.urlRequest,
-              let requestData = requestData(from: request),
-              let config = configData(from: requestData) else {
-            return [String: Any]()
+            let requestData = requestData(from: request),
+            let config = configData(from: requestData) else {
+                return [String: Any]()
         }
         return config
     }
