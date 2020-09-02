@@ -164,6 +164,7 @@ extension TealiumTraceTests: DispatchListener {
 }
 
 class DummyDataManagerTrace: DataLayerManagerProtocol {
+    
     var traceId: String? {
         willSet {
             all["cp.trace_id"] = newValue

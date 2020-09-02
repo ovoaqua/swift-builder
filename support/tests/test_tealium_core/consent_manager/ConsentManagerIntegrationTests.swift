@@ -81,12 +81,32 @@ class ConsentManagerTests: XCTestCase {
     func testTrackUserConsentPreferences() {
         let config = testTealiumConfig
         config.consentLoggingEnabled = true
-        let consentManager = consentManagerForConfig(config)
-        let expectation = self.expectation(description: "testTrackUserConsentPreferences")
-        expectations.append(expectation)
+        let mockConsentDelegate = MockConsentDelegate()
+        let consentManager = ConsentManager(config: config, delegate: mockConsentDelegate, diskStorage: ConsentMockDiskStorage())
+        let expect = expectation(description: "testTrackUserConsentPreferences")
+        mockConsentDelegate.asyncExpectation = expect
+        
         let consentPreferences = UserConsentPreferences(consentStatus: .consented, consentCategories: [.cdp])
         consentManager.trackUserConsentPreferences(consentPreferences)
-        waiter.wait(for: expectations, timeout: 2)
+        
+        waitForExpectations(timeout: 2) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let trackInfo = mockConsentDelegate.trackInfo else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            if trackInfo["tealium_event"] as? String == ConsentKey.gdprConsentCookieEventName {
+                return
+            }
+            if let categories = trackInfo["consent_categories"] as? [String], categories.count > 0 {
+                let catEnum = TealiumConsentCategories.consentCategoriesStringArrayToEnum(categories)
+                XCTAssertTrue([TealiumConsentCategories.cdp] == catEnum, "Consent Manager Test: testTrackUserConsentPreferences: Categories array contained unexpected values")
+            }
+        }
     }
 
     func testloadSavedPreferencesEmpty() {
@@ -283,19 +303,7 @@ extension ConsentManagerTests: ModuleDelegate {
     func requestDequeue(reason: String) { }
 
     func requestTrack(_ track: TealiumTrackRequest) {
-        trackData = track.trackDictionary
-        if trackData?["tealium_event"] as? String == ConsentKey.gdprConsentCookieEventName {
-            return
-        }
-        if let testtrackUserConsentPreferencesExpectation = getExpectation(forDescription: "testTrackUserConsentPreferences") {
-            if let categories = trackData?["consent_categories"] as? [String], categories.count > 0 {
-                let catEnum = TealiumConsentCategories.consentCategoriesStringArrayToEnum(categories)
-                XCTAssertTrue([TealiumConsentCategories.cdp] == catEnum, "Consent Manager Test: testTrackUserConsentPreferences: Categories array contained unexpected values")
-            }
-            if allTestsFinished {
-                testtrackUserConsentPreferencesExpectation.fulfill()
-            }
-        }
+
     }
 
 }

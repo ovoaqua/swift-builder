@@ -159,6 +159,48 @@ targets:
     dependencies:
       - target: TealiumCore
       - target: TealiumCollect
+  TealiumConnectivityTests-iOS:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: support/tests/test_tealium_core
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+  TealiumConnectivityTests-macOS:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: support/tests/test_tealium_core
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore
+  TealiumConnectivityTests-tvOS:
+    type: bundle.unit-test
+    platform: tvOS
+    sources:
+      - path: support/tests/test_tealium_core
+        buildPhase: sources
+      - path: support/tests/TestTealiumHelper.swift
+        buildPhase: sources
+    settings:
+      base:
+        CODE_SIGN_STYLE: "Manual"
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - target: TealiumCore    
   TealiumCore:
     type: framework
     platform: iOS
@@ -220,7 +262,7 @@ targets:
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
       - path: support/tests/test_tealium_core/datalayer/large-event-data.json
-        buildPhase: resources
+        buildPhase: resources       
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
@@ -243,7 +285,7 @@ targets:
       - path: support/tests/TestTealiumHelper.swift
         buildPhase: sources
       - path: support/tests/test_tealium_core/datalayer/large-event-data.json
-        buildPhase: resources
+        buildPhase: resources       
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
@@ -502,9 +544,7 @@ targets:
       - path: support/tests/test_tealium_visitorservice/stubs/visitor-nils.json
         buildPhase: resources
       - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
-        buildPhase: resources
-      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
-        buildPhase: resources         
+        buildPhase: resources        
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
@@ -527,9 +567,7 @@ targets:
       - path: support/tests/test_tealium_visitorservice/stubs/visitor-nils.json
         buildPhase: resources
       - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
-        buildPhase: resources
-      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
-        buildPhase: resources         
+        buildPhase: resources       
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"
@@ -552,9 +590,7 @@ targets:
       - path: support/tests/test_tealium_visitorservice/stubs/visitor-nils.json
         buildPhase: resources
       - path: support/tests/test_tealium_visitorservice/stubs/visitor.json
-        buildPhase: resources
-      - path: support/tests/test_tealium_visitorservice/stubs/big-visitor.json
-        buildPhase: resources        
+        buildPhase: resources       
     settings:
       base:
         CODE_SIGN_STYLE: "Manual"

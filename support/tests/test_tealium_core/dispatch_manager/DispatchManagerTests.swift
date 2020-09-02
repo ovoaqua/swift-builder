@@ -95,7 +95,7 @@ class TealiumDispatchQueueModuleTests: XCTestCase {
         dispatchManager = DispatchManager(dispatchers: nil, dispatchValidators: nil, dispatchListeners: nil, connectivityManager: TealiumDispatchQueueModuleTests.connectivity, config: config, diskStorage: DispatchQueueMockDiskStorage())
         TealiumDispatchQueueModuleTests.remoteAPIExpectation = self.expectation(description: "remote api")
 
-        let dispatcher = DummyDispatcher(config: config, delegate: self, completion: nil)
+        let dispatcher = DispatchQueueDummyDispatcher(config: config, delegate: self, completion: nil)
         dispatchManager.dispatchers = [dispatcher]
         
         let trackRequest = TealiumTrackRequest(data: ["tealium_event": "myevent"])
@@ -176,7 +176,8 @@ extension TealiumDispatchQueueModuleTests: ModuleDelegate {
     
 }
 
-class DummyDispatcher: Dispatcher {
+class DispatchQueueDummyDispatcher: Dispatcher {
+    var isReady: Bool = true
     
     required init(config: TealiumConfig, delegate: ModuleDelegate, completion: ModuleCompletion?) {
         self.config = config
@@ -189,7 +190,7 @@ class DummyDispatcher: Dispatcher {
         TealiumDispatchQueueModuleTests.remoteAPIExpectation!.fulfill()
     }
     
-    var id: String = "DummyDispatcher"
+    var id: String = "DispatchQueueDummyDispatcher"
     
     var config: TealiumConfig
     

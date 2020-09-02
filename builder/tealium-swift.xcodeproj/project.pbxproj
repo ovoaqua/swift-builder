@@ -16,6 +16,38 @@
 		4BD9036E24F5CDEC0041EFA0 /* Array+Tealium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9036D24F5CDEC0041EFA0 /* Array+Tealium.swift */; };
 		4BD9037024F5CE100041EFA0 /* Dictionary+Tealium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9036F24F5CE100041EFA0 /* Dictionary+Tealium.swift */; };
 		4BD9037224F5CED40041EFA0 /* Double+Tealium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9037124F5CED40041EFA0 /* Double+Tealium.swift */; };
+		CF13D83524FD5FE30024E79A /* AppDelegateProxyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72DB0BF24F7BF4000183D48 /* AppDelegateProxyTests.swift */; };
+		CF13D83824FD5FE30024E79A /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CF13D84624FD600C0024E79A /* TealiumAppDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72FAD4024F442B000700ABF /* TealiumAppDelegateProxy.swift */; };
+		CF13D84724FD601E0024E79A /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
+		CF13D87224FD61F80024E79A /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CF13D8A124FD61FC0024E79A /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CF13D8D324FD62000024E79A /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CF13D8EA24FDB6350024E79A /* EventDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1924768F5000CF0AB0 /* EventDataManagerTests.swift */; };
+		CF13D8EB24FDB6360024E79A /* EventDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1924768F5000CF0AB0 /* EventDataManagerTests.swift */; };
+		CF13D8EC24FDB6370024E79A /* EventDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1924768F5000CF0AB0 /* EventDataManagerTests.swift */; };
+		CF13D8ED24FDB65A0024E79A /* MockSessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1A24768F5000CF0AB0 /* MockSessionStarter.swift */; };
+		CF13D8EE24FDB65B0024E79A /* MockSessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1A24768F5000CF0AB0 /* MockSessionStarter.swift */; };
+		CF13D8EF24FDB65B0024E79A /* MockSessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1A24768F5000CF0AB0 /* MockSessionStarter.swift */; };
+		CF13D8F024FDB66D0024E79A /* MockDataLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1B24768F5000CF0AB0 /* MockDataLayerManager.swift */; };
+		CF13D8F124FDB66D0024E79A /* large-event-data.json in Resources */ = {isa = PBXBuildFile; fileRef = D7187F1524768F5000CF0AB0 /* large-event-data.json */; };
+		CF13D8F224FDB66D0024E79A /* MockEventDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1C24768F5000CF0AB0 /* MockEventDataDiskStorage.swift */; };
+		CF13D8F324FDB66D0024E79A /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1624768F5000CF0AB0 /* SessionManagerTests.swift */; };
+		CF13D8F424FDB66D0024E79A /* DataLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1424768F5000CF0AB0 /* DataLayerTests.swift */; };
+		CF13D8F524FDB66D0024E79A /* SessionStarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1D24768F5000CF0AB0 /* SessionStarterTests.swift */; };
+		CF13D8F624FDB66E0024E79A /* MockDataLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1B24768F5000CF0AB0 /* MockDataLayerManager.swift */; };
+		CF13D8F724FDB66E0024E79A /* large-event-data.json in Resources */ = {isa = PBXBuildFile; fileRef = D7187F1524768F5000CF0AB0 /* large-event-data.json */; };
+		CF13D8F824FDB66E0024E79A /* MockEventDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1C24768F5000CF0AB0 /* MockEventDataDiskStorage.swift */; };
+		CF13D8F924FDB66E0024E79A /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1624768F5000CF0AB0 /* SessionManagerTests.swift */; };
+		CF13D8FA24FDB66E0024E79A /* DataLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1424768F5000CF0AB0 /* DataLayerTests.swift */; };
+		CF13D8FB24FDB66E0024E79A /* SessionStarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1D24768F5000CF0AB0 /* SessionStarterTests.swift */; };
+		CF13D8FC24FDB66E0024E79A /* MockDataLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1B24768F5000CF0AB0 /* MockDataLayerManager.swift */; };
+		CF13D8FD24FDB66E0024E79A /* large-event-data.json in Resources */ = {isa = PBXBuildFile; fileRef = D7187F1524768F5000CF0AB0 /* large-event-data.json */; };
+		CF13D8FE24FDB66E0024E79A /* MockEventDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1C24768F5000CF0AB0 /* MockEventDataDiskStorage.swift */; };
+		CF13D8FF24FDB66E0024E79A /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1624768F5000CF0AB0 /* SessionManagerTests.swift */; };
+		CF13D90024FDB66E0024E79A /* DataLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1424768F5000CF0AB0 /* DataLayerTests.swift */; };
+		CF13D90124FDB66E0024E79A /* SessionStarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1D24768F5000CF0AB0 /* SessionStarterTests.swift */; };
+		CF13D90224FDBA700024E79A /* TealiumTraceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79EFE5924E4100100F43375 /* TealiumTraceTests.swift */; };
 		CF237C1924593E100017ECF8 /* TagManagementWKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C4FB8A21B9C4E6006E3CD8 /* TagManagementWKWebView.swift */; };
 		CF237C1A24593E160017ECF8 /* TagManagementWKNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C4FB9621BA948D006E3CD8 /* TagManagementWKNavigationDelegate.swift */; };
 		CF237C1B24593E1B0017ECF8 /* TagManagementWKWebViewCookieStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE5739C747453CF3D01031 /* TagManagementWKWebViewCookieStoreObserver.swift */; };
@@ -68,17 +100,66 @@
 		CF7F947A2464A06600399774 /* MockTagManagementWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7F94782464A03200399774 /* MockTagManagementWebView.swift */; };
 		CF7F948724650FB500399774 /* MockLocationDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7F948324650F9300399774 /* MockLocationDiskStorage.swift */; };
 		CF8FF2C4244634240081C1A9 /* TealiumVisitorProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8FF2C2244634010081C1A9 /* TealiumVisitorProfile.swift */; };
-		CF8FF2C724466FD90081C1A9 /* big-visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = CF8FF2C524466FD90081C1A9 /* big-visitor.json */; };
-		CF8FF2C824466FD90081C1A9 /* big-visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = CF8FF2C524466FD90081C1A9 /* big-visitor.json */; };
-		CF8FF2C924466FD90081C1A9 /* big-visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = CF8FF2C524466FD90081C1A9 /* big-visitor.json */; };
-		CF8FF2CC244670200081C1A9 /* VisitorProfilePerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8FF2CA244670150081C1A9 /* VisitorProfilePerformanceTests.swift */; };
-		CF8FF2CD244670200081C1A9 /* VisitorProfilePerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8FF2CA244670150081C1A9 /* VisitorProfilePerformanceTests.swift */; };
-		CF8FF2CE244670200081C1A9 /* VisitorProfilePerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8FF2CA244670150081C1A9 /* VisitorProfilePerformanceTests.swift */; };
 		CF9A3F5B24D1E36B0097A9E4 /* TealiumRemoteCommands.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B04D17219994D400C87E22 /* TealiumRemoteCommands.framework */; };
 		CF9A3F5C24D1E36B0097A9E4 /* TealiumRemoteCommands.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7B04D17219994D400C87E22 /* TealiumRemoteCommands.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF9F3F6224EDC02800C9D19E /* LifecycleStubsExpected.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F5F24EDC02800C9D19E /* LifecycleStubsExpected.swift */; };
+		CF9F3F6324EDC02800C9D19E /* LifecycleStubsExpected.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F5F24EDC02800C9D19E /* LifecycleStubsExpected.swift */; };
+		CF9F3F6424EDC02800C9D19E /* LifecycleStubsExpected.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F5F24EDC02800C9D19E /* LifecycleStubsExpected.swift */; };
+		CF9F3F6524EDC02800C9D19E /* LifecycleStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F6024EDC02800C9D19E /* LifecycleStubs.swift */; };
+		CF9F3F6624EDC02800C9D19E /* LifecycleStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F6024EDC02800C9D19E /* LifecycleStubs.swift */; };
+		CF9F3F6724EDC02800C9D19E /* LifecycleStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F6024EDC02800C9D19E /* LifecycleStubs.swift */; };
+		CF9F3F6824EDC02800C9D19E /* LifecycleStubsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F6124EDC02800C9D19E /* LifecycleStubsEvents.swift */; };
+		CF9F3F6924EDC02800C9D19E /* LifecycleStubsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F6124EDC02800C9D19E /* LifecycleStubsEvents.swift */; };
+		CF9F3F6A24EDC02800C9D19E /* LifecycleStubsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F3F6124EDC02800C9D19E /* LifecycleStubsEvents.swift */; };
+		CF9F423924F05980009B93C2 /* MockLocationModuleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F423724F0597F009B93C2 /* MockLocationModuleDelegate.swift */; };
+		CF9F423A24F05980009B93C2 /* MockLocationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F423824F0597F009B93C2 /* MockLocationDelegate.swift */; };
+		CF9F424524F4191F009B93C2 /* big-visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = CF8FF2C524466FD90081C1A9 /* big-visitor.json */; };
+		CF9F424624F4191F009B93C2 /* big-visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = CF8FF2C524466FD90081C1A9 /* big-visitor.json */; };
+		CF9F424724F4191F009B93C2 /* big-visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = CF8FF2C524466FD90081C1A9 /* big-visitor.json */; };
+		CF9F426124F42D46009B93C2 /* TealiumConnectivityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D777EDB91FB1AED100181B11 /* TealiumConnectivityTests.swift */; };
+		CF9F426224F42D49009B93C2 /* MockURLSessionConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F3D2476BED900CF0AB0 /* MockURLSessionConnectivity.swift */; };
+		CF9F426F24F435F3009B93C2 /* TealiumTagManagementModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7166E7F71E6007B000FCA9EE /* TealiumTagManagementModuleTests.swift */; };
+		CF9F427024F435F3009B93C2 /* WKWebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730B611220851CB00B2BD24 /* WKWebViewTests.swift */; };
+		CF9F427124F435F3009B93C2 /* TealiumTagManagementUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7166E7F81E6007B000FCA9EE /* TealiumTagManagementUtilsTests.swift */; };
+		CF9F427224F435F3009B93C2 /* MockTagManagementWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7F94782464A03200399774 /* MockTagManagementWebView.swift */; };
+		CF9F427324F435F3009B93C2 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CF9F427D24F438E1009B93C2 /* MockConsentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F427C24F438E1009B93C2 /* MockConsentDelegate.swift */; };
+		CF9F427E24F438E1009B93C2 /* MockConsentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F427C24F438E1009B93C2 /* MockConsentDelegate.swift */; };
+		CF9F427F24F438E1009B93C2 /* MockConsentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9F427C24F438E1009B93C2 /* MockConsentDelegate.swift */; };
 		CFA19E2D245756EC00C455EA /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E2C245756EC00C455EA /* SessionManager.swift */; };
 		CFA19E2F24575F3200C455EA /* SessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E2E24575F3200C455EA /* SessionStarter.swift */; };
 		CFA19E31245792E200C455EA /* DataLayerManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA19E30245792E200C455EA /* DataLayerManagerProtocol.swift */; };
+		CFA5582924E4B6FB00BFBED8 /* TealiumConnectivityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D777EDB91FB1AED100181B11 /* TealiumConnectivityTests.swift */; };
+		CFA5582A24E4B6FD00BFBED8 /* TealiumConnectivityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D777EDB91FB1AED100181B11 /* TealiumConnectivityTests.swift */; };
+		CFA5595424E4E84F00BFBED8 /* CoreMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA558BF24E4E6B200BFBED8 /* CoreMocks.swift */; };
+		CFA5595524E4E84F00BFBED8 /* CoreMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA558BF24E4E6B200BFBED8 /* CoreMocks.swift */; };
+		CFA5595624E4E84F00BFBED8 /* CoreMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA558BF24E4E6B200BFBED8 /* CoreMocks.swift */; };
+		CFA5595724E4E85700BFBED8 /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
+		CFA55A1A24E4F57F00BFBED8 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD88F234BBCD600668AFD /* MockURLSession.swift */; };
+		CFA55A1B24E4F58000BFBED8 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD88F234BBCD600668AFD /* MockURLSession.swift */; };
+		CFA55A1C24E4F58000BFBED8 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD88F234BBCD600668AFD /* MockURLSession.swift */; };
+		CFA55A2324E4F79800BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A2424E4F79900BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A2524E4F79A00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A2B24E5902A00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A2C24E5902B00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A2D24E5902B00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A2E24E5902C00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A2F24E5902C00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3024E5902D00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3124E5902E00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3224E5902E00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3324E5903000BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3424E5903200BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3524E5903200BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3924E5903400BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3A24E5903400BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3B24E5903600BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A3F24E5903800BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A4124E5903900BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A4224E5903A00BFBED8 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		CFA55A4324E59D1F00BFBED8 /* MockURLSessionConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F3D2476BED900CF0AB0 /* MockURLSessionConnectivity.swift */; };
+		CFA55A4424E59D2000BFBED8 /* MockURLSessionConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F3D2476BED900CF0AB0 /* MockURLSessionConnectivity.swift */; };
 		CFADC90524FEBD9F00566C0F /* RemoteCommandsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFADC90424FEBD9F00566C0F /* RemoteCommandsConstants.swift */; };
 		CFB1ED88244F9088005CC6F1 /* DataLayerCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED86244F905C005CC6F1 /* DataLayerCollection.swift */; };
 		CFB1ED89244F908D005CC6F1 /* DataLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB1ED84244F79B8005CC6F1 /* DataLayer.swift */; };
@@ -167,33 +248,6 @@
 		D71378F12498FFBF0045AE82 /* Disk+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE5C97E18714C1851BFA44 /* Disk+Helpers.swift */; };
 		D7157F8024F51B1400F1F323 /* TealiumContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7157F7F24F51B1400F1F323 /* TealiumContext.swift */; };
 		D7174B2E2346505000D685F7 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7174B2D2346504F00D685F7 /* URLSessionProtocol.swift */; };
-		D7187F1E24768F5100CF0AB0 /* DataLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1424768F5000CF0AB0 /* DataLayerTests.swift */; };
-		D7187F1F24768F5100CF0AB0 /* DataLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1424768F5000CF0AB0 /* DataLayerTests.swift */; };
-		D7187F2024768F5100CF0AB0 /* DataLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1424768F5000CF0AB0 /* DataLayerTests.swift */; };
-		D7187F2124768F5100CF0AB0 /* large-event-data.json in Resources */ = {isa = PBXBuildFile; fileRef = D7187F1524768F5000CF0AB0 /* large-event-data.json */; };
-		D7187F2224768F5100CF0AB0 /* large-event-data.json in Resources */ = {isa = PBXBuildFile; fileRef = D7187F1524768F5000CF0AB0 /* large-event-data.json */; };
-		D7187F2324768F5100CF0AB0 /* large-event-data.json in Resources */ = {isa = PBXBuildFile; fileRef = D7187F1524768F5000CF0AB0 /* large-event-data.json */; };
-		D7187F2424768F5100CF0AB0 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1624768F5000CF0AB0 /* SessionManagerTests.swift */; };
-		D7187F2524768F5100CF0AB0 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1624768F5000CF0AB0 /* SessionManagerTests.swift */; };
-		D7187F2624768F5100CF0AB0 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1624768F5000CF0AB0 /* SessionManagerTests.swift */; };
-		D7187F2D24768F5100CF0AB0 /* EventDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1924768F5000CF0AB0 /* EventDataManagerTests.swift */; };
-		D7187F2E24768F5100CF0AB0 /* EventDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1924768F5000CF0AB0 /* EventDataManagerTests.swift */; };
-		D7187F2F24768F5100CF0AB0 /* EventDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1924768F5000CF0AB0 /* EventDataManagerTests.swift */; };
-		D7187F3024768F5100CF0AB0 /* MockSessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1A24768F5000CF0AB0 /* MockSessionStarter.swift */; };
-		D7187F3124768F5100CF0AB0 /* MockSessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1A24768F5000CF0AB0 /* MockSessionStarter.swift */; };
-		D7187F3224768F5100CF0AB0 /* MockSessionStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1A24768F5000CF0AB0 /* MockSessionStarter.swift */; };
-		D7187F3324768F5100CF0AB0 /* MockDataLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1B24768F5000CF0AB0 /* MockDataLayerManager.swift */; };
-		D7187F3424768F5100CF0AB0 /* MockDataLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1B24768F5000CF0AB0 /* MockDataLayerManager.swift */; };
-		D7187F3524768F5100CF0AB0 /* MockDataLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1B24768F5000CF0AB0 /* MockDataLayerManager.swift */; };
-		D7187F3624768F5100CF0AB0 /* MockEventDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1C24768F5000CF0AB0 /* MockEventDataDiskStorage.swift */; };
-		D7187F3724768F5100CF0AB0 /* MockEventDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1C24768F5000CF0AB0 /* MockEventDataDiskStorage.swift */; };
-		D7187F3824768F5100CF0AB0 /* MockEventDataDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1C24768F5000CF0AB0 /* MockEventDataDiskStorage.swift */; };
-		D7187F3924768F5100CF0AB0 /* SessionStarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1D24768F5000CF0AB0 /* SessionStarterTests.swift */; };
-		D7187F3A24768F5100CF0AB0 /* SessionStarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1D24768F5000CF0AB0 /* SessionStarterTests.swift */; };
-		D7187F3B24768F5100CF0AB0 /* SessionStarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F1D24768F5000CF0AB0 /* SessionStarterTests.swift */; };
-		D7187F3E2476BED900CF0AB0 /* MockURLSessionConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F3D2476BED900CF0AB0 /* MockURLSessionConnectivity.swift */; };
-		D7187F3F2476BED900CF0AB0 /* MockURLSessionConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F3D2476BED900CF0AB0 /* MockURLSessionConnectivity.swift */; };
-		D7187F402476BED900CF0AB0 /* MockURLSessionConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7187F3D2476BED900CF0AB0 /* MockURLSessionConnectivity.swift */; };
 		D71912672472C20F000FD63E /* DispatchQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7052C44209706F800723DC5 /* DispatchQueueTests.swift */; };
 		D71912682472C20F000FD63E /* DispatchQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7052C44209706F800723DC5 /* DispatchQueueTests.swift */; };
 		D71912692472C210000FD63E /* DispatchQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7052C44209706F800723DC5 /* DispatchQueueTests.swift */; };
@@ -203,8 +257,6 @@
 		D71912702472C23F000FD63E /* DispatchQueueMockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A59F2321550700BC6D60 /* DispatchQueueMockDiskStorage.swift */; };
 		D71912712472C240000FD63E /* DispatchQueueMockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A59F2321550700BC6D60 /* DispatchQueueMockDiskStorage.swift */; };
 		D71912722472C240000FD63E /* DispatchQueueMockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A59F2321550700BC6D60 /* DispatchQueueMockDiskStorage.swift */; };
-		D71912782474079C000FD63E /* TealiumConnectivityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D777EDB91FB1AED100181B11 /* TealiumConnectivityTests.swift */; };
-		D71912792474079D000FD63E /* TealiumConnectivityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D777EDB91FB1AED100181B11 /* TealiumConnectivityTests.swift */; };
 		D71912B524743DF8000FD63E /* TealiumCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D71912B124743DF8000FD63E /* TealiumCore.framework */; };
 		D71912B624743DF8000FD63E /* TealiumCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D71912B124743DF8000FD63E /* TealiumCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D71912B724743DF8000FD63E /* TealiumCollect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D71912B224743DF8000FD63E /* TealiumCollect.framework */; };
@@ -221,6 +273,7 @@
 		D719956322B8E97E005BE543 /* TealiumDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE5A0823C14DB89DFE8069 /* TealiumDiskStorage.swift */; };
 		D7215F0E22BCEA0F00DC5EA9 /* TealiumDiskStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7215F0922BCEA0F00DC5EA9 /* TealiumDiskStorageProtocol.swift */; };
 		D724971024B35112006AD829 /* AppDataModuleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D724970F24B35112006AD829 /* AppDataModuleExtensions.swift */; };
+		D724D85B2230295100883C1E /* TealiumRemoteCommandsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D724D8592230295100883C1E /* TealiumRemoteCommandsConstants.swift */; };
 		D72DB0C024F7BF4000183D48 /* AppDelegateProxyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72DB0BF24F7BF4000183D48 /* AppDelegateProxyTests.swift */; };
 		D72E8C142361E50100BA3786 /* WatchOSTestBed WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D72E8C132361E50100BA3786 /* WatchOSTestBed WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D72E8C1A2361E50100BA3786 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D72E8C182361E50100BA3786 /* Interface.storyboard */; };
@@ -235,7 +288,6 @@
 		D72E8C352361E50400BA3786 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D72E8C342361E50400BA3786 /* Preview Assets.xcassets */; };
 		D72E8C442361E63F00BA3786 /* TealiumWatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72E8C432361E63E00BA3786 /* TealiumWatchHelper.swift */; };
 		D72E8C4E2361E6A000BA3786 /* WatchOS.h in Headers */ = {isa = PBXBuildFile; fileRef = D72E8C4C2361E6A000BA3786 /* WatchOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D72FAD4124F442B000700ABF /* TealiumAppDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72FAD4024F442B000700ABF /* TealiumAppDelegateProxy.swift */; };
 		D7406C3823C8E059009C5F74 /* DiskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7406C3723C8E059009C5F74 /* DiskError.swift */; };
 		D740E5C2246956F000BC36F5 /* TealiumLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFF242A123CE774C0091B7BF /* TealiumLocation.framework */; platformFilter = ios; };
 		D740E5C3246956F000BC36F5 /* TealiumLocation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CFF242A123CE774C0091B7BF /* TealiumLocation.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -251,7 +303,6 @@
 		D7596C8A2451A886003AB939 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7596C892451A886003AB939 /* Dispatcher.swift */; };
 		D7596C8C2451AE35003AB939 /* DispatchValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7596C8B2451AE35003AB939 /* DispatchValidator.swift */; };
 		D7596C992451D141003AB939 /* TealiumModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7596C982451D141003AB939 /* TealiumModule.swift */; };
-		D762FC3A232F97EF00CBC4D0 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D76FE1272193093A00D73EC5 /* AttributionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F085BF1DDE154C008850C8 /* AttributionModule.swift */; };
 		D76FE1602193093A00D73EC5 /* AttributionModule.swift in Headers */ = {isa = PBXBuildFile; fileRef = 71F085BF1DDE154C008850C8 /* AttributionModule.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		D7727EFB2260C2DB00FCE537 /* TealiumTrace.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7727EF62260C2DB00FCE537 /* TealiumTrace.swift */; };
@@ -293,16 +344,14 @@
 		D777EDB11FB0B87300181B11 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D777EDAF1FB0B87300181B11 /* LaunchScreen.storyboard */; };
 		D77DBC50248EA6FB00B4A1AE /* ConsentPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77DBC4F248EA6FB00B4A1AE /* ConsentPolicies.swift */; };
 		D77E0B1C24521F0200A3E0C1 /* TealiumRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0187CF20067A890057E281 /* TealiumRequests.swift */; };
-		D7805842233A672800DAD90E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
-		D7805861233A68DD00DAD90E /* VisitorProfileManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805850233A68DC00DAD90E /* VisitorProfileManagerTests.swift */; };
-		D7805863233A68DD00DAD90E /* TealiumVisitorProfileModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805852233A68DC00DAD90E /* TealiumVisitorProfileModuleTests.swift */; };
+		D7805861233A68DD00DAD90E /* VisitorServiceManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805850233A68DC00DAD90E /* VisitorServiceManagerTests.swift */; };
 		D7805864233A68DD00DAD90E /* visitor-all-nil.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805854233A68DC00DAD90E /* visitor-all-nil.json */; };
 		D7805865233A68DD00DAD90E /* visitor-empties.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805855233A68DC00DAD90E /* visitor-empties.json */; };
 		D7805866233A68DD00DAD90E /* visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805856233A68DC00DAD90E /* visitor.json */; };
 		D7805867233A68DD00DAD90E /* visitor-nils.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805857233A68DC00DAD90E /* visitor-nils.json */; };
 		D780586B233A68DD00DAD90E /* XCTestCaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585D233A68DD00DAD90E /* XCTestCaseUtilities.swift */; };
 		D780586D233A68DD00DAD90E /* VisitorProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585F233A68DD00DAD90E /* VisitorProfileTests.swift */; };
-		D780586E233A68DE00DAD90E /* VisitorProfileRetrieverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805860233A68DD00DAD90E /* VisitorProfileRetrieverTests.swift */; };
+		D780586E233A68DE00DAD90E /* VisitorServiceRetrieverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805860233A68DD00DAD90E /* VisitorServiceRetrieverTests.swift */; };
 		D7805882233A691A00DAD90E /* VisitorServiceModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805876233A691800DAD90E /* VisitorServiceModule.swift */; };
 		D783DFF2234F9CA5007DD9E4 /* TealiumURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7174B312346511A00D685F7 /* TealiumURLSession.swift */; };
 		D783DFF6234FC891007DD9E4 /* TealiumRegistration.swift in Headers */ = {isa = PBXBuildFile; fileRef = CFE49EDA229DA3A400FD6A68 /* TealiumRegistration.swift */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -319,35 +368,25 @@
 		D7885B6224AE579B00ECFEC7 /* TealiumModulesManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D131DDBC3A500512C99 /* TealiumModulesManagerTests.swift */; };
 		D7885B6324AE579B00ECFEC7 /* TealiumModulesManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D131DDBC3A500512C99 /* TealiumModulesManagerTests.swift */; };
 		D7885B6524AE579E00ECFEC7 /* TealiumModulesManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D131DDBC3A500512C99 /* TealiumModulesManagerTests.swift */; };
-		D788A3E3231841F200BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D788A3F22318424600BC6D60 /* TealiumAttributionModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EBA7551DDCD66D00813470 /* TealiumAttributionModuleTests.swift */; };
 		D788A3F32318424600BC6D60 /* TealiumAttributionDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70FF574224110E100854F22 /* TealiumAttributionDataTests.swift */; };
 		D788A3F62319280B00BC6D60 /* AttributionMockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A3F42319280B00BC6D60 /* AttributionMockDiskStorage.swift */; };
-		D788A43A23196C0F00BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
-		D788A45123196D2500BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
-		D788A46E23196E4400BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D788A47E23196F9600BC6D60 /* TealiumRepeatingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7268F8A2191A8780083766C /* TealiumRepeatingTimer.swift */; };
-		D788A48A231970B900BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D788A4B12319719F00BC6D60 /* TealiumConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D101DDBC3A500512C99 /* TealiumConfigTests.swift */; };
 		D788A4B22319719F00BC6D60 /* TealiumConstantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D111DDBC3A500512C99 /* TealiumConstantsTests.swift */; };
 		D788A4B82319719F00BC6D60 /* TealiumUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AD890A218B53500018E2FA /* TealiumUtilsTests.swift */; };
 		D788A4B92319719F00BC6D60 /* TealiumDiskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D719955F22B8E47D005BE543 /* TealiumDiskTests.swift */; };
-		D788A4F9231988B000BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D788A4FC231988B000BC6D60 /* lifecycle_events.json in Resources */ = {isa = PBXBuildFile; fileRef = 712184851E5360B5000DCE07 /* lifecycle_events.json */; };
-		D788A5082319890300BC6D60 /* TealiumLifecycleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184881E5360B5000DCE07 /* TealiumLifecycleIntegrationTests.swift */; };
 		D788A5092319890300BC6D60 /* LifecycleModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184931E54115B000DCE07 /* LifecycleModuleTests.swift */; };
 		D788A50A2319890300BC6D60 /* TealiumLifecyclePersistentDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7121848A1E5360B5000DCE07 /* TealiumLifecyclePersistentDataTests.swift */; };
 		D788A50B2319890300BC6D60 /* TealiumLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7121848B1E5360B5000DCE07 /* TealiumLifecycleTests.swift */; };
 		D788A50C2319890300BC6D60 /* TealiumLifecycleSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184971E54B55F000DCE07 /* TealiumLifecycleSessionTests.swift */; };
 		D788A50D2319892300BC6D60 /* lifecycle_events_with_crashes.json in Resources */ = {isa = PBXBuildFile; fileRef = 712184861E5360B5000DCE07 /* lifecycle_events_with_crashes.json */; };
-		D788A54B231989DF00BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D788A55623198A0C00BC6D60 /* TealiumRemoteCommandsModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F63A571E79B073006A723F /* TealiumRemoteCommandsModuleTests.swift */; };
 		D788A55723198A0C00BC6D60 /* TealiumRemoteCommandsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F63A591E79B07D006A723F /* TealiumRemoteCommandsTests.swift */; };
 		D788A55823198A0C00BC6D60 /* TealiumRemoteHTTPCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BAF2C91E8DA56D00071239 /* TealiumRemoteHTTPCommandTests.swift */; };
-		D788A56423198A3100BC6D60 /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D788A56F23198A4D00BC6D60 /* TealiumTagManagementModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7166E7F71E6007B000FCA9EE /* TealiumTagManagementModuleTests.swift */; };
 		D788A57023198A4D00BC6D60 /* TealiumTagManagementUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7166E7F81E6007B000FCA9EE /* TealiumTagManagementUtilsTests.swift */; };
-		D788A57123198A5500BC6D60 /* WKWebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730B611220851CB00B2BD24 /* WKWebViewTests.swift */; };
 		D788A58C23198E8300BC6D60 /* AutotrackingModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7102BF6F1E0CF05700ED5783 /* AutotrackingModuleTests.swift */; };
 		D788A59B231FB8F300BC6D60 /* LifecycleMockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A599231FB8F300BC6D60 /* LifecycleMockDiskStorage.swift */; };
 		D788A5AB2326AD1700BC6D60 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A5A82326AD1100BC6D60 /* MockURLSession.swift */; };
@@ -377,46 +416,34 @@
 		D798C31323423DB600EE665E /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A5A82326AD1100BC6D60 /* MockURLSession.swift */; };
 		D798C31423423DB600EE665E /* TealiumCollectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D0E1DDBC3A500512C99 /* TealiumCollectTests.swift */; };
 		D798C31523423DB600EE665E /* CollectModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D0D1DDBC3A500512C99 /* CollectModuleTests.swift */; };
-		D798C31623423DB600EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D798C32523423DBA00EE665E /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A5A82326AD1100BC6D60 /* MockURLSession.swift */; };
 		D798C32623423DBA00EE665E /* TealiumCollectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D0E1DDBC3A500512C99 /* TealiumCollectTests.swift */; };
 		D798C32723423DBA00EE665E /* CollectModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D0D1DDBC3A500512C99 /* CollectModuleTests.swift */; };
-		D798C32823423DBA00EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
-		D798C33823423F3F00EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
-		D798C34823423F4300EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
-		D798C3BF234240E000EE665E /* TealiumLifecycleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184881E5360B5000DCE07 /* TealiumLifecycleIntegrationTests.swift */; };
 		D798C3C0234240E000EE665E /* LifecycleModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184931E54115B000DCE07 /* LifecycleModuleTests.swift */; };
 		D798C3C1234240E000EE665E /* TealiumLifecyclePersistentDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7121848A1E5360B5000DCE07 /* TealiumLifecyclePersistentDataTests.swift */; };
 		D798C3C2234240E000EE665E /* LifecycleMockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A599231FB8F300BC6D60 /* LifecycleMockDiskStorage.swift */; };
 		D798C3C3234240E000EE665E /* TealiumLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7121848B1E5360B5000DCE07 /* TealiumLifecycleTests.swift */; };
 		D798C3C4234240E000EE665E /* TealiumLifecycleSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184971E54B55F000DCE07 /* TealiumLifecycleSessionTests.swift */; };
-		D798C3C5234240E000EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D798C3C8234240E000EE665E /* lifecycle_events_with_crashes.json in Resources */ = {isa = PBXBuildFile; fileRef = 712184861E5360B5000DCE07 /* lifecycle_events_with_crashes.json */; };
 		D798C3C9234240E000EE665E /* lifecycle_events.json in Resources */ = {isa = PBXBuildFile; fileRef = 712184851E5360B5000DCE07 /* lifecycle_events.json */; };
-		D798C3D6234240E300EE665E /* TealiumLifecycleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184881E5360B5000DCE07 /* TealiumLifecycleIntegrationTests.swift */; };
 		D798C3D7234240E300EE665E /* LifecycleModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184931E54115B000DCE07 /* LifecycleModuleTests.swift */; };
 		D798C3D8234240E300EE665E /* TealiumLifecyclePersistentDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7121848A1E5360B5000DCE07 /* TealiumLifecyclePersistentDataTests.swift */; };
 		D798C3D9234240E300EE665E /* LifecycleMockDiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788A599231FB8F300BC6D60 /* LifecycleMockDiskStorage.swift */; };
 		D798C3DA234240E300EE665E /* TealiumLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7121848B1E5360B5000DCE07 /* TealiumLifecycleTests.swift */; };
 		D798C3DB234240E300EE665E /* TealiumLifecycleSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712184971E54B55F000DCE07 /* TealiumLifecycleSessionTests.swift */; };
-		D798C3DC234240E300EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D798C3DF234240E300EE665E /* lifecycle_events_with_crashes.json in Resources */ = {isa = PBXBuildFile; fileRef = 712184861E5360B5000DCE07 /* lifecycle_events_with_crashes.json */; };
 		D798C3E0234240E300EE665E /* lifecycle_events.json in Resources */ = {isa = PBXBuildFile; fileRef = 712184851E5360B5000DCE07 /* lifecycle_events.json */; };
 		D798C4462342411E00EE665E /* VisitorProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585F233A68DD00DAD90E /* VisitorProfileTests.swift */; };
-		D798C4472342411E00EE665E /* TealiumVisitorProfileModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805852233A68DC00DAD90E /* TealiumVisitorProfileModuleTests.swift */; };
-		D798C4482342411E00EE665E /* VisitorProfileManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805850233A68DC00DAD90E /* VisitorProfileManagerTests.swift */; };
-		D798C44A2342411E00EE665E /* VisitorProfileRetrieverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805860233A68DD00DAD90E /* VisitorProfileRetrieverTests.swift */; };
-		D798C44B2342411E00EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		D798C4482342411E00EE665E /* VisitorServiceManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805850233A68DC00DAD90E /* VisitorServiceManagerTests.swift */; };
+		D798C44A2342411E00EE665E /* VisitorServiceRetrieverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805860233A68DD00DAD90E /* VisitorServiceRetrieverTests.swift */; };
 		D798C44C2342411E00EE665E /* XCTestCaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585D233A68DD00DAD90E /* XCTestCaseUtilities.swift */; };
 		D798C44F2342411E00EE665E /* visitor-nils.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805857233A68DC00DAD90E /* visitor-nils.json */; };
 		D798C4502342411E00EE665E /* visitor-empties.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805855233A68DC00DAD90E /* visitor-empties.json */; };
 		D798C4512342411E00EE665E /* visitor.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805856233A68DC00DAD90E /* visitor.json */; };
 		D798C4522342411E00EE665E /* visitor-all-nil.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805854233A68DC00DAD90E /* visitor-all-nil.json */; };
 		D798C4702342416900EE665E /* VisitorProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585F233A68DD00DAD90E /* VisitorProfileTests.swift */; };
-		D798C4712342416900EE665E /* TealiumVisitorProfileModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805852233A68DC00DAD90E /* TealiumVisitorProfileModuleTests.swift */; };
-		D798C4722342416900EE665E /* VisitorProfileManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805850233A68DC00DAD90E /* VisitorProfileManagerTests.swift */; };
-		D798C4742342416900EE665E /* VisitorProfileRetrieverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805860233A68DD00DAD90E /* VisitorProfileRetrieverTests.swift */; };
-		D798C4752342416900EE665E /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
+		D798C4722342416900EE665E /* VisitorServiceManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805850233A68DC00DAD90E /* VisitorServiceManagerTests.swift */; };
+		D798C4742342416900EE665E /* VisitorServiceRetrieverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7805860233A68DD00DAD90E /* VisitorServiceRetrieverTests.swift */; };
 		D798C4762342416900EE665E /* XCTestCaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D780585D233A68DD00DAD90E /* XCTestCaseUtilities.swift */; };
 		D798C4792342416900EE665E /* visitor-nils.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805857233A68DC00DAD90E /* visitor-nils.json */; };
 		D798C47A2342416900EE665E /* visitor-empties.json in Resources */ = {isa = PBXBuildFile; fileRef = D7805855233A68DC00DAD90E /* visitor-empties.json */; };
@@ -452,9 +479,6 @@
 		D79A7A0B247D150000B1D486 /* TealiumDeviceDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE5835EB7657391D136D9C /* TealiumDeviceDataTests.swift */; };
 		D79D01782452F00F00A446DF /* TealiumDispatchQueueExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FE15A022E61080000ABF56 /* TealiumDispatchQueueExtensions.swift */; };
 		D79D017B24530B6900A446DF /* CollectModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79D017924530A8000A446DF /* CollectModule.swift */; };
-		D79EFE5A24E4100100F43375 /* TealiumTraceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79EFE5924E4100100F43375 /* TealiumTraceTests.swift */; };
-		D79EFE5B24E4100100F43375 /* TealiumTraceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79EFE5924E4100100F43375 /* TealiumTraceTests.swift */; };
-		D79EFE5C24E4100100F43375 /* TealiumTraceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79EFE5924E4100100F43375 /* TealiumTraceTests.swift */; };
 		D7A42DD9245837A5006D15B3 /* TealiumLoggerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A42DD7245837A1006D15B3 /* TealiumLoggerProtocol.swift */; };
 		D7A42DDB24583822006D15B3 /* TealiumLogRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A42DDA24583822006D15B3 /* TealiumLogRequest.swift */; };
 		D7A42DDC24598F56006D15B3 /* TealiumTagManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D755DD8621945F99003C6BA1 /* TealiumTagManagement.framework */; platformFilter = ios; };
@@ -487,9 +511,6 @@
 		D7C8EED1223A957A008FB02B /* AttributionConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C8EECF223A957A008FB02B /* AttributionConstants.swift */; };
 		D7C8EED4223A9956008FB02B /* AttributionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C8EED2223A9956008FB02B /* AttributionData.swift */; };
 		D7C8EED7223AA2C1008FB02B /* AttributionDataProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C8EED5223AA2C1008FB02B /* AttributionDataProtocol.swift */; };
-		D7CAD890234BBCD700668AFD /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD88F234BBCD600668AFD /* MockURLSession.swift */; };
-		D7CAD891234BBCD700668AFD /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD88F234BBCD600668AFD /* MockURLSession.swift */; };
-		D7CAD892234BBCD700668AFD /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD88F234BBCD600668AFD /* MockURLSession.swift */; };
 		D7CCB57522C65B0600FF1103 /* TealiumDiskStorageConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CCB57322C65B0500FF1103 /* TealiumDiskStorageConfig.swift */; };
 		D7CED26721932DF200ACD291 /* AutotrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D2B34E1E2FE3670049BCF3 /* AutotrackingModule.swift */; };
 		D7CED26821932DF200ACD291 /* UIApplication+TealiumTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 71D2B3501E2FE3670049BCF3 /* UIApplication+TealiumTracker.m */; };
@@ -503,7 +524,6 @@
 		D7D5C1AE23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AB23D74B44002DB7C6 /* PublishSettingsTests.swift */; };
 		D7D5C1B023D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
 		D7D5C1B123D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
-		D7D5C1B223D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */; };
 		D7DB82E1245ADF4D005392B2 /* ConnectivityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7171AB291F01B949004F59D1 /* ConnectivityModule.swift */; };
 		D7DB82E3245B1473005392B2 /* DispatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB82E2245B1473005392B2 /* DispatchManager.swift */; };
 		D7E4184722831EE500BD8EB9 /* AttributionExtensions.swift in Headers */ = {isa = PBXBuildFile; fileRef = D7C8EECC223A93CB008FB02B /* AttributionExtensions.swift */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -520,18 +540,205 @@
 		D7F2DED4233279A1000D0E0F /* TealiumConstantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D111DDBC3A500512C99 /* TealiumConstantsTests.swift */; };
 		D7F2DED9233279A1000D0E0F /* TealiumUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AD890A218B53500018E2FA /* TealiumUtilsTests.swift */; };
 		D7F2DEDA233279A1000D0E0F /* TealiumDiskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D719955F22B8E47D005BE543 /* TealiumDiskTests.swift */; };
-		D7F2DEDB233279A1000D0E0F /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D7F2DF00233279B2000D0E0F /* TealiumConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D101DDBC3A500512C99 /* TealiumConfigTests.swift */; };
 		D7F2DF01233279B2000D0E0F /* TealiumConstantsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D111DDBC3A500512C99 /* TealiumConstantsTests.swift */; };
 		D7F2DF06233279B2000D0E0F /* TealiumUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AD890A218B53500018E2FA /* TealiumUtilsTests.swift */; };
 		D7F2DF07233279B2000D0E0F /* TealiumDiskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D719955F22B8E47D005BE543 /* TealiumDiskTests.swift */; };
-		D7F2DF08233279B2000D0E0F /* TestTealiumHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */; };
 		D7F8D8E7246079F500796E12 /* ModuleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7596C9A2451D6E1003AB939 /* ModuleDelegate.swift */; };
 		D7FF987C24ACBD1300E87A80 /* AutoTrackingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF987B24ACBD1300E87A80 /* AutoTrackingExtensions.swift */; };
 		D7FF987D24AD0B6F00E87A80 /* MockAttributionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7F075A24770212003E23B9 /* MockAttributionData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CF13D80F24FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFF242A023CE774C0091B7BF;
+			remoteInfo = TealiumLocation;
+		};
+		CF13D81124FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7805825233A65FB00DAD90E;
+			remoteInfo = TealiumVisitorService;
+		};
+		CF13D81324FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D76FE1222193093A00D73EC5;
+			remoteInfo = TealiumAttribution;
+		};
+		CF13D81524FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7CED25721932DD500ACD291;
+			remoteInfo = TealiumAutotracking;
+		};
+		CF13D81724FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D736D6A42195CCB600B3BDEE;
+			remoteInfo = TealiumCollect;
+		};
+		CF13D81924FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DC9821945E41003C6BA1;
+			remoteInfo = TealiumCore;
+		};
+		CF13D81B24FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7881EF121998DAD002CDCC1;
+			remoteInfo = TealiumLifecycle;
+		};
+		CF13D81D24FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DD1121945F99003C6BA1;
+			remoteInfo = TealiumTagManagement;
+		};
+		CF13D81F24FD5FE30024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D777EDA31FB0B87300181B11;
+			remoteInfo = TestHost;
+		};
+		CF13D84A24FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFF242A023CE774C0091B7BF;
+			remoteInfo = TealiumLocation;
+		};
+		CF13D84C24FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7805825233A65FB00DAD90E;
+			remoteInfo = TealiumVisitorService;
+		};
+		CF13D84E24FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D76FE1222193093A00D73EC5;
+			remoteInfo = TealiumAttribution;
+		};
+		CF13D85024FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7CED25721932DD500ACD291;
+			remoteInfo = TealiumAutotracking;
+		};
+		CF13D85224FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D736D6A42195CCB600B3BDEE;
+			remoteInfo = TealiumCollect;
+		};
+		CF13D85424FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DC9821945E41003C6BA1;
+			remoteInfo = TealiumCore;
+		};
+		CF13D85624FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7881EF121998DAD002CDCC1;
+			remoteInfo = TealiumLifecycle;
+		};
+		CF13D85824FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DD1121945F99003C6BA1;
+			remoteInfo = TealiumTagManagement;
+		};
+		CF13D85A24FD61F80024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D777EDA31FB0B87300181B11;
+			remoteInfo = TestHost;
+		};
+		CF13D88224FD61FC0024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7805825233A65FB00DAD90E;
+			remoteInfo = TealiumVisitorService;
+		};
+		CF13D88424FD61FC0024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D736D6A42195CCB600B3BDEE;
+			remoteInfo = TealiumCollect;
+		};
+		CF13D88624FD61FC0024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7881EF121998DAD002CDCC1;
+			remoteInfo = TealiumLifecycle;
+		};
+		CF13D88824FD61FC0024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DC9821945E41003C6BA1;
+			remoteInfo = TealiumCore;
+		};
+		CF13D8B024FD62000024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7805825233A65FB00DAD90E;
+			remoteInfo = TealiumVisitorService;
+		};
+		CF13D8B224FD62000024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7CED25721932DD500ACD291;
+			remoteInfo = TealiumAutotracking;
+		};
+		CF13D8B424FD62000024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D736D6A42195CCB600B3BDEE;
+			remoteInfo = TealiumCollect;
+		};
+		CF13D8B624FD62000024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DC9821945E41003C6BA1;
+			remoteInfo = TealiumCore;
+		};
+		CF13D8B824FD62000024E79A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7881EF121998DAD002CDCC1;
+			remoteInfo = TealiumLifecycle;
+		};
 		CF64A134246B465D00FA456E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
@@ -552,6 +759,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = D7B04D08219994D400C87E22;
 			remoteInfo = TealiumRemoteCommands;
+		};
+		CF9F424A24F427D7009B93C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7CED25721932DD500ACD291;
+			remoteInfo = TealiumAutotracking;
+		};
+		CF9F424C24F427ED009B93C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7CED25721932DD500ACD291;
+			remoteInfo = TealiumAutotracking;
+		};
+		CF9F426B24F435F3009B93C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DD1121945F99003C6BA1;
+			remoteInfo = TealiumTagManagement;
+		};
+		CF9F426D24F435F3009B93C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D755DC9821945E41003C6BA1;
+			remoteInfo = TealiumCore;
 		};
 		CFC657692370AFA200A61F6D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -868,13 +1103,6 @@
 			remoteGlobalIDString = D755DD1121945F99003C6BA1;
 			remoteInfo = TealiumTagManagement;
 		};
-		D788A58A23198E7700BC6D60 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D7CED25721932DD500ACD291;
-			remoteInfo = TealiumAutotracking;
-		};
 		D788A5F523292B8100BC6D60 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
@@ -1064,13 +1292,6 @@
 			remoteGlobalIDString = D755DC9821945E41003C6BA1;
 			remoteInfo = TealiumCore;
 		};
-		D7F2DF1723327B26000D0E0F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D7CED25721932DD500ACD291;
-			remoteInfo = TealiumAutotracking;
-		};
 		D7F2DF1923327B26000D0E0F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
@@ -1098,13 +1319,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D76FE1222193093A00D73EC5;
 			remoteInfo = TealiumAttribution;
-		};
-		D7F2DF3D2332802D000D0E0F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7182DD011D77492D0001A95B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D7CED25721932DD500ACD291;
-			remoteInfo = TealiumAutotracking;
 		};
 		D7F2DF3F2332802D000D0E0F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1324,7 +1538,6 @@
 		711B6E501D787BEC00A4B13D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		712184851E5360B5000DCE07 /* lifecycle_events.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = lifecycle_events.json; sourceTree = "<group>"; };
 		712184861E5360B5000DCE07 /* lifecycle_events_with_crashes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = lifecycle_events_with_crashes.json; sourceTree = "<group>"; };
-		712184881E5360B5000DCE07 /* TealiumLifecycleIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLifecycleIntegrationTests.swift; sourceTree = "<group>"; };
 		7121848A1E5360B5000DCE07 /* TealiumLifecyclePersistentDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLifecyclePersistentDataTests.swift; sourceTree = "<group>"; };
 		7121848B1E5360B5000DCE07 /* TealiumLifecycleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumLifecycleTests.swift; sourceTree = "<group>"; };
 		712184931E54115B000DCE07 /* LifecycleModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LifecycleModuleTests.swift; sourceTree = "<group>"; };
@@ -1359,6 +1572,14 @@
 		71F63A481E799C0D006A723F /* RemoteCommandsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandsModule.swift; sourceTree = "<group>"; };
 		71F63A571E79B073006A723F /* TealiumRemoteCommandsModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumRemoteCommandsModuleTests.swift; sourceTree = "<group>"; };
 		71F63A591E79B07D006A723F /* TealiumRemoteCommandsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumRemoteCommandsTests.swift; sourceTree = "<group>"; };
+		CF13D84424FD5FE30024E79A /* TealiumAppDelegateProxyTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumAppDelegateProxyTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF13D84524FD5FE30024E79A /* TealiumAppDelegateProxyTests-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumAppDelegateProxyTests-iOS-Info.plist"; path = "/Users/christina/Projects/work-repos/github/tealium-swift-builder/builder/TealiumAppDelegateProxyTests-iOS-Info.plist"; sourceTree = "<absolute>"; };
+		CF13D87E24FD61F80024E79A /* TealiumTraceTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumTraceTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF13D87F24FD61F80024E79A /* TealiumTraceTests-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumTraceTests-iOS-Info.plist"; path = "/Users/christina/Projects/work-repos/github/tealium-swift-builder/builder/TealiumTraceTests-iOS-Info.plist"; sourceTree = "<absolute>"; };
+		CF13D8AC24FD61FC0024E79A /* TealiumTraceTests-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumTraceTests-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF13D8AD24FD61FD0024E79A /* TealiumTraceTests-macOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumTraceTests-macOS-Info.plist"; path = "/Users/christina/Projects/work-repos/github/tealium-swift-builder/builder/TealiumTraceTests-macOS-Info.plist"; sourceTree = "<absolute>"; };
+		CF13D8DB24FD62000024E79A /* TealiumTraceTests-tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumTraceTests-tvOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF13D8DC24FD62000024E79A /* TealiumTraceTests-tvOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumTraceTests-tvOS-Info.plist"; path = "/Users/christina/Projects/work-repos/github/tealium-swift-builder/builder/TealiumTraceTests-tvOS-Info.plist"; sourceTree = "<absolute>"; };
 		CF237C62245B30480017ECF8 /* LifecycleModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleModule.swift; sourceTree = "<group>"; };
 		CF33DA4F24B919C300ECEE64 /* VisitorServiceConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorServiceConstants.swift; sourceTree = "<group>"; };
 		CF33DA5024B919C400ECEE64 /* VisitorServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorServiceManager.swift; sourceTree = "<group>"; };
@@ -1382,11 +1603,18 @@
 		CF7F94892469E98500399774 /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		CF8FF2C2244634010081C1A9 /* TealiumVisitorProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumVisitorProfile.swift; sourceTree = "<group>"; };
 		CF8FF2C524466FD90081C1A9 /* big-visitor.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "big-visitor.json"; sourceTree = "<group>"; };
-		CF8FF2CA244670150081C1A9 /* VisitorProfilePerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitorProfilePerformanceTests.swift; sourceTree = "<group>"; };
+		CF9F3F5F24EDC02800C9D19E /* LifecycleStubsExpected.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LifecycleStubsExpected.swift; sourceTree = "<group>"; };
+		CF9F3F6024EDC02800C9D19E /* LifecycleStubs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LifecycleStubs.swift; sourceTree = "<group>"; };
+		CF9F3F6124EDC02800C9D19E /* LifecycleStubsEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LifecycleStubsEvents.swift; sourceTree = "<group>"; };
+		CF9F423724F0597F009B93C2 /* MockLocationModuleDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockLocationModuleDelegate.swift; sourceTree = "<group>"; };
+		CF9F423824F0597F009B93C2 /* MockLocationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockLocationDelegate.swift; sourceTree = "<group>"; };
+		CF9F427A24F435F3009B93C2 /* TealiumTagManagementIntegrationTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumTagManagementIntegrationTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF9F427C24F438E1009B93C2 /* MockConsentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConsentDelegate.swift; sourceTree = "<group>"; };
 		CFA19E2C245756EC00C455EA /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		CFA19E2E24575F3200C455EA /* SessionStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStarter.swift; sourceTree = "<group>"; };
 		CFA19E30245792E200C455EA /* DataLayerManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayerManagerProtocol.swift; sourceTree = "<group>"; };
 		CFA19E4E2458C9C400C455EA /* TagManagementModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagementModule.swift; sourceTree = "<group>"; };
+		CFA558BF24E4E6B200BFBED8 /* CoreMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMocks.swift; sourceTree = "<group>"; };
 		CFADC90424FEBD9F00566C0F /* RemoteCommandsConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandsConstants.swift; sourceTree = "<group>"; };
 		CFB1ED84244F79B8005CC6F1 /* DataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayer.swift; sourceTree = "<group>"; };
 		CFB1ED86244F905C005CC6F1 /* DataLayerCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayerCollection.swift; sourceTree = "<group>"; };
@@ -1551,7 +1779,7 @@
 		D7596C8B2451AE35003AB939 /* DispatchValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchValidator.swift; sourceTree = "<group>"; };
 		D7596C982451D141003AB939 /* TealiumModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumModule.swift; sourceTree = "<group>"; };
 		D7596C9A2451D6E1003AB939 /* ModuleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleDelegate.swift; sourceTree = "<group>"; };
-		D762FC41232F97EF00CBC4D0 /* TealiumLocationTests-iOSs.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "TealiumLocationTests-iOSs.xctest"; path = "TealiumLocationTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D762FC41232F97EF00CBC4D0 /* TealiumLocationTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumLocationTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D76FE19D2193093A00D73EC5 /* TealiumAttribution.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumAttribution.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D76FE19E2193093A00D73EC5 /* TealiumAttribution-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TealiumAttribution-Info.plist"; sourceTree = SOURCE_ROOT; };
 		D7727EF62260C2DB00FCE537 /* TealiumTrace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumTrace.swift; sourceTree = "<group>"; };
@@ -1578,8 +1806,8 @@
 		D7805836233A65FB00DAD90E /* TealiumVisitorService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumVisitorService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7805837233A65FE00DAD90E /* TealiumVisitorService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TealiumVisitorService-Info.plist"; sourceTree = "<group>"; };
 		D7805849233A672800DAD90E /* TealiumVisitorServiceTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumVisitorServiceTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D7805850233A68DC00DAD90E /* VisitorProfileManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorProfileManagerTests.swift; sourceTree = "<group>"; };
-		D7805852233A68DC00DAD90E /* TealiumVisitorProfileModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TealiumVisitorProfileModuleTests.swift; sourceTree = "<group>"; };
+		D7805850233A68DC00DAD90E /* VisitorServiceManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorServiceManagerTests.swift; sourceTree = "<group>"; };
+		D7805852233A68DC00DAD90E /* VisitorServiceModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorServiceModuleTests.swift; sourceTree = "<group>"; };
 		D7805854233A68DC00DAD90E /* visitor-all-nil.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "visitor-all-nil.json"; sourceTree = "<group>"; };
 		D7805855233A68DC00DAD90E /* visitor-empties.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "visitor-empties.json"; sourceTree = "<group>"; };
 		D7805856233A68DC00DAD90E /* visitor.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = visitor.json; sourceTree = "<group>"; };
@@ -1587,7 +1815,7 @@
 		D780585B233A68DD00DAD90E /* MockDiskStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDiskStorage.swift; sourceTree = "<group>"; };
 		D780585D233A68DD00DAD90E /* XCTestCaseUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTestCaseUtilities.swift; sourceTree = "<group>"; };
 		D780585F233A68DD00DAD90E /* VisitorProfileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorProfileTests.swift; sourceTree = "<group>"; };
-		D7805860233A68DD00DAD90E /* VisitorProfileRetrieverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorProfileRetrieverTests.swift; sourceTree = "<group>"; };
+		D7805860233A68DD00DAD90E /* VisitorServiceRetrieverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorServiceRetrieverTests.swift; sourceTree = "<group>"; };
 		D7805876233A691800DAD90E /* VisitorServiceModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisitorServiceModule.swift; sourceTree = "<group>"; };
 		D7881EEE21998A44002CDCC1 /* TealiumPersistentData-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TealiumPersistentData-Info.plist"; sourceTree = SOURCE_ROOT; };
 		D7881EFF21998DAD002CDCC1 /* TealiumLifecycle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumLifecycle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1673,17 +1901,51 @@
 		D7F1EBD42361CBF80088B103 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		D7F2DEE2233279A1000D0E0F /* TealiumCoreTests-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumCoreTests-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7F2DF0F233279B2000D0E0F /* TealiumCoreTests-tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TealiumCoreTests-tvOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D7F8D8E22460613300796E12 /* TealiumLifecycle copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TealiumLifecycle copy-Info.plist"; path = "/Users/craigrouse/mobiledev/swift-library/tealium-swift-builder/builder/TealiumLifecycle copy-Info.plist"; sourceTree = "<absolute>"; };
 		D7FE15A022E61080000ABF56 /* TealiumDispatchQueueExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumDispatchQueueExtensions.swift; sourceTree = "<group>"; };
 		D7FF987B24ACBD1300E87A80 /* AutoTrackingExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoTrackingExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CF13D83D24FD5FE30024E79A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D87724FD61F80024E79A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D8A524FD61FC0024E79A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D8D424FD62000024E79A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CF7AF2D02437ED5500D9294C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CF729B21244A5E7300713196 /* SwiftShell in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF9F427424F435F3009B93C2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2116,9 +2378,11 @@
 		712184841E5360B5000DCE07 /* test_tealium_lifecycle */ = {
 			isa = PBXGroup;
 			children = (
+				CF9F3F6024EDC02800C9D19E /* LifecycleStubs.swift */,
+				CF9F3F6124EDC02800C9D19E /* LifecycleStubsEvents.swift */,
+				CF9F3F5F24EDC02800C9D19E /* LifecycleStubsExpected.swift */,
 				712184851E5360B5000DCE07 /* lifecycle_events.json */,
 				712184861E5360B5000DCE07 /* lifecycle_events_with_crashes.json */,
-				712184881E5360B5000DCE07 /* TealiumLifecycleIntegrationTests.swift */,
 				712184931E54115B000DCE07 /* LifecycleModuleTests.swift */,
 				7121848A1E5360B5000DCE07 /* TealiumLifecyclePersistentDataTests.swift */,
 				7121848B1E5360B5000DCE07 /* TealiumLifecycleTests.swift */,
@@ -2169,8 +2433,8 @@
 				CFF242D523CE78390091B7BF /* test_tealium_location */,
 				71F63A511E79B001006A723F /* test_tealium_remotecommands */,
 				7166E7F61E6007B000FCA9EE /* test_tealium_tagmanagement */,
-				716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */,
 				D780584F233A68AD00DAD90E /* test_tealium_visitorservice */,
+				716C7D1B1DDBC3A500512C99 /* TestTealiumHelper.swift */,
 			);
 			name = tests;
 			path = ../support/tests;
@@ -2205,6 +2469,8 @@
 				D7D5C1AB23D74B44002DB7C6 /* PublishSettingsTests.swift */,
 				D7D5C1AF23D755CB002DB7C6 /* MockURLSessionPublishSettings.swift */,
 				CF7F94892469E98500399774 /* PerformanceTests.swift */,
+				CFA558BF24E4E6B200BFBED8 /* CoreMocks.swift */,
+				CF8FF2C524466FD90081C1A9 /* big-visitor.json */,
 				D72DB0BF24F7BF4000183D48 /* AppDelegateProxyTests.swift */,
 			);
 			path = test_tealium_core;
@@ -2272,7 +2538,10 @@
 				D7B04D2E219995CD00C87E22 /* TealiumVolatileData-Info.plist */,
 				D798C4692342416600EE665E /* TealiumTests-Info.plist */,
 				CFF242BE23CE778B0091B7BF /* TealiumLocation-Info.plist */,
-				D7F8D8E22460613300796E12 /* TealiumLifecycle copy-Info.plist */,
+				CF13D84524FD5FE30024E79A /* TealiumAppDelegateProxyTests-iOS-Info.plist */,
+				CF13D87F24FD61F80024E79A /* TealiumTraceTests-iOS-Info.plist */,
+				CF13D8AD24FD61FD0024E79A /* TealiumTraceTests-macOS-Info.plist */,
+				CF13D8DC24FD62000024E79A /* TealiumTraceTests-tvOS-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2298,7 +2567,7 @@
 				D788A504231988B000BC6D60 /* TealiumLifecycleTests-iOS.xctest */,
 				D788A552231989DF00BC6D60 /* TealiumRemoteCommandsTests-iOS.xctest */,
 				D788A56B23198A3100BC6D60 /* TealiumTagManagementTests-iOS.xctest */,
-				D762FC41232F97EF00CBC4D0 /* TealiumLocationTests-iOSs.xctest */,
+				D762FC41232F97EF00CBC4D0 /* TealiumLocationTests-iOS.xctest */,
 				D7F2DEE2233279A1000D0E0F /* TealiumCoreTests-macOS.xctest */,
 				D7F2DF0F233279B2000D0E0F /* TealiumCoreTests-tvOS.xctest */,
 				D7805836233A65FB00DAD90E /* TealiumVisitorService.framework */,
@@ -2317,6 +2586,11 @@
 				D72E8C4A2361E69F00BA3786 /* WatchOS.framework */,
 				CFF242A123CE774C0091B7BF /* TealiumLocation.framework */,
 				CF7AF2D32437ED5500D9294C /* script-release */,
+				CF13D84424FD5FE30024E79A /* TealiumAppDelegateProxyTests-iOS.xctest */,
+				CF13D87E24FD61F80024E79A /* TealiumTraceTests-iOS.xctest */,
+				CF13D8AC24FD61FC0024E79A /* TealiumTraceTests-macOS.xctest */,
+				CF13D8DB24FD62000024E79A /* TealiumTraceTests-tvOS.xctest */,
+				CF9F427A24F435F3009B93C2 /* TealiumTagManagementIntegrationTests-iOS.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2481,6 +2755,7 @@
 				D7052C602098A02F00723DC5 /* ConsentManagerIntegrationTests.swift */,
 				D73E7A0C209B0601001D05D3 /* ConsentManagerModuleUnitTests.swift */,
 				D788A59C2321392D00BC6D60 /* ConsentMockDiskStorage.swift */,
+				CF9F427C24F438E1009B93C2 /* MockConsentDelegate.swift */,
 			);
 			path = consent_manager;
 			sourceTree = "<group>";
@@ -2556,6 +2831,8 @@
 				CFF242D923CE78390091B7BF /* TealiumLocationTests.swift */,
 				CF7F948324650F9300399774 /* MockLocationDiskStorage.swift */,
 				CFE5D85F24D09BC0007E092C /* MockTealiumLocationManager.swift */,
+				CF9F423824F0597F009B93C2 /* MockLocationDelegate.swift */,
+				CF9F423724F0597F009B93C2 /* MockLocationModuleDelegate.swift */,
 			);
 			path = test_tealium_location;
 			sourceTree = "<group>";
@@ -2789,11 +3066,10 @@
 				D7805858233A68DD00DAD90E /* mocks */,
 				D7805853233A68DC00DAD90E /* stubs */,
 				D780585C233A68DD00DAD90E /* utilities */,
-				D7805852233A68DC00DAD90E /* TealiumVisitorProfileModuleTests.swift */,
-				D7805850233A68DC00DAD90E /* VisitorProfileManagerTests.swift */,
-				D7805860233A68DD00DAD90E /* VisitorProfileRetrieverTests.swift */,
+				D7805852233A68DC00DAD90E /* VisitorServiceModuleTests.swift */,
+				D7805850233A68DC00DAD90E /* VisitorServiceManagerTests.swift */,
+				D7805860233A68DD00DAD90E /* VisitorServiceRetrieverTests.swift */,
 				D780585F233A68DD00DAD90E /* VisitorProfileTests.swift */,
-				CF8FF2CA244670150081C1A9 /* VisitorProfilePerformanceTests.swift */,
 			);
 			path = test_tealium_visitorservice;
 			sourceTree = "<group>";
@@ -2801,7 +3077,6 @@
 		D7805853233A68DC00DAD90E /* stubs */ = {
 			isa = PBXGroup;
 			children = (
-				CF8FF2C524466FD90081C1A9 /* big-visitor.json */,
 				D7805854233A68DC00DAD90E /* visitor-all-nil.json */,
 				D7805855233A68DC00DAD90E /* visitor-empties.json */,
 				D7805856233A68DC00DAD90E /* visitor.json */,
@@ -3095,6 +3370,104 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		CF13D80D24FD5FE30024E79A /* TealiumAppDelegateProxyTests-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF13D84124FD5FE30024E79A /* Build configuration list for PBXNativeTarget "TealiumAppDelegateProxyTests-iOS" */;
+			buildPhases = (
+				CF13D82024FD5FE30024E79A /* Sources */,
+				CF13D83D24FD5FE30024E79A /* Frameworks */,
+				CF13D84024FD5FE30024E79A /* SwiftLint */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF13D80E24FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81024FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81224FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81424FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81624FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81824FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81A24FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81C24FD5FE30024E79A /* PBXTargetDependency */,
+				CF13D81E24FD5FE30024E79A /* PBXTargetDependency */,
+			);
+			name = "TealiumAppDelegateProxyTests-iOS";
+			productName = "tealium-swift-tests";
+			productReference = CF13D84424FD5FE30024E79A /* TealiumAppDelegateProxyTests-iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CF13D84824FD61F80024E79A /* TealiumTraceTests-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF13D87B24FD61F80024E79A /* Build configuration list for PBXNativeTarget "TealiumTraceTests-iOS" */;
+			buildPhases = (
+				CF13D85B24FD61F80024E79A /* Sources */,
+				CF13D87724FD61F80024E79A /* Frameworks */,
+				CF13D87824FD61F80024E79A /* Resources */,
+				CF13D87A24FD61F80024E79A /* SwiftLint */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF13D84924FD61F80024E79A /* PBXTargetDependency */,
+				CF13D84B24FD61F80024E79A /* PBXTargetDependency */,
+				CF13D84D24FD61F80024E79A /* PBXTargetDependency */,
+				CF13D84F24FD61F80024E79A /* PBXTargetDependency */,
+				CF13D85124FD61F80024E79A /* PBXTargetDependency */,
+				CF13D85324FD61F80024E79A /* PBXTargetDependency */,
+				CF13D85524FD61F80024E79A /* PBXTargetDependency */,
+				CF13D85724FD61F80024E79A /* PBXTargetDependency */,
+				CF13D85924FD61F80024E79A /* PBXTargetDependency */,
+			);
+			name = "TealiumTraceTests-iOS";
+			productName = "tealium-swift-tests";
+			productReference = CF13D87E24FD61F80024E79A /* TealiumTraceTests-iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CF13D88024FD61FC0024E79A /* TealiumTraceTests-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF13D8A924FD61FC0024E79A /* Build configuration list for PBXNativeTarget "TealiumTraceTests-macOS" */;
+			buildPhases = (
+				CF13D88924FD61FC0024E79A /* Sources */,
+				CF13D8A524FD61FC0024E79A /* Frameworks */,
+				CF13D8A624FD61FC0024E79A /* Resources */,
+				CF13D8A824FD61FC0024E79A /* SwiftLint */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF13D88124FD61FC0024E79A /* PBXTargetDependency */,
+				CF13D88324FD61FC0024E79A /* PBXTargetDependency */,
+				CF13D88524FD61FC0024E79A /* PBXTargetDependency */,
+				CF13D88724FD61FC0024E79A /* PBXTargetDependency */,
+			);
+			name = "TealiumTraceTests-macOS";
+			productName = "tealium-swift-tests";
+			productReference = CF13D8AC24FD61FC0024E79A /* TealiumTraceTests-macOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CF13D8AE24FD62000024E79A /* TealiumTraceTests-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF13D8D824FD62000024E79A /* Build configuration list for PBXNativeTarget "TealiumTraceTests-tvOS" */;
+			buildPhases = (
+				CF13D8B924FD62000024E79A /* Sources */,
+				CF13D8D424FD62000024E79A /* Frameworks */,
+				CF13D8D524FD62000024E79A /* Resources */,
+				CF13D8D724FD62000024E79A /* SwiftLint */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF13D8AF24FD62000024E79A /* PBXTargetDependency */,
+				CF13D8B124FD62000024E79A /* PBXTargetDependency */,
+				CF13D8B324FD62000024E79A /* PBXTargetDependency */,
+				CF13D8B524FD62000024E79A /* PBXTargetDependency */,
+				CF13D8B724FD62000024E79A /* PBXTargetDependency */,
+			);
+			name = "TealiumTraceTests-tvOS";
+			productName = "tealium-swift-tests";
+			productReference = CF13D8DB24FD62000024E79A /* TealiumTraceTests-tvOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		CF7AF2D22437ED5500D9294C /* script-release */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CF7AF2D92437ED5500D9294C /* Build configuration list for PBXNativeTarget "script-release" */;
@@ -3114,6 +3487,25 @@
 			productName = "script-release";
 			productReference = CF7AF2D32437ED5500D9294C /* script-release */;
 			productType = "com.apple.product-type.tool";
+		};
+		CF9F426924F435F3009B93C2 /* TealiumTagManagementIntegrationTests-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF9F427724F435F3009B93C2 /* Build configuration list for PBXNativeTarget "TealiumTagManagementIntegrationTests-iOS" */;
+			buildPhases = (
+				CF9F426E24F435F3009B93C2 /* Sources */,
+				CF9F427424F435F3009B93C2 /* Frameworks */,
+				CF9F427524F435F3009B93C2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF9F426A24F435F3009B93C2 /* PBXTargetDependency */,
+				CF9F426C24F435F3009B93C2 /* PBXTargetDependency */,
+			);
+			name = "TealiumTagManagementIntegrationTests-iOS";
+			productName = "tealium-swift-tests";
+			productReference = CF9F427A24F435F3009B93C2 /* TealiumTagManagementIntegrationTests-iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		CFF242A023CE774C0091B7BF /* TealiumLocation */ = {
 			isa = PBXNativeTarget;
@@ -3332,7 +3724,7 @@
 			);
 			name = "TealiumLocationTests-iOS";
 			productName = "tealium-swift-tests";
-			productReference = D762FC41232F97EF00CBC4D0 /* TealiumLocationTests-iOSs.xctest */;
+			productReference = D762FC41232F97EF00CBC4D0 /* TealiumLocationTests-iOS.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		D76FE1222193093A00D73EC5 /* TealiumAttribution */ = {
@@ -3471,7 +3863,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				D788A58B23198E7700BC6D60 /* PBXTargetDependency */,
+				CF9F424B24F427D7009B93C2 /* PBXTargetDependency */,
 				D788A43223196C0F00BC6D60 /* PBXTargetDependency */,
 			);
 			name = "TealiumAutotrackingTests-iOS";
@@ -3530,10 +3922,10 @@
 			buildRules = (
 			);
 			dependencies = (
+				CF9F424D24F427ED009B93C2 /* PBXTargetDependency */,
 				CF64A135246B465D00FA456E /* PBXTargetDependency */,
 				D7075A0C2368E8D100AE3D69 /* PBXTargetDependency */,
 				D7F2DF3C2332802D000D0E0F /* PBXTargetDependency */,
-				D7F2DF3E2332802D000D0E0F /* PBXTargetDependency */,
 				D7F2DF402332802D000D0E0F /* PBXTargetDependency */,
 				D7F2DF462332802D000D0E0F /* PBXTargetDependency */,
 				D7F2DF502332802D000D0E0F /* PBXTargetDependency */,
@@ -3868,7 +4260,6 @@
 			);
 			dependencies = (
 				D7075A102368E8E100AE3D69 /* PBXTargetDependency */,
-				D7F2DF1823327B26000D0E0F /* PBXTargetDependency */,
 				D7F2DF1A23327B26000D0E0F /* PBXTargetDependency */,
 				D7F2DF2023327B26000D0E0F /* PBXTargetDependency */,
 				D7F2DF2A23327B26000D0E0F /* PBXTargetDependency */,
@@ -3967,7 +4358,6 @@
 					};
 					D788A46323196E4400BC6D60 = {
 						LastSwiftMigration = 1130;
-						ProvisioningStyle = Manual;
 					};
 					D788A47F231970B900BC6D60 = {
 						ProvisioningStyle = Automatic;
@@ -3986,9 +4376,6 @@
 						ProvisioningStyle = Manual;
 					};
 					D798C31F23423DBA00EE665E = {
-						ProvisioningStyle = Manual;
-					};
-					D798C33123423F3F00EE665E = {
 						ProvisioningStyle = Manual;
 					};
 					D798C34123423F4300EE665E = {
@@ -4018,9 +4405,6 @@
 					D7CED25721932DD500ACD291 = {
 						LastSwiftMigration = 1130;
 						ProvisioningStyle = Manual;
-					};
-					D7F2DEB7233279A1000D0E0F = {
-						ProvisioningStyle = Automatic;
 					};
 					D7F2DEE4233279B2000D0E0F = {
 						ProvisioningStyle = Automatic;
@@ -4056,6 +4440,7 @@
 				D7B04D08219994D400C87E22 /* TealiumRemoteCommands */,
 				D755DD1121945F99003C6BA1 /* TealiumTagManagement */,
 				D7805825233A65FB00DAD90E /* TealiumVisitorService */,
+				CF13D80D24FD5FE30024E79A /* TealiumAppDelegateProxyTests-iOS */,
 				D788A3D9231841F200BC6D60 /* TealiumAttributionTests-iOS */,
 				D788A42F23196C0F00BC6D60 /* TealiumAutotrackingTests-iOS */,
 				D788A44723196D2500BC6D60 /* TealiumCollectTests-iOS */,
@@ -4073,6 +4458,10 @@
 				D762FC30232F97EF00CBC4D0 /* TealiumLocationTests-iOS */,
 				D788A541231989DF00BC6D60 /* TealiumRemoteCommandsTests-iOS */,
 				D788A55923198A3100BC6D60 /* TealiumTagManagementTests-iOS */,
+				CF13D84824FD61F80024E79A /* TealiumTraceTests-iOS */,
+				CF13D88024FD61FC0024E79A /* TealiumTraceTests-macOS */,
+				CF13D8AE24FD62000024E79A /* TealiumTraceTests-tvOS */,
+				CF9F426924F435F3009B93C2 /* TealiumTagManagementIntegrationTests-iOS */,
 				D7805838233A672800DAD90E /* TealiumVisitorServiceTests-iOS */,
 				D798C4402342411E00EE665E /* TealiumVisitorServiceTests-tvOS */,
 				D798C46A2342416900EE665E /* TealiumVisitorServiceTests-macOS */,
@@ -4086,6 +4475,34 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CF13D87824FD61F80024E79A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D8A624FD61FC0024E79A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D8D524FD62000024E79A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF9F427524F435F3009B93C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CFF2429F23CE774C0091B7BF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4210,7 +4627,6 @@
 			files = (
 				D7805867233A68DD00DAD90E /* visitor-nils.json in Resources */,
 				D7805865233A68DD00DAD90E /* visitor-empties.json in Resources */,
-				CF8FF2C724466FD90081C1A9 /* big-visitor.json in Resources */,
 				D7805866233A68DD00DAD90E /* visitor.json in Resources */,
 				D7805864233A68DD00DAD90E /* visitor-all-nil.json in Resources */,
 			);
@@ -4255,7 +4671,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7187F2124768F5100CF0AB0 /* large-event-data.json in Resources */,
+				CF13D8F124FDB66D0024E79A /* large-event-data.json in Resources */,
+				CF9F424524F4191F009B93C2 /* big-visitor.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4334,7 +4751,6 @@
 			files = (
 				D798C44F2342411E00EE665E /* visitor-nils.json in Resources */,
 				D798C4502342411E00EE665E /* visitor-empties.json in Resources */,
-				CF8FF2C824466FD90081C1A9 /* big-visitor.json in Resources */,
 				D798C4512342411E00EE665E /* visitor.json in Resources */,
 				D798C4522342411E00EE665E /* visitor-all-nil.json in Resources */,
 			);
@@ -4346,7 +4762,6 @@
 			files = (
 				D798C4792342416900EE665E /* visitor-nils.json in Resources */,
 				D798C47A2342416900EE665E /* visitor-empties.json in Resources */,
-				CF8FF2C924466FD90081C1A9 /* big-visitor.json in Resources */,
 				D798C47B2342416900EE665E /* visitor.json in Resources */,
 				D798C47C2342416900EE665E /* visitor-all-nil.json in Resources */,
 			);
@@ -4380,7 +4795,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7187F2224768F5100CF0AB0 /* large-event-data.json in Resources */,
+				CF13D8F724FDB66E0024E79A /* large-event-data.json in Resources */,
+				CF9F424624F4191F009B93C2 /* big-visitor.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4388,13 +4804,75 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7187F2324768F5100CF0AB0 /* large-event-data.json in Resources */,
+				CF13D8FD24FDB66E0024E79A /* large-event-data.json in Resources */,
+				CF9F424724F4191F009B93C2 /* big-visitor.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		CF13D84024FD5FE30024E79A /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../support/tests/test_tealium_core/*.swift",
+			);
+			name = SwiftLint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint-tests.sh\n";
+		};
+		CF13D87A24FD61F80024E79A /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../support/tests/test_tealium_core/*.swift",
+			);
+			name = SwiftLint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint-tests.sh\n";
+		};
+		CF13D8A824FD61FC0024E79A /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../support/tests/test_tealium_core/*.swift",
+			);
+			name = SwiftLint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint-tests.sh\n";
+		};
+		CF13D8D724FD62000024E79A /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../support/tests/test_tealium_core/*.swift",
+				"$(SRCROOT)/../support/tests/test_tealium_tagmanagement/*.swift",
+			);
+			name = SwiftLint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/../tealium/scripts/run-swiftlint-tests.sh\n";
+		};
 		D736D6AF2195CCB600B3BDEE /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4592,7 +5070,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../support/tests/test_tealium_connectivity/*.swift",
+				"$(SRCROOT)/../support/tests/test_tealium_core/connectivity/*.swift",
 			);
 			name = SwiftLint;
 			outputPaths = (
@@ -4699,7 +5177,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../support/tests/test_tealium_connectivity/*.swift",
+				"$(SRCROOT)/../support/tests/test_tealium_core/connectivity/*.swift",
 			);
 			name = SwiftLint;
 			outputPaths = (
@@ -4716,7 +5194,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../support/tests/test_tealium_connectivity/*.swift",
+				"$(SRCROOT)/../support/tests/test_tealium_core/connectivity/*.swift",
 			);
 			name = SwiftLint;
 			outputPaths = (
@@ -4848,11 +5326,58 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CF13D82024FD5FE30024E79A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF13D84724FD601E0024E79A /* MockURLSessionPublishSettings.swift in Sources */,
+				CF13D83524FD5FE30024E79A /* AppDelegateProxyTests.swift in Sources */,
+				CF13D83824FD5FE30024E79A /* TestTealiumHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D85B24FD61F80024E79A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF13D87224FD61F80024E79A /* TestTealiumHelper.swift in Sources */,
+				CF13D90224FDBA700024E79A /* TealiumTraceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D88924FD61FC0024E79A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF13D8A124FD61FC0024E79A /* TestTealiumHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF13D8B924FD62000024E79A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF13D8D324FD62000024E79A /* TestTealiumHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CF7AF2CF2437ED5500D9294C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CF7AF2D62437ED5500D9294C /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF9F426E24F435F3009B93C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF9F426F24F435F3009B93C2 /* TealiumTagManagementModuleTests.swift in Sources */,
+				CF9F427024F435F3009B93C2 /* WKWebViewTests.swift in Sources */,
+				CF9F427124F435F3009B93C2 /* TealiumTagManagementUtilsTests.swift in Sources */,
+				CF9F427224F435F3009B93C2 /* MockTagManagementWebView.swift in Sources */,
+				CF9F427324F435F3009B93C2 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4961,6 +5486,7 @@
 				D719955822B7F190005BE543 /* Disk.swift in Sources */,
 				D7AA280122D77BE000254ADB /* TealiumLoggerConstants.swift in Sources */,
 				D719955922B7F190005BE543 /* Disk+Errors.swift in Sources */,
+				CF13D84624FD600C0024E79A /* TealiumAppDelegateProxy.swift in Sources */,
 				D7B04D5221999AE400C87E22 /* TealiumMulticastDelegate.swift in Sources */,
 				D74C47EC22C505F600B1E0AC /* TealiumQueues.swift in Sources */,
 				CF3C1AF22473231900A4DEE9 /* UserConsentPreferences.swift in Sources */,
@@ -5023,7 +5549,6 @@
 				D7B1A2632462F1630058028D /* DispatchListener.swift in Sources */,
 				D79A1CAA244A0FF500BBA8B3 /* DeviceDataCarrierInfo.swift in Sources */,
 				D79A1C90244A0F3D00BBA8B3 /* ConnectivityDelegate.swift in Sources */,
-				D72FAD4124F442B000700ABF /* TealiumAppDelegateProxy.swift in Sources */,
 				43DE590D11729BCF1EF22124 /* AnyCodable.swift in Sources */,
 				D7CCB57522C65B0600FF1103 /* TealiumDiskStorageConfig.swift in Sources */,
 				D78CF3FC24644C8100D00858 /* TealiumLoggerExtensions.swift in Sources */,
@@ -5054,9 +5579,11 @@
 			files = (
 				CFE5D86224D09C1C007E092C /* MockTealiumLocationManager.swift in Sources */,
 				CFF242E723CE78390091B7BF /* TealiumLocationTests.swift in Sources */,
-				D762FC3A232F97EF00CBC4D0 /* TestTealiumHelper.swift in Sources */,
+				CF9F423924F05980009B93C2 /* MockLocationModuleDelegate.swift in Sources */,
 				CFF242ED23CE78390091B7BF /* MockLocationManager.swift in Sources */,
 				CF7F948724650FB500399774 /* MockLocationDiskStorage.swift in Sources */,
+				CF9F423A24F05980009B93C2 /* MockLocationDelegate.swift in Sources */,
+				CFA55A3F24E5903800BFBED8 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5103,13 +5630,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D780586D233A68DD00DAD90E /* VisitorProfileTests.swift in Sources */,
-				D7805863233A68DD00DAD90E /* TealiumVisitorProfileModuleTests.swift in Sources */,
 				D798C4832342585700EE665E /* MockDiskStorage.swift in Sources */,
-				D7805861233A68DD00DAD90E /* VisitorProfileManagerTests.swift in Sources */,
-				D780586E233A68DE00DAD90E /* VisitorProfileRetrieverTests.swift in Sources */,
-				D7CAD890234BBCD700668AFD /* MockURLSession.swift in Sources */,
-				CF8FF2CC244670200081C1A9 /* VisitorProfilePerformanceTests.swift in Sources */,
-				D7805842233A672800DAD90E /* TestTealiumHelper.swift in Sources */,
+				D7805861233A68DD00DAD90E /* VisitorServiceManagerTests.swift in Sources */,
+				CFA55A2324E4F79800BFBED8 /* TestTealiumHelper.swift in Sources */,
+				D780586E233A68DE00DAD90E /* VisitorServiceRetrieverTests.swift in Sources */,
+				CFA55A1C24E4F58000BFBED8 /* MockURLSession.swift in Sources */,
 				CFC3FB9D24C6232400763C9E /* MockTealiumVisitorServiceManager.swift in Sources */,
 				D780586B233A68DD00DAD90E /* XCTestCaseUtilities.swift in Sources */,
 			);
@@ -5136,7 +5661,7 @@
 				D788A3F22318424600BC6D60 /* TealiumAttributionModuleTests.swift in Sources */,
 				D7FF987D24AD0B6F00E87A80 /* MockAttributionData.swift in Sources */,
 				D788A3F32318424600BC6D60 /* TealiumAttributionDataTests.swift in Sources */,
-				D788A3E3231841F200BC6D60 /* TestTealiumHelper.swift in Sources */,
+				CFA55A2B24E5902A00BFBED8 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5145,7 +5670,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D788A58C23198E8300BC6D60 /* AutotrackingModuleTests.swift in Sources */,
-				D788A43A23196C0F00BC6D60 /* TestTealiumHelper.swift in Sources */,
+				CFA55A2C24E5902B00BFBED8 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5156,7 +5681,7 @@
 				D788A5AB2326AD1700BC6D60 /* MockURLSession.swift in Sources */,
 				D788A5F12327A7C800BC6D60 /* TealiumCollectTests.swift in Sources */,
 				D7A9DAAE246A9C5F00DE4CB6 /* CollectModuleTests.swift in Sources */,
-				D788A45123196D2500BC6D60 /* TestTealiumHelper.swift in Sources */,
+				CFA55A2D24E5902B00BFBED8 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5164,7 +5689,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D788A46E23196E4400BC6D60 /* TestTealiumHelper.swift in Sources */,
+				CFA5582A24E4B6FD00BFBED8 /* TealiumConnectivityTests.swift in Sources */,
+				CFA55A3024E5902D00BFBED8 /* TestTealiumHelper.swift in Sources */,
+				CFA55A4424E59D2000BFBED8 /* MockURLSessionConnectivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5172,12 +5699,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7187F2D24768F5100CF0AB0 /* EventDataManagerTests.swift in Sources */,
 				CF782CF32475DB9E009D974C /* MockAppDataDiskStorage.swift in Sources */,
-				D79EFE5A24E4100100F43375 /* TealiumTraceTests.swift in Sources */,
-				D7187F3324768F5100CF0AB0 /* MockDataLayerManager.swift in Sources */,
-				D7187F3624768F5100CF0AB0 /* MockEventDataDiskStorage.swift in Sources */,
+				CF13D8F324FDB66D0024E79A /* SessionManagerTests.swift in Sources */,
 				CF3C1AFD2473251F00A4DEE9 /* ConsentMockDiskStorage.swift in Sources */,
+				D788A4B12319719F00BC6D60 /* TealiumConfigTests.swift in Sources */,
+				CFA5595624E4E84F00BFBED8 /* CoreMocks.swift in Sources */,
 				D7187F3924768F5100CF0AB0 /* SessionStarterTests.swift in Sources */,
 				CFE55FBA24FED12200956B9D /* MockHDLDiskStorage.swift in Sources */,
 				D788A4B12319719F00BC6D60 /* TealiumConfigTests.swift in Sources */,
@@ -5188,20 +5714,22 @@
 				D7D5C1B023D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */,
 				D7885B5D24AE56B900ECFEC7 /* ConsentManagerIntegrationTests.swift in Sources */,
 				D71912672472C20F000FD63E /* DispatchQueueTests.swift in Sources */,
+				CFA55A3324E5903000BFBED8 /* TestTealiumHelper.swift in Sources */,
 				CFB7D83624C2576C000BA6F3 /* TealiumAppDataTests.swift in Sources */,
+				CF13D8EA24FDB6350024E79A /* EventDataManagerTests.swift in Sources */,
 				D7D5C1AC23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */,
 				D788A4B82319719F00BC6D60 /* TealiumUtilsTests.swift in Sources */,
+				CF13D8F224FDB66D0024E79A /* MockEventDataDiskStorage.swift in Sources */,
+				CF13D8F024FDB66D0024E79A /* MockDataLayerManager.swift in Sources */,
 				D719126A2472C21D000FD63E /* DispatchManagerTests.swift in Sources */,
 				CF3C1AFA2473251700A4DEE9 /* ConsentManagerModuleUnitTests.swift in Sources */,
-				D7187F2424768F5100CF0AB0 /* SessionManagerTests.swift in Sources */,
-				D72DB0C024F7BF4000183D48 /* AppDelegateProxyTests.swift in Sources */,
+				CF9F427D24F438E1009B93C2 /* MockConsentDelegate.swift in Sources */,
+				CF13D8F524FDB66D0024E79A /* SessionStarterTests.swift in Sources */,
+				CF13D8F424FDB66D0024E79A /* DataLayerTests.swift in Sources */,
 				D788A4B92319719F00BC6D60 /* TealiumDiskTests.swift in Sources */,
 				D7885B6224AE579B00ECFEC7 /* TealiumModulesManagerTests.swift in Sources */,
-				D788A48A231970B900BC6D60 /* TestTealiumHelper.swift in Sources */,
-				D71912782474079C000FD63E /* TealiumConnectivityTests.swift in Sources */,
-				D7187F3E2476BED900CF0AB0 /* MockURLSessionConnectivity.swift in Sources */,
+				CF13D8ED24FDB65A0024E79A /* MockSessionStarter.swift in Sources */,
 				D79A7A09247D14FE00B1D486 /* TealiumDeviceDataTests.swift in Sources */,
-				D7187F3024768F5100CF0AB0 /* MockSessionStarter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5209,13 +5737,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D788A5082319890300BC6D60 /* TealiumLifecycleIntegrationTests.swift in Sources */,
 				D788A5092319890300BC6D60 /* LifecycleModuleTests.swift in Sources */,
 				D788A50A2319890300BC6D60 /* TealiumLifecyclePersistentDataTests.swift in Sources */,
+				CF9F3F6224EDC02800C9D19E /* LifecycleStubsExpected.swift in Sources */,
 				D788A59B231FB8F300BC6D60 /* LifecycleMockDiskStorage.swift in Sources */,
 				D788A50B2319890300BC6D60 /* TealiumLifecycleTests.swift in Sources */,
+				CFA55A3924E5903400BFBED8 /* TestTealiumHelper.swift in Sources */,
+				CF9F3F6524EDC02800C9D19E /* LifecycleStubs.swift in Sources */,
 				D788A50C2319890300BC6D60 /* TealiumLifecycleSessionTests.swift in Sources */,
-				D788A4F9231988B000BC6D60 /* TestTealiumHelper.swift in Sources */,
+				CF9F3F6824EDC02800C9D19E /* LifecycleStubsEvents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5230,11 +5760,11 @@
 				CF6E9E31249AEFCE0032A663 /* TealiumRemoteCommandResponseTests.swift in Sources */,
 				CF7A8F162489A12F003AE25D /* MockRemoteCommandDelegate.swift in Sources */,
 				D788A55723198A0C00BC6D60 /* TealiumRemoteCommandsTests.swift in Sources */,
+				CFA55A4124E5903900BFBED8 /* TestTealiumHelper.swift in Sources */,
 				D788A55823198A0C00BC6D60 /* TealiumRemoteHTTPCommandTests.swift in Sources */,
 				CF7A8F182489C01E003AE25D /* MockURLSessionHTTPRemoteCommand.swift in Sources */,
 				CF6E9E33249AEFD90032A663 /* TealiumRemoteCommandExtensionsTests.swift in Sources */,
 				CF6E9E35249AF7360032A663 /* MockTealiumRemoteCommandResponse.swift in Sources */,
-				D788A54B231989DF00BC6D60 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5243,10 +5773,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D788A56F23198A4D00BC6D60 /* TealiumTagManagementModuleTests.swift in Sources */,
-				D788A57123198A5500BC6D60 /* WKWebViewTests.swift in Sources */,
 				D788A57023198A4D00BC6D60 /* TealiumTagManagementUtilsTests.swift in Sources */,
 				CF7F947A2464A06600399774 /* MockTagManagementWebView.swift in Sources */,
-				D788A56423198A3100BC6D60 /* TestTealiumHelper.swift in Sources */,
+				CFA55A4224E5903A00BFBED8 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5257,7 +5786,7 @@
 				D798C31323423DB600EE665E /* MockURLSession.swift in Sources */,
 				D798C31423423DB600EE665E /* TealiumCollectTests.swift in Sources */,
 				D798C31523423DB600EE665E /* CollectModuleTests.swift in Sources */,
-				D798C31623423DB600EE665E /* TestTealiumHelper.swift in Sources */,
+				CFA55A2E24E5902C00BFBED8 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5268,7 +5797,7 @@
 				D798C32523423DBA00EE665E /* MockURLSession.swift in Sources */,
 				D798C32623423DBA00EE665E /* TealiumCollectTests.swift in Sources */,
 				D798C32723423DBA00EE665E /* CollectModuleTests.swift in Sources */,
-				D798C32823423DBA00EE665E /* TestTealiumHelper.swift in Sources */,
+				CFA55A2F24E5902C00BFBED8 /* TestTealiumHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5276,7 +5805,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D798C33823423F3F00EE665E /* TestTealiumHelper.swift in Sources */,
+				CF9F426124F42D46009B93C2 /* TealiumConnectivityTests.swift in Sources */,
+				CFA55A3124E5902E00BFBED8 /* TestTealiumHelper.swift in Sources */,
+				CF9F426224F42D49009B93C2 /* MockURLSessionConnectivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5284,7 +5815,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D798C34823423F4300EE665E /* TestTealiumHelper.swift in Sources */,
+				CFA5582924E4B6FB00BFBED8 /* TealiumConnectivityTests.swift in Sources */,
+				CFA55A3224E5902E00BFBED8 /* TestTealiumHelper.swift in Sources */,
+				CFA55A4324E59D1F00BFBED8 /* MockURLSessionConnectivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5292,13 +5825,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D798C3BF234240E000EE665E /* TealiumLifecycleIntegrationTests.swift in Sources */,
 				D798C3C0234240E000EE665E /* LifecycleModuleTests.swift in Sources */,
 				D798C3C1234240E000EE665E /* TealiumLifecyclePersistentDataTests.swift in Sources */,
+				CF9F3F6324EDC02800C9D19E /* LifecycleStubsExpected.swift in Sources */,
 				D798C3C2234240E000EE665E /* LifecycleMockDiskStorage.swift in Sources */,
 				D798C3C3234240E000EE665E /* TealiumLifecycleTests.swift in Sources */,
+				CFA55A3A24E5903400BFBED8 /* TestTealiumHelper.swift in Sources */,
+				CF9F3F6624EDC02800C9D19E /* LifecycleStubs.swift in Sources */,
 				D798C3C4234240E000EE665E /* TealiumLifecycleSessionTests.swift in Sources */,
-				D798C3C5234240E000EE665E /* TestTealiumHelper.swift in Sources */,
+				CF9F3F6924EDC02800C9D19E /* LifecycleStubsEvents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5306,13 +5841,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D798C3D6234240E300EE665E /* TealiumLifecycleIntegrationTests.swift in Sources */,
 				D798C3D7234240E300EE665E /* LifecycleModuleTests.swift in Sources */,
 				D798C3D8234240E300EE665E /* TealiumLifecyclePersistentDataTests.swift in Sources */,
+				CF9F3F6424EDC02800C9D19E /* LifecycleStubsExpected.swift in Sources */,
 				D798C3D9234240E300EE665E /* LifecycleMockDiskStorage.swift in Sources */,
 				D798C3DA234240E300EE665E /* TealiumLifecycleTests.swift in Sources */,
+				CFA55A3B24E5903600BFBED8 /* TestTealiumHelper.swift in Sources */,
+				CF9F3F6724EDC02800C9D19E /* LifecycleStubs.swift in Sources */,
 				D798C3DB234240E300EE665E /* TealiumLifecycleSessionTests.swift in Sources */,
-				D798C3DC234240E300EE665E /* TestTealiumHelper.swift in Sources */,
+				CF9F3F6A24EDC02800C9D19E /* LifecycleStubsEvents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5321,13 +5858,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D798C4462342411E00EE665E /* VisitorProfileTests.swift in Sources */,
-				D798C4472342411E00EE665E /* TealiumVisitorProfileModuleTests.swift in Sources */,
 				D798C4842342585800EE665E /* MockDiskStorage.swift in Sources */,
-				D798C4482342411E00EE665E /* VisitorProfileManagerTests.swift in Sources */,
-				D798C44A2342411E00EE665E /* VisitorProfileRetrieverTests.swift in Sources */,
-				D7CAD891234BBCD700668AFD /* MockURLSession.swift in Sources */,
-				CF8FF2CD244670200081C1A9 /* VisitorProfilePerformanceTests.swift in Sources */,
-				D798C44B2342411E00EE665E /* TestTealiumHelper.swift in Sources */,
+				D798C4482342411E00EE665E /* VisitorServiceManagerTests.swift in Sources */,
+				CFA55A2424E4F79900BFBED8 /* TestTealiumHelper.swift in Sources */,
+				D798C44A2342411E00EE665E /* VisitorServiceRetrieverTests.swift in Sources */,
+				CFA55A1B24E4F58000BFBED8 /* MockURLSession.swift in Sources */,
 				CFC3FB9E24C6232400763C9E /* MockTealiumVisitorServiceManager.swift in Sources */,
 				D798C44C2342411E00EE665E /* XCTestCaseUtilities.swift in Sources */,
 			);
@@ -5338,13 +5873,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D798C4702342416900EE665E /* VisitorProfileTests.swift in Sources */,
-				D798C4712342416900EE665E /* TealiumVisitorProfileModuleTests.swift in Sources */,
 				D798C4852342585900EE665E /* MockDiskStorage.swift in Sources */,
-				D798C4722342416900EE665E /* VisitorProfileManagerTests.swift in Sources */,
-				D798C4742342416900EE665E /* VisitorProfileRetrieverTests.swift in Sources */,
-				D7CAD892234BBCD700668AFD /* MockURLSession.swift in Sources */,
-				CF8FF2CE244670200081C1A9 /* VisitorProfilePerformanceTests.swift in Sources */,
-				D798C4752342416900EE665E /* TestTealiumHelper.swift in Sources */,
+				D798C4722342416900EE665E /* VisitorServiceManagerTests.swift in Sources */,
+				CFA55A2524E4F79A00BFBED8 /* TestTealiumHelper.swift in Sources */,
+				D798C4742342416900EE665E /* VisitorServiceRetrieverTests.swift in Sources */,
+				CFA55A1A24E4F57F00BFBED8 /* MockURLSession.swift in Sources */,
 				CFC3FB9F24C6232400763C9E /* MockTealiumVisitorServiceManager.swift in Sources */,
 				D798C4762342416900EE665E /* XCTestCaseUtilities.swift in Sources */,
 			);
@@ -5392,35 +5925,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7187F2E24768F5100CF0AB0 /* EventDataManagerTests.swift in Sources */,
+				CF13D8EB24FDB6360024E79A /* EventDataManagerTests.swift in Sources */,
 				CF782CF42475DB9F009D974C /* MockAppDataDiskStorage.swift in Sources */,
-				D79EFE5B24E4100100F43375 /* TealiumTraceTests.swift in Sources */,
-				D7187F3424768F5100CF0AB0 /* MockDataLayerManager.swift in Sources */,
-				D7187F3724768F5100CF0AB0 /* MockEventDataDiskStorage.swift in Sources */,
 				CF3C1AFE2473252000A4DEE9 /* ConsentMockDiskStorage.swift in Sources */,
-				D7187F3A24768F5100CF0AB0 /* SessionStarterTests.swift in Sources */,
 				D79A7A0A247D14FF00B1D486 /* TealiumDeviceDataTests.swift in Sources */,
 				D7F2DED3233279A1000D0E0F /* TealiumConfigTests.swift in Sources */,
+				CFA5595524E4E84F00BFBED8 /* CoreMocks.swift in Sources */,
 				CFE55FBB24FED12200956B9D /* MockHDLDiskStorage.swift in Sources */,
 				D7187F1F24768F5100CF0AB0 /* DataLayerTests.swift in Sources */,
 				D71912712472C240000FD63E /* DispatchQueueMockDiskStorage.swift in Sources */,
 				D7F2DED4233279A1000D0E0F /* TealiumConstantsTests.swift in Sources */,
+				CF13D8FA24FDB66E0024E79A /* DataLayerTests.swift in Sources */,
 				D7885B5E24AE56BA00ECFEC7 /* ConsentManagerIntegrationTests.swift in Sources */,
+				CF13D8F824FDB66E0024E79A /* MockEventDataDiskStorage.swift in Sources */,
 				D7D5C1B123D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */,
+				CFA55A3424E5903200BFBED8 /* TestTealiumHelper.swift in Sources */,
 				CFB7D83724C2576C000BA6F3 /* TealiumAppDataTests.swift in Sources */,
 				D71912682472C20F000FD63E /* DispatchQueueTests.swift in Sources */,
 				D7D5C1AD23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */,
+				CF13D8FB24FDB66E0024E79A /* SessionStarterTests.swift in Sources */,
 				D7F2DED9233279A1000D0E0F /* TealiumUtilsTests.swift in Sources */,
 				CFE55FB824FED12200956B9D /* HostedDataLayerTests.swift in Sources */,
 				D719126B2472C21D000FD63E /* DispatchManagerTests.swift in Sources */,
 				CF3C1AFB2473251800A4DEE9 /* ConsentManagerModuleUnitTests.swift in Sources */,
-				D7187F2524768F5100CF0AB0 /* SessionManagerTests.swift in Sources */,
+				CF13D8F624FDB66E0024E79A /* MockDataLayerManager.swift in Sources */,
+				CF9F427E24F438E1009B93C2 /* MockConsentDelegate.swift in Sources */,
 				D7885B6324AE579B00ECFEC7 /* TealiumModulesManagerTests.swift in Sources */,
+				CF13D8EE24FDB65B0024E79A /* MockSessionStarter.swift in Sources */,
+				CF13D8F924FDB66E0024E79A /* SessionManagerTests.swift in Sources */,
 				D7F2DEDA233279A1000D0E0F /* TealiumDiskTests.swift in Sources */,
-				D7F2DEDB233279A1000D0E0F /* TestTealiumHelper.swift in Sources */,
-				D71912792474079D000FD63E /* TealiumConnectivityTests.swift in Sources */,
-				D7187F3F2476BED900CF0AB0 /* MockURLSessionConnectivity.swift in Sources */,
-				D7187F3124768F5100CF0AB0 /* MockSessionStarter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5428,30 +5961,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF13D8EC24FDB6370024E79A /* EventDataManagerTests.swift in Sources */,
 				CFB7D83824C2576C000BA6F3 /* TealiumAppDataTests.swift in Sources */,
-				D7187F3B24768F5100CF0AB0 /* SessionStarterTests.swift in Sources */,
 				CF782CF52475DBA0009D974C /* MockAppDataDiskStorage.swift in Sources */,
-				D7187F2624768F5100CF0AB0 /* SessionManagerTests.swift in Sources */,
-				D7187F3524768F5100CF0AB0 /* MockDataLayerManager.swift in Sources */,
-				D79EFE5C24E4100100F43375 /* TealiumTraceTests.swift in Sources */,
-				D7187F3224768F5100CF0AB0 /* MockSessionStarter.swift in Sources */,
 				CF3C1AFF2473252000A4DEE9 /* ConsentMockDiskStorage.swift in Sources */,
 				D7F2DF00233279B2000D0E0F /* TealiumConfigTests.swift in Sources */,
+				CFA5595424E4E84F00BFBED8 /* CoreMocks.swift in Sources */,
 				D71912722472C240000FD63E /* DispatchQueueMockDiskStorage.swift in Sources */,
 				D7F2DF01233279B2000D0E0F /* TealiumConstantsTests.swift in Sources */,
-				D7187F3824768F5100CF0AB0 /* MockEventDataDiskStorage.swift in Sources */,
-				D7D5C1B223D755CB002DB7C6 /* MockURLSessionPublishSettings.swift in Sources */,
-				D7187F2024768F5100CF0AB0 /* DataLayerTests.swift in Sources */,
+				CF13D90024FDB66E0024E79A /* DataLayerTests.swift in Sources */,
+				CFA5595724E4E85700BFBED8 /* MockURLSessionPublishSettings.swift in Sources */,
+				CF13D8FE24FDB66E0024E79A /* MockEventDataDiskStorage.swift in Sources */,
+				CFA55A3524E5903200BFBED8 /* TestTealiumHelper.swift in Sources */,
 				D7885B5F24AE56BA00ECFEC7 /* ConsentManagerIntegrationTests.swift in Sources */,
-				D7187F2F24768F5100CF0AB0 /* EventDataManagerTests.swift in Sources */,
 				D79A7A0B247D150000B1D486 /* TealiumDeviceDataTests.swift in Sources */,
 				D71912692472C210000FD63E /* DispatchQueueTests.swift in Sources */,
 				D7D5C1AE23D74B44002DB7C6 /* PublishSettingsTests.swift in Sources */,
+				CF13D90124FDB66E0024E79A /* SessionStarterTests.swift in Sources */,
 				D7F2DF06233279B2000D0E0F /* TealiumUtilsTests.swift in Sources */,
+				CF9F427F24F438E1009B93C2 /* MockConsentDelegate.swift in Sources */,
 				D719126C2472C21F000FD63E /* DispatchManagerTests.swift in Sources */,
+				CF13D8FC24FDB66E0024E79A /* MockDataLayerManager.swift in Sources */,
 				CF3C1AFC2473251900A4DEE9 /* ConsentManagerModuleUnitTests.swift in Sources */,
-				D7187F402476BED900CF0AB0 /* MockURLSessionConnectivity.swift in Sources */,
 				D7F2DF07233279B2000D0E0F /* TealiumDiskTests.swift in Sources */,
+				CF13D8EF24FDB65B0024E79A /* MockSessionStarter.swift in Sources */,
+				CF13D8FF24FDB66E0024E79A /* SessionManagerTests.swift in Sources */,
 				D7885B6524AE579E00ECFEC7 /* TealiumModulesManagerTests.swift in Sources */,
 				CFE55FBC24FED12200956B9D /* MockHDLDiskStorage.swift in Sources */,
 				CFE55FB924FED12200956B9D /* HostedDataLayerTests.swift in Sources */,
@@ -5462,6 +5996,141 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CF13D80E24FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CFF242A023CE774C0091B7BF /* TealiumLocation */;
+			targetProxy = CF13D80F24FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81024FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7805825233A65FB00DAD90E /* TealiumVisitorService */;
+			targetProxy = CF13D81124FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81224FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D76FE1222193093A00D73EC5 /* TealiumAttribution */;
+			targetProxy = CF13D81324FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81424FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
+			targetProxy = CF13D81524FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81624FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D736D6A42195CCB600B3BDEE /* TealiumCollect */;
+			targetProxy = CF13D81724FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81824FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
+			targetProxy = CF13D81924FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81A24FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7881EF121998DAD002CDCC1 /* TealiumLifecycle */;
+			targetProxy = CF13D81B24FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81C24FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DD1121945F99003C6BA1 /* TealiumTagManagement */;
+			targetProxy = CF13D81D24FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D81E24FD5FE30024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D777EDA31FB0B87300181B11 /* TestHost */;
+			targetProxy = CF13D81F24FD5FE30024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D84924FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CFF242A023CE774C0091B7BF /* TealiumLocation */;
+			targetProxy = CF13D84A24FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D84B24FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7805825233A65FB00DAD90E /* TealiumVisitorService */;
+			targetProxy = CF13D84C24FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D84D24FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D76FE1222193093A00D73EC5 /* TealiumAttribution */;
+			targetProxy = CF13D84E24FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D84F24FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
+			targetProxy = CF13D85024FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D85124FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D736D6A42195CCB600B3BDEE /* TealiumCollect */;
+			targetProxy = CF13D85224FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D85324FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
+			targetProxy = CF13D85424FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D85524FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7881EF121998DAD002CDCC1 /* TealiumLifecycle */;
+			targetProxy = CF13D85624FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D85724FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DD1121945F99003C6BA1 /* TealiumTagManagement */;
+			targetProxy = CF13D85824FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D85924FD61F80024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D777EDA31FB0B87300181B11 /* TestHost */;
+			targetProxy = CF13D85A24FD61F80024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D88124FD61FC0024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7805825233A65FB00DAD90E /* TealiumVisitorService */;
+			targetProxy = CF13D88224FD61FC0024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D88324FD61FC0024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D736D6A42195CCB600B3BDEE /* TealiumCollect */;
+			targetProxy = CF13D88424FD61FC0024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D88524FD61FC0024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7881EF121998DAD002CDCC1 /* TealiumLifecycle */;
+			targetProxy = CF13D88624FD61FC0024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D88724FD61FC0024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
+			targetProxy = CF13D88824FD61FC0024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D8AF24FD62000024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7805825233A65FB00DAD90E /* TealiumVisitorService */;
+			targetProxy = CF13D8B024FD62000024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D8B124FD62000024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
+			targetProxy = CF13D8B224FD62000024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D8B324FD62000024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D736D6A42195CCB600B3BDEE /* TealiumCollect */;
+			targetProxy = CF13D8B424FD62000024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D8B524FD62000024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
+			targetProxy = CF13D8B624FD62000024E79A /* PBXContainerItemProxy */;
+		};
+		CF13D8B724FD62000024E79A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7881EF121998DAD002CDCC1 /* TealiumLifecycle */;
+			targetProxy = CF13D8B824FD62000024E79A /* PBXContainerItemProxy */;
+		};
 		CF64A135246B465D00FA456E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CFF242A023CE774C0091B7BF /* TealiumLocation */;
@@ -5477,6 +6146,26 @@
 			isa = PBXTargetDependency;
 			target = D7B04D08219994D400C87E22 /* TealiumRemoteCommands */;
 			targetProxy = CF9A3F5D24D1E36B0097A9E4 /* PBXContainerItemProxy */;
+		};
+		CF9F424B24F427D7009B93C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
+			targetProxy = CF9F424A24F427D7009B93C2 /* PBXContainerItemProxy */;
+		};
+		CF9F424D24F427ED009B93C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
+			targetProxy = CF9F424C24F427ED009B93C2 /* PBXContainerItemProxy */;
+		};
+		CF9F426A24F435F3009B93C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DD1121945F99003C6BA1 /* TealiumTagManagement */;
+			targetProxy = CF9F426B24F435F3009B93C2 /* PBXContainerItemProxy */;
+		};
+		CF9F426C24F435F3009B93C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
+			targetProxy = CF9F426D24F435F3009B93C2 /* PBXContainerItemProxy */;
 		};
 		CFC6576A2370AFA200A61F6D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5705,11 +6394,6 @@
 			target = D755DD1121945F99003C6BA1 /* TealiumTagManagement */;
 			targetProxy = D788A56D23198A3D00BC6D60 /* PBXContainerItemProxy */;
 		};
-		D788A58B23198E7700BC6D60 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
-			targetProxy = D788A58A23198E7700BC6D60 /* PBXContainerItemProxy */;
-		};
 		D788A5F623292B8100BC6D60 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -5847,11 +6531,6 @@
 			target = D755DC9821945E41003C6BA1 /* TealiumCore */;
 			targetProxy = D7F2DECF233279A1000D0E0F /* PBXContainerItemProxy */;
 		};
-		D7F2DF1823327B26000D0E0F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
-			targetProxy = D7F2DF1723327B26000D0E0F /* PBXContainerItemProxy */;
-		};
 		D7F2DF1A23327B26000D0E0F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D736D6A42195CCB600B3BDEE /* TealiumCollect */;
@@ -5871,11 +6550,6 @@
 			isa = PBXTargetDependency;
 			target = D76FE1222193093A00D73EC5 /* TealiumAttribution */;
 			targetProxy = D7F2DF3B2332802D000D0E0F /* PBXContainerItemProxy */;
-		};
-		D7F2DF3E2332802D000D0E0F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D7CED25721932DD500ACD291 /* TealiumAutotracking */;
-			targetProxy = D7F2DF3D2332802D000D0E0F /* PBXContainerItemProxy */;
 		};
 		D7F2DF402332802D000D0E0F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -6097,6 +6771,319 @@
 			};
 			name = Release;
 		};
+		CF13D84224FD5FE30024E79A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"TEST=1",
+				);
+				INFOPLIST_FILE = "TealiumAppDelegateProxyTests-iOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestHost.app/TestHost";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		CF13D84324FD5FE30024E79A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				INFOPLIST_FILE = "TealiumAppDelegateProxyTests-iOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestHost.app/TestHost";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		CF13D87C24FD61F80024E79A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"TEST=1",
+				);
+				INFOPLIST_FILE = "TealiumTraceTests-iOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestHost.app/TestHost";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		CF13D87D24FD61F80024E79A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				INFOPLIST_FILE = "TealiumTraceTests-iOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestHost.app/TestHost";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		CF13D8AA24FD61FC0024E79A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"TEST=1",
+				);
+				INFOPLIST_FILE = "TealiumTraceTests-macOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		CF13D8AB24FD61FC0024E79A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				INFOPLIST_FILE = "TealiumTraceTests-macOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		CF13D8D924FD62000024E79A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"TEST=1",
+				);
+				INFOPLIST_FILE = "TealiumTraceTests-tvOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos watchsimulator appletvsimulator watchos appletvos macosx";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,4";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		CF13D8DA24FD62000024E79A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XC939GDC9P;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				INFOPLIST_FILE = "TealiumTraceTests-tvOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos watchsimulator appletvsimulator watchos appletvos macosx";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
 		CF7AF2D72437ED5500D9294C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6134,6 +7121,77 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		CF9F427824F435F3009B93C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"TEST=1",
+				);
+				INFOPLIST_FILE = "TealiumTagManagementTests-iOS copy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		CF9F427924F435F3009B93C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				INFOPLIST_FILE = "TealiumTagManagementTests-iOS copy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-F$(SRCROOT)/../Carthage/Build/iOS";
+				OTHER_SWIFT_FLAGS = "-DTEST";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
 			name = Release;
 		};
@@ -6878,7 +7936,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -6916,7 +7974,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7141,6 +8199,7 @@
 					"@loader_path/Frameworks",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = tealium.ios.visitorservice;
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME)";
@@ -7211,8 +8270,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = XC939GDC9P;
@@ -7250,8 +8309,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = XC939GDC9P;
@@ -7384,7 +8443,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7422,7 +8481,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7455,11 +8514,12 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -7493,11 +8553,12 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = "TealiumTests-Info.plist";
@@ -7526,7 +8587,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7564,7 +8625,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7596,10 +8657,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = XC939GDC9P;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -7620,6 +8683,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -7633,10 +8697,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = XC939GDC9P;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -7653,6 +8719,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
@@ -7745,7 +8812,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7783,7 +8850,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7887,7 +8954,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7925,7 +8992,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7958,7 +9025,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -7996,7 +9063,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -8029,7 +9096,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -8067,7 +9134,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -8099,10 +9166,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = XC939GDC9P;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8123,6 +9192,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -8137,10 +9207,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = XC939GDC9P;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -8157,6 +9229,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tealium.tealium-swift-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -8382,7 +9455,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = XC939GDC9P;
@@ -8420,7 +9493,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = XC939GDC9P;
@@ -8453,8 +9526,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = XC939GDC9P;
@@ -8492,8 +9565,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = XC939GDC9P;
@@ -8753,7 +9826,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "autotracking DEBUG";
 				SWIFT_VERSION = 5.0;
@@ -8800,7 +9873,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = autotracking;
 				SWIFT_VERSION = 5.0;
@@ -8817,12 +9890,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = XC939GDC9P;
+				DEVELOPMENT_TEAM = "";
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8858,12 +9931,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = XC939GDC9P;
+				DEVELOPMENT_TEAM = "";
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -8980,11 +10053,56 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		CF13D84124FD5FE30024E79A /* Build configuration list for PBXNativeTarget "TealiumAppDelegateProxyTests-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF13D84224FD5FE30024E79A /* Debug */,
+				CF13D84324FD5FE30024E79A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF13D87B24FD61F80024E79A /* Build configuration list for PBXNativeTarget "TealiumTraceTests-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF13D87C24FD61F80024E79A /* Debug */,
+				CF13D87D24FD61F80024E79A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF13D8A924FD61FC0024E79A /* Build configuration list for PBXNativeTarget "TealiumTraceTests-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF13D8AA24FD61FC0024E79A /* Debug */,
+				CF13D8AB24FD61FC0024E79A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF13D8D824FD62000024E79A /* Build configuration list for PBXNativeTarget "TealiumTraceTests-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF13D8D924FD62000024E79A /* Debug */,
+				CF13D8DA24FD62000024E79A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CF7AF2D92437ED5500D9294C /* Build configuration list for PBXNativeTarget "script-release" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF7AF2D72437ED5500D9294C /* Debug */,
 				CF7AF2D82437ED5500D9294C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF9F427724F435F3009B93C2 /* Build configuration list for PBXNativeTarget "TealiumTagManagementIntegrationTests-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF9F427824F435F3009B93C2 /* Debug */,
+				CF9F427924F435F3009B93C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

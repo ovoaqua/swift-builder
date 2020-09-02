@@ -188,7 +188,12 @@ class TealiumLocationTests: XCTestCase {
         let expect = expectation(description: "testSendGeofenceTrackingEventEntered")
         TealiumLocationTests.expectations.append(expect)
 
-        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: self,
+        NSTimeZone.default = TimeZone(abbreviation: "PST")!
+
+        let mockLocationDelegate = MockLocationDelegate()
+        mockLocationDelegate.asyncExpectation = expect
+
+        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: mockLocationDelegate,
                                                      locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -207,14 +212,41 @@ class TealiumLocationTests: XCTestCase {
 
         tealiumLocation.sendGeofenceTrackingEvent(region: region, triggeredTransition: LocationKey.entered)
 
-        waitForExpectations(timeout: 3.0, handler: nil)
+        waitForExpectations(timeout: 2) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let result = mockLocationDelegate.locationData else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            let expected: [String: Any] = [TealiumKey.event: LocationKey.entered,
+                                           LocationKey.accuracy: "low",
+                                           LocationKey.geofenceName: "testRegion",
+                                           LocationKey.geofenceTransition: LocationKey.entered,
+                                           LocationKey.deviceLatitude: "37.3317",
+                                           LocationKey.deviceLongitude: "-122.0325086",
+                                           LocationKey.timestamp: "2020-01-15 06:31:00 +0000",
+                                           LocationKey.speed: "40.0"]
+            XCTAssertEqual(expected.keys.sorted(), result.keys.sorted())
+            result.forEach {
+                guard let value = $0.value as? String,
+                      let expected = expected[$0.key] as? String else { return }
+                XCTAssertEqual(expected, value)
+            }
+        }
     }
 
     func testSendGeofenceTrackingEventExited() {
         let expect = expectation(description: "testSendGeofenceTrackingEventExited")
         TealiumLocationTests.expectations.append(expect)
 
-        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: self,
+        let mockLocationDelegate = MockLocationDelegate()
+        mockLocationDelegate.asyncExpectation = expect
+
+        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: mockLocationDelegate,
                                                      locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -225,7 +257,116 @@ class TealiumLocationTests: XCTestCase {
 
         tealiumLocation.sendGeofenceTrackingEvent(region: region, triggeredTransition: LocationKey.exited)
 
-        waitForExpectations(timeout: 3.0, handler: nil)
+        waitForExpectations(timeout: 2) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let result = mockLocationDelegate.locationData else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            let expected: [String: Any] = [TealiumKey.event: LocationKey.exited,
+                                           LocationKey.geofenceName: "testRegion",
+                                           LocationKey.geofenceTransition: LocationKey.exited]
+            XCTAssertEqual(expected.keys, result.keys)
+            result.forEach {
+                guard let value = $0.value as? String,
+                      let expected = expected[$0.key] as? String else { return }
+                XCTAssertEqual(expected, value)
+            }
+        }
+    }
+
+    func testDidEnterGeofence() {
+        let expect = expectation(description: "testDidEnterGeofence")
+        TealiumLocationTests.expectations.append(expect)
+
+        let mockModuleDelegate = MockLocationModuleDelegate()
+        mockModuleDelegate.asyncExpectation = expect
+
+        config = TealiumConfig(account: "tealiummobile", profile: "location", environment: "dev")
+        let mockDisk = MockLocationDiskStorage(config: config)
+        let locationModule = LocationModule(config: config,
+                                            delegate: mockModuleDelegate,
+                                            diskStorage: mockDisk,
+                                            completion: { _ in })
+
+        guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
+            XCTFail("MockLocationManager did not init properly - shouldn't happen")
+            return
+        }
+        self.locationManager = locationManager
+
+        let data: [String: Any] = [LocationKey.geofenceName: "Tealium_San_Diego",
+                                   LocationKey.geofenceTransition: LocationKey.entered,
+                                   TealiumKey.event: LocationKey.entered]
+
+        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: locationModule,
+                                                     locationManager: locationManager)
+
+        locationManager.delegate = tealiumLocation
+
+        tealiumLocation.locationDelegate?.didEnterGeofence(data)
+
+        waitForExpectations(timeout: 2) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let result = mockModuleDelegate.trackRequest else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertNotNil(result)
+        }
+    }
+
+    func testDidExitGeofence() {
+        let expect = expectation(description: "testDidExitGeofence")
+        TealiumLocationTests.expectations.append(expect)
+
+        let mockModuleDelegate = MockLocationModuleDelegate()
+        mockModuleDelegate.asyncExpectation = expect
+
+        config = TealiumConfig(account: "tealiummobile", profile: "location", environment: "dev")
+        let mockDisk = MockLocationDiskStorage(config: config)
+        let locationModule = LocationModule(config: config,
+                                            delegate: mockModuleDelegate,
+                                            diskStorage: mockDisk,
+                                            completion: { _ in })
+
+        guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
+            XCTFail("MockLocationManager did not init properly - shouldn't happen")
+            return
+        }
+        self.locationManager = locationManager
+
+        let data: [String: Any] = [LocationKey.geofenceName: "Tealium_San_Diego",
+                                   LocationKey.geofenceTransition: LocationKey.exited,
+                                   TealiumKey.event: LocationKey.exited]
+
+        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: locationModule,
+                                                     locationManager: locationManager)
+
+        locationManager.delegate = tealiumLocation
+
+        tealiumLocation.locationDelegate?.didExitGeofence(data)
+
+        waitForExpectations(timeout: 2) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let result = mockModuleDelegate.trackRequest else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertNotNil(result)
+        }
     }
 
     func testLastLocationPopulated() {
@@ -247,7 +388,8 @@ class TealiumLocationTests: XCTestCase {
     }
 
     func testStartMonitoring() {
-        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: self,
+        let mockLocationDelegate = MockLocationDelegate()
+        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: mockLocationDelegate,
                                                      locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -276,7 +418,8 @@ class TealiumLocationTests: XCTestCase {
     }
 
     func testStopMonitoring() {
-        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: self,
+        let mockLocationDelegate = MockLocationDelegate()
+        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: mockLocationDelegate,
                                                      locationManager: locationManager)
 
         locationManager.delegate = tealiumLocation
@@ -451,52 +594,6 @@ class TealiumLocationTests: XCTestCase {
         }
     }
 
-    func testDidEnterGeofence() {
-        let expect = expectation(description: "testDidEnterGeofence")
-        TealiumLocationTests.expectations.append(expect)
-        guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
-            XCTFail("MockLocationManager did not init properly - shouldn't happen")
-            return
-        }
-        self.locationManager = locationManager
-
-        let data: [String: Any] = [LocationKey.geofenceName: "Tealium_San_Diego",
-                                   LocationKey.geofenceTransition: LocationKey.entered,
-                                   TealiumKey.event: LocationKey.entered]
-
-        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: locationModule,
-                                                     locationManager: locationManager)
-
-        locationManager.delegate = tealiumLocation
-
-        tealiumLocation.locationDelegate?.didEnterGeofence(data)
-
-        waitForExpectations(timeout: 3.0, handler: nil)
-    }
-
-    func testDidExitGeofence() {
-        let expect = expectation(description: "testDidExitGeofence")
-        TealiumLocationTests.expectations.append(expect)
-        guard let locationManager = MockLocationManager(distanceFilter: 500.0, locationAccuracy: kCLLocationAccuracyBest, delegateClass: nil) else {
-            XCTFail("MockLocationManager did not init properly - shouldn't happen")
-            return
-        }
-        self.locationManager = locationManager
-
-        let data: [String: Any] = [LocationKey.geofenceName: "Tealium_San_Diego",
-                                   LocationKey.geofenceTransition: LocationKey.exited,
-                                   TealiumKey.event: LocationKey.exited]
-
-        let tealiumLocation = TealiumLocationManager(config: config, locationDelegate: locationModule,
-                                                     locationManager: locationManager)
-
-        locationManager.delegate = tealiumLocation
-
-        tealiumLocation.locationDelegate?.didExitGeofence(data)
-
-        waitForExpectations(timeout: 3.0, handler: nil)
-    }
-
 }
 
 extension TealiumLocationTests: ModuleDelegate {
@@ -543,7 +640,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys.sorted(), data.keys.sorted())
         data.forEach {
             guard let value = $0.value as? String,
-                let expected = expected[$0.key] as? String else { return }
+                  let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations
@@ -558,7 +655,7 @@ extension TealiumLocationTests: LocationDelegate {
         XCTAssertEqual(expected.keys, data.keys)
         data.forEach {
             guard let value = $0.value as? String,
-                let expected = expected[$0.key] as? String else { return }
+                  let expected = expected[$0.key] as? String else { return }
             XCTAssertEqual(expected, value)
         }
         TealiumLocationTests.expectations

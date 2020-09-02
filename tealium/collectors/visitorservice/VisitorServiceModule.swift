@@ -50,7 +50,7 @@ public class VisitorServiceModule: Collector, DispatchListener {
         completion((.success(true), nil))
     }
 
-    func retrieveProfile(visitorId: String) {
+    func retrieveProfile(visitorId: String, _ completion: (() -> Void)? = nil) {
         // wait before triggering refresh, to give event time to process
         TealiumQueues.backgroundConcurrentQueue.write(after: .now() + 2.1) {
             guard self.firstEventSent else {
