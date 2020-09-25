@@ -11,7 +11,7 @@ import TealiumCore
 import TealiumCollect
 import TealiumTagManagement
 import TealiumAttribution
-import TealiumAutotracking
+//import TealiumAutotracking
 import TealiumRemoteCommands
 import TealiumVisitorService
 import TealiumLifecycle
